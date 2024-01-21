@@ -10,6 +10,7 @@
     "connect": "pscale connect cares main --port 3309"
   },
   "dependencies": {
+    "@clerk/nextjs": "^4.29.4",
     "@planetscale/database": "^1.14.0",
     "@prisma/client": "^5.8.1",
     "dotenv": "^16.3.2",
