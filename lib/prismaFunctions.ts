@@ -51,6 +51,7 @@ export async function updateUser(userId: string, userData: any) {
 
   return updatedUser;
 }
+
 export async function deleteUser(userId: string) {
   // Start a transaction to perform multiple operations
   await prisma.$transaction(async (prisma) => {
