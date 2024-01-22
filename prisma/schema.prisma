@@ -10,7 +10,15 @@ generator client {
 
 model User {
   id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+  first_name  String
+  last_name   String
   phone String
+  emailAddresses EmailAddress[]
+}
+
+model EmailAddress {
+  id Int @id @default(autoincrement())
+  email String @unique
+  userId Int
+  user User @relation(fields: [userId], references: [id])
 }
