@@ -52,12 +52,18 @@ export async function updateUser(userId: string, userData: any) {
   return updatedUser;
 }
 export async function deleteUser(userId: string) {
-  await prisma.$transaction([
-    prisma.emailAddress.deleteMany({
+  // Start a transaction to perform multiple operations
+  await prisma.$transaction(async (prisma) => {
+    // Delete the related EmailAddress records
+    await prisma.emailAddress.deleteMany({
       where: { userId: userId },
-    }),
-    prisma.user.delete({
+    });
+
+    // Delete the User
+    await prisma.user.delete({
       where: { userId: userId },
-    }),
-  ]);
+    });
+  });
+
+  console.log(`User ${userId} and related email addresses deleted`);
 }
