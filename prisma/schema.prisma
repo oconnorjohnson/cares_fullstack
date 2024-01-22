@@ -10,9 +10,9 @@ generator client {
 
 model User {
   id    Int     @id @default(autoincrement())
+  userId String @unique
   first_name  String
   last_name   String
-  phone String
   emailAddresses EmailAddress[]
 }
 

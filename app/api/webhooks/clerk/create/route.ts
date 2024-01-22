@@ -7,33 +7,30 @@ const prisma = new PrismaClient();
 interface EmailAddress {
   email_address: string;
   id: string;
-  // other fields...
 }
 
 interface UserData { 
-    id: number;
+    id: string;
     email_addresses: EmailAddress[];
     first_name: string;
     last_name: string;
-    phone: string;
+
   }
 
-export async function POST(request: NextRequest): Promise<NextResponse> {
+  export async function POST(request: NextRequest): Promise<NextResponse> {
     try { 
       const payload: WebhookEvent = await request.json();
   
-      const { id, email_addresses, first_name, last_name, phone } = payload.data.object as unknown as UserData;
-  ''
+      const { id, email_addresses, first_name, last_name } = payload.data as unknown as UserData;
+  
       const user = await prisma.user.create({
         data: {
-          id,
+          userId: id,
           first_name,
           last_name,
-          phone,
           emailAddresses: {
             create: email_addresses.map((emailAddress) => ({
-              email: emailAddress.email_address,
-              userId: id,
+              email: emailAddress.email_address
             })),
           },
         },
