@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
 import { WebhookEvent } from "@clerk/nextjs/server";
 import { createUser } from "@/lib/prismaFunctions";
-
-const prisma = new PrismaClient();
 
 interface EmailAddress {
   email_address: string;
