@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme-provider";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
+import Providers from "@/lib/providers";
 
 import { ourFileRouter } from "@/app/api/uploadthing/core";
 
@@ -39,7 +40,7 @@ export default function RootLayout({
                */
               routerConfig={extractRouterConfig(ourFileRouter)}
             />
-            {children}
+            <Providers>{children}</Providers>
           </ThemeProvider>
         </body>
       </html>

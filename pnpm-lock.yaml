@@ -71,6 +71,18 @@ dependencies:
   "@radix-ui/react-tooltip":
     specifier: ^1.0.7
     version: 1.0.7(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
+  "@tanstack/react-form":
+    specifier: ^0.13.3
+    version: 0.13.3(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
+  "@tanstack/react-query":
+    specifier: ^5.17.19
+    version: 5.17.19(react@18.2.0)
+  "@tanstack/react-query-devtools":
+    specifier: ^5.17.21
+    version: 5.17.21(@tanstack/react-query@5.17.19)(react@18.2.0)
+  "@tanstack/react-table":
+    specifier: ^8.11.7
+    version: 8.11.7(react-dom@18.2.0)(react@18.2.0)
   "@uploadthing/react":
     specifier: ^6.2.0
     version: 6.2.0(next@14.1.0)(react@18.2.0)(uploadthing@6.2.0)
@@ -101,6 +113,9 @@ dependencies:
   react:
     specifier: ^18
     version: 18.2.0
+  react-charts:
+    specifier: 3.0.0-beta.57
+    version: 3.0.0-beta.57(react-dom@18.2.0)(react@18.2.0)
   react-day-picker:
     specifier: ^8.10.0
     version: 8.10.0(date-fns@3.3.0)(react@18.2.0)
@@ -166,6 +181,9 @@ devDependencies:
   prettier:
     specifier: ^3.2.4
     version: 3.2.4
+  prettier-plugin-tailwind:
+    specifier: ^2.2.12
+    version: 2.2.12(prettier@3.2.4)(tailwindcss@3.4.1)
   prettier-plugin-tailwindcss:
     specifier: ^0.5.11
     version: 0.5.11(prettier@3.2.4)
@@ -173,7 +191,7 @@ devDependencies:
     specifier: ^5.8.1
     version: 5.8.1
   tailwindcss:
-    specifier: ^3.3.0
+    specifier: ^3.4.1
     version: 3.4.1(ts-node@10.9.2)
   ts-node:
     specifier: ^10.9.2
@@ -1935,6 +1953,125 @@ packages:
       tslib: 2.6.2
     dev: false
 
+  /@tanstack/form-core@0.13.3:
+    resolution:
+      {
+        integrity: sha512-kffdf1dLcXDYLKfvtOtiENUbj6A3lwimavl1g8dDOSDh7K1iQrCRGct+HvotmYtQVMxAeKTdPkoesyk5N7tPCw==,
+      }
+    dependencies:
+      "@tanstack/store": 0.1.3
+    dev: false
+
+  /@tanstack/query-core@5.17.19:
+    resolution:
+      {
+        integrity: sha512-Lzw8FUtnLCc9Jwz0sw9xOjZB+/mCCmJev38v2wHMUl/ioXNIhnNWeMxu0NKUjIhAd62IRB3eAtvxAGDJ55UkyA==,
+      }
+    dev: false
+
+  /@tanstack/query-devtools@5.17.21:
+    resolution:
+      {
+        integrity: sha512-WWfcnNjTEqcuAS5GyKkVGkseuES6yd197MJWGImBu+MoCjWPqxSXKCCfm+utSXJauJUGm7xoMmhqCphiQdjf8w==,
+      }
+    dev: false
+
+  /@tanstack/react-form@0.13.3(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0):
+    resolution:
+      {
+        integrity: sha512-eRr7k8HAz+xJ6auvmqa/tsAuo405fliZyTyOcnqkzLx6DwqExbhJbmsCs74+e6VFJyCk4J4C14sVr5+3IXE2cw==,
+      }
+    peerDependencies:
+      react: ^17.0.0 || ^18.0.0
+      react-dom: ^17.0.0 || ^18.0.0
+      react-native: "*"
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+    dependencies:
+      "@tanstack/form-core": 0.13.3
+      "@tanstack/react-store": 0.2.1(react-dom@18.2.0)(react@18.2.0)
+      decode-formdata: 0.4.0
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      rehackt: 0.0.3(@types/react@18.2.48)(react@18.2.0)
+    transitivePeerDependencies:
+      - "@types/react"
+    dev: false
+
+  /@tanstack/react-query-devtools@5.17.21(@tanstack/react-query@5.17.19)(react@18.2.0):
+    resolution:
+      {
+        integrity: sha512-Ri1AuWpN67eyPdMTlPxx1TMGNUaxTHrGv0ll0S20ZObz/Xms5wfANV3c6OX0HZTY0igudP1k5jpRLXNkd249mg==,
+      }
+    peerDependencies:
+      "@tanstack/react-query": ^5.17.19
+      react: ^18.0.0
+    dependencies:
+      "@tanstack/query-devtools": 5.17.21
+      "@tanstack/react-query": 5.17.19(react@18.2.0)
+      react: 18.2.0
+    dev: false
+
+  /@tanstack/react-query@5.17.19(react@18.2.0):
+    resolution:
+      {
+        integrity: sha512-qaQENB6/03Gj3dFZGvdmUoqeUGlGm7P1p0RmaR04Bf1Ib1T9lLGimcC9T3oCFbrx0b2ZF21ngjFZNjj9uPJMcg==,
+      }
+    peerDependencies:
+      react: ^18.0.0
+    dependencies:
+      "@tanstack/query-core": 5.17.19
+      react: 18.2.0
+    dev: false
+
+  /@tanstack/react-store@0.2.1(react-dom@18.2.0)(react@18.2.0):
+    resolution:
+      {
+        integrity: sha512-tEbMCQjbeVw9KOP/202LfqZMSNAVi6zYkkp1kBom8nFuMx/965Hzes3+6G6b/comCwVxoJU8Gg9IrcF8yRPthw==,
+      }
+    peerDependencies:
+      react: ">=16"
+      react-dom: ">=16"
+    dependencies:
+      "@tanstack/store": 0.1.3
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      use-sync-external-store: 1.2.0(react@18.2.0)
+    dev: false
+
+  /@tanstack/react-table@8.11.7(react-dom@18.2.0)(react@18.2.0):
+    resolution:
+      {
+        integrity: sha512-ZbzfMkLjxUTzNPBXJYH38pv2VpC9WUA+Qe5USSHEBz0dysDTv4z/ARI3csOed/5gmlmrPzVUN3UXGuUMbod3Jg==,
+      }
+    engines: { node: ">=12" }
+    peerDependencies:
+      react: ">=16"
+      react-dom: ">=16"
+    dependencies:
+      "@tanstack/table-core": 8.11.7
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@tanstack/store@0.1.3:
+    resolution:
+      {
+        integrity: sha512-GnolmC8Fr4mvsHE1fGQmR3Nm0eBO3KnZjDU0a+P3TeQNM/dDscFGxtA7p31NplQNW3KwBw4t1RVFmz0VeKLxcw==,
+      }
+    dev: false
+
+  /@tanstack/table-core@8.11.7:
+    resolution:
+      {
+        integrity: sha512-N3ksnkbPbsF3PjubuZCB/etTqvctpXWRHIXTmYfJFnhynQKjeZu8BCuHvdlLPpumKbA+bjY4Ay9AELYLOXPWBg==,
+      }
+    engines: { node: ">=12" }
+    dev: false
+
   /@tsconfig/node10@1.0.9:
     resolution:
       {
@@ -1988,6 +2125,45 @@ packages:
       "@types/express": 4.17.14
       "@types/keygrip": 1.0.6
       "@types/node": 20.11.5
+    dev: false
+
+  /@types/d3-array@3.2.1:
+    resolution:
+      {
+        integrity: sha512-Y2Jn2idRrLzUfAKV2LyRImR+y4oa2AntrgID95SHJxuMUrkNXmanDSed71sRNZysveJVt1hLLemQZIady0FpEg==,
+      }
+    dev: false
+
+  /@types/d3-path@3.0.2:
+    resolution:
+      {
+        integrity: sha512-WAIEVlOCdd/NKRYTsqCpOMHQHemKBEINf8YXMYOtXH0GA7SY0dqMB78P3Uhgfy+4X+/Mlw2wDtlETkN6kQUCMA==,
+      }
+    dev: false
+
+  /@types/d3-scale@4.0.8:
+    resolution:
+      {
+        integrity: sha512-gkK1VVTr5iNiYJ7vWDI+yUFFlszhNMtVeneJ6lUTKPjprsvLLI9/tgEGiXJOnlINJA8FyA88gfnQsHbybVZrYQ==,
+      }
+    dependencies:
+      "@types/d3-time": 3.0.3
+    dev: false
+
+  /@types/d3-shape@3.1.6:
+    resolution:
+      {
+        integrity: sha512-5KKk5aKGu2I+O6SONMYSNflgiP0WfZIQvVUMan50wHsLG1G94JlxEVnCpQARfTtzytuY0p/9PXXZb3I7giofIA==,
+      }
+    dependencies:
+      "@types/d3-path": 3.0.2
+    dev: false
+
+  /@types/d3-time@3.0.3:
+    resolution:
+      {
+        integrity: sha512-2p6olUZ4w3s+07q3Tm2dbiMZy5pCDfYwtLXXHUnVzXgQlZ/OyPtUz6OL382BkOuGlLXqfT+wqv8Fw2v8/0geBw==,
+      }
     dev: false
 
   /@types/express-serve-static-core@4.17.41:
@@ -2087,11 +2263,27 @@ packages:
       }
     dev: false
 
+  /@types/raf@3.4.3:
+    resolution:
+      {
+        integrity: sha512-c4YAvMedbPZ5tEyxzQdMoOhhJ4RD3rngZIdwC2/qDN3d7JpEhB6fiBRKVY1lg5B7Wk+uPBjn5f39j1/2MY1oOw==,
+      }
+    dev: false
+
   /@types/range-parser@1.2.7:
     resolution:
       {
         integrity: sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==,
       }
+    dev: false
+
+  /@types/react-dom@17.0.25:
+    resolution:
+      {
+        integrity: sha512-urx7A7UxkZQmThYA4So0NelOVjx3V4rNFVJwp0WZlbIK5eM4rNJDiN3R/E9ix0MBh6kAEojk/9YL+Te6D9zHNA==,
+      }
+    dependencies:
+      "@types/react": 17.0.75
     dev: false
 
   /@types/react-dom@18.2.18:
@@ -2101,6 +2293,17 @@ packages:
       }
     dependencies:
       "@types/react": 18.2.48
+
+  /@types/react@17.0.75:
+    resolution:
+      {
+        integrity: sha512-MSA+NzEzXnQKrqpO63CYqNstFjsESgvJAdAyyJ1n6ZQq/GLgf6nOfIKwk+Twuz0L1N6xPe+qz5xRCJrbhMaLsw==,
+      }
+    dependencies:
+      "@types/prop-types": 15.7.11
+      "@types/scheduler": 0.16.8
+      csstype: 3.1.3
+    dev: false
 
   /@types/react@18.2.48:
     resolution:
@@ -2914,6 +3117,104 @@ packages:
         integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==,
       }
 
+  /d3-array@2.12.1:
+    resolution:
+      {
+        integrity: sha512-B0ErZK/66mHtEsR1TkPEEkwdy+WDesimkM5gpZr5Dsg54BiTA5RXtYW5qTLIAcekaS9xfZrzBLF/OAkB3Qn1YQ==,
+      }
+    dependencies:
+      internmap: 1.0.1
+    dev: false
+
+  /d3-color@2.0.0:
+    resolution:
+      {
+        integrity: sha512-SPXi0TSKPD4g9tw0NMZFnR95XVgUZiBH+uUTqQuDu1OsE2zomHU7ho0FISciaPvosimixwHFl3WHLGabv6dDgQ==,
+      }
+    dev: false
+
+  /d3-delaunay@5.3.0:
+    resolution:
+      {
+        integrity: sha512-amALSrOllWVLaHTnDLHwMIiz0d1bBu9gZXd1FiLfXf8sHcX9jrcj81TVZOqD4UX7MgBZZ07c8GxzEgBpJqc74w==,
+      }
+    dependencies:
+      delaunator: 4.0.1
+    dev: false
+
+  /d3-format@2.0.0:
+    resolution:
+      {
+        integrity: sha512-Ab3S6XuE/Q+flY96HXT0jOXcM4EAClYFnRGY5zsjRGNy6qCYrQsMffs7cV5Q9xejb35zxW5hf/guKw34kvIKsA==,
+      }
+    dev: false
+
+  /d3-interpolate@2.0.1:
+    resolution:
+      {
+        integrity: sha512-c5UhwwTs/yybcmTpAVqwSFl6vrQ8JZJoT5F7xNFK9pymv5C0Ymcc9/LIJHtYIggg/yS9YHw8i8O8tgb9pupjeQ==,
+      }
+    dependencies:
+      d3-color: 2.0.0
+    dev: false
+
+  /d3-path@2.0.0:
+    resolution:
+      {
+        integrity: sha512-ZwZQxKhBnv9yHaiWd6ZU4x5BtCQ7pXszEV9CU6kRgwIQVQGLMv1oiL4M+MK/n79sYzsj+gcgpPQSctJUsLN7fA==,
+      }
+    dev: false
+
+  /d3-scale@3.3.0:
+    resolution:
+      {
+        integrity: sha512-1JGp44NQCt5d1g+Yy+GeOnZP7xHo0ii8zsQp6PGzd+C1/dl0KGsp9A7Mxwp+1D1o4unbTTxVdU/ZOIEBoeZPbQ==,
+      }
+    dependencies:
+      d3-array: 2.12.1
+      d3-format: 2.0.0
+      d3-interpolate: 2.0.1
+      d3-time: 2.1.1
+      d3-time-format: 3.0.0
+    dev: false
+
+  /d3-shape@2.1.0:
+    resolution:
+      {
+        integrity: sha512-PnjUqfM2PpskbSLTJvAzp2Wv4CZsnAgTfcVRTwW03QR3MkXF8Uo7B1y/lWkAsmbKwuecto++4NlsYcvYpXpTHA==,
+      }
+    dependencies:
+      d3-path: 2.0.0
+    dev: false
+
+  /d3-time-format@3.0.0:
+    resolution:
+      {
+        integrity: sha512-UXJh6EKsHBTjopVqZBhFysQcoXSv/5yLONZvkQ5Kk3qbwiUYkdX17Xa1PT6U1ZWXGGfB1ey5L8dKMlFq2DO0Ag==,
+      }
+    dependencies:
+      d3-time: 2.1.1
+    dev: false
+
+  /d3-time-format@4.1.0:
+    resolution:
+      {
+        integrity: sha512-dJxPBlzC7NugB2PDLwo9Q8JiTR3M3e4/XANkreKSUxF8vvXKqm1Yfq4Q5dl8budlunRVlUUaDUgFt7eA8D6NLg==,
+      }
+    engines: { node: ">=12" }
+    dependencies:
+      d3-time: 2.1.1
+    dev: false
+
+  /d3-time@2.1.1:
+    resolution:
+      {
+        integrity: sha512-/eIQe/eR4kCQwq7yxi7z4c6qEXf2IYGcjoWB5OOQy4Tq9Uv39/947qlDcN2TLkiTzQWzvnsuYPB9TrWaNfipKQ==,
+      }
+    dependencies:
+      d3-array: 2.12.1
+    dev: false
+
   /damerau-levenshtein@1.0.8:
     resolution:
       {
@@ -2957,6 +3258,13 @@ packages:
       ms: 2.1.2
     dev: true
 
+  /decode-formdata@0.4.0:
+    resolution:
+      {
+        integrity: sha512-/OMUlsRLrSgHPOWCwembsFFTT4DY7Ts9GGlwK8v9yeLOyYZSPKIfn/1oOuV9UmpQ9CZi5JeyT8edunRoBOOl5g==,
+      }
+    dev: false
+
   /deep-is@0.1.4:
     resolution:
       {
@@ -2995,6 +3303,13 @@ packages:
       has-property-descriptors: 1.0.1
       object-keys: 1.1.1
     dev: true
+
+  /delaunator@4.0.1:
+    resolution:
+      {
+        integrity: sha512-WNPWi1IRKZfCt/qIDMfERkDp93+iZEmOxN2yy4Jg+Xhv8SLk2UTqqbe1sfiipn0and9QrE914/ihdx82Y/Giag==,
+      }
+    dev: false
 
   /delayed-stream@1.0.0:
     resolution:
@@ -4132,6 +4447,13 @@ packages:
       hasown: 2.0.0
       side-channel: 1.0.4
     dev: true
+
+  /internmap@1.0.1:
+    resolution:
+      {
+        integrity: sha512-lDB5YccMydFBtasVtxnZ3MRBHuaoE8GKsppq+EchKL2U4nK/DmEpPHNH8MZe5HkMtpSiTSOZwfN0tzYjO/lJEw==,
+      }
+    dev: false
 
   /invariant@2.2.4:
     resolution:
@@ -5333,6 +5655,20 @@ packages:
     engines: { node: ">= 0.8.0" }
     dev: true
 
+  /prettier-plugin-tailwind@2.2.12(prettier@3.2.4)(tailwindcss@3.4.1):
+    resolution:
+      {
+        integrity: sha512-2SvZxpsYme0g5MrxGsKM43rx28f9AVlJrbwMnx4a03svCfsHwVGtcN6oN1YlClnEwZbquu3IhVAMcawEMKTjuA==,
+      }
+    peerDependencies:
+      prettier: ^2.0.0
+      tailwindcss: "*"
+    dependencies:
+      prettier: 3.2.4
+      tailwind-classes-sorter: 0.2.5
+      tailwindcss: 3.4.1(ts-node@10.9.2)
+    dev: true
+
   /prettier-plugin-tailwindcss@0.5.11(prettier@3.2.4):
     resolution:
       {
@@ -5463,6 +5799,33 @@ packages:
         integrity: sha512-ARhCpm70fzdcvNQfPoy49IaanKkTlRWF2JMzqhcJbhSFRZv7nPTvZJdcY7301IPmvW+/p0RgIWnQDLJxifsQ7g==,
       }
     engines: { node: ">=8" }
+    dev: false
+
+  /react-charts@3.0.0-beta.57(react-dom@18.2.0)(react@18.2.0):
+    resolution:
+      {
+        integrity: sha512-vqas7IQhsnDGcMxreGaWXvSIL3poEMoUBNltJrslz/+m0pI3QejBCszL1QrLNYQfOWXrbZADfedi/a+yWOQ7Hw==,
+      }
+    peerDependencies:
+      react: ">=16"
+      react-dom: ">=16"
+    dependencies:
+      "@babel/runtime": 7.23.8
+      "@types/d3-array": 3.2.1
+      "@types/d3-scale": 4.0.8
+      "@types/d3-shape": 3.1.6
+      "@types/raf": 3.4.3
+      "@types/react": 17.0.75
+      "@types/react-dom": 17.0.25
+      d3-array: 2.12.1
+      d3-delaunay: 5.3.0
+      d3-scale: 3.3.0
+      d3-shape: 2.1.0
+      d3-time: 2.1.1
+      d3-time-format: 4.1.0
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      ts-toolbelt: 9.6.0
     dev: false
 
   /react-day-picker@8.10.0(date-fns@3.3.0)(react@18.2.0):
@@ -5630,6 +5993,24 @@ packages:
       define-properties: 1.2.1
       set-function-name: 2.0.1
     dev: true
+
+  /rehackt@0.0.3(@types/react@18.2.48)(react@18.2.0):
+    resolution:
+      {
+        integrity: sha512-aBRHudKhOWwsTvCbSoinzq+Lej/7R8e8UoPvLZo5HirZIIBLGAgdG7SL9QpdcBoQ7+3QYPi3lRLknAzXBlhZ7g==,
+      }
+    peerDependencies:
+      "@types/react": "*"
+      react: "*"
+    peerDependenciesMeta:
+      "@types/react":
+        optional: true
+      react:
+        optional: true
+    dependencies:
+      "@types/react": 18.2.48
+      react: 18.2.0
+    dev: false
 
   /requires-port@1.0.0:
     resolution:
@@ -6164,6 +6545,15 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
+  /tailwind-classes-sorter@0.2.5:
+    resolution:
+      {
+        integrity: sha512-7S0AaDitt+Fjy9m3v0GrQ/KZrCswNDD25SSXX9U/HIB5h9lk0ImSkq/VVcnzu78cRQxR0fFfvHYFdfcqN3dCGA==,
+      }
+    dependencies:
+      find-up: 5.0.0
+    dev: true
+
   /tailwind-merge@1.14.0:
     resolution:
       {
@@ -6347,6 +6737,13 @@ packages:
       typescript: 5.3.3
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
+
+  /ts-toolbelt@9.6.0:
+    resolution:
+      {
+        integrity: sha512-nsZd8ZeNUzukXPlJmTBwUAuABDe/9qtVDelJeT/qW0ow3ZS3BsQJtNkan1802aM9Uf68/Y8ljw86Hu0h5IUW3w==,
+      }
+    dev: false
 
   /tsconfig-paths@3.15.0:
     resolution:
