@@ -1,4 +1,3 @@
-"use client";
 import {
   SignedIn,
   SignedOut,
@@ -7,6 +6,7 @@ import {
   SignUpButton,
 } from "@clerk/nextjs";
 import { ModeToggle } from "@/components/mode-toggle";
+import CurrentUser from "@/components/current-user";
 
 export default function Home() {
   return (
@@ -20,6 +20,7 @@ export default function Home() {
           <SignInButton>Sign In</SignInButton>
           <SignUpButton>Sign Up</SignUpButton>
         </SignedOut>
+        <CurrentUser />
       </main>
     </>
   );
