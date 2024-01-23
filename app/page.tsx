@@ -6,11 +6,13 @@ import {
   SignInButton,
   SignUpButton,
 } from "@clerk/nextjs";
+import { ModeToggle } from "@/components/mode-toggle";
 
 export default function Home() {
   return (
     <>
       <main>
+        <ModeToggle />
         <SignedIn>
           <UserButton />
         </SignedIn>
