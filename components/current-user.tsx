@@ -1,14 +1,12 @@
-import { currentUser, SignInButton } from "@clerk/nextjs";
+import { currentUser } from "@clerk/nextjs";
 
 export default async function Page() {
   const user = await currentUser();
 
-  if (!user)
-    return (
-      <div>
-        <SignInButton />
-      </div>
-    );
-
-  return <div>Hello {user?.firstName}</div>;
+  return (
+    <>
+      <div>Welcome, {user?.firstName}.</div>
+      <div className="px-1" />
+    </>
+  );
 }

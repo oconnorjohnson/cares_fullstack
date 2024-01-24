@@ -1,19 +1,19 @@
-import { ModeToggle } from "@/components/mode-toggle";
-import CurrentUser from "@/components/current-user";
-import ExampleUploader from "@/components/example-uploader";
-import { SignedIn, UserButton } from "@clerk/nextjs";
-import NavBar from "@/components/navbar";
+import { auth, SignedIn, SignedOut } from "@clerk/nextjs";
+import ClientDashboard from "@/components/client-dashboard";
+import AdminDashboard from "@/components/admin-dashboard";
+import Hero from "@/components/hero";
 
 export default function Home() {
+  const { sessionClaims } = auth();
+  const isAdmin = (sessionClaims?.publicMetadata as any)?.admin;
   return (
     <>
       <main>
-        <NavBar />
-        <ModeToggle />
-        <CurrentUser />
+        <SignedOut>
+          <Hero />
+        </SignedOut>
         <SignedIn>
-          <UserButton />
-          <ExampleUploader />
+          {isAdmin ? <AdminDashboard /> : <ClientDashboard />}
         </SignedIn>
       </main>
     </>
