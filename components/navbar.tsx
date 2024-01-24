@@ -71,12 +71,11 @@ export default function SignedInNavBar() {
                       >
                         {/* <Icons.logo className="h-6 w-6" /> */}
                         <div className="mb-2 mt-4 text-lg font-medium">
-                          shadcn/ui
+                          CARES
                         </div>
                         <p className="text-sm leading-tight text-muted-foreground">
-                          Beautifully designed components that you can copy and
-                          paste into your apps. Accessible. Customizable. Open
-                          Source.
+                          Holistic support for members of our community
+                          struggling to navigate the criminal justice system.
                         </p>
                       </a>
                     </NavigationMenuLink>
@@ -113,9 +112,9 @@ export default function SignedInNavBar() {
               </NavigationMenuContent>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="/docs" legacyBehavior passHref>
+              <Link href="/dashboard" legacyBehavior passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Documentation
+                  Dashboard
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
