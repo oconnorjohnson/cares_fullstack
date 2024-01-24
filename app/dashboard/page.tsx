@@ -1,7 +1,9 @@
 import { auth, SignedIn } from "@clerk/nextjs";
-import ClientDashboard from "@/components/client-dashboard";
-import AdminDashboard from "@/components/admin-dashboard";
+import dynamic from "next/dynamic";
 import Hero from "@/components/hero";
+
+const ClientDashboard = dynamic(() => import("@/components/client-dashboard"));
+const AdminDashboard = dynamic(() => import("@/components/admin-dashboard"));
 
 export default function Home() {
   const { sessionClaims } = auth();
