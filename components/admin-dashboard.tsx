@@ -1,5 +1,4 @@
 import CurrentUser from "@/components/current-user";
-import { SignedIn, SignedOut } from "@clerk/nextjs";
 
 export default function Dashboard() {
   return (
