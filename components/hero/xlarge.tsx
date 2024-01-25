@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function Hero() {
   return (
     <>
-      <div className="flex flex-col items-center h-full space-y-10 py-10 sm:py-12 md:py-16 lg:py-20 xl:py-28 2xl:py-40">
+      <div className="hidden xl:block flex flex-col items-center h-full space-y-10 py-10 sm:py-12 md:py-16 lg:py-20 xl:py-28 2xl:py-40">
         {/* <div className="py-2" /> */}
         <Image
           src="/hero.svg"
