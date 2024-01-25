@@ -2,7 +2,7 @@ import { auth, SignedIn } from "@clerk/nextjs";
 import dynamic from "next/dynamic";
 import Hero from "@/components/hero";
 
-const ClientDashboard = dynamic(() => import("@/components/client-dashboard"));
+const UserDashboard = dynamic(() => import("@/components/user-dashboard"));
 const AdminDashboard = dynamic(() => import("@/components/admin-dashboard"));
 
 export default function Home() {
@@ -10,7 +10,7 @@ export default function Home() {
   const isAdmin = (sessionClaims?.publicMetadata as any)?.admin;
   return (
     <>
-      <div>{isAdmin ? <AdminDashboard /> : <ClientDashboard />}</div>
+      <div>{isAdmin ? <AdminDashboard /> : <UserDashboard />}</div>
     </>
   );
 }

@@ -83,9 +83,21 @@ dependencies:
   "@tanstack/react-table":
     specifier: ^8.11.7
     version: 8.11.7(react-dom@18.2.0)(react@18.2.0)
+  "@trpc/client":
+    specifier: 10.45.0
+    version: 10.45.0(@trpc/server@10.45.0)
+  "@trpc/next":
+    specifier: 10.45.0
+    version: 10.45.0(@tanstack/react-query@5.17.19)(@trpc/client@10.45.0)(@trpc/react-query@10.45.0)(@trpc/server@10.45.0)(next@14.1.0)(react-dom@18.2.0)(react@18.2.0)
+  "@trpc/react-query":
+    specifier: 10.45.0
+    version: 10.45.0(@tanstack/react-query@5.17.19)(@trpc/client@10.45.0)(@trpc/server@10.45.0)(react-dom@18.2.0)(react@18.2.0)
+  "@trpc/server":
+    specifier: 10.45.0
+    version: 10.45.0
   "@uploadthing/react":
-    specifier: ^6.2.0
-    version: 6.2.0(next@14.1.0)(react@18.2.0)(uploadthing@6.2.0)
+    specifier: ^6.2.1
+    version: 6.2.1(next@14.1.0)(react@18.2.0)(uploadthing@6.3.0)
   class-variance-authority:
     specifier: ^0.7.0
     version: 0.7.0
@@ -110,6 +122,9 @@ dependencies:
   next-themes:
     specifier: ^0.2.1
     version: 0.2.1(next@14.1.0)(react-dom@18.2.0)(react@18.2.0)
+  prettier-plugin-tailwindcss:
+    specifier: ^0.5.11
+    version: 0.5.11(prettier@3.2.4)
   react:
     specifier: ^18
     version: 18.2.0
@@ -131,6 +146,9 @@ dependencies:
   sonner:
     specifier: ^1.3.1
     version: 1.3.1(react-dom@18.2.0)(react@18.2.0)
+  superjson:
+    specifier: ^2.2.1
+    version: 2.2.1
   svix:
     specifier: ^1.15.0
     version: 1.15.0
@@ -141,8 +159,8 @@ dependencies:
     specifier: ^1.0.7
     version: 1.0.7(tailwindcss@3.4.1)
   uploadthing:
-    specifier: ^6.2.0
-    version: 6.2.0
+    specifier: ^6.3.0
+    version: 6.3.0
   zod:
     specifier: ^3.22.4
     version: 3.22.4
@@ -184,9 +202,6 @@ devDependencies:
   prettier-plugin-tailwind:
     specifier: ^2.2.12
     version: 2.2.12(prettier@3.2.4)(tailwindcss@3.4.1)
-  prettier-plugin-tailwindcss:
-    specifier: ^0.5.11
-    version: 0.5.11(prettier@3.2.4)
   prisma:
     specifier: ^5.8.1
     version: 5.8.1
@@ -2072,6 +2087,66 @@ packages:
     engines: { node: ">=12" }
     dev: false
 
+  /@trpc/client@10.45.0(@trpc/server@10.45.0):
+    resolution:
+      {
+        integrity: sha512-m091R1qte9rvkvL8N1e/mzrbb8S4gb+Q4ZNJnEGDgd7kic/6a8DFgSciBTiCoSp0YwOTVhyQzSrrA/sZI6PhBg==,
+      }
+    peerDependencies:
+      "@trpc/server": 10.45.0
+    dependencies:
+      "@trpc/server": 10.45.0
+    dev: false
+
+  /@trpc/next@10.45.0(@tanstack/react-query@5.17.19)(@trpc/client@10.45.0)(@trpc/react-query@10.45.0)(@trpc/server@10.45.0)(next@14.1.0)(react-dom@18.2.0)(react@18.2.0):
+    resolution:
+      {
+        integrity: sha512-saXajAb5GBpos9BNEtq/BeTOxmM4oCP3kyuGlMopNtHoacr71xHCItFnLsPWffM4DVW88uOXCFWaOtpOs5ThBw==,
+      }
+    peerDependencies:
+      "@tanstack/react-query": ^4.18.0
+      "@trpc/client": 10.45.0
+      "@trpc/react-query": 10.45.0
+      "@trpc/server": 10.45.0
+      next: "*"
+      react: ">=16.8.0"
+      react-dom: ">=16.8.0"
+    dependencies:
+      "@tanstack/react-query": 5.17.19(react@18.2.0)
+      "@trpc/client": 10.45.0(@trpc/server@10.45.0)
+      "@trpc/react-query": 10.45.0(@tanstack/react-query@5.17.19)(@trpc/client@10.45.0)(@trpc/server@10.45.0)(react-dom@18.2.0)(react@18.2.0)
+      "@trpc/server": 10.45.0
+      next: 14.1.0(react-dom@18.2.0)(react@18.2.0)
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@trpc/react-query@10.45.0(@tanstack/react-query@5.17.19)(@trpc/client@10.45.0)(@trpc/server@10.45.0)(react-dom@18.2.0)(react@18.2.0):
+    resolution:
+      {
+        integrity: sha512-MMc2pLwoaLZVwvLQyzJv3uEmdG3lORhifhVzR/drtavwDYwt+OEvH0w3s1zC7RaDdFpc6Nj2kkpHmdoU7BlAAw==,
+      }
+    peerDependencies:
+      "@tanstack/react-query": ^4.18.0
+      "@trpc/client": 10.45.0
+      "@trpc/server": 10.45.0
+      react: ">=16.8.0"
+      react-dom: ">=16.8.0"
+    dependencies:
+      "@tanstack/react-query": 5.17.19(react@18.2.0)
+      "@trpc/client": 10.45.0(@trpc/server@10.45.0)
+      "@trpc/server": 10.45.0
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@trpc/server@10.45.0:
+    resolution:
+      {
+        integrity: sha512-2Fwzv6nqpE0Ie/G7PeS0EVR89zLm+c1Mw7T+RAGtU807j4oaUx0zGkBXTu5u9AI+j+BYNN2GZxJcuDTAecbr1A==,
+      }
+    dev: false
+
   /@tsconfig/node10@1.0.9:
     resolution:
       {
@@ -2445,10 +2520,10 @@ packages:
       }
     dev: false
 
-  /@uploadthing/react@6.2.0(next@14.1.0)(react@18.2.0)(uploadthing@6.2.0):
+  /@uploadthing/react@6.2.1(next@14.1.0)(react@18.2.0)(uploadthing@6.3.0):
     resolution:
       {
-        integrity: sha512-DTD4R9OaVH/UDbs+J/s2UFMjNVQfHA+FCjAUEoa1JgTXQUfP8HvpOl8pCMcLqWx555e98bZrSgw50LjsOWGS0A==,
+        integrity: sha512-EPyOtxEyD/alcp5DSHjI1GkcAVRgI8EonUYn1xVSCQCJLXv0CctuPpKJhpVD5UuZwcBW9qBY37NwTK3Ac67fRg==,
       }
     peerDependencies:
       next: "*"
@@ -2459,21 +2534,21 @@ packages:
         optional: true
     dependencies:
       "@uploadthing/dropzone": 0.1.1
-      "@uploadthing/shared": 6.1.0(@uploadthing/mime-types@0.2.2)
+      "@uploadthing/shared": 6.2.0(@uploadthing/mime-types@0.2.2)
       attr-accept: 2.2.2
       file-selector: 0.6.0
       next: 14.1.0(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
       tailwind-merge: 1.14.0
-      uploadthing: 6.2.0
+      uploadthing: 6.3.0
     transitivePeerDependencies:
       - "@uploadthing/mime-types"
     dev: false
 
-  /@uploadthing/shared@6.1.0(@uploadthing/mime-types@0.2.2):
+  /@uploadthing/shared@6.2.0(@uploadthing/mime-types@0.2.2):
     resolution:
       {
-        integrity: sha512-pZNTqq/3QbAnLF6wRKAa9lM7MxdP057z3W3E6vZiHnhmwmdMllJpaVs3TWqe0wbSy6jcDDRLhDCuU/Vvr2KsZw==,
+        integrity: sha512-GMC1gwZa9X48RZwuY7gGse7E8TXYMAMUNaYWEQL2ctVhMZv7viCPyMyZ0yMqBsQmOeGfbmycPnUeNE9IuesJGg==,
       }
     peerDependencies:
       "@uploadthing/mime-types": ^0.2.2
@@ -2482,6 +2557,7 @@ packages:
         optional: true
     dependencies:
       "@uploadthing/mime-types": 0.2.2
+      std-env: 3.7.0
     dev: false
 
   /acorn-jsx@5.3.2(acorn@8.11.3):
@@ -3077,6 +3153,16 @@ packages:
         integrity: sha512-YZ3GUyn/o8gfKJlnlX7g7xq4gyO6OSuhGPKaaGssGB2qgDUS0gPgtTvoyZLTt9Ab6dC4hfc9dV5arkvc/OCmrw==,
       }
     engines: { node: ">= 0.6" }
+    dev: false
+
+  /copy-anything@3.0.5:
+    resolution:
+      {
+        integrity: sha512-yCEafptTtb4bk7GLEQoM8KVJpxAfdBJYaXyzQEgQQQgYrZiDp8SJmGKlYza6CYjEDNstAdNdKA3UuoULlEbS6w==,
+      }
+    engines: { node: ">=12.13" }
+    dependencies:
+      is-what: 4.1.16
     dev: false
 
   /create-require@1.1.1:
@@ -4731,6 +4817,14 @@ packages:
       get-intrinsic: 1.2.2
     dev: true
 
+  /is-what@4.1.16:
+    resolution:
+      {
+        integrity: sha512-ZhMwEosbFJkA0YhFnNDgTM4ZxDRsS6HqTo7qsZM08fehyRYIYa0yHu5R6mgo1n/8MgaPBXiPimPD77baVFYg+A==,
+      }
+    engines: { node: ">=12.13" }
+    dev: false
+
   /isarray@2.0.5:
     resolution:
       {
@@ -5722,7 +5816,7 @@ packages:
         optional: true
     dependencies:
       prettier: 3.2.4
-    dev: true
+    dev: false
 
   /prettier@3.2.4:
     resolution:
@@ -5731,7 +5825,6 @@ packages:
       }
     engines: { node: ">=14" }
     hasBin: true
-    dev: true
 
   /prisma@5.8.1:
     resolution:
@@ -6310,6 +6403,13 @@ packages:
       }
     engines: { node: ">=0.10.0" }
 
+  /std-env@3.7.0:
+    resolution:
+      {
+        integrity: sha512-JPbdCEQLj1w5GilpiHAx3qJvFndqybBysA3qUOnznweH4QbNYUsW/ea8QzSrnh0vNsezMMw5bcVool8lM0gwzg==,
+      }
+    dev: false
+
   /streamsearch@1.1.0:
     resolution:
       {
@@ -6488,6 +6588,16 @@ packages:
       mz: 2.7.0
       pirates: 4.0.6
       ts-interface-checker: 0.1.13
+
+  /superjson@2.2.1:
+    resolution:
+      {
+        integrity: sha512-8iGv75BYOa0xRJHK5vRLEjE2H/i4lulTjzpUXic3Eg8akftYjkmQDa8JARQ42rlczXyFR3IeRoeFCc7RxHsYZA==,
+      }
+    engines: { node: ">=16" }
+    dependencies:
+      copy-anything: 3.0.5
+    dev: false
 
   /supports-color@7.2.0:
     resolution:
@@ -6895,16 +7005,17 @@ packages:
       picocolors: 1.0.0
     dev: true
 
-  /uploadthing@6.2.0:
+  /uploadthing@6.3.0:
     resolution:
       {
-        integrity: sha512-QP32VguzERaa/xeu8swvkBTUz6am7118zRXcK0rA/k+E8O7kNEdPKI43vMxDWMQMNwm0YVjsHWZLsBsj6Z6Xig==,
+        integrity: sha512-Herfy6a59jFv+5pAKuyUHZrOGcDrtfo7jqKOOhfd80/5vae8LCESVauJj37ZIoUVaPQzNs6sqvF3g86O4+JNFg==,
       }
     engines: { node: ">=18.13.0" }
     dependencies:
       "@uploadthing/mime-types": 0.2.2
-      "@uploadthing/shared": 6.1.0(@uploadthing/mime-types@0.2.2)
+      "@uploadthing/shared": 6.2.0(@uploadthing/mime-types@0.2.2)
       consola: 3.2.3
+      std-env: 3.7.0
     dev: false
 
   /uri-js@4.4.1:

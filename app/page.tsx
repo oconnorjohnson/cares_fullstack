@@ -1,10 +1,10 @@
-import XLHero from "@/components/hero/xlarge";
+import Hero from "@/components/hero";
 
 export default function Home() {
   return (
     <>
       <main>
-        <XLHero />
+        <Hero />
       </main>
     </>
   );

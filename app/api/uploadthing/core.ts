@@ -10,10 +10,10 @@ export const ourFileRouter = {
   // Define as many FileRoutes as you like, each with a unique routeSlug
   pdfUploader: f({ pdf: { maxFileSize: "16MB" } })
     // Set permissions and file types for this FileRoute
-    .middleware(async ({ req }) => {
+    .middleware(async ({ req, files }) => {
       // This code runs on your server before upload
       const user = await auth(req);
-
+      const uploadCount = files.length;
       // If you throw, the user will not be able to upload
       if (!user) throw new Error("Unauthorized");
 

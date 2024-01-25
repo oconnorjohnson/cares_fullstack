@@ -14,6 +14,7 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import SignInButton from "@/components/sign-in-button";
+import Image from "next/image";
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -56,7 +57,9 @@ export default function SignedInNavBar() {
   return (
     <>
       <div className="p-4 flex flex-row justify-between  m-4">
-        <ModeToggle />
+        <Link href="/">
+          <Image src="/logo.png" height="50" width="50" alt="logo" />
+        </Link>
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
@@ -124,7 +127,11 @@ export default function SignedInNavBar() {
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
-        <SignInButton />
+        <div className="flex flex-row justify-center items-center">
+          <ModeToggle />
+          <div className="px-2" />
+          <SignInButton />
+        </div>
       </div>
     </>
   );

@@ -9,16 +9,100 @@ generator client {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  userId String @unique
-  first_name  String
-  last_name   String
-  emailAddresses EmailAddress[]
+  id              Int             @id @default(autoincrement())
+  userId          String          @unique
+  first_name      String
+  last_name       String
+  emailAddresses  EmailAddress[]
+  agencyId        Int?
+  agency          Agency?          @relation(fields: [agencyId], references: [id])
+  clients         Client[]
+  requests        Request[]
+  isBanned        Boolean         @default(false)
 }
 
 model EmailAddress {
-  id Int @id @default(autoincrement())
-  email String @unique
-  userId String
-  user User @relation(fields: [userId], references: [userId])
+  id      Int    @id @default(autoincrement())
+  email   String @unique
+  userId  String
+  user    User   @relation(fields: [userId], references: [userId])
 }
+
+model Agency {
+  id      Int     @id @default(autoincrement())
+  name    String
+  users   User[]
+}
+
+model Client {
+  id              Int         @id @default(autoincrement())
+  fullName        String
+  contactInfo     String?     // Optional contact information
+  clientID        String      @unique
+  caseNumber      String?     // Optional case number
+  age             Int?
+  sex             String?
+  race            String?
+  userId          Int         // Add this line
+  user            User        @relation(fields: [userId], references: [id]) // Add this line
+  requests        Request[]
+}
+
+
+model Request {
+  id                Int             @id @default(autoincrement())
+  clientId          Int
+  client            Client          @relation(fields: [clientId], references: [id])
+  userId            Int
+  user              User            @relation(fields: [userId], references: [id])
+  status            String          // Enum may be used here for predefined statuses
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  preScreenForm     PreScreenForm?
+  postScreenForm    PostScreenForm?
+  funds             Fund[]
+  receiptUrl        String?         // URL to the PDF receipt, nullable
+}
+
+model Fund {
+  id            Int        @id @default(autoincrement())
+  requestId     Int
+  request       Request    @relation(fields: [requestId], references: [id])
+  fundTypeId    Int
+  fundType      FundType   @relation(fields: [fundTypeId], references: [id])
+  amount        Decimal?   // Nullable for non-monetary funds like bus passes
+  details       String?    // JSON string or link to more detailed information
+}
+
+model FundType {
+  id        Int     @id @default(autoincrement())
+  typeName  String
+  funds     Fund[]
+}
+
+model PreScreenForm {
+  id              Int               @id @default(autoincrement())
+  requestId       Int               @unique // Change this line
+  request         Request           @relation(fields: [requestId], references: [id])
+  answers         Answer[]          // Change to use a related model
+  additionalNotes String?           // Optional field for additional notes
+}
+
+model PostScreenForm {
+  id              Int               @id @default(autoincrement())
+  requestId       Int               @unique // Change this line
+  request         Request           @relation(fields: [requestId], references: [id])
+  answers         Answer[]          // Change to use a related model
+  additionalNotes String?           // Optional field for additional notes
+  completedAt     DateTime?         // Track when the post-screen is completed, nullable
+}
+
+model Answer {
+  id              Int               @id @default(autoincrement())
+  value           Int               // The actual answer value
+  preScreenFormId Int?
+  postScreenFormId Int?
+  preScreenForm   PreScreenForm?    @relation(fields: [preScreenFormId], references: [id])
+  postScreenForm  PostScreenForm?   @relation(fields: [postScreenFormId], references: [id])
+}
+
