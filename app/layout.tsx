@@ -5,7 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme-provider";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
-import Providers from "@/lib/providers";
+import Providers from "@/app/_trpc/Provider";
 import NavBar from "@/components/navbar";
 
 import { ourFileRouter } from "@/app/api/uploadthing/core";
