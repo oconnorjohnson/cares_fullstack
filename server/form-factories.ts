@@ -2,13 +2,13 @@ import { createFormFactory } from "@tanstack/react-form";
 
 export const newClientFactory = createFormFactory({
   defaultValues: {
-    first_name: "",
-    last_name: "",
-    contactInfo: "",
-    caseNumber: "",
-    age: 0,
-    sex: "",
-    race: "",
+    first_name: "First Name",
+    last_name: "Last Name",
+    contactInfo: "Phone # or Email Address",
+    caseNumber: "Example: CR201954",
+    age: 55,
+    sex: "Male",
+    race: "White",
   },
   onServerValidate({ value }) {
     if (!value.first_name) {

@@ -123,9 +123,9 @@ export default function NewClient() {
                 <SelectValue>{field.state.value || "Select Sex"}</SelectValue>
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="male">Male</SelectItem>
-                <SelectItem value="female">Female</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
+                <SelectItem value="Male">Male</SelectItem>
+                <SelectItem value="Female">Female</SelectItem>
+                <SelectItem value="Other">Other</SelectItem>
               </SelectContent>
             </Select>
           )}
@@ -138,9 +138,10 @@ export default function NewClient() {
               </SelectTrigger>
               <SelectContent>
                 {/* Replace with actual race options */}
-                <SelectItem value="race1">Race 1</SelectItem>
-                <SelectItem value="race2">Race 2</SelectItem>
-                <SelectItem value="race3">Race 3</SelectItem>
+                <SelectItem value="Black">Black</SelectItem>
+                <SelectItem value="White">White</SelectItem>
+                <SelectItem value="Hispanic">Hispanic</SelectItem>
+                <SelectItem value="AAPI">AAPI</SelectItem>
               </SelectContent>
             </Select>
           )}
