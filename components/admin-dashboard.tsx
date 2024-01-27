@@ -1,13 +1,15 @@
 import CurrentUser from "@/components/current-user";
-import TestList from "@/components/test-list-users";
+import TodoList from "@/components/TodoList";
+import { serverClient } from "@/app/_trpc/serverClient";
 
-export default function Dashboard() {
+export default async function Dashboard() {
+  const todos = await serverClient.getTodos();
   return (
     <>
       <div className="">
         <div className="flex flex-row justify-center">
           <CurrentUser /> You are an admin.
-          <TestList />
+          <TodoList />
         </div>
       </div>
     </>

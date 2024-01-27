@@ -5,7 +5,9 @@ export default async function Page() {
 
   return (
     <>
-      <div>Welcome, {user?.firstName}.</div>
+      <div>
+        Welcome, {user?.firstName}. Your User ID is: {user?.id}
+      </div>
       <div className="px-1" />
     </>
   );
