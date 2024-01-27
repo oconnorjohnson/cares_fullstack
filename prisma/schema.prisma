@@ -14,13 +14,11 @@ model User {
   first_name     String
   last_name      String
   emailAddresses EmailAddress[]
-  agencyId       Int?
-  agency         Agency?        @relation(fields: [agencyId], references: [id])
   clients        Client[]
   requests       Request[]
   isBanned       Boolean        @default(false)
 
-  @@index([userId, agencyId])
+  @@index([userId])
 }
 
 model EmailAddress {
@@ -28,19 +26,21 @@ model EmailAddress {
   email  String @unique
   userId String
   user   User   @relation(fields: [userId], references: [userId])
+
+  @@index([userId])
 }
 
 model Agency {
-  id    Int    @id @default(autoincrement())
-  name  String
-  users User[]
+  id       Int       @id @default(autoincrement())
+  name     String
+  requests Request[]
 }
 
 model Client {
   id          Int       @id @default(autoincrement())
-  fullName    String
+  first_name  String
+  last_name   String
   contactInfo String? // Optional contact information
-  clientID    String    @unique
   caseNumber  String? // Optional case number
   age         Int?
   sex         String?
@@ -49,7 +49,7 @@ model Client {
   user        User      @relation(fields: [userId], references: [id])
   requests    Request[]
 
-  @@index([userId, clientID])
+  @@index([userId])
 }
 
 model Fund {
@@ -60,6 +60,8 @@ model Fund {
   fundType   FundType @relation(fields: [fundTypeId], references: [id])
   amount     Decimal? // Nullable for non-monetary funds like bus passes
   details    String? // JSON string or link to more detailed information
+
+  @@index([requestId, fundTypeId])
 }
 
 model FundType {
@@ -74,6 +76,8 @@ model Request {
   client              Client              @relation(fields: [clientId], references: [id])
   userId              Int
   user                User                @relation(fields: [userId], references: [id])
+  agencyId            Int
+  agency              Agency              @relation(fields: [agencyId], references: [id])
   status              String
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
@@ -85,7 +89,7 @@ model Request {
   postScreenAnswerId  Int?
   Fund                Fund[]
 
-  @@index([clientId, userId])
+  @@index([clientId, userId, agencyId])
 }
 
 model RequestFormAnswers {

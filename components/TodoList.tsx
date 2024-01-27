@@ -1,17 +1,17 @@
-"use client";
-import { trpc } from "@/app/_trpc/client";
+// "use client";
+// import { trpc } from "@/app/_trpc/client";
 
-export default function TodoList() {
-  const getTodos = trpc.getTodos.useQuery();
-  // const addTodo = trpc.addTodo.useMutation({
-  // onSettled: () => {
-  // getTodos.refetch();
-  // }
-  // })
+// export default function TodoList() {
+//   // const getUser = trpc.getUser.useQuery();
+//   // const addTodo = trpc.addTodo.useMutation({
+//   // onSettled: () => {
+//   // getTodos.refetch();
+//   // }
+//   // })
 
-  return (
-    <div>
-      <div>{JSON.stringify(getTodos.data)}</div>
-    </div>
-  );
-}
+//   return (
+//     <div>
+//       <div>{JSON.stringify(getUser.data)}</div>
+//     </div>
+//   );
+// }
