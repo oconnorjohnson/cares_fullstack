@@ -1,5 +1,5 @@
 import CurrentUser from "@/components/current-user";
-import TodoList from "@/components/TodoList";
+import NewClient from "@/components/forms/NewClient";
 import { serverClient } from "@/app/_trpc/serverClient";
 
 export default async function Dashboard() {
@@ -9,7 +9,7 @@ export default async function Dashboard() {
       <div className="">
         <div className="flex flex-row justify-center">
           <CurrentUser /> You are an admin.
-          <TodoList />
+          <NewClient />
         </div>
       </div>
     </>
