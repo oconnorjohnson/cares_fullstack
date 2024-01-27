@@ -42,7 +42,7 @@ model Client {
   last_name   String
   contactInfo String? // Optional contact information
   caseNumber  String? // Optional case number
-  age         Int?
+  dateOfBirth DateTime?
   sex         String?
   race        String?
   userId      Int

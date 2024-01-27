@@ -1,19 +1,3 @@
-// first_name  String
-// last_name   String
-// contactInfo String?
-// caseNumber  String?
-// age         Int
-// sex         String
-// race        String
-// userId      Int
-// user        User      @relation(fields: [userId], references: [id])
-// requests    Request[]
-
-// @@index([userId, clientId])
-
-// sex && race will be selected from dropdown
-// userId, user, and requests are irrelevant to front-end form
-
 "use client";
 import { FormApi, mergeForm, useTransform } from "@tanstack/react-form";
 import { newClientFactory } from "@/server/form-factories";
@@ -27,6 +11,14 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
 
 export default function NewClient() {
   const [state, action] = useFormState(
@@ -45,121 +37,147 @@ export default function NewClient() {
   const formErrors = useStore((formState) => formState.errors);
 
   return (
-    <Provider>
-      <form action={action as never} onSubmit={() => handleSubmit()}>
-        {formErrors.map((error) => (
-          <p key={error as string}>{error}</p>
-        ))}
+    <div className="px-2">
+      <Provider>
+        <form action={action as never} onSubmit={() => handleSubmit()}>
+          {formErrors.map((error) => (
+            <p key={error as string}>{error}</p>
+          ))}
 
-        {/* Fields for first_name, last_name, contactInfo, caseNumber, age, sex, and race */}
-        <Field name="first_name">
-          {(field) => (
-            <Input
-              name={field.name}
-              value={field.state.value}
-              onChange={(e) => field.setValue(e.target.value)}
-              placeholder="First Name"
-            />
-          )}
-        </Field>
-        <Field name="last_name">
-          {(field) => (
-            <Input
-              name={field.name}
-              value={field.state.value}
-              onChange={(e) => field.setValue(e.target.value)}
-              placeholder="Last Name"
-            />
-          )}
-        </Field>
-        <Field name="contactInfo">
-          {(field) => (
-            <Input
-              name={field.name}
-              value={field.state.value}
-              onChange={(e) => field.setValue(e.target.value)}
-              placeholder="Contact Info"
-            />
-          )}
-        </Field>
-        <Field name="caseNumber">
-          {(field) => (
-            <Input
-              name={field.name}
-              value={field.state.value}
-              onChange={(e) => field.setValue(e.target.value)}
-              placeholder="Case Number"
-            />
-          )}
-        </Field>
-        <Field
-          name="age"
-          validators={{
-            onChange: ({ value }) =>
-              value < 8
-                ? "Client validation: You must be at least 8"
-                : undefined,
-          }}
-        >
-          {(field) => (
-            <div>
+          {/* Fields for first_name, last_name, contactInfo, caseNumber, age, sex, and race */}
+          <div className="py-1" />
+          <Field name="first_name">
+            {(field) => (
               <Input
-                type="number"
+                className=""
+                name={field.name}
                 value={field.state.value}
-                onChange={(e) => field.setValue(e.target.valueAsNumber)}
-                placeholder="Age"
+                onChange={(e) => field.setValue(e.target.value)}
+                placeholder="First Name*"
               />
-              {field.state.meta.errors.map((error) => (
-                <p key={error as string}>{error}</p>
-              ))}
-            </div>
-          )}
-        </Field>
-
-        <Field name="sex">
-          {(field) => (
-            <Select value={field.state.value} onValueChange={field.setValue}>
-              <SelectTrigger aria-label="Sex">
-                <SelectValue>{field.state.value || "Select Sex"}</SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Male">Male</SelectItem>
-                <SelectItem value="Female">Female</SelectItem>
-                <SelectItem value="Other">Other</SelectItem>
-              </SelectContent>
-            </Select>
-          )}
-        </Field>
-        <Field name="race">
-          {(field) => (
-            <Select value={field.state.value} onValueChange={field.setValue}>
-              <SelectTrigger aria-label="Race">
-                <SelectValue>{field.state.value || "Select Race"}</SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                {/* Replace with actual race options */}
-                <SelectItem value="Black">Black</SelectItem>
-                <SelectItem value="White">White</SelectItem>
-                <SelectItem value="Hispanic">Hispanic</SelectItem>
-                <SelectItem value="AAPI">AAPI</SelectItem>
-              </SelectContent>
-            </Select>
-          )}
-        </Field>
-
-        <Subscribe
-          selector={(formState) => [
-            formState.canSubmit,
-            formState.isSubmitting,
-          ]}
-        >
-          {([canSubmit, isSubmitting]) => (
-            <button type="submit" disabled={!canSubmit || isSubmitting}>
-              {isSubmitting ? "Submitting..." : "Submit"}
-            </button>
-          )}
-        </Subscribe>
-      </form>
-    </Provider>
+            )}
+          </Field>
+          <div className="py-1" />
+          <Field name="last_name">
+            {(field) => (
+              <Input
+                className=""
+                name={field.name}
+                value={field.state.value}
+                onChange={(e) => field.setValue(e.target.value)}
+                placeholder="Last Name*"
+              />
+            )}
+          </Field>
+          <div className="py-1" />
+          <Field name="contactInfo">
+            {(field) => (
+              <Input
+                className=""
+                name={field.name}
+                value={field.state.value}
+                onChange={(e) => field.setValue(e.target.value)}
+                placeholder="Phone or Email"
+              />
+            )}
+          </Field>
+          <div className="py-1" />
+          <Field name="caseNumber">
+            {(field) => (
+              <Input
+                className=""
+                name={field.name}
+                value={field.state.value}
+                onChange={(e) => field.setValue(e.target.value)}
+                placeholder="Case Number"
+              />
+            )}
+          </Field>
+          <div className="py-1" />
+          <Field name="dateOfBirth">
+            {(field) => (
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button>
+                    {field.state.value
+                      ? format(new Date(field.state.value), "PPP")
+                      : "Select Date of Birth"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <Calendar
+                    mode="single"
+                    selected={
+                      field.state.value
+                        ? new Date(field.state.value)
+                        : undefined
+                    }
+                    onSelect={(date) => {
+                      //@ts-expect-error
+                      field.setValue(date || null);
+                    }}
+                  />
+                </PopoverContent>
+              </Popover>
+            )}
+          </Field>
+          <div className="py-1" />
+          <Field name="sex">
+            {(field) => (
+              <Select
+                value={field.state.value || ""}
+                onValueChange={(value) => field.setValue(value)}
+              >
+                <SelectTrigger aria-label="Sex">
+                  <SelectValue placeholder="Sex*">
+                    {field.state.value || ""}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Male">Male</SelectItem>
+                  <SelectItem value="Female">Female</SelectItem>
+                  <SelectItem value="Other">Other</SelectItem>
+                  {/* ... other options */}
+                </SelectContent>
+              </Select>
+            )}
+          </Field>
+          <div className="py-1" />
+          <Field name="race">
+            {(field) => (
+              <Select
+                value={field.state.value || ""}
+                onValueChange={(value) => field.setValue(value)}
+              >
+                <SelectTrigger aria-label="Race">
+                  <SelectValue placeholder="Race*">
+                    {field.state.value || ""}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Black">Black</SelectItem>
+                  <SelectItem value="White">White</SelectItem>
+                  <SelectItem value="Hispanic">Hispanic</SelectItem>
+                  <SelectItem value="AAPI">AAPI</SelectItem>
+                </SelectContent>
+              </Select>
+            )}
+          </Field>
+          <div className="py-1" />
+          <Subscribe
+            selector={(formState) => [
+              formState.canSubmit,
+              formState.isSubmitting,
+            ]}
+          >
+            {([canSubmit, isSubmitting]) => (
+              <Button type="submit" disabled={!canSubmit || isSubmitting}>
+                {isSubmitting ? "Submitting..." : "Submit"}
+              </Button>
+            )}
+          </Subscribe>
+        </form>
+      </Provider>
+    </div>
   );
 }
