@@ -19,6 +19,14 @@ import { FormApi, mergeForm, useTransform } from "@tanstack/react-form";
 import { newClientFactory } from "@/server/form-factories";
 import { newClient } from "@/server/actions";
 import { useFormState } from "react-dom";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 
 export default function NewClient() {
   const [state, action] = useFormState(
@@ -43,6 +51,47 @@ export default function NewClient() {
           <p key={error as string}>{error}</p>
         ))}
 
+        {/* Fields for first_name, last_name, contactInfo, caseNumber, age, sex, and race */}
+        <Field name="first_name">
+          {(field) => (
+            <Input
+              name={field.name}
+              value={field.state.value}
+              onChange={(e) => field.setValue(e.target.value)}
+              placeholder="First Name"
+            />
+          )}
+        </Field>
+        <Field name="last_name">
+          {(field) => (
+            <Input
+              name={field.name}
+              value={field.state.value}
+              onChange={(e) => field.setValue(e.target.value)}
+              placeholder="Last Name"
+            />
+          )}
+        </Field>
+        <Field name="contactInfo">
+          {(field) => (
+            <Input
+              name={field.name}
+              value={field.state.value}
+              onChange={(e) => field.setValue(e.target.value)}
+              placeholder="Contact Info"
+            />
+          )}
+        </Field>
+        <Field name="caseNumber">
+          {(field) => (
+            <Input
+              name={field.name}
+              value={field.state.value}
+              onChange={(e) => field.setValue(e.target.value)}
+              placeholder="Case Number"
+            />
+          )}
+        </Field>
         <Field
           name="age"
           validators={{
@@ -52,23 +101,51 @@ export default function NewClient() {
                 : undefined,
           }}
         >
-          {(field) => {
-            return (
-              <div>
-                <input
-                  className="text-black"
-                  name="age"
-                  type="number"
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.valueAsNumber)}
-                />
-                {field.state.meta.errors.map((error) => (
-                  <p key={error as string}>{error}</p>
-                ))}
-              </div>
-            );
-          }}
+          {(field) => (
+            <div>
+              <Input
+                type="number"
+                value={field.state.value}
+                onChange={(e) => field.setValue(e.target.valueAsNumber)}
+                placeholder="Age"
+              />
+              {field.state.meta.errors.map((error) => (
+                <p key={error as string}>{error}</p>
+              ))}
+            </div>
+          )}
         </Field>
+
+        <Field name="sex">
+          {(field) => (
+            <Select value={field.state.value} onValueChange={field.setValue}>
+              <SelectTrigger aria-label="Sex">
+                <SelectValue>{field.state.value || "Select Sex"}</SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="male">Male</SelectItem>
+                <SelectItem value="female">Female</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
+              </SelectContent>
+            </Select>
+          )}
+        </Field>
+        <Field name="race">
+          {(field) => (
+            <Select value={field.state.value} onValueChange={field.setValue}>
+              <SelectTrigger aria-label="Race">
+                <SelectValue>{field.state.value || "Select Race"}</SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                {/* Replace with actual race options */}
+                <SelectItem value="race1">Race 1</SelectItem>
+                <SelectItem value="race2">Race 2</SelectItem>
+                <SelectItem value="race3">Race 3</SelectItem>
+              </SelectContent>
+            </Select>
+          )}
+        </Field>
+
         <Subscribe
           selector={(formState) => [
             formState.canSubmit,
@@ -76,8 +153,8 @@ export default function NewClient() {
           ]}
         >
           {([canSubmit, isSubmitting]) => (
-            <button type="submit" disabled={!canSubmit}>
-              {isSubmitting ? "..." : "Submit"}
+            <button type="submit" disabled={!canSubmit || isSubmitting}>
+              {isSubmitting ? "Submitting..." : "Submit"}
             </button>
           )}
         </Subscribe>
