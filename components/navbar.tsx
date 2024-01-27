@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { ModeToggle } from "@/components/mode-toggle";
-import { cn } from "@/lib/utils";
+import { cn } from "@/server/utils";
 import {
   NavigationMenu,
   NavigationMenuContent,

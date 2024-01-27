@@ -16,8 +16,8 @@
 
 "use client";
 import { FormApi, mergeForm, useTransform } from "@tanstack/react-form";
-import { newClientFactory } from "@/lib/form-factories";
-import { newClient } from "@/lib/actions";
+import { newClientFactory } from "@/server/form-factories";
+import { newClient } from "@/server/actions";
 // @ts-expect-error
 import { experimental_useFormState as useFormState } from "react-dom";
 

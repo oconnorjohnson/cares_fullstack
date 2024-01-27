@@ -1,7 +1,7 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
-import { createUser, updateUser, deleteUser } from "@/lib/prismaFunctions";
+import { createUser, updateUser, deleteUser } from "@/prisma/prismaFunctions";
 
 interface EmailAddress {
   email_address: string;
