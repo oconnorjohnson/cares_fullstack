@@ -105,8 +105,8 @@ dependencies:
     specifier: ^2.1.0
     version: 2.1.0
   date-fns:
-    specifier: ^3.3.0
-    version: 3.3.0
+    specifier: ^3.3.1
+    version: 3.3.1
   dotenv:
     specifier: ^16.3.2
     version: 16.3.2
@@ -133,7 +133,7 @@ dependencies:
     version: 3.0.0-beta.57(react-dom@18.2.0)(react@18.2.0)
   react-day-picker:
     specifier: ^8.10.0
-    version: 8.10.0(date-fns@3.3.0)(react@18.2.0)
+    version: 8.10.0(date-fns@3.3.1)(react@18.2.0)
   react-dom:
     specifier: ^18
     version: 18.2.0(react@18.2.0)
@@ -153,8 +153,8 @@ dependencies:
     specifier: ^1.15.0
     version: 1.15.0
   tailwind-merge:
-    specifier: ^2.2.0
-    version: 2.2.0
+    specifier: ^2.2.1
+    version: 2.2.1
   tailwindcss-animate:
     specifier: ^1.0.7
     version: 1.0.7(tailwindcss@3.4.1)
@@ -3317,10 +3317,10 @@ packages:
       }
     dev: true
 
-  /date-fns@3.3.0:
+  /date-fns@3.3.1:
     resolution:
       {
-        integrity: sha512-xuouT0GuI2W8yXhCMn/AXbSl1Av3wu2hJXxMnnILTY3bYY0UgNK0qOwVXqdFBrobW5qbX1TuOTgMw7c2H2OuhA==,
+        integrity: sha512-y8e109LYGgoQDveiEBD3DYXKba1jWf5BA8YU1FL5Tvm0BTdEfy54WLCwnuYWZNnzzvALy/QQ4Hov+Q9RVRv+Zw==,
       }
     dev: false
 
@@ -5930,7 +5930,7 @@ packages:
       ts-toolbelt: 9.6.0
     dev: false
 
-  /react-day-picker@8.10.0(date-fns@3.3.0)(react@18.2.0):
+  /react-day-picker@8.10.0(date-fns@3.3.1)(react@18.2.0):
     resolution:
       {
         integrity: sha512-mz+qeyrOM7++1NCb1ARXmkjMkzWVh2GL9YiPbRjKe0zHccvekk4HE+0MPOZOrosn8r8zTHIIeOUXTmXRqmkRmg==,
@@ -5939,7 +5939,7 @@ packages:
       date-fns: ^2.28.0 || ^3.0.0
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      date-fns: 3.3.0
+      date-fns: 3.3.1
       react: 18.2.0
     dev: false
 
@@ -6680,10 +6680,10 @@ packages:
       }
     dev: false
 
-  /tailwind-merge@2.2.0:
+  /tailwind-merge@2.2.1:
     resolution:
       {
-        integrity: sha512-SqqhhaL0T06SW59+JVNfAqKdqLs0497esifRrZ7jOaefP3o64fdFNDMrAQWZFMxTLJPiHVjRLUywT8uFz1xNWQ==,
+        integrity: sha512-o+2GTLkthfa5YUt4JxPfzMIpQzZ3adD1vLVkvKE1Twl9UAhGsEbIZhHHZVRttyW177S8PDJI3bTQNaebyofK3Q==,
       }
     dependencies:
       "@babel/runtime": 7.23.8

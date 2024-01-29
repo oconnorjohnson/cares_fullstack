@@ -17,7 +17,6 @@ function Calendar({
 }: CalendarProps) {
   return (
     <DayPicker
-      captionLayout="dropdown"
       showOutsideDays={showOutsideDays}
       className={cn("p-3", className)}
       classNames={{
