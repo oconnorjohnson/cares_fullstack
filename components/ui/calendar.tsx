@@ -18,10 +18,13 @@ function Calendar({
 }: CalendarProps) {
   // State for the controlled month and year
   const [month, setMonthState] = useState(new Date());
-
+  const currentYear = new Date().getFullYear();
   // Generate array of months and years for the dropdowns
   const months = Array.from({ length: 12 }, (_, i) => i);
-  const years = Array.from({ length: 2023 - 1900 + 1 }, (_, i) => 1900 + i);
+  const years = Array.from(
+    { length: currentYear - 1900 + 1 },
+    (_, i) => 1900 + i,
+  );
 
   // Handlers for month and year change
   const handleMonthChange = (newMonth: Date) => {

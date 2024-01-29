@@ -155,10 +155,24 @@ export default function NewClient() {
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Black">Black</SelectItem>
+                  <SelectItem value="African American / Black">
+                    African American / Black
+                  </SelectItem>
+                  <SelectItem value="American Indian / Alaska Native">
+                    American Indian / Alaska Native
+                  </SelectItem>
+                  <SelectItem value="Asian">Asian</SelectItem>
+                  <SelectItem value="Hispanic / Latino">
+                    Hispanic / Latino
+                  </SelectItem>
+                  <SelectItem value="Middle Eastern / North African">
+                    Middle Eastern / North African
+                  </SelectItem>
+                  <SelectItem value="Hispanic">
+                    Native Hawaiian / Other Pacific Islander
+                  </SelectItem>
                   <SelectItem value="White">White</SelectItem>
-                  <SelectItem value="Hispanic">Hispanic</SelectItem>
-                  <SelectItem value="AAPI">AAPI</SelectItem>
+                  <SelectItem value="Other">Other</SelectItem>
                 </SelectContent>
               </Select>
             )}
