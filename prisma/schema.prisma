@@ -42,9 +42,9 @@ model Client {
   last_name   String
   contactInfo String? // Optional contact information
   caseNumber  String? // Optional case number
-  dateOfBirth DateTime? // Optional date of birth 
-  sex         String?
-  race        String?
+  dateOfBirth DateTime
+  sex         String
+  race        String
   userId      Int
   user        User      @relation(fields: [userId], references: [id])
   requests    Request[]

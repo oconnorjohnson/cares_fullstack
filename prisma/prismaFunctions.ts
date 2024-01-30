@@ -2,11 +2,38 @@ import "server-only";
 import { PrismaClient } from "@prisma/client";
 
 export const prisma = new PrismaClient();
+
 export async function createUser(userData: any) {
   const user = await prisma.user.create({
     data: userData,
   });
   return user;
+}
+
+export async function createClient(clientData: {
+  first_name: string;
+  last_name: string;
+  dateOfBirth: Date;
+  sex: string;
+  race: string;
+  userId: number; // Adjusted to match the type in the schema
+  contactInfo?: string;
+  caseNumber?: string;
+}) {
+  const newClient = await prisma.client.create({
+    data: {
+      first_name: clientData.first_name,
+      last_name: clientData.last_name,
+      dateOfBirth: clientData.dateOfBirth,
+      sex: clientData.sex,
+      race: clientData.race,
+      userId: clientData.userId,
+      contactInfo: clientData.contactInfo,
+      caseNumber: clientData.caseNumber,
+    },
+  });
+
+  return newClient;
 }
 
 export async function updateUser(userId: string, userData: any) {
