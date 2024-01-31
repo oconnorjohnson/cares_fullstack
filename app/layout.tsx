@@ -7,6 +7,7 @@ import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import Providers from "@/app/_trpc/Provider";
 import NavBar from "@/components/navbar";
+import { Toaster } from "@/components/ui/sonner";
 
 import { ourFileRouter } from "@/app/api/uploadthing/core";
 
@@ -42,8 +43,11 @@ export default function RootLayout({
               routerConfig={extractRouterConfig(ourFileRouter)}
             />
             <Providers>
-              <NavBar />
-              {children}
+              <main>
+                <NavBar />
+                {children}
+              </main>
+              <Toaster />
             </Providers>
           </ThemeProvider>
         </body>

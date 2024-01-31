@@ -50,6 +50,7 @@ function Calendar({
           value={getMonth(month)}
           onChange={handleMonthSelectChange}
           className="form-select"
+          style={{ margin: "10px 0 0 10px" }}
         >
           {months.map((monthIndex) => (
             <option key={monthIndex} value={monthIndex}>
@@ -63,6 +64,7 @@ function Calendar({
           value={getYear(month)}
           onChange={handleYearChange}
           className="form-select"
+          style={{ margin: "10px 10px 0 0" }}
         >
           {years.map((year) => (
             <option key={year} value={year}>
