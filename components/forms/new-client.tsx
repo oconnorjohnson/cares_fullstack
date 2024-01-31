@@ -104,7 +104,7 @@ export default function NewClient({ userId }: { userId: string | null }) {
     },
   });
   const { reset } = form;
-
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   // access tRPC context
   const trpcContext = trpc.useUtils();
 
@@ -125,6 +125,7 @@ export default function NewClient({ userId }: { userId: string | null }) {
 
       if (response && response.id) {
         // Trigger success toast
+        setIsDialogOpen(false);
         toast("Client created successfully");
         reset();
         // invalidate the getClients query to refetch the latest data
@@ -142,7 +143,7 @@ export default function NewClient({ userId }: { userId: string | null }) {
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
+      <DialogTrigger asChild onClick={() => setIsDialogOpen(true)}>
         <Button variant="default">Add New Client</Button>
       </DialogTrigger>
       <DialogContent>
