@@ -1,5 +1,5 @@
 "use client";
-import { z } from "zod";
+import { date, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
@@ -25,7 +25,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
+import { format, isToday, startOfToday } from "date-fns";
 import { toast } from "@/components/ui/use-toast";
 import { cn } from "@/server/utils";
 import { newClient } from "@/server/actions";
@@ -72,7 +72,9 @@ export default function NewClient({ userId }: { userId: string | null }) {
       last_name: "",
       race: "",
       sex: "",
-      dateOfBirth: undefined,
+      dateOfBirth: new Date(), // Adjusted from `undefined` to `null`
+      contactInfo: "", // Ensure this is initialized as an empty string
+      caseNumber: "",
     },
   });
 
@@ -177,11 +179,7 @@ export default function NewClient({ userId }: { userId: string | null }) {
                         !field.value && "text-muted-foreground",
                       )}
                     >
-                      {field.value ? (
-                        format(field.value, "PPP")
-                      ) : (
-                        <span>Date of Birth</span>
-                      )}
+                      {format(field.value, "PPP")}
                       <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                     </Button>
                   </FormControl>
@@ -190,7 +188,10 @@ export default function NewClient({ userId }: { userId: string | null }) {
                   <Calendar
                     mode="single"
                     selected={field.value}
-                    onSelect={field.onChange}
+                    onSelect={(date) => {
+                      // Ensure the date is always set
+                      field.onChange(date || new Date());
+                    }}
                     disabled={(date) =>
                       date > new Date() || date < new Date("1900-01-01")
                     }
