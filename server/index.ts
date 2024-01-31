@@ -8,10 +8,6 @@ import {
 import { z } from "zod";
 
 export const appRouter = router({
-  addClient: publicProcedure.mutation(async () => {}),
-  getTodos: publicProcedure.query(async () => {
-    return [10, 30, 30, 40, 50, 60, 70, 80, 90, 100];
-  }),
   getUser: publicProcedure
     .input(z.string())
     .query(async ({ input: userId }) => {

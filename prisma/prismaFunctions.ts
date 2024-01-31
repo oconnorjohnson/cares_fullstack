@@ -33,24 +33,18 @@ export async function createClient(clientData: {
       caseNumber: clientData.caseNumber,
     },
   });
-
   return newClient;
 }
 
 // UPDATE FUNCTIONS
 export async function updateUser(userId: string, userData: any) {
   const { emailAddresses, ...rest } = userData;
-
-  // Find the user with the provided userId
   const existingUser = await prisma.user.findUnique({
     where: { userId: userId },
   });
-
   if (!existingUser) {
     throw new Error(`User with userId ${userId} not found`);
   }
-
-  // Start a transaction if you need to perform multiple independent operations
   const updatedUser = await prisma.user.update({
     where: { userId: userId },
     data: {
@@ -74,40 +68,30 @@ export async function updateUser(userId: string, userData: any) {
 
 // DELETE FUNCTIONS
 export async function deleteUser(userId: string) {
-  // Delete the related EmailAddress records
   await prisma.emailAddress.deleteMany({
     where: { userId: userId },
   });
-
-  // Then, delete the User
   const deletedUser = await prisma.user.delete({
     where: { userId: userId },
   });
-
   console.log(`User ${userId} and related email addresses deleted`);
   return deletedUser;
 }
 
 export async function deleteClient(clientId: number) {
-  // Check if the client has any dependent requests
   const dependentRequests = await prisma.request.findMany({
     where: {
       clientId: clientId,
     },
   });
-
-  // If dependent requests exist, throw an error or handle it as needed
   if (dependentRequests.length > 0) {
     throw new Error(
       `Client ${clientId} cannot be deleted because they have dependent requests.`,
     );
   }
-
-  // Proceed with deletion if no dependent requests are found
   const deletedClient = await prisma.client.delete({
     where: { id: clientId },
   });
-
   console.log(`Client ${clientId} deleted`);
   return deletedClient;
 }
