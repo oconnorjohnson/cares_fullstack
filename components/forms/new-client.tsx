@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -27,8 +27,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogHeader,
-  DialogClose,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -64,9 +62,7 @@ const formSchema = z.object({
     .max(50, { message: "Contact info must not exceed 50 characters" })
     .refine(
       (value) => {
-        // Regular expression for validating an email address
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        // Regular expression for validating a 10-digit phone number
         const phoneRegex = /^\d{10}$/;
         return emailRegex.test(value) || phoneRegex.test(value);
       },
@@ -89,7 +85,6 @@ const formSchema = z.object({
 export default function NewClient({ userId }: { userId: string | null }) {
   console.log("User ID:", userId);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const closeBtnRef = useRef<HTMLButtonElement>(null);
   // define form
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -98,16 +93,13 @@ export default function NewClient({ userId }: { userId: string | null }) {
       last_name: "",
       race: "",
       sex: "",
-      dateOfBirth: new Date(), // Adjusted from `undefined` to `null`
-      contactInfo: "", // Ensure this is initialized as an empty string
+      dateOfBirth: new Date(),
+      contactInfo: "",
       caseNumber: "",
     },
   });
   const { reset } = form;
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  // access tRPC context
   const trpcContext = trpc.useUtils();
-
   async function onSubmit(data: z.infer<typeof formSchema>) {
     setIsSubmitting(true); // Start submitting
     console.log("Form submitted", data);
@@ -115,35 +107,28 @@ export default function NewClient({ userId }: { userId: string | null }) {
       if (!userId) {
         throw new Error("User must be authenticated to submit this form.");
       }
-
       const submissionData = {
         ...data,
         userId,
       };
-
       const response = await newClient(submissionData);
-
       if (response && response.id) {
-        // Trigger success toast
-        setIsDialogOpen(false);
         toast("Client created successfully");
         reset();
-        // invalidate the getClients query to refetch the latest data
         trpcContext.getClients.invalidate();
       } else {
         throw new Error("Failed to create client.");
       }
     } catch (error) {
-      // Trigger error toast
       toast("Error submitting form: An unknown error occurred");
     } finally {
-      setIsSubmitting(false); // Done submitting
+      setIsSubmitting(false);
     }
   }
 
   return (
     <Dialog>
-      <DialogTrigger asChild onClick={() => setIsDialogOpen(true)}>
+      <DialogTrigger asChild>
         <Button variant="default">Add New Client</Button>
       </DialogTrigger>
       <DialogContent>
@@ -174,7 +159,6 @@ export default function NewClient({ userId }: { userId: string | null }) {
                   <FormControl>
                     <Input placeholder="Last Name" {...field} />
                   </FormControl>
-
                   <FormMessage />
                 </FormItem>
               )}
@@ -190,7 +174,6 @@ export default function NewClient({ userId }: { userId: string | null }) {
                       {...field}
                     />
                   </FormControl>
-
                   <FormMessage />
                 </FormItem>
               )}
@@ -203,7 +186,6 @@ export default function NewClient({ userId }: { userId: string | null }) {
                   <FormControl>
                     <Input placeholder="Case Number" {...field} />
                   </FormControl>
-
                   <FormMessage />
                 </FormItem>
               )}
@@ -233,7 +215,6 @@ export default function NewClient({ userId }: { userId: string | null }) {
                         mode="single"
                         selected={field.value}
                         onSelect={(date) => {
-                          // Ensure the date is always set
                           field.onChange(date || new Date());
                         }}
                         disabled={(date) =>
@@ -310,7 +291,6 @@ export default function NewClient({ userId }: { userId: string | null }) {
                 </FormItem>
               )}
             />
-
             <Button disabled={isSubmitting} type="submit">
               Submit
             </Button>
