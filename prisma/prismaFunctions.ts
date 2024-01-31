@@ -89,11 +89,27 @@ export async function deleteUser(userId: string) {
 }
 
 export async function deleteClient(clientId: number) {
+  // Check if the client has any dependent requests
+  const dependentRequests = await prisma.request.findMany({
+    where: {
+      clientId: clientId,
+    },
+  });
+
+  // If dependent requests exist, throw an error or handle it as needed
+  if (dependentRequests.length > 0) {
+    throw new Error(
+      `Client ${clientId} cannot be deleted because they have dependent requests.`,
+    );
+  }
+
+  // Proceed with deletion if no dependent requests are found
   const deletedClient = await prisma.client.delete({
     where: { id: clientId },
   });
 
   console.log(`Client ${clientId} deleted`);
+  return deletedClient;
 }
 
 // GET FUNCTIONS
