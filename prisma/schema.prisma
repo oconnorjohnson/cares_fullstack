@@ -45,10 +45,9 @@ model Client {
   dateOfBirth DateTime
   sex         String
   race        String
-  userId      Int
-  user        User      @relation(fields: [userId], references: [id])
+  userId      String
+  user        User      @relation(fields: [userId], references: [userId])
   requests    Request[]
-
   @@index([userId])
 }
 

@@ -28,6 +28,8 @@ import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "@/components/ui/use-toast";
 import { cn } from "@/server/utils";
+import { newClient } from "@/server/actions";
+import { auth } from "@clerk/nextjs";
 
 const formSchema = z.object({
   first_name: z
@@ -61,7 +63,7 @@ const formSchema = z.object({
   }),
 });
 
-export default function NewClient() {
+export default function NewClient({ userId }: { userId: string | null }) {
   // define form
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -73,19 +75,37 @@ export default function NewClient() {
       dateOfBirth: undefined,
     },
   });
-  // define submit handler
-  function onSubmit(data: z.infer<typeof formSchema>) {
-    // do something with the form values
-    // this will be type-safe and validated.
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-    console.log(data);
+
+  async function onSubmit(data: z.infer<typeof formSchema>) {
+    try {
+      if (!userId) {
+        throw new Error("User must be authenticated to submit this form.");
+      }
+
+      const submissionData = {
+        ...data,
+        userId, // No need for conversion if auth() returns a string
+      };
+
+      // Call the server action with the form data including the userId
+      const response = await newClient(submissionData);
+
+      // Verify response before showing success message
+      if (response && response.id) {
+        // Assuming response contains the created client's id
+        toast({
+          title: "Client created successfully",
+          description: "The new client has been added to the database.",
+        });
+      } else {
+        throw new Error("Failed to create client.");
+      }
+    } catch (error) {
+      toast({
+        title: "Error submitting form",
+        description: "An unknown error occurred",
+      });
+    }
   }
   return (
     <Form {...form}>

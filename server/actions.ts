@@ -1,47 +1,33 @@
-// "use server";
-// import { createClient } from "@/prisma/prismaFunctions";
-// import { newClientFactory } from "@/server/form-factories";
-// import { currentUser } from "@clerk/nextjs";
+"use server";
+import { createClient } from "@/prisma/prismaFunctions";
 
-// interface ClientData {
-//   first_name: string;
-//   last_name: string;
-//   dateOfBirth: Date; // Already a Date object
-//   sex: string;
-//   race: string;
-//   userId: number;
-//   contactInfo?: string;
-//   caseNumber?: string;
-// }
+interface ClientData {
+  first_name: string;
+  last_name: string;
+  dateOfBirth: Date; // Already a Date object
+  sex: string;
+  race: string;
+  userId: string;
+  contactInfo?: string;
+  caseNumber?: string;
+}
 
-// // Adjust the function to directly accept an object matching the form's state
-// export async function newClient(clientState: ClientData) {
-//   // Fetch the current user
-//   const user = await currentUser();
-//   if (!user) {
-//     throw new Error("User not authenticated");
-//   }
-//   const userId = parseInt(user.id); // Convert to number to match the schema
+export async function newClient(clientState: ClientData) {
+  if (!clientState.userId) {
+    throw new Error("User not authenticated");
+  }
 
-//   // No need to convert dateOfBirth, it's already a Date object
-//   // Validate form data using the factory
-//   const validationResult = await newClientFactory.validateFormData(clientState);
-//   if (validationResult && Object.keys(validationResult).length > 0) {
-//     console.error("Validation failed:", validationResult);
-//     // Construct a detailed error message
-//     const detailedErrorMessage = Object.entries(validationResult)
-//       .map(([field, message]) => `${field}: ${message}`)
-//       .join(", ");
-//     throw new Error(`Validation failed: ${detailedErrorMessage}`);
-//   }
+  // Server-side validation (example)
+  if (clientState.first_name.length < 2) {
+    throw new Error("First name must be at least 2 characters.");
+  }
 
-//   // The clientState already contains the correct types, including dateOfBirth as a Date object
-//   const clientData: ClientData = {
-//     ...clientState,
-//     userId: userId, // Add the userId from the authenticated user
-//   };
+  // Assuming createClient handles the insertion and returns the created record
+  const newClientRecord = await createClient(clientState);
 
-//   // Call the createClient function with the prepared data
-//   const newClientRecord = await createClient(clientData);
-//   return newClientRecord;
-// }
+  if (!newClientRecord) {
+    throw new Error("Failed to create client.");
+  }
+
+  return newClientRecord;
+}

@@ -16,7 +16,7 @@ export async function createClient(clientData: {
   dateOfBirth: Date;
   sex: string;
   race: string;
-  userId: number; // Adjusted to match the type in the schema
+  userId: string;
   contactInfo?: string;
   caseNumber?: string;
 }) {
