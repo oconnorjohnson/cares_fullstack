@@ -3,6 +3,7 @@ import { prisma } from "@/prisma/prismaFunctions";
 import { z } from "zod";
 import { Prisma } from "@prisma/client";
 import { getAuth } from "@clerk/nextjs/server";
+import { getClientsByUserId } from "@/prisma/prismaFunctions";
 
 export const appRouter = router({
   addClient: publicProcedure.mutation(async () => {}),
@@ -14,6 +15,12 @@ export const appRouter = router({
     .query(async ({ input: userId }) => {
       const user = await prisma.user.findUnique({ where: { userId } });
       return user;
+    }),
+  getClients: publicProcedure
+    .input(z.string())
+    .query(async ({ input: userId }) => {
+      const clients = await getClientsByUserId(userId);
+      return clients;
     }),
 });
 

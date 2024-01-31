@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 
 export const prisma = new PrismaClient();
 
+// CREATE FUNCTIONS
 export async function createUser(userData: any) {
   const user = await prisma.user.create({
     data: userData,
@@ -36,6 +37,7 @@ export async function createClient(clientData: {
   return newClient;
 }
 
+// UPDATE FUNCTIONS
 export async function updateUser(userId: string, userData: any) {
   const { emailAddresses, ...rest } = userData;
 
@@ -70,6 +72,7 @@ export async function updateUser(userId: string, userData: any) {
   return updatedUser;
 }
 
+// DELETE FUNCTIONS
 export async function deleteUser(userId: string) {
   // Delete the related EmailAddress records
   await prisma.emailAddress.deleteMany({
@@ -83,4 +86,14 @@ export async function deleteUser(userId: string) {
 
   console.log(`User ${userId} and related email addresses deleted`);
   return deletedUser;
+}
+
+// GET FUNCTIONS
+export async function getClientsByUserId(userId: string) {
+  const clients = await prisma.client.findMany({
+    where: {
+      userId: userId,
+    },
+  });
+  return clients;
 }
