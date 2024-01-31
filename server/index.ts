@@ -1,9 +1,11 @@
 import { publicProcedure, router } from "./trpc";
-import { prisma } from "@/prisma/prismaFunctions";
+import { TRPCError } from "@trpc/server";
+import {
+  prisma,
+  getClientsByUserId,
+  deleteClient as deleteClientFromDB,
+} from "@/prisma/prismaFunctions";
 import { z } from "zod";
-import { Prisma } from "@prisma/client";
-import { getAuth } from "@clerk/nextjs/server";
-import { getClientsByUserId } from "@/prisma/prismaFunctions";
 
 export const appRouter = router({
   addClient: publicProcedure.mutation(async () => {}),
@@ -21,6 +23,20 @@ export const appRouter = router({
     .query(async ({ input: userId }) => {
       const clients = await getClientsByUserId(userId);
       return clients;
+    }),
+  deleteClient: publicProcedure
+    .input(z.number()) // Assuming the client ID is a string
+    .mutation(async ({ input: clientId }) => {
+      // Call the deleteClient function with the provided client ID
+      try {
+        const deletedClient = await deleteClientFromDB(clientId);
+        return deletedClient;
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to delete client",
+        });
+      }
     }),
 });
 

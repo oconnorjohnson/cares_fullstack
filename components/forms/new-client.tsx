@@ -1,4 +1,5 @@
 "use client";
+import React, { useRef, useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -38,6 +39,7 @@ import { format, isToday, startOfToday } from "date-fns";
 import { toast } from "sonner";
 import { cn } from "@/server/utils";
 import { newClient } from "@/server/actions";
+import { trpc } from "@/app/_trpc/client";
 
 const formSchema = z.object({
   first_name: z
@@ -59,7 +61,20 @@ const formSchema = z.object({
   contactInfo: z
     .string()
     .min(7, { message: "Contact info must be at least 7 characters" })
-    .max(50, { message: "Contact info must not exceed 50 characters" }),
+    .max(50, { message: "Contact info must not exceed 50 characters" })
+    .refine(
+      (value) => {
+        // Regular expression for validating an email address
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        // Regular expression for validating a 10-digit phone number
+        const phoneRegex = /^\d{10}$/;
+        return emailRegex.test(value) || phoneRegex.test(value);
+      },
+      {
+        message:
+          "Contact info must be a valid email address or a 10-digit phone number",
+      },
+    ),
   caseNumber: z
     .string()
     .min(6, { message: "Case Number must be at least 6 characters" })
@@ -73,6 +88,8 @@ const formSchema = z.object({
 
 export default function NewClient({ userId }: { userId: string | null }) {
   console.log("User ID:", userId);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
   // define form
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -86,8 +103,13 @@ export default function NewClient({ userId }: { userId: string | null }) {
       caseNumber: "",
     },
   });
+  const { reset } = form;
+
+  // access tRPC context
+  const trpcContext = trpc.useUtils();
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
+    setIsSubmitting(true); // Start submitting
     console.log("Form submitted", data);
     try {
       if (!userId) {
@@ -104,19 +126,24 @@ export default function NewClient({ userId }: { userId: string | null }) {
       if (response && response.id) {
         // Trigger success toast
         toast("Client created successfully");
+        reset();
+        // invalidate the getClients query to refetch the latest data
+        trpcContext.getClients.invalidate();
       } else {
         throw new Error("Failed to create client.");
       }
     } catch (error) {
       // Trigger error toast
       toast("Error submitting form: An unknown error occurred");
+    } finally {
+      setIsSubmitting(false); // Done submitting
     }
   }
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Add New Client</Button>
+        <Button variant="default">Add New Client</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogTitle>Add New Client</DialogTitle>
@@ -283,7 +310,9 @@ export default function NewClient({ userId }: { userId: string | null }) {
               )}
             />
 
-            <Button type="submit">Submit</Button>
+            <Button disabled={isSubmitting} type="submit">
+              Submit
+            </Button>
           </form>
         </Form>
       </DialogContent>

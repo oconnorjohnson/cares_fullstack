@@ -9,9 +9,11 @@ export default function Dashboard() {
   const { userId } = auth();
   return (
     <>
-      <div className="">
-        <div className="flex flex-row justify-center">
-          <NewClient userId={userId} />
+      <div className="px-24">
+        <div className="flex flex-col justify-center">
+          <div className="flex justify-between items-center">
+            <NewClient userId={userId} />
+          </div>
           <GetClients userId={userId} />
         </div>
         <Uploader />

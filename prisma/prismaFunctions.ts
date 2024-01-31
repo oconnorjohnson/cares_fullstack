@@ -88,6 +88,14 @@ export async function deleteUser(userId: string) {
   return deletedUser;
 }
 
+export async function deleteClient(clientId: number) {
+  const deletedClient = await prisma.client.delete({
+    where: { id: clientId },
+  });
+
+  console.log(`Client ${clientId} deleted`);
+}
+
 // GET FUNCTIONS
 export async function getClientsByUserId(userId: string) {
   const clients = await prisma.client.findMany({
