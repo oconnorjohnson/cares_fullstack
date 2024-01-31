@@ -273,13 +273,9 @@ export default function NewClient({ userId }: { userId: string | null }) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="African American / Black">
-                        Male
-                      </SelectItem>
-                      <SelectItem value="American Indian / Alaska Native">
-                        Female
-                      </SelectItem>
-                      <SelectItem value="Asian">Other</SelectItem>
+                      <SelectItem value="Male">Male</SelectItem>
+                      <SelectItem value="Female">Female</SelectItem>
+                      <SelectItem value="Other">Other</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
