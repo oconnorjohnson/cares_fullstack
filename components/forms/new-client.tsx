@@ -1,5 +1,5 @@
 "use client";
-import { date, z } from "zod";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
@@ -22,11 +22,20 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogClose,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon } from "lucide-react";
 import { format, isToday, startOfToday } from "date-fns";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import { cn } from "@/server/utils";
 import { newClient } from "@/server/actions";
 
@@ -87,185 +96,201 @@ export default function NewClient({ userId }: { userId: string | null }) {
 
       const submissionData = {
         ...data,
-        userId, // No need for conversion if auth() returns a string
+        userId,
       };
 
-      // Call the server action with the form data including the userId
       const response = await newClient(submissionData);
 
-      // Verify response before showing success message
       if (response && response.id) {
-        // Assuming response contains the created client's id
-        toast({
-          title: "Client created successfully",
-          description: "The new client has been added to the database.",
-        });
+        // Trigger success toast
+        toast("Client created successfully");
       } else {
         throw new Error("Failed to create client.");
       }
     } catch (error) {
-      toast({
-        title: "Error submitting form",
-        description: "An unknown error occurred",
-      });
+      // Trigger error toast
+      toast("Error submitting form: An unknown error occurred");
     }
   }
+
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-        <FormField
-          control={form.control}
-          name="first_name"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input placeholder="First Name" {...field} />
-              </FormControl>
-
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="last_name"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input placeholder="Last Name" {...field} />
-              </FormControl>
-
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="contactInfo"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input placeholder="Phone Number of Email Address" {...field} />
-              </FormControl>
-
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="caseNumber"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input placeholder="Case Number" {...field} />
-              </FormControl>
-
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="dateOfBirth"
-          render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <Popover>
-                <PopoverTrigger asChild>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button>Add New Client</Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogTitle>Add New Client</DialogTitle>
+        <DialogDescription>
+          Fill in the details to add a new client.
+        </DialogDescription>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+            <FormField
+              control={form.control}
+              name="first_name"
+              render={({ field }) => (
+                <FormItem>
                   <FormControl>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-[240px] pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground",
-                      )}
-                    >
-                      {format(field.value, "PPP")}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
+                    <Input placeholder="First Name" {...field} />
                   </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={field.value}
-                    onSelect={(date) => {
-                      // Ensure the date is always set
-                      field.onChange(date || new Date());
-                    }}
-                    disabled={(date) =>
-                      date > new Date() || date < new Date("1900-01-01")
-                    }
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="race"
-          render={({ field }) => (
-            <FormItem>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Race" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="African American / Black">
-                    African American / Black
-                  </SelectItem>
-                  <SelectItem value="American Indian / Alaska Native">
-                    American Indian / Alaska Native
-                  </SelectItem>
-                  <SelectItem value="Asian">Asian</SelectItem>
-                  <SelectItem value="Hispanic / Latino">
-                    Hispanic / Latino
-                  </SelectItem>
-                  <SelectItem value="Middle Eastern / North African">
-                    Middle Eastern / North African
-                  </SelectItem>
-                  <SelectItem value="Native Hawaiian / Other Pacific Islander">
-                    Native Hawaiian / Other Pacific Islander
-                  </SelectItem>
-                  <SelectItem value="White">White</SelectItem>
-                  <SelectItem value="Other">Other</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="sex"
-          render={({ field }) => (
-            <FormItem>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Sex" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="African American / Black">Male</SelectItem>
-                  <SelectItem value="American Indian / Alaska Native">
-                    Female
-                  </SelectItem>
-                  <SelectItem value="Asian">Other</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
 
-        <Button type="submit">Submit</Button>
-      </form>
-    </Form>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="last_name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input placeholder="Last Name" {...field} />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="contactInfo"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      placeholder="Phone Number of Email Address"
+                      {...field}
+                    />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="caseNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input placeholder="Case Number" {...field} />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="dateOfBirth"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            " pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground",
+                          )}
+                        >
+                          {format(field.value, "PPP")}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={(date) => {
+                          // Ensure the date is always set
+                          field.onChange(date || new Date());
+                        }}
+                        disabled={(date) =>
+                          date > new Date() || date < new Date("1900-01-01")
+                        }
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="race"
+              render={({ field }) => (
+                <FormItem>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Race" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="African American / Black">
+                        African American / Black
+                      </SelectItem>
+                      <SelectItem value="American Indian / Alaska Native">
+                        American Indian / Alaska Native
+                      </SelectItem>
+                      <SelectItem value="Asian">Asian</SelectItem>
+                      <SelectItem value="Hispanic / Latino">
+                        Hispanic / Latino
+                      </SelectItem>
+                      <SelectItem value="Middle Eastern / North African">
+                        Middle Eastern / North African
+                      </SelectItem>
+                      <SelectItem value="Native Hawaiian / Other Pacific Islander">
+                        Native Hawaiian / Other Pacific Islander
+                      </SelectItem>
+                      <SelectItem value="White">White</SelectItem>
+                      <SelectItem value="Other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="sex"
+              render={({ field }) => (
+                <FormItem>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Sex" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="African American / Black">
+                        Male
+                      </SelectItem>
+                      <SelectItem value="American Indian / Alaska Native">
+                        Female
+                      </SelectItem>
+                      <SelectItem value="Asian">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button type="submit">Submit</Button>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 }
