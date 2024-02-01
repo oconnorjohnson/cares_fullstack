@@ -23,10 +23,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   Dialog,
+  DialogTrigger,
+  DialogHeader,
+  DialogDescription,
   DialogContent,
   DialogTitle,
   DialogClose,
+  DialogFooter,
 } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 
 export default function GetClients({ userId }: { userId: string | null }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -118,28 +123,66 @@ export default function GetClients({ userId }: { userId: string | null }) {
                 <TableCell>{client.caseNumber}</TableCell>
                 <TableCell>{client.contactInfo}</TableCell>
                 <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button size="icon" variant="ghost">
-                        <MoreHorizontalIcon />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuItem
-                      // onSelect={() => openConfirmDialog(client.id)}
-                      >
-                        View Details
-                      </DropdownMenuItem>
-                      <div className="py-1" />
-                      <DropdownMenuItem
-                        onSelect={() => openConfirmDialog(client.id)}
-                        className="bg-red-600 text-white"
-                      >
-                        Delete Client
-                      </DropdownMenuItem>
-                      {/* Add more menu items here as needed */}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <Dialog>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button size="icon" variant="ghost">
+                          <MoreHorizontalIcon />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DialogTrigger asChild>
+                          <DropdownMenuItem
+                          // onSelect={() => openConfirmDialog(client.id)}
+                          >
+                            Edit
+                          </DropdownMenuItem>
+                        </DialogTrigger>
+                        <div className="py-1" />
+                        <DropdownMenuItem
+                          onSelect={() => openConfirmDialog(client.id)}
+                          className="bg-red-600 text-white"
+                        >
+                          Delete
+                        </DropdownMenuItem>
+                        {/* Add more menu items here as needed */}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                    <DialogContent className="sm:max-w-[425px]">
+                      <DialogHeader>
+                        <DialogTitle>Edit profile</DialogTitle>
+                        <DialogDescription>
+                          Make changes to your profile here. Click save when
+                          you're done.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="name" className="text-right">
+                            Name
+                          </Label>
+                          <Input
+                            id="name"
+                            defaultValue="Pedro Duarte"
+                            className="col-span-3"
+                          />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="username" className="text-right">
+                            Username
+                          </Label>
+                          <Input
+                            id="username"
+                            defaultValue="@peduarte"
+                            className="col-span-3"
+                          />
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button type="submit">Save changes</Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </TableCell>
               </TableRow>
             ))}
