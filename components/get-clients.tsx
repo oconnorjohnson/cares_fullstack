@@ -3,9 +3,10 @@ import { useState } from "react";
 import { trpc } from "@/app/_trpc/client";
 import { format, parseISO } from "date-fns";
 import { toast } from "sonner";
-import { MoreHorizontalIcon } from "lucide-react";
+import { MoreHorizontalIcon, Terminal } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   Table,
   TableHeader,
@@ -75,6 +76,18 @@ export default function GetClients({ userId }: { userId: string | null }) {
   }
   if (isError) {
     return <div>Error fetching clients.</div>;
+  }
+  if (clients && clients.length === 0) {
+    // Display a message if there are no clients
+    return (
+      <Alert>
+        <Terminal className="h-4 w-4" />
+        <AlertTitle>Heads up!</AlertTitle>
+        <AlertDescription>
+          Click on <strong>Add New Client</strong> to get started!
+        </AlertDescription>
+      </Alert>
+    );
   } else {
     return (
       <>

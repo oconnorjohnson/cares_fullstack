@@ -23,11 +23,14 @@ export const appRouter = router({
   deleteClient: publicProcedure
     .input(z.number()) // Assuming the client ID is a string
     .mutation(async ({ input: clientId }) => {
+      console.log(`Attempting to delete client with ID: ${clientId}`); // Log the client ID being deleted
       // Call the deleteClient function with the provided client ID
       try {
         const deletedClient = await deleteClientFromDB(clientId);
+        console.log(`Successfully deleted client: `, deletedClient); // Log the result of the deletion
         return deletedClient;
       } catch (error) {
+        console.error(`Error deleting client with ID ${clientId}: `, error); // Log any errors
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to delete client",

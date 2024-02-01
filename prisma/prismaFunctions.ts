@@ -79,12 +79,12 @@ export async function deleteUser(userId: string) {
 }
 
 export async function deleteClient(clientId: number) {
-  const dependentRequests = await prisma.request.findMany({
+  const dependentRequestsCount = await prisma.request.count({
     where: {
       clientId: clientId,
     },
   });
-  if (dependentRequests.length > 0) {
+  if (dependentRequestsCount > 0) {
     throw new Error(
       `Client ${clientId} cannot be deleted because they have dependent requests.`,
     );
