@@ -1,5 +1,11 @@
 "use client";
+import { useState } from "react";
 import { trpc } from "@/app/_trpc/client";
+import { format, parseISO } from "date-fns";
+import { toast } from "sonner";
+import { MoreHorizontalIcon } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableHeader,
@@ -14,18 +20,12 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { format, parseISO } from "date-fns";
-import { TrashIcon, MoreHorizontalIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogClose,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { useState } from "react";
 
 export default function GetClients({ userId }: { userId: string | null }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -112,6 +112,12 @@ export default function GetClients({ userId }: { userId: string | null }) {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
+                      <DropdownMenuItem
+                      // onSelect={() => openConfirmDialog(client.id)}
+                      >
+                        View Details
+                      </DropdownMenuItem>
+                      <div className="py-1" />
                       <DropdownMenuItem
                         onSelect={() => openConfirmDialog(client.id)}
                         className="bg-red-600 text-white"
