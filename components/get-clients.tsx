@@ -3,7 +3,13 @@ import { useState } from "react";
 import { trpc } from "@/app/_trpc/client";
 import { format, parseISO } from "date-fns";
 import { toast } from "sonner";
-import { MoreHorizontalIcon, Terminal } from "lucide-react";
+import {
+  MoreHorizontalIcon,
+  Terminal,
+  EditIcon,
+  TrashIcon,
+  PlusIcon,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -131,11 +137,27 @@ export default function GetClients({ userId }: { userId: string | null }) {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
+                        {/* <DialogTrigger asChild>
+                          <DropdownMenuItem
+                          // onSelect={() => openConfirmDialog(client.id)}
+                          >
+                            <div className="flex text-md flex-row items-center">
+                              <PlusIcon size={15} />
+                              <div className="px-1" />
+                              New Request
+                            </div>
+                          </DropdownMenuItem>
+                        </DialogTrigger>
+                        <div className="py-1" /> */}
                         <DialogTrigger asChild>
                           <DropdownMenuItem
                           // onSelect={() => openConfirmDialog(client.id)}
                           >
-                            Edit
+                            <div className="flex text-md flex-row items-center">
+                              <EditIcon size={15} />
+                              <div className="px-1" />
+                              Edit
+                            </div>
                           </DropdownMenuItem>
                         </DialogTrigger>
                         <div className="py-1" />
@@ -143,43 +165,95 @@ export default function GetClients({ userId }: { userId: string | null }) {
                           onSelect={() => openConfirmDialog(client.id)}
                           className="bg-red-600 text-white"
                         >
-                          Delete
+                          <div className="flex text-md flex-row items-center">
+                            <TrashIcon size={15} />
+                            <div className="px-1" />
+                            Delete
+                          </div>
                         </DropdownMenuItem>
                         {/* Add more menu items here as needed */}
                       </DropdownMenuContent>
                     </DropdownMenu>
                     <DialogContent className="sm:max-w-[425px]">
                       <DialogHeader>
-                        <DialogTitle>Edit profile</DialogTitle>
+                        <DialogTitle>Edit Client Details</DialogTitle>
                         <DialogDescription>
-                          Make changes to your profile here. Click save when
-                          you're done.
+                          Update your client's information as necessary.
                         </DialogDescription>
                       </DialogHeader>
                       <div className="grid gap-4 py-4">
                         <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="name" className="text-right">
-                            Name
+                          <Label htmlFor="first_name" className="text-right">
+                            First Name
                           </Label>
                           <Input
-                            id="name"
-                            defaultValue="Pedro Duarte"
+                            id="first_name"
+                            defaultValue={client.first_name}
                             className="col-span-3"
                           />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="username" className="text-right">
-                            Username
+                          <Label htmlFor="last_name" className="text-right">
+                            Last Name
                           </Label>
                           <Input
-                            id="username"
-                            defaultValue="@peduarte"
+                            id="last_name"
+                            defaultValue={client.last_name}
+                            className="col-span-3"
+                          />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="sex" className="text-right">
+                            Sex
+                          </Label>
+                          <Input
+                            id="sex"
+                            defaultValue={client.sex}
+                            className="col-span-3"
+                          />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="race" className="text-right">
+                            Race
+                          </Label>
+                          <Input
+                            id="race"
+                            defaultValue={client.race}
+                            className="col-span-3"
+                          />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="caseNumber" className="text-right">
+                            Case Number
+                          </Label>
+                          <Input
+                            id="caseNumber"
+                            defaultValue={client.caseNumber}
+                            className="col-span-3"
+                          />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="contactInfo" className="text-right">
+                            Contact Info
+                          </Label>
+                          <Input
+                            id="contactInfo"
+                            defaultValue={client.contactInfo}
                             className="col-span-3"
                           />
                         </div>
                       </div>
                       <DialogFooter>
-                        <Button type="submit">Save changes</Button>
+                        <div className="flex justify-between w-full">
+                          <div className="flex justify-start">
+                            <DialogClose asChild>
+                              <Button>Cancel</Button>
+                            </DialogClose>
+                          </div>
+                          <div className="flex justify-end">
+                            <Button type="submit">Save changes</Button>
+                          </div>
+                        </div>
                       </DialogFooter>
                     </DialogContent>
                   </Dialog>
