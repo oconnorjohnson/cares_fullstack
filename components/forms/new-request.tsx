@@ -35,6 +35,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import SDOHSelect from "@/components/sdoh-multi-select";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import RFFSelect from "@/components/rff-assist-multi";
 
 interface Client {
   id: number;
@@ -54,6 +55,21 @@ const formSchema = z.object({
     }),
 });
 export default function NewRequest({ userId }: { userId: string | null }) {
+  // state to manage active tab
+  const [activeTab, setActiveTab] = useState("tab1");
+  // function to move to the next tab
+  const goToNextTab = () => {
+    const nextTab = `tab${parseInt(activeTab[3]) + 1}`;
+    setActiveTab(nextTab);
+  };
+  // function to move to the last tab
+  const goToLastTab = () => {
+    if (activeTab !== "tab`") {
+      const lastTab = `tab${parseInt(activeTab[3]) - 1}`;
+      setActiveTab(lastTab);
+    }
+  };
+  // initialize useForm with formSchema type
   const form = useForm<typeof formSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -86,15 +102,11 @@ export default function NewRequest({ userId }: { userId: string | null }) {
             Fill in the details to add a new client.
           </DialogDescription>
 
-          <Tabs defaultValue="tab1">
-            <div className="flex flex-col items-center">
-              <TabsList aria-label="Form sections">
-                <TabsTrigger value="tab1">Step 1</TabsTrigger>
-                <TabsTrigger value="tab2">Step 2</TabsTrigger>
-                <TabsTrigger value="tab3">Step 3</TabsTrigger>
-                <TabsTrigger value="tab4">Step 4</TabsTrigger>
-              </TabsList>
-            </div>
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            defaultValue="tab1"
+          >
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
@@ -181,8 +193,6 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                       </FormItem>
                     )}
                   />
-                </TabsContent>
-                <TabsContent value="tab2">
                   <FormField
                     control={form.control}
                     name="agency"
@@ -194,6 +204,10 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                       </FormItem>
                     )}
                   />
+
+                  <Button onClick={goToNextTab}>Next</Button>
+                </TabsContent>
+                <TabsContent value="tab2">
                   <FormField
                     control={form.control}
                     name="sdoh"
@@ -205,8 +219,33 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                       </FormItem>
                     )}
                   />
-
-                  <Button type="submit">Submit</Button>
+                  <FormField
+                    control={form.control}
+                    name="rff"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>How can RFF assist?</FormLabel>
+                        <RFFSelect />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="flex flex-row justify-between">
+                    <Button onClick={goToLastTab}>Last</Button>
+                    <Button onClick={goToNextTab}>Next</Button>
+                  </div>
+                </TabsContent>
+                <TabsContent value="tab3">
+                  <div className="flex flex-row justify-between">
+                    <Button onClick={goToLastTab}>Last</Button>
+                    <Button onClick={goToNextTab}>Next</Button>
+                  </div>
+                </TabsContent>
+                <TabsContent value="tab4">
+                  <div className="flex flex-row justify-between">
+                    <Button onClick={goToLastTab}>Last</Button>
+                    <Button type="submit">Submit</Button>
+                  </div>
                 </TabsContent>
               </form>
             </Form>
