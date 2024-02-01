@@ -48,6 +48,7 @@ model Client {
   userId      String
   user        User      @relation(fields: [userId], references: [userId])
   requests    Request[]
+
   @@index([userId])
 }
 
@@ -77,7 +78,13 @@ model Request {
   user                User                @relation(fields: [userId], references: [id])
   agencyId            Int
   agency              Agency              @relation(fields: [agencyId], references: [id])
-  status              String
+  submitted           Boolean             @default(false)
+  pendingApproval     Boolean             @default(false)
+  approved            Boolean             @default(false)
+  pendingPayout       Boolean             @default(false)
+  paid                Boolean             @default(false)
+  hasPreScreen        Boolean             @default(false)
+  hasPostScreen       Boolean             @default(false)
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
   requestFormAnswer   RequestFormAnswers?

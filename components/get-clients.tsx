@@ -8,8 +8,14 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
 import { format, parseISO } from "date-fns";
-import { TrashIcon } from "lucide-react";
+import { TrashIcon, MoreHorizontalIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import {
@@ -22,7 +28,6 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 
 export default function GetClients({ userId }: { userId: string | null }) {
-  console.log("User ID:", userId);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
   const [confirmationText, setConfirmationText] = useState("");
@@ -83,7 +88,7 @@ export default function GetClients({ userId }: { userId: string | null }) {
               <TableHead>Race</TableHead>
               <TableHead>Case Number</TableHead>
               <TableHead>Contact Info</TableHead>
-              <TableHead className="text-destructive">Danger</TableHead>
+              {/* <TableHead className="text-destructive">Danger</TableHead> */}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -98,14 +103,23 @@ export default function GetClients({ userId }: { userId: string | null }) {
                 <TableCell>{client.race}</TableCell>
                 <TableCell>{client.caseNumber}</TableCell>
                 <TableCell>{client.contactInfo}</TableCell>
-                <TableCell className="text-destructive">
-                  <Button
-                    onClick={() => openConfirmDialog(client.id)}
-                    variant="destructive"
-                    size="icon"
-                  >
-                    <TrashIcon />
-                  </Button>
+                <TableCell>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button size="icon" variant="ghost">
+                        <MoreHorizontalIcon />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem
+                        onSelect={() => openConfirmDialog(client.id)}
+                        className="bg-red-600 text-white"
+                      >
+                        Delete Client
+                      </DropdownMenuItem>
+                      {/* Add more menu items here as needed */}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </TableCell>
               </TableRow>
             ))}
