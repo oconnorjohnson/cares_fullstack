@@ -15,6 +15,7 @@ import {
   DialogDescription,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -129,8 +130,11 @@ export default function NewRequest({ userId }: { userId: string | null }) {
   }, [activeTab]);
   // function to move to the next tab
   const goToNextTab = () => {
-    const nextTab = `tab${parseInt(activeTab[3]) + 1}`;
-    setActiveTab(nextTab);
+    let currentTabIndex = parseInt(activeTab.substring(3));
+    if (currentTabIndex < 5) {
+      const nextTab = `tab${currentTabIndex + 1}`;
+      setActiveTab(nextTab);
+    }
   };
   // function to move to the last tab
   const goToLastTab = () => {
@@ -149,14 +153,24 @@ export default function NewRequest({ userId }: { userId: string | null }) {
       sdoh: [],
       rff: [],
       means: [],
+      amount: "",
+      sustainability: "",
+      implementation: "",
     },
   });
-  const { reset } = form;
+  const watchedClientId = form.watch("clientId");
   const trpcContext = trpc.useUtils();
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
     console.log(data);
-    // Handle form submission here
+
+    // after form submission logic, go to next tab
+    goToNextTab();
   };
+  const handleThirdTabSubmit = () => {
+    goToNextTab();
+    form.handleSubmit(onSubmit)();
+  };
+
   const {
     data: clients,
     isLoading,
@@ -171,6 +185,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
           <Button variant="default">Submit New Request</Button>
         </DialogTrigger>
         <DialogContent>
+          <p>Selected Client ID: {watchedClientId}</p>
           <Progress value={progress} className="w-full mt-4" />
           <DialogTitle>New Request</DialogTitle>
           <DialogDescription>
@@ -184,7 +199,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
           >
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="">
-                <TabsContent value="tab1">
+                <TabsContent value="tab1" hidden={activeTab !== "tab1"}>
                   {!isLoading && clients && (
                     <FormField
                       control={form.control}
@@ -271,7 +286,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Details of Client&apos;s Problem</FormLabel>
-                        <Textarea className="resize-none" />
+                        <Textarea {...field} className="resize-none" />
 
                         <FormMessage />
                       </FormItem>
@@ -282,7 +297,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                     <Button onClick={goToNextTab}>Next</Button>
                   </div>
                 </TabsContent>
-                <TabsContent value="tab2">
+                <TabsContent value="tab2" hidden={activeTab !== "tab2"}>
                   <FormField
                     control={form.control}
                     name="sdoh"
@@ -323,7 +338,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                     <Button onClick={goToNextTab}>Next</Button>
                   </div>
                 </TabsContent>
-                <TabsContent value="tab3">
+                <TabsContent value="tab3" hidden={activeTab !== "tab3"}>
                   <FormField
                     control={form.control}
                     name="implementation"
@@ -332,7 +347,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                         <FormLabel>
                           Plan for implementation of RFF supports:
                         </FormLabel>
-                        <Textarea className="resize-none" />
+                        <Textarea {...field} className="resize-none" />
 
                         <FormMessage />
                       </FormItem>
@@ -348,7 +363,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                           that has an ongoing cost. Write N/A if problem is NOT
                           ongoing.
                         </FormLabel>
-                        <Textarea className="resize-none" />
+                        <Textarea {...field} className="resize-none" />
 
                         <FormMessage />
                       </FormItem>
@@ -360,7 +375,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                     <Button onClick={goToNextTab}>Next</Button>
                   </div>
                 </TabsContent>
-                <TabsContent value="tab4">
+                <TabsContent value="tab4" hidden={activeTab !== "tab4"}>
                   <FormField
                     control={form.control}
                     name="means"
@@ -385,19 +400,20 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                       <FormItem>
                         <FormLabel>
                           Amount Requested &#40;Ex&#58; Arco&#58; $25, Bus
-                          Passes&#58; 2&#41;{" "}
+                          Passes&#58; 2&#41;
                         </FormLabel>
-                        <Input />
+                        <Input {...field} />
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
                   <div className="p-1" />
                   <div className="flex flex-row justify-between">
                     <Button onClick={goToLastTab}>Last</Button>
-                    <Button onClick={goToNextTab}>Next</Button>
+                    <Button onClick={handleThirdTabSubmit}>Submit</Button>
                   </div>
                 </TabsContent>
-                <TabsContent value="tab5">
+                <TabsContent value="tab5" hidden={activeTab !== "tab5"}>
                   <FormItem>
                     <FormLabel>
                       Your request has been submitted! You&apos;ll get an email
@@ -407,8 +423,10 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                     <div className="py-2" />
                   </FormItem>
                   <div className="flex flex-row justify-between">
-                    <Button onClick={goToLastTab}>Last</Button>
-                    <Button type="submit">Submit</Button>
+                    {/* <Button onClick={goToLastTab}>Last</Button> */}
+                    <DialogClose>
+                      <Button>Close</Button>
+                    </DialogClose>
                   </div>
                 </TabsContent>
               </form>
