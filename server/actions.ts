@@ -1,5 +1,6 @@
 "use server";
 import { createClient } from "@/prisma/prismaFunctions";
+import { createRequest } from "@/prisma/prismaFunctions";
 
 interface ClientData {
   first_name: string;
@@ -10,6 +11,18 @@ interface ClientData {
   userId: string;
   contactInfo?: string;
   caseNumber?: string;
+}
+
+interface RequestData {
+  userId: string;
+  clientId: number;
+  agency: string;
+  details: string;
+  sdoh: string[];
+  rff: string[];
+  implementation: string;
+  means: string[];
+  amount: string;
 }
 
 export async function newClient(clientState: ClientData) {

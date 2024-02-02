@@ -36,6 +36,23 @@ export async function createClient(clientData: {
   return newClient;
 }
 
+export async function createRequest(requestData: {
+  userId: string;
+  clientId: number;
+  agency: string;
+  details: string;
+  sdoh: string[];
+  rff: string[];
+  implementation: string;
+  means: string[];
+  amount: string;
+}) {
+  const newRequest = await prisma.request.create({
+    data: requestData,
+  });
+  return newRequest;
+}
+
 // UPDATE FUNCTIONS
 export async function updateUser(userId: string, userData: any) {
   const { emailAddresses, ...rest } = userData;
