@@ -60,7 +60,9 @@ export default function GetClients({ userId }: { userId: string | null }) {
         trpcContext.getClients.invalidate();
       },
       onError: (error) => {
-        toast("Error deleting client.");
+        toast(
+          "You can not delete a client after submitting a request on their behalf.",
+        );
         console.error("Failed to delete client:", error);
       },
     });

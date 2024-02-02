@@ -123,7 +123,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
           <Button variant="default">Submit New Request</Button>
         </DialogTrigger>
         <DialogContent>
-          <Progress value={progress} className="w=full mt-4" />
+          <Progress value={progress} className="w-full mt-4" />
           <DialogTitle>New Request</DialogTitle>
           <DialogDescription>
             Fill in the details to add a new client.
@@ -135,10 +135,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
             defaultValue="tab1"
           >
             <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-2"
-              >
+              <form onSubmit={form.handleSubmit(onSubmit)} className="">
                 <TabsContent value="tab1">
                   {!isLoading && clients && (
                     <FormField
@@ -222,16 +219,17 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                   />
                   <FormField
                     control={form.control}
-                    name="agency"
+                    name="details"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Details of Client's Problem</FormLabel>
+                        <FormLabel>Details of Client&apos;s Problem</FormLabel>
                         <Textarea className="resize-none" />
+
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-
+                  <div className="p-1" />
                   <Button onClick={goToNextTab}>Next</Button>
                 </TabsContent>
                 <TabsContent value="tab2">
@@ -257,18 +255,76 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                       </FormItem>
                     )}
                   />
+                  <FormField
+                    control={form.control}
+                    name="implementation"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          Plan for implementation of RFF supports:
+                        </FormLabel>
+                        <Textarea className="resize-none" />
+
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="p-1" />
                   <div className="flex flex-row justify-between">
                     <Button onClick={goToLastTab}>Last</Button>
                     <Button onClick={goToNextTab}>Next</Button>
                   </div>
                 </TabsContent>
                 <TabsContent value="tab3">
+                  <FormField
+                    control={form.control}
+                    name="sustainability"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          Plan for sustainability if RFF is supporting a problem
+                          that has an ongoing cost. Write N/A if problem is NOT
+                          ongoing.
+                        </FormLabel>
+                        <Textarea className="resize-none" />
+
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="amount"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Amount Requested</FormLabel>
+                        <Input />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="p-1" />
                   <div className="flex flex-row justify-between">
                     <Button onClick={goToLastTab}>Last</Button>
                     <Button onClick={goToNextTab}>Next</Button>
                   </div>
                 </TabsContent>
                 <TabsContent value="tab4">
+                  <FormField
+                    control={form.control}
+                    name="plan"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          Plan for implementation of RFF supports:
+                        </FormLabel>
+                        <Textarea className="resize-none" />
+
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="p-1" />
                   <div className="flex flex-row justify-between">
                     <Button onClick={goToLastTab}>Last</Button>
                     <Button onClick={goToNextTab}>Next</Button>
