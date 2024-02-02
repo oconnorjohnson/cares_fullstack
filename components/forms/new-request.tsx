@@ -76,6 +76,17 @@ const OPTIONS: Option[] = [
   { label: "Specialty Medical Supplies", value: "Specialty Medical Supplies" },
   { label: "Rental Assistance", value: "Rental Assistance" },
   { label: "Utilities Assistance", value: "Utilities Assistance" },
+  { label: "Education Access", value: "Education Access" },
+  { label: "Health Care", value: "Health Care" },
+  { label: "Neighborhood Safety", value: "Neighborhood Safety" },
+  { label: "Social & Community", value: "Social & Community" },
+  { label: "Economic Instability", value: "Economic Instability" },
+  { label: "Walmart Gift Card", value: "Walmart Gift Card" },
+  { label: "Arco Gift Card", value: "Arco Gift Card" },
+  { label: "Bus Passes", value: "Bus Passes" },
+  { label: "Invoice", value: "Invoice" },
+  { label: "Check", value: "Check" },
+  { label: "Cash", value: "Cash" },
 ];
 
 // helper function to convert strings -> option objs
