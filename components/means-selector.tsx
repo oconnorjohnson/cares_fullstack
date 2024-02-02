@@ -12,6 +12,12 @@ const OPTIONS: Option[] = [
 ];
 
 const MultipleSelectorControlled = ({ value, onChange }) => {
+  const handleChange = (selectedOptions: Option[]) => {
+    // map selected options to their string values
+    const valueArray = selectedOptions.map((option) => option.value);
+    onChange(valueArray); //pas array of strings to parent component
+  };
+
   return (
     <div className="flex w-full flex-col gap-5">
       {/* <p className="text-primary">
@@ -19,7 +25,7 @@ const MultipleSelectorControlled = ({ value, onChange }) => {
       </p> */}
       <MultipleSelector
         value={value}
-        onChange={onChange}
+        onChange={handleChange}
         defaultOptions={OPTIONS}
         placeholder="Select all that apply"
         emptyIndicator={

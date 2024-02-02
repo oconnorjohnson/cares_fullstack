@@ -37,6 +37,7 @@ import { Button } from "@/components/ui/button";
 import SDOHSelect from "@/components/sdoh-multi-select";
 import RFFSelect from "@/components/rff-assist-multi";
 import { Progress } from "@/components/ui/progress";
+import { Option } from "@/components/ui/multiple-selector";
 
 interface Client {
   id: number;
@@ -62,6 +63,30 @@ const formSchema = z.object({
   means: z.array(z.string()),
   amount: z.string(),
 });
+const OPTIONS: Option[] = [
+  { label: "Food", value: "Food" },
+  { label: "Clothing", value: "Clothing" },
+  { label: "Hygiene Items", value: "Hygiene Items" },
+  { label: "Basic Necessities", value: "Basic Necessities" },
+  { label: "Medication Co-Pay", value: "Medication Co-Pay" },
+  { label: "Durable Medical Equipment", value: "Durable Medical Equipment" },
+  { label: "Gas", value: "Gas" },
+  { label: "Rideshare", value: "Rideshare" },
+  { label: "Busspass", value: "Busspass" },
+  { label: "Specialty Medical Supplies", value: "Specialty Medical Supplies" },
+  { label: "Rental Assistance", value: "Rental Assistance" },
+  { label: "Utilities Assistance", value: "Utilities Assistance" },
+];
+
+// helper function to convert strings -> option objs
+const stringsToOptions = (values: string[]): Option[] => {
+  return OPTIONS.filter((option) => values.includes(option.value));
+};
+
+// helper function to convert Option objs -> strings
+const optionsToStrings = (options: Option[]): string[] => {
+  return options.map((option) => option.value);
+};
 export default function NewRequest({ userId }: { userId: string | null }) {
   // state to manage active tab
   const [activeTab, setActiveTab] = useState("tab1");
@@ -270,10 +295,11 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                       <FormItem>
                         <FormLabel>How can RFF assist?</FormLabel>
                         <RFFSelect
-                          {...field}
-                          onChange={(selectedOptions: string[]) =>
-                            field.onChange(selectedOptions)
+                          value={stringsToOptions(field.value)}
+                          onChange={(selectedOptions: Option[]) =>
+                            field.onChange(optionsToStrings(selectedOptions))
                           }
+                          // Pass other necessary props to RFFSelect
                         />
                         <FormMessage />
                       </FormItem>
