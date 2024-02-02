@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { cn } from "@/server/utils";
 import { trpc } from "@/app/_trpc/client";
 import { newClient } from "@/server/actions";
+import Means from "@/components/means-selector";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Dialog,
@@ -230,7 +231,9 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                     )}
                   />
                   <div className="p-1" />
-                  <Button onClick={goToNextTab}>Next</Button>
+                  <div className="flex flex-row justify-end">
+                    <Button onClick={goToNextTab}>Next</Button>
+                  </div>
                 </TabsContent>
                 <TabsContent value="tab2">
                   <FormField
@@ -239,7 +242,12 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>SDOH Categories</FormLabel>
-                        <SDOHSelect />
+                        <SDOHSelect
+                          {...field}
+                          onChange={(selectedOptions) =>
+                            field.onChange(selectedOptions)
+                          }
+                        />
                         <FormMessage />
                       </FormItem>
                     )}
@@ -250,11 +258,24 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>How can RFF assist?</FormLabel>
-                        <RFFSelect />
+                        <RFFSelect
+                          {...field}
+                          onChange={(selectedOptions) =>
+                            field.onChange(selectedOptions)
+                          }
+                        />
                         <FormMessage />
                       </FormItem>
                     )}
                   />
+
+                  <div className="p-1" />
+                  <div className="flex flex-row justify-between">
+                    <Button onClick={goToLastTab}>Last</Button>
+                    <Button onClick={goToNextTab}>Next</Button>
+                  </div>
+                </TabsContent>
+                <TabsContent value="tab3">
                   <FormField
                     control={form.control}
                     name="implementation"
@@ -269,13 +290,6 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                       </FormItem>
                     )}
                   />
-                  <div className="p-1" />
-                  <div className="flex flex-row justify-between">
-                    <Button onClick={goToLastTab}>Last</Button>
-                    <Button onClick={goToNextTab}>Next</Button>
-                  </div>
-                </TabsContent>
-                <TabsContent value="tab3">
                   <FormField
                     control={form.control}
                     name="sustainability"
@@ -292,13 +306,39 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                       </FormItem>
                     )}
                   />
+                  <div className="p-1" />
+                  <div className="flex flex-row justify-between">
+                    <Button onClick={goToLastTab}>Last</Button>
+                    <Button onClick={goToNextTab}>Next</Button>
+                  </div>
+                </TabsContent>
+                <TabsContent value="tab4">
+                  <FormField
+                    control={form.control}
+                    name="means"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Means of utilizing support:</FormLabel>
+                        <Means
+                          {...field}
+                          onChange={(selectedOptions) =>
+                            field.onChange(selectedOptions)
+                          }
+                        />
 
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   <FormField
                     control={form.control}
                     name="amount"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Amount Requested</FormLabel>
+                        <FormLabel>
+                          Amount Requested &#40;Ex&#58; Arco&#58; $25, Bus
+                          Passes&#58; 2&#41;{" "}
+                        </FormLabel>
                         <Input />
                       </FormItem>
                     )}
@@ -309,28 +349,15 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                     <Button onClick={goToNextTab}>Next</Button>
                   </div>
                 </TabsContent>
-                <TabsContent value="tab4">
-                  <FormField
-                    control={form.control}
-                    name="plan"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          Plan for implementation of RFF supports:
-                        </FormLabel>
-                        <Textarea className="resize-none" />
-
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <div className="p-1" />
-                  <div className="flex flex-row justify-between">
-                    <Button onClick={goToLastTab}>Last</Button>
-                    <Button onClick={goToNextTab}>Next</Button>
-                  </div>
-                </TabsContent>
                 <TabsContent value="tab5">
+                  <FormItem>
+                    <FormLabel>
+                      Your request has been submitted! You&apos;ll get an email
+                      when your request has moved to the next stage of
+                      processing.
+                    </FormLabel>
+                    <div className="py-2" />
+                  </FormItem>
                   <div className="flex flex-row justify-between">
                     <Button onClick={goToLastTab}>Last</Button>
                     <Button type="submit">Submit</Button>

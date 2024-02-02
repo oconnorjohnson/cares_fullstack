@@ -3,11 +3,12 @@ import React from "react";
 import MultipleSelector, { Option } from "@/components/ui/multiple-selector";
 
 const OPTIONS: Option[] = [
-  { label: "Education Access", value: "Education Access" },
-  { label: "Health Care", value: "Health Care" },
-  { label: "Neighborhood Safety", value: "Neighborhood Safety" },
-  { label: "Social & Community", value: "Social & Community" },
-  { label: "Economic Instability", value: "Economic Instability" },
+  { label: "Walmart Gift Card", value: "Walmart Gift Card" },
+  { label: "Arco Gift Card", value: "Arco Gift Card" },
+  { label: "Bus Passes", value: "Bus Passes" },
+  { label: "Invoice", value: "Invoice" },
+  { label: "Check", value: "Check" },
+  { label: "Cash", value: "Cash" },
 ];
 
 const MultipleSelectorControlled = ({ value, onChange }) => {

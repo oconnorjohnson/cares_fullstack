@@ -17,8 +17,7 @@ const OPTIONS: Option[] = [
   { label: "Utilities Assistance", value: "Utilities Assistance" },
 ];
 
-const MultipleSelectorControlled = () => {
-  const [value, setValue] = React.useState<Option[]>([]);
+const MultipleSelectorControlled = ({ value, onChange }) => {
   return (
     <div className="flex w-full flex-col gap-5">
       {/* <p className="text-primary">
@@ -26,7 +25,7 @@ const MultipleSelectorControlled = () => {
       </p> */}
       <MultipleSelector
         value={value}
-        onChange={setValue}
+        onChange={onChange}
         defaultOptions={OPTIONS}
         placeholder="Select all that apply"
         emptyIndicator={
