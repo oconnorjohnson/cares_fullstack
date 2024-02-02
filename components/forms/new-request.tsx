@@ -54,6 +54,13 @@ const formSchema = z.object({
     .max(55, {
       message: "Agency must be selected.",
     }),
+  details: z.string(),
+  sdoh: z.array(z.string()),
+  rff: z.array(z.string()),
+  implementation: z.string(),
+  sustainability: z.string(),
+  means: z.array(z.string()),
+  amount: z.string(),
 });
 export default function NewRequest({ userId }: { userId: string | null }) {
   // state to manage active tab
@@ -97,11 +104,15 @@ export default function NewRequest({ userId }: { userId: string | null }) {
     }
   };
   // initialize useForm with formSchema type
-  const form = useForm<typeof formSchema>({
+  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       clientId: undefined,
-      agency: undefined,
+      agency: "",
+      details: "",
+      sdoh: [],
+      rff: [],
+      means: [],
     },
   });
   const { reset } = form;
@@ -244,7 +255,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                         <FormLabel>SDOH Categories</FormLabel>
                         <SDOHSelect
                           {...field}
-                          onChange={(selectedOptions) =>
+                          onChange={(selectedOptions: string[]) =>
                             field.onChange(selectedOptions)
                           }
                         />
@@ -260,7 +271,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                         <FormLabel>How can RFF assist?</FormLabel>
                         <RFFSelect
                           {...field}
-                          onChange={(selectedOptions) =>
+                          onChange={(selectedOptions: string[]) =>
                             field.onChange(selectedOptions)
                           }
                         />
@@ -321,7 +332,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                         <FormLabel>Means of utilizing support:</FormLabel>
                         <Means
                           {...field}
-                          onChange={(selectedOptions) =>
+                          onChange={(selectedOptions: string[]) =>
                             field.onChange(selectedOptions)
                           }
                         />

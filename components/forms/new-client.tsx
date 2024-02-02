@@ -70,11 +70,13 @@ const formSchema = z.object({
         message:
           "Contact info must be a valid email address or a 10-digit phone number",
       },
-    ),
+    )
+    .optional(),
   caseNumber: z
     .string()
     .min(6, { message: "Case Number must be at least 6 characters" })
-    .max(50, { message: "Case Number must not exceed 50 characters" }),
+    .max(50, { message: "Case Number must not exceed 50 characters" })
+    .optional(),
   race: z.string().min(1, { message: "Race must be selected." }),
   sex: z.string().min(1, { message: "Sex must be selected." }),
   dateOfBirth: z.date().refine((date) => date <= new Date(), {
