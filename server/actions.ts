@@ -31,3 +31,17 @@ export async function newClient(clientState: ClientData) {
 
   return newClientRecord;
 }
+
+export async function newRequest(requestState: RequestData) {
+  if (!requestState.userId) {
+    throw new Error("User not authenticated");
+  }
+
+  const newRequestRecord = await createRequest(requestState);
+
+  if (!newRequestRecord) {
+    throw new Error("Failed to submit request.");
+  }
+
+  return newRequestRecord;
+}
