@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -34,8 +34,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import SDOHSelect from "@/components/sdoh-multi-select";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import RFFSelect from "@/components/rff-assist-multi";
+import { Progress } from "@/components/ui/progress";
 
 interface Client {
   id: number;
@@ -57,6 +57,32 @@ const formSchema = z.object({
 export default function NewRequest({ userId }: { userId: string | null }) {
   // state to manage active tab
   const [activeTab, setActiveTab] = useState("tab1");
+  // set state for progress bar
+  const [progress, setProgress] = useState(0);
+
+  // update progress based on activeTab
+  useEffect(() => {
+    switch (activeTab) {
+      case "tab1":
+        setProgress(0);
+        break;
+      case "tab2":
+        setProgress(25);
+        break;
+      case "tab3":
+        setProgress(50);
+        break;
+      case "tab4":
+        setProgress(75);
+        break;
+      case "tab5":
+        setProgress(100);
+        break;
+      // in future, add fifth tab case to 100% here
+      default:
+        setProgress(0); // reset to 20% if it's none of the above for safety
+    }
+  }, [activeTab]);
   // function to move to the next tab
   const goToNextTab = () => {
     const nextTab = `tab${parseInt(activeTab[3]) + 1}`;
@@ -97,6 +123,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
           <Button variant="default">Submit New Request</Button>
         </DialogTrigger>
         <DialogContent>
+          <Progress value={progress} className="w=full mt-4" />
           <DialogTitle>New Request</DialogTitle>
           <DialogDescription>
             Fill in the details to add a new client.
@@ -242,6 +269,12 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                   </div>
                 </TabsContent>
                 <TabsContent value="tab4">
+                  <div className="flex flex-row justify-between">
+                    <Button onClick={goToLastTab}>Last</Button>
+                    <Button onClick={goToNextTab}>Next</Button>
+                  </div>
+                </TabsContent>
+                <TabsContent value="tab5">
                   <div className="flex flex-row justify-between">
                     <Button onClick={goToLastTab}>Last</Button>
                     <Button type="submit">Submit</Button>
