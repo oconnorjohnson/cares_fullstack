@@ -279,9 +279,9 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                       <FormItem>
                         <FormLabel>SDOH Categories</FormLabel>
                         <SDOHSelect
-                          {...field}
-                          onChange={(selectedOptions: string[]) =>
-                            field.onChange(selectedOptions)
+                          value={stringsToOptions(field.value)}
+                          onChange={(selectedOptions: Option[]) =>
+                            field.onChange(optionsToStrings(selectedOptions))
                           }
                         />
                         <FormMessage />
@@ -357,9 +357,9 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                       <FormItem>
                         <FormLabel>Means of utilizing support:</FormLabel>
                         <Means
-                          {...field}
-                          onChange={(selectedOptions: string[]) =>
-                            field.onChange(selectedOptions)
+                          value={stringsToOptions(field.value)}
+                          onChange={(selectedOptions: Option[]) =>
+                            field.onChange(optionsToStrings(selectedOptions))
                           }
                         />
 
