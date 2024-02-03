@@ -117,6 +117,24 @@ export async function deleteUser(userId: string) {
   return deletedUser;
 }
 
+export async function deleteFundType(fundTypeId: number) {
+  const dependentFundsCount = await prisma.fund.count({
+    where: {
+      fundTypeId: fundTypeId,
+    },
+  });
+  if (dependentFundsCount > 0) {
+    throw new Error(
+      `FundType ${fundTypeId} cannot be deleted because they have dependent funds.`,
+    );
+  }
+  const deletedFundType = await prisma.fundType.delete({
+    where: { id: fundTypeId },
+  });
+  console.log(`Deleted fundType with ID: ${fundTypeId}`);
+  return deletedFundType;
+}
+
 export async function deleteClient(clientId: number) {
   const dependentRequestsCount = await prisma.request.count({
     where: {
