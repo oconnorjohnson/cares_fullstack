@@ -39,10 +39,18 @@ export default function NewFundType({ userId }: { userId: string }) {
       typeName: "",
     },
   });
-  // data as any is placeholder
+  const { reset } = form;
+  const trpcContext = trpc.useUtils();
   const onSubmit = async (data: any) => {
     console.log(data);
     const newFundTypeRecord = await newFundType(data);
+    if (newFundTypeRecord) {
+      toast.success("New fund type added successfully");
+      reset();
+      trpcContext.getFundTypes.invalidate();
+    } else {
+      toast.error("Failed to add new fund type");
+    }
     console.log(newFundTypeRecord);
     // form submission logic here
   };
