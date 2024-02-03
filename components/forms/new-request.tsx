@@ -45,7 +45,7 @@ interface Client {
   first_name: string;
   last_name: string;
 }
-type FormValues = z.infer<typeof formSchema>;
+
 const formSchema = z.object({
   clientId: z.number(),
   agency: z
@@ -208,6 +208,12 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                         <FormItem>
                           <FormLabel>Client</FormLabel>
                           <Select
+                            {...field}
+                            value={
+                              field && field.value !== undefined
+                                ? field.value.toString()
+                                : ""
+                            }
                             onValueChange={(value) =>
                               field.onChange(parseInt(value, 10))
                             }
@@ -244,6 +250,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                       <FormItem>
                         <FormLabel>Requesting Agency</FormLabel>
                         <Select
+                          {...field}
                           onValueChange={field.onChange}
                           defaultValue={field.value}
                         >
@@ -425,7 +432,14 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                   <div className="flex flex-row justify-between">
                     {/* <Button onClick={goToLastTab}>Last</Button> */}
                     <DialogClose>
-                      <Button>Close</Button>
+                      <Button
+                        onClick={() => {
+                          form.reset();
+                          setActiveTab("tab1");
+                        }}
+                      >
+                        Close
+                      </Button>
                     </DialogClose>
                   </div>
                 </TabsContent>

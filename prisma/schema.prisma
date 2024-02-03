@@ -17,6 +17,7 @@ model User {
   clients        Client[]
   requests       Request[]
   isBanned       Boolean        @default(false)
+  fundTypes      FundType[]
 
   @@index([userId])
 }
@@ -68,6 +69,10 @@ model FundType {
   id       Int    @id @default(autoincrement())
   typeName String
   funds    Fund[]
+  userId   String
+  user     User   @relation(fields: [userId], references: [userId])
+
+  @@index([userId])
 }
 
 model Request {

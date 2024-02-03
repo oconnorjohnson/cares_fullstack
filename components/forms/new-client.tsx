@@ -294,7 +294,7 @@ export default function NewClient({ userId }: { userId: string | null }) {
               )}
             />
             <Button disabled={isSubmitting} type="submit">
-              Submit
+              Add Client
             </Button>
           </form>
         </Form>
