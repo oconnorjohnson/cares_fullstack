@@ -4,6 +4,28 @@ import { PrismaClient } from "@prisma/client";
 export const prisma = new PrismaClient();
 
 // CREATE FUNCTIONS
+export async function createFundType(fundTypeData: {
+  userId: string;
+  typeName: string;
+}) {
+  if (!fundTypeData.userId) {
+    throw new Error("UserId is required.");
+  }
+  if (!fundTypeData.typeName) {
+    throw new Error("TypeName is required.");
+  }
+  try {
+    const fundType = await prisma.fundType.create({
+      data: fundTypeData,
+    });
+    return fundType;
+  } catch (error) {
+    throw new Error(
+      `Failed to create fund type: ${error instanceof Error ? error.message : "Unknown error"}`,
+    );
+  }
+}
+
 export async function createUser(userData: any) {
   const user = await prisma.user.create({
     data: userData,
@@ -36,22 +58,22 @@ export async function createClient(clientData: {
   return newClient;
 }
 
-export async function createRequest(requestData: {
-  userId: string;
-  clientId: number;
-  agency: string;
-  details: string;
-  sdoh: string[];
-  rff: string[];
-  implementation: string;
-  means: string[];
-  amount: string;
-}) {
-  const newRequest = await prisma.request.create({
-    data: requestData,
-  });
-  return newRequest;
-}
+// export async function createRequest(requestData: {
+//   userId: string;
+//   clientId: number;
+//   agency: string;
+//   details: string;
+//   sdoh: string[];
+//   rff: string[];
+//   implementation: string;
+//   means: string[];
+//   amount: string;
+// }) {
+//   const newRequest = await prisma.request.create({
+//     data: requestData,
+//   });
+//   return newRequest;
+// }
 
 // UPDATE FUNCTIONS
 export async function updateUser(userId: string, userData: any) {
