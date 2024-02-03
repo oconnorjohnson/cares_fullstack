@@ -12,14 +12,16 @@ export default async function Dashboard() {
       <>
         <div className="flex flex-col items-center justify-center">
           <CurrentUser />
-          <div className="flex flex-col w-1/4">
-            <GetFundTypes />
-          </div>
+
           <div className="text-md font-extralight">
             You are an administrator.
           </div>
 
-          <NewFundType userId={userId} />
+          <div className="flex flex-col w-1/4 py-12">
+            <NewFundType userId={userId} />
+            <div className="py-4" />
+            <GetFundTypes />
+          </div>
         </div>
       </>
     );
