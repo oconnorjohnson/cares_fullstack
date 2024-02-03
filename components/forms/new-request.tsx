@@ -2,13 +2,13 @@
 import React, { useState, useEffect } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { toast } from "sonner";
 import { cn } from "@/server/utils";
 import { trpc } from "@/app/_trpc/client";
-import { newRequest } from "@/server/actions";
-import Means from "@/components/means-selector";
+// import { newRequest } from "@/server/actions";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -46,6 +46,18 @@ interface Client {
   last_name: string;
 }
 
+interface FundType {
+  id: number;
+  typeName: string;
+}
+
+interface SelectedFunds {
+  [key: number]: { selected: boolean; amount: number };
+}
+const fundTypeSchema = z.object({
+  selected: z.boolean(),
+  amount: z.number(),
+});
 const formSchema = z.object({
   clientId: z.number(),
   agency: z
@@ -61,8 +73,9 @@ const formSchema = z.object({
   rff: z.array(z.string()),
   implementation: z.string(),
   sustainability: z.string(),
-  means: z.array(z.string()),
+  fundTypes: z.array(z.string()),
   amount: z.string(),
+  selectedFunds: z.record(fundTypeSchema),
 });
 const OPTIONS: Option[] = [
   { label: "Food", value: "Food" },
@@ -100,11 +113,52 @@ const optionsToStrings = (options: Option[]): string[] => {
   return options.map((option) => option.value);
 };
 export default function NewRequest({ userId }: { userId: string | null }) {
+  // state to manage fund type data
+  const [fundTypesData, setFundTypesData] = useState<FundType[]>([]);
+  //state to manage selected funds types
+  const [selectedFunds, setSelectedFunds] = useState<SelectedFunds>({});
   // state to manage active tab
   const [activeTab, setActiveTab] = useState("tab1");
   // set state for progress bar
   const [progress, setProgress] = useState(0);
-
+  // get fund types using trpc
+  const { data: fundTypes, isLoading: isLoadingFundTypes } =
+    trpc.getFundTypes.useQuery();
+  // use effect to manage currently imported fund types
+  useEffect(() => {
+    if (fundTypes) {
+      setFundTypesData(fundTypes);
+      // initialize selectedFunds state
+      const initialSelectedFunds: SelectedFunds =
+        fundTypes.reduce<SelectedFunds>((acc, fundType) => {
+          acc[fundType.id] = { selected: false, amount: 0 };
+          return acc;
+        }, {});
+      setSelectedFunds(initialSelectedFunds);
+    }
+  }, [fundTypes]);
+  // functioin to handle fund selection change
+  // Update the handleFundSelectionChange function to be more declarative
+  const handleFundSelectionChange = (
+    fundTypeId: number,
+    isSelected: boolean,
+    amount?: number,
+  ) => {
+    setSelectedFunds((prev) => {
+      const updatedFunds = { ...prev };
+      if (isSelected) {
+        updatedFunds[fundTypeId] = {
+          selected: isSelected,
+          amount: amount || 0,
+        };
+      } else {
+        // If not selected, you might want to remove it or set selected to false
+        // Depending on your logic, you might also want to keep the amount or reset it
+        updatedFunds[fundTypeId] = { selected: isSelected, amount: 0 };
+      }
+      return updatedFunds;
+    });
+  };
   // update progress based on activeTab
   useEffect(() => {
     switch (activeTab) {
@@ -152,17 +206,31 @@ export default function NewRequest({ userId }: { userId: string | null }) {
       details: "",
       sdoh: [],
       rff: [],
-      means: [],
-      amount: "",
+      fundTypes: [],
+      amount: undefined,
       sustainability: "",
       implementation: "",
+      selectedFunds: {},
     },
   });
+  const { control, handleSubmit, setValue, watch } = form;
   const watchedClientId = form.watch("clientId");
   const trpcContext = trpc.useUtils();
   const onSubmit = async (data: any) => {
-    console.log(data);
+    const selectedFundTypes = Object.entries(selectedFunds)
+      .filter(([_, value]) => value.selected)
+      .map(([key, value]) => ({
+        fundTypeId: key,
+        amount: value.amount,
+      }));
 
+    //combine `data` with `selectedFundTypes` and submit
+    const submissionData = {
+      ...data,
+      fundTypes: selectedFundTypes,
+    };
+    // use server action to call prismaFunction to submit data to database
+    console.log(submissionData);
     // after form submission logic, go to next tab
     goToNextTab();
   };
@@ -385,31 +453,75 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                 <TabsContent value="tab4" hidden={activeTab !== "tab4"}>
                   <FormField
                     control={form.control}
-                    name="means"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Means of utilizing support:</FormLabel>
-                        <Means
-                          value={stringsToOptions(field.value)}
-                          onChange={(selectedOptions: Option[]) =>
-                            field.onChange(optionsToStrings(selectedOptions))
-                          }
-                        />
-
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="amount"
+                    name="fundTypes"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>
-                          Amount Requested &#40;Ex&#58; Arco&#58; $25, Bus
-                          Passes&#58; 2&#41;
+                          Select Requested Fund Types & Amounts:
                         </FormLabel>
-                        <Input {...field} />
+                        <div className="flex flex-col align-start w-3/4">
+                          {fundTypesData.map((fundType) => (
+                            <div
+                              key={fundType.id}
+                              className="flex items-center space-x-2"
+                            >
+                              <Controller
+                                name={`selectedFunds.${fundType.id}.selected`}
+                                control={control}
+                                render={({
+                                  field: { onChange, onBlur, name, ref, value },
+                                }) => (
+                                  <Checkbox
+                                    checked={value}
+                                    onCheckedChange={(checked) =>
+                                      onChange(checked)
+                                    }
+                                    onBlur={onBlur}
+                                    name={name}
+                                    ref={ref}
+                                    // Remove the `value` prop if it's not expected by your Checkbox component
+                                    // value={value} // This line should be removed or commented out
+                                    // Ensure any other necessary props are passed to the Checkbox component
+                                  />
+                                )}
+                              />
+                              <label>{fundType.typeName}</label>
+                              {watch(
+                                `selectedFunds.${fundType.id}.selected`,
+                              ) && (
+                                <Controller
+                                  name={`selectedFunds.${fundType.id}.amount`}
+                                  control={control}
+                                  render={({ field }) => (
+                                    <Input
+                                      type="number"
+                                      {...field}
+                                      value={field.value || ""}
+                                      onChange={(e) =>
+                                        field.onChange(e.target.value)
+                                      }
+                                      placeholder="Amount"
+                                    />
+                                  )}
+                                />
+                              )}
+                            </div>
+                          ))}
+                          {/* <div className="flex flex-row py-2">
+                            <Checkbox id="walmart-giftcard-placeholder" />
+                            <div className="px-1" />
+                            <label
+                              htmlFor="walmart-giftcard-placeholder"
+                              className="text-sm font-medium leading-none"
+                            >
+                              walmart-giftcard-placeholder
+                            </label>
+                          </div>
+                          <div className="flex flex-row items-center space-x-2">
+                            <div>Amount</div>
+                            <Input {...field} placeholder="25" />
+                          </div> */}
+                        </div>
                         <FormMessage />
                       </FormItem>
                     )}

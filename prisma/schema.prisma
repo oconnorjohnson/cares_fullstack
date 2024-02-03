@@ -59,7 +59,7 @@ model Fund {
   request    Request  @relation(fields: [requestId], references: [id])
   fundTypeId Int
   fundType   FundType @relation(fields: [fundTypeId], references: [id])
-  amount     Decimal? // Nullable for non-monetary funds like bus passes
+  amount     Int
   details    String? // JSON string or link to more detailed information
 
   @@index([requestId, fundTypeId])
@@ -93,7 +93,6 @@ model Request {
   details             String
   implementation      String
   sustainability      String
-  amount              String
   preScreenAnswer     PreScreenAnswers?
   postScreenAnswer    PostScreenAnswers?
   requestFormAnswerId Int?
@@ -102,7 +101,6 @@ model Request {
   Funds               Fund[]
   SDOHs               SDOH[]
   RFFs                RFF[]
-  Means               Means[]
 
   @@index([clientId, userId, agencyId])
 }
@@ -115,13 +113,6 @@ model SDOH {
 }
 
 model RFF {
-  id        Int     @id @default(autoincrement())
-  value     String
-  requestId Int
-  request   Request @relation(fields: [requestId], references: [id])
-}
-
-model Means {
   id        Int     @id @default(autoincrement())
   value     String
   requestId Int
