@@ -46,6 +46,12 @@ interface Client {
   last_name: string;
 }
 
+interface Agency {
+  id: number;
+  name: string;
+  userId: string;
+}
+
 interface FundType {
   id: number;
   typeName: string;
@@ -60,14 +66,7 @@ const fundTypeSchema = z.object({
 });
 const formSchema = z.object({
   clientId: z.number(),
-  agency: z
-    .string()
-    .min(10, {
-      message: "Agency must be selected.",
-    })
-    .max(55, {
-      message: "Agency must be selected.",
-    }),
+  agencyId: z.number(),
   details: z.string(),
   sdoh: z.array(z.string()),
   rff: z.array(z.string()),
@@ -202,7 +201,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       clientId: undefined,
-      agency: "",
+      agencyId: undefined,
       details: "",
       sdoh: [],
       rff: [],
@@ -215,6 +214,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
   });
   const { control, handleSubmit, setValue, watch } = form;
   const watchedClientId = form.watch("clientId");
+  const watchedAgencyId = form.watch("agencyId");
   const trpcContext = trpc.useUtils();
   const onSubmit = async (data: any) => {
     const selectedFundTypes = Object.entries(selectedFunds)
@@ -238,7 +238,12 @@ export default function NewRequest({ userId }: { userId: string | null }) {
     goToNextTab();
     form.handleSubmit(onSubmit)();
   };
-
+  // Fetch agencies using TRPC
+  const { data: agencies, isLoading: isLoadingAgencies } =
+    trpc.getAgencies.useQuery();
+  const selectedAgency = agencies?.find(
+    (agency) => agency.id === watchedAgencyId,
+  );
   const {
     data: clients,
     isLoading,
@@ -254,6 +259,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
         </DialogTrigger>
         <DialogContent>
           <p>Selected Client ID: {watchedClientId}</p>
+          <p>Selected Agency ID: {watchedAgencyId}</p>
           <Progress value={progress} className="w-full mt-4" />
           <DialogTitle>New Request</DialogTitle>
           <DialogDescription>
@@ -310,51 +316,48 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                       )}
                     />
                   )}
-
-                  <FormField
-                    control={form.control}
-                    name="agency"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Requesting Agency</FormLabel>
-                        <Select
-                          {...field}
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Agency" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="Yolo County Public Defender">
-                              Yolo County Public Defender
-                            </SelectItem>
-                            <SelectItem value="Yolo County Probation">
-                              Yolo County Probation
-                            </SelectItem>
-                            <SelectItem value="Yolo County Health & Human Services - RJP">
-                              Yolo County Health & Human Services - RJP
-                            </SelectItem>
-                            <SelectItem value="Yolo County Health & Human Services - AIC">
-                              Yolo County Health & Human Services - AIC
-                            </SelectItem>
-                            <SelectItem value="Yolo County Health & Human Services - Other">
-                              Yolo County Health & Human Services - Other
-                            </SelectItem>
-                            <SelectItem value="Yolo County District Attorny's Office - RJP">
-                              Yolo County District Attorny's Office - RJP
-                            </SelectItem>
-                            <SelectItem value="Conflict Panel Attorneys">
-                              Conflict Panel Attorneys
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  {!isLoadingAgencies && agencies && (
+                    <FormField
+                      control={form.control}
+                      name="agencyId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Agency</FormLabel>
+                          <Select
+                            {...field}
+                            value={
+                              field && field.value !== undefined
+                                ? field.value.toString()
+                                : ""
+                            }
+                            onValueChange={(value) =>
+                              field.onChange(parseInt(value, 10))
+                            }
+                            defaultValue={
+                              field.value ? field.value.toString() : ""
+                            }
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select an Agency" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {agencies.map((agency: Agency) => (
+                                <SelectItem
+                                  key={agency.id}
+                                  value={agency.id.toString()}
+                                >
+                                  {agency.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
                   <FormField
                     control={form.control}
                     name="details"
