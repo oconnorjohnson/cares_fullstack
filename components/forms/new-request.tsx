@@ -463,48 +463,58 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                           {fundTypesData.map((fundType) => (
                             <div
                               key={fundType.id}
-                              className="flex items-center space-x-2"
+                              className="flex flex-row justify-between space-x-4"
                             >
-                              <Controller
-                                name={`selectedFunds.${fundType.id}.selected`}
-                                control={control}
-                                render={({
-                                  field: { onChange, onBlur, name, ref, value },
-                                }) => (
-                                  <Checkbox
-                                    checked={value}
-                                    onCheckedChange={(checked) =>
-                                      onChange(checked)
-                                    }
-                                    onBlur={onBlur}
-                                    name={name}
-                                    ref={ref}
-                                    // Remove the `value` prop if it's not expected by your Checkbox component
-                                    // value={value} // This line should be removed or commented out
-                                    // Ensure any other necessary props are passed to the Checkbox component
+                              <div className="flex flex-col-2">
+                                <div className="flex flex-row items-center space-x-2">
+                                  <Controller
+                                    name={`selectedFunds.${fundType.id}.selected`}
+                                    control={control}
+                                    render={({
+                                      field: {
+                                        onChange,
+                                        onBlur,
+                                        name,
+                                        ref,
+                                        value,
+                                      },
+                                    }) => (
+                                      <Checkbox
+                                        checked={value}
+                                        onCheckedChange={(checked) =>
+                                          onChange(checked)
+                                        }
+                                        onBlur={onBlur}
+                                        name={name}
+                                        ref={ref}
+                                        // Remove the `value` prop if it's not expected by your Checkbox component
+                                        // value={value} // This line should be removed or commented out
+                                        // Ensure any other necessary props are passed to the Checkbox component
+                                      />
+                                    )}
+                                  />
+                                  <label>{fundType.typeName}</label>
+                                </div>
+                                {watch(
+                                  `selectedFunds.${fundType.id}.selected`,
+                                ) && (
+                                  <Controller
+                                    name={`selectedFunds.${fundType.id}.amount`}
+                                    control={control}
+                                    render={({ field }) => (
+                                      <Input
+                                        type="number"
+                                        {...field}
+                                        value={field.value || ""}
+                                        onChange={(e) =>
+                                          field.onChange(e.target.value)
+                                        }
+                                        placeholder="Amount"
+                                      />
+                                    )}
                                   />
                                 )}
-                              />
-                              <label>{fundType.typeName}</label>
-                              {watch(
-                                `selectedFunds.${fundType.id}.selected`,
-                              ) && (
-                                <Controller
-                                  name={`selectedFunds.${fundType.id}.amount`}
-                                  control={control}
-                                  render={({ field }) => (
-                                    <Input
-                                      type="number"
-                                      {...field}
-                                      value={field.value || ""}
-                                      onChange={(e) =>
-                                        field.onChange(e.target.value)
-                                      }
-                                      placeholder="Amount"
-                                    />
-                                  )}
-                                />
-                              )}
+                              </div>
                             </div>
                           ))}
                           {/* <div className="flex flex-row py-2">
