@@ -33,6 +33,19 @@ export async function createUser(userData: any) {
   return user;
 }
 
+export async function createAgency(agencyData: {
+  userId: string;
+  name: string;
+}) {
+  const newAgency = await prisma.agency.create({
+    data: {
+      userId: agencyData.userId,
+      name: agencyData.name,
+    },
+  });
+  return newAgency;
+}
+
 export async function createClient(clientData: {
   first_name: string;
   last_name: string;
@@ -151,6 +164,24 @@ export async function deleteClient(clientId: number) {
   });
   console.log(`Client ${clientId} deleted`);
   return deletedClient;
+}
+
+export async function deleteAgency(agencyId: number) {
+  const dependentRequestsCount = await prisma.request.count({
+    where: {
+      agencyId: agencyId,
+    },
+  });
+  if (dependentRequestsCount > 0) {
+    throw new Error(
+      `Agency ${agencyId} cannot be deleted because it has dependent requests.`,
+    );
+  }
+  const deletedAgency = await prisma.agency.delete({
+    where: { id: agencyId },
+  });
+  console.log(`Agency ${agencyId} deleted`);
+  return deletedAgency;
 }
 
 // GET FUNCTIONS

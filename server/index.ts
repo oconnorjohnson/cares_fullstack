@@ -5,6 +5,7 @@ import {
   getClientsByUserId,
   deleteClient as deleteClientFromDB,
   deleteFundType as deleteFundTypeFromDB,
+  deleteAgency as deleteAgencyFromDB,
 } from "@/prisma/prismaFunctions";
 import { z } from "zod";
 
@@ -19,11 +20,31 @@ export const appRouter = router({
     const fundTypes = await prisma.fundType.findMany();
     return fundTypes;
   }),
+  getAgencies: publicProcedure.query(async () => {
+    const getAgencies = await prisma.agency.findMany();
+    return getAgencies;
+  }),
   getClients: publicProcedure
     .input(z.string())
     .query(async ({ input: userId }) => {
       const clients = await getClientsByUserId(userId);
       return clients;
+    }),
+  deleteAgency: publicProcedure
+    .input(z.number())
+    .mutation(async ({ input: agencyId }) => {
+      console.log(`Attempting to delete agency with ID: ${agencyId}`);
+      try {
+        const deletedAgency = await deleteAgencyFromDB(agencyId);
+        console.log(`Successfully deleted agency: `, deletedAgency);
+        return deletedAgency;
+      } catch (error) {
+        console.error(`Error deleteing agency ID ${agencyId}`);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to delete agency",
+        });
+      }
     }),
   deleteFundType: publicProcedure
     .input(z.number())

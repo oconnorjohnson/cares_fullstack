@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { cn } from "@/server/utils";
 import { trpc } from "@/app/_trpc/client";
-import { newFundType } from "@/server/actions";
+import { newAgency } from "@/server/actions";
 import {
   Dialog,
   DialogContent,
@@ -27,50 +27,50 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 const formSchema = z.object({
-  typeName: z.string().min(1),
+  name: z.string().min(1),
   userId: z.string().min(1),
 });
 
-export default function NewFundType({ userId }: { userId: string }) {
+export default function NewAgency({ userId }: { userId: string }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       userId: userId,
-      typeName: "",
+      name: "",
     },
   });
   const { reset } = form;
   const trpcContext = trpc.useUtils();
   const onSubmit = async (data: any) => {
     console.log(data);
-    const newFundTypeRecord = await newFundType(data);
-    if (newFundTypeRecord) {
-      toast.success("New fund type added successfully");
+    const newAgencyRecord = await newAgency(data);
+    if (newAgencyRecord) {
+      toast.success("Agency created");
       reset();
-      trpcContext.getFundTypes.invalidate();
+      trpcContext.getAgencies.invalidate();
     } else {
       toast.error("Failed to add new fund type");
     }
-    console.log(newFundTypeRecord);
+    console.log(newAgencyRecord);
   };
 
   return (
     <>
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="default">Add New Fund Type</Button>
+          <Button>Add New Agency</Button>
         </DialogTrigger>
         <DialogContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="">
               <FormField
                 control={form.control}
-                name="typeName"
+                name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Enter Fund Type Name</FormLabel>
+                    <FormLabel>Enter Agency Name</FormLabel>
                     <FormControl>
-                      <Input {...form.register("typeName")} />
+                      <Input {...form.register("name")} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -78,10 +78,10 @@ export default function NewFundType({ userId }: { userId: string }) {
               />
               <div className="flex flex-row justify-between py-4">
                 <DialogClose>
-                  <Button variant="default">Cancel</Button>
+                  <Button>Cancel</Button>
                 </DialogClose>
                 <Button onClick={() => form.handleSubmit(onSubmit)}>
-                  Add Fund Type
+                  Add Agency
                 </Button>
               </div>
             </form>

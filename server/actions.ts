@@ -1,7 +1,10 @@
 "use server";
-import { createClient } from "@/prisma/prismaFunctions";
 // import { createRequest } from "@/prisma/prismaFunctions";
-import { createFundType } from "@/prisma/prismaFunctions";
+import {
+  createClient,
+  createFundType,
+  createAgency,
+} from "@/prisma/prismaFunctions";
 
 interface ClientData {
   first_name: string;
@@ -29,6 +32,22 @@ interface RequestData {
 interface FundTypeData {
   userId: string;
   typeName: string;
+}
+
+interface AgencyData {
+  userId: string;
+  name: string;
+}
+
+export async function newAgency(agencyState: AgencyData) {
+  if (!agencyState.userId) {
+    throw new Error("User not authenticated");
+  }
+  const newAgencyRecord = await createAgency(agencyState);
+  if (!newAgencyRecord) {
+    throw new Error("Failed to create new agency.");
+  }
+  return newAgencyRecord;
 }
 
 export async function newFundType(fundState: FundTypeData) {

@@ -18,6 +18,7 @@ model User {
   requests       Request[]
   isBanned       Boolean        @default(false)
   fundTypes      FundType[]
+  Agency         Agency[]
 
   @@index([userId])
 }
@@ -34,7 +35,11 @@ model EmailAddress {
 model Agency {
   id       Int       @id @default(autoincrement())
   name     String
+  userId   String
+  user     User      @relation(fields: [userId], references: [userId])
   requests Request[]
+
+  @@index([userId])
 }
 
 model Client {
