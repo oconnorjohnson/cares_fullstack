@@ -46,6 +46,46 @@ export async function createAgency(agencyData: {
   return newAgency;
 }
 
+export async function createRequest(requestData: {
+  clientId: number;
+  userId: string;
+  agencyId: number;
+  details: string;
+  implementation: string;
+  sustainability: string;
+  funds: { fundTypeId: number; amount: number }[];
+  sdoh: string[];
+  rff: string[];
+}) {
+  const newRequest = await prisma.request.create({
+    data: {
+      clientId: requestData.clientId,
+      userId: requestData.userId,
+      agencyId: requestData.agencyId,
+      details: requestData.details,
+      implementation: requestData.implementation,
+      sustainability: requestData.sustainability,
+      Funds: {
+        create: requestData.funds.map((fund) => ({
+          fundTypeId: fund.fundTypeId,
+          amount: fund.amount,
+        })),
+      },
+      SDOHs: {
+        create: requestData.sdoh.map((sdoh) => ({
+          value: sdoh,
+        })),
+      },
+      RFFs: {
+        create: requestData.rff.map((rff) => ({
+          value: rff,
+        })),
+      },
+    },
+  });
+  return newRequest;
+}
+
 export async function createClient(clientData: {
   first_name: string;
   last_name: string;

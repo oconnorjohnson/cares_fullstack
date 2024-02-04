@@ -6,7 +6,7 @@ import { useForm, Controller } from "react-hook-form";
 import { toast } from "sonner";
 import { cn } from "@/server/utils";
 import { trpc } from "@/app/_trpc/client";
-// import { newRequest } from "@/server/actions";
+import { newRequest } from "@/server/actions";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -216,7 +216,8 @@ export default function NewRequest({ userId }: { userId: string | null }) {
   const watchedClientId = form.watch("clientId");
   const watchedAgencyId = form.watch("agencyId");
   const trpcContext = trpc.useUtils();
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (formData: any) => {
+    console.log("Form submitted", formData);
     const selectedFundTypes = Object.entries(selectedFunds)
       .filter(([_, value]) => value.selected)
       .map(([key, value]) => ({
@@ -226,24 +227,36 @@ export default function NewRequest({ userId }: { userId: string | null }) {
 
     //combine `data` with `selectedFundTypes` and submit
     const submissionData = {
-      ...data,
-      fundTypes: selectedFundTypes,
+      ...formData,
+      funds: Object.entries(selectedFundTypes)
+        .filter(([_, value]) => value.fundTypeId)
+        .map(([key, value]) => ({
+          fundTypeId: parseInt(key),
+          amount: value.amount,
+        })),
     };
     // use server action to call prismaFunction to submit data to database
-    console.log(submissionData);
-    // after form submission logic, go to next tab
-    goToNextTab();
+    newRequest(submissionData)
+      .then(() => {
+        // If the request is successful, show a success message and proceed
+        toast.success("Request submitted successfully");
+        form.reset(); // Reset the form to its initial state
+        goToNextTab(); // Navigate to the next tab
+      })
+      .catch((error) => {
+        // If the request fails, show an error message
+        toast.error("Failed to submit request");
+        console.error("Submission error:", error);
+      });
   };
   const handleThirdTabSubmit = () => {
-    goToNextTab();
-    form.handleSubmit(onSubmit)();
+    console.log("handleThidTabSubmit clicked");
+    handleSubmit(onSubmit)();
   };
   // Fetch agencies using TRPC
   const { data: agencies, isLoading: isLoadingAgencies } =
     trpc.getAgencies.useQuery();
-  const selectedAgency = agencies?.find(
-    (agency) => agency.id === watchedAgencyId,
-  );
+
   const {
     data: clients,
     isLoading,
@@ -272,7 +285,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
             defaultValue="tab1"
           >
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="">
+              <form onSubmit={handleSubmit(onSubmit)} className="">
                 <TabsContent value="tab1" hidden={activeTab !== "tab1"}>
                   {!isLoading && clients && (
                     <FormField
@@ -542,7 +555,9 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                   <div className="p-1" />
                   <div className="flex flex-row justify-between">
                     <Button onClick={goToLastTab}>Last</Button>
-                    <Button onClick={handleThirdTabSubmit}>Submit</Button>
+                    <Button type="submit" onClick={handleThirdTabSubmit}>
+                      Submit
+                    </Button>
                   </div>
                 </TabsContent>
                 <TabsContent value="tab5" hidden={activeTab !== "tab5"}>
