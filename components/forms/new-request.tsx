@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { toast } from "sonner";
 import { cn } from "@/server/utils";
 import { trpc } from "@/app/_trpc/client";
@@ -57,6 +57,11 @@ interface FundType {
   typeName: string;
 }
 
+interface FundInput {
+  fundTypeId: number;
+  amount: number;
+}
+
 interface SelectedFunds {
   [key: number]: { selected: boolean; amount: number };
 }
@@ -65,6 +70,7 @@ const fundTypeSchema = z.object({
   amount: z.number(),
 });
 const formSchema = z.object({
+  userId: z.string(),
   clientId: z.number(),
   agencyId: z.number(),
   details: z.string(),
@@ -72,9 +78,14 @@ const formSchema = z.object({
   rff: z.array(z.string()),
   implementation: z.string(),
   sustainability: z.string(),
-  fundTypes: z.array(z.string()),
-  amount: z.string(),
-  selectedFunds: z.record(fundTypeSchema),
+  fundType: z.number(),
+  amount: z.number(),
+  funds: z.array(
+    z.object({
+      fundTypeId: z.number(),
+      amount: z.number(),
+    }),
+  ),
 });
 const OPTIONS: Option[] = [
   { label: "Food", value: "Food" },
@@ -111,6 +122,9 @@ const stringsToOptions = (values: string[]): Option[] => {
 const optionsToStrings = (options: Option[]): string[] => {
   return options.map((option) => option.value);
 };
+
+type FormInputs = z.infer<typeof formSchema>;
+
 export default function NewRequest({ userId }: { userId: string | null }) {
   // state to manage fund type data
   const [fundTypesData, setFundTypesData] = useState<FundType[]>([]);
@@ -138,25 +152,56 @@ export default function NewRequest({ userId }: { userId: string | null }) {
   }, [fundTypes]);
   // functioin to handle fund selection change
   // Update the handleFundSelectionChange function to be more declarative
-  const handleFundSelectionChange = (
-    fundTypeId: number,
-    isSelected: boolean,
-    amount?: number,
-  ) => {
-    setSelectedFunds((prev) => {
-      const updatedFunds = { ...prev };
-      if (isSelected) {
-        updatedFunds[fundTypeId] = {
-          selected: isSelected,
-          amount: amount || 0,
-        };
-      } else {
-        // If not selected, you might want to remove it or set selected to false
-        // Depending on your logic, you might also want to keep the amount or reset it
-        updatedFunds[fundTypeId] = { selected: isSelected, amount: 0 };
-      }
-      return updatedFunds;
-    });
+  const [funds, setFunds] = useState<FundInput[]>([]);
+  // function to add new fund input set to UI
+  const handleAddFund = (fundTypeId: number, amount: number) => {
+    setFunds((prevFunds) => [...prevFunds, { fundTypeId, amount }]);
+  };
+  // function to mreove specific fund input set
+  const handleRemoveFund = (index: number) => {
+    setFunds((prevFunds) => prevFunds.filter((_, i) => i !== index));
+  };
+  // function to update specific fund input set
+  const handleUpdateFund = (index: number, fund: FundInput) => {
+    const newFunds = [...funds];
+    newFunds[index] = fund;
+    setFunds(newFunds);
+  };
+  // render fund inputs dynamically
+  const renderFundINputs = () => {
+    return funds.map((fund, index) => (
+      <div key={index} className="flex items-center gap-2 mb-4">
+        <Select
+          value={fund.fundTypeId.toString()}
+          onOpenChange={(e) =>
+            handleUpdateFund(index, {
+              ...fund,
+              fundTypeId: parseInt(e.target.value),
+            })
+          }
+        >
+          {fundTypesData.map((type) => (
+            <option key={type.id} value={type.id}>
+              {type.typeName}
+            </option>
+          ))}
+        </Select>
+        <Input
+          type="number"
+          value={fund.amount.toString()}
+          onChange={(e) =>
+            handleUpdateFund(index, {
+              ...fund,
+              amount: parseInt(e.target.value),
+            })
+          }
+          placeholder="Amount"
+        />
+        <Button variant="destructive" onClick={() => handleRemoveFund(index)}>
+          Remove
+        </Button>
+      </div>
+    ));
   };
   // update progress based on activeTab
   useEffect(() => {
@@ -205,54 +250,68 @@ export default function NewRequest({ userId }: { userId: string | null }) {
       details: "",
       sdoh: [],
       rff: [],
-      fundTypes: [],
+      fundType: undefined,
       amount: undefined,
       sustainability: "",
       implementation: "",
-      selectedFunds: {},
+      funds: [{ fundTypeId: 0, amount: 0 }],
     },
   });
-  const { control, handleSubmit, setValue, watch } = form;
+  const { control, handleSubmit, register } = form;
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "funds",
+  });
   const watchedClientId = form.watch("clientId");
   const watchedAgencyId = form.watch("agencyId");
   const trpcContext = trpc.useUtils();
-  const onSubmit = async (formData: any) => {
-    console.log("Form submitted", formData);
-    const selectedFundTypes = Object.entries(selectedFunds)
-      .filter(([_, value]) => value.selected)
-      .map(([key, value]) => ({
-        fundTypeId: key,
-        amount: value.amount,
-      }));
+  const onSubmit = async (data: FormInputs) => {
+    try {
+      await newRequest(data);
+      toast.success("Request submitted successrfully");
+    } catch (error) {
+      toast.error("Failed to submit request");
+      console.log("Form submission started", data);
+    }
+    alert("Form submitted. Check the console for details.");
+  };
+  // const onSubmit = async (formData: any) => {
+  //   console.log("Attempting form submission", formData);
+  //   const selectedFundTypes = Object.entries(selectedFunds)
+  //     .filter(([_, value]) => value.selected)
+  //     .map(([key, value]) => ({
+  //       fundTypeId: key,
+  //       amount: value.amount,
+  //     }));
 
-    //combine `data` with `selectedFundTypes` and submit
-    const submissionData = {
-      ...formData,
-      funds: Object.entries(selectedFundTypes)
-        .filter(([_, value]) => value.fundTypeId)
-        .map(([key, value]) => ({
-          fundTypeId: parseInt(key),
-          amount: value.amount,
-        })),
-    };
-    // use server action to call prismaFunction to submit data to database
-    newRequest(submissionData)
-      .then(() => {
-        // If the request is successful, show a success message and proceed
-        toast.success("Request submitted successfully");
-        form.reset(); // Reset the form to its initial state
-        goToNextTab(); // Navigate to the next tab
-      })
-      .catch((error) => {
-        // If the request fails, show an error message
-        toast.error("Failed to submit request");
-        console.error("Submission error:", error);
-      });
-  };
-  const handleThirdTabSubmit = () => {
-    console.log("handleThidTabSubmit clicked");
-    handleSubmit(onSubmit)();
-  };
+  //   //combine `data` with `selectedFundTypes` and submit
+  //   const submissionData = {
+  //     ...formData,
+  //     funds: Object.entries(selectedFundTypes)
+  //       .filter(([_, value]) => value.fundTypeId)
+  //       .map(([key, value]) => ({
+  //         fundTypeId: parseInt(key),
+  //         amount: value.amount,
+  //       })),
+  //   };
+  //   // use server action to call prismaFunction to submit data to database
+  //   newRequest(submissionData)
+  //     .then(() => {
+  //       // If the request is successful, show a success message and proceed
+  //       toast.success("Request submitted successfully");
+  //       form.reset(); // Reset the form to its initial state
+  //       goToNextTab(); // Navigate to the next tab
+  //     })
+  //     .catch((error) => {
+  //       // If the request fails, show an error message
+  //       toast.error("Failed to submit request");
+  //       console.error("Submission error:", error);
+  //     });
+  // };
+  // const handleThirdTabSubmit = () => {
+  //   console.log("handleThidTabSubmit clicked");
+  //   handleSubmit(onSubmit)();
+  // };
   // Fetch agencies using TRPC
   const { data: agencies, isLoading: isLoadingAgencies } =
     trpc.getAgencies.useQuery();
@@ -285,7 +344,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
             defaultValue="tab1"
           >
             <Form {...form}>
-              <form onSubmit={handleSubmit(onSubmit)} className="">
+              <form onSubmit={form.handleSubmit(onSubmit)} className="">
                 <TabsContent value="tab1" hidden={activeTab !== "tab1"}>
                   {!isLoading && clients && (
                     <FormField
@@ -467,97 +526,50 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                   </div>
                 </TabsContent>
                 <TabsContent value="tab4" hidden={activeTab !== "tab4"}>
-                  <FormField
-                    control={form.control}
-                    name="fundTypes"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          Select Requested Fund Types & Amounts:
-                        </FormLabel>
-                        <div className="flex flex-col align-start w-3/4">
-                          {fundTypesData.map((fundType) => (
-                            <div
-                              key={fundType.id}
-                              className="flex flex-row justify-between space-x-4"
-                            >
-                              <div className="flex flex-col-2">
-                                <div className="flex flex-row items-center space-x-2">
-                                  <Controller
-                                    name={`selectedFunds.${fundType.id}.selected`}
-                                    control={control}
-                                    render={({
-                                      field: {
-                                        onChange,
-                                        onBlur,
-                                        name,
-                                        ref,
-                                        value,
-                                      },
-                                    }) => (
-                                      <Checkbox
-                                        checked={value}
-                                        onCheckedChange={(checked) =>
-                                          onChange(checked)
-                                        }
-                                        onBlur={onBlur}
-                                        name={name}
-                                        ref={ref}
-                                        // Remove the `value` prop if it's not expected by your Checkbox component
-                                        // value={value} // This line should be removed or commented out
-                                        // Ensure any other necessary props are passed to the Checkbox component
-                                      />
-                                    )}
-                                  />
-                                  <label>{fundType.typeName}</label>
-                                </div>
-                                {watch(
-                                  `selectedFunds.${fundType.id}.selected`,
-                                ) && (
-                                  <Controller
-                                    name={`selectedFunds.${fundType.id}.amount`}
-                                    control={control}
-                                    render={({ field }) => (
-                                      <Input
-                                        type="number"
-                                        {...field}
-                                        value={field.value || ""}
-                                        onChange={(e) =>
-                                          field.onChange(e.target.value)
-                                        }
-                                        placeholder="Amount"
-                                      />
-                                    )}
-                                  />
-                                )}
-                              </div>
-                            </div>
-                          ))}
-                          {/* <div className="flex flex-row py-2">
-                            <Checkbox id="walmart-giftcard-placeholder" />
-                            <div className="px-1" />
-                            <label
-                              htmlFor="walmart-giftcard-placeholder"
-                              className="text-sm font-medium leading-none"
-                            >
-                              walmart-giftcard-placeholder
-                            </label>
-                          </div>
-                          <div className="flex flex-row items-center space-x-2">
-                            <div>Amount</div>
-                            <Input {...field} placeholder="25" />
-                          </div> */}
-                        </div>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  {fields.map((field, index) => (
+                    <div key={field.id}>
+                      <Select
+                        {...register(`funds.${index}.fundTypeId` as const)}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select Fund Type" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {!isLoadingFundTypes &&
+                            fundTypes?.map((fundType) => (
+                              <SelectItem
+                                key={fundType.id}
+                                value={fundType.id.toString()}
+                              >
+                                {fundType.typeName}
+                              </SelectItem>
+                            ))}
+                        </SelectContent>
+                      </Select>
+                      <Input
+                        type="number"
+                        {...register(`funds.${index}.amount` as const)}
+                      />
+
+                      <Button type="button" onClick={() => remove(index)}>
+                        Remove
+                      </Button>
+                    </div>
+                  ))}
+
+                  <Button
+                    type="button"
+                    onClick={() => append({ fundTypeId: 0, amount: 0 })}
+                  >
+                    Add Fund
+                  </Button>
+
                   <div className="p-1" />
                   <div className="flex flex-row justify-between">
                     <Button onClick={goToLastTab}>Last</Button>
-                    <Button type="submit" onClick={handleThirdTabSubmit}>
-                      Submit
-                    </Button>
+                    <Button type="submit">Submit</Button>
                   </div>
                 </TabsContent>
                 <TabsContent value="tab5" hidden={activeTab !== "tab5"}>

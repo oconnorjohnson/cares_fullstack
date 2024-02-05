@@ -20,13 +20,15 @@ interface ClientData {
 interface RequestData {
   userId: string;
   clientId: number;
-  agency: string;
+  agencyId: number;
   details: string;
   sdoh: string[];
   rff: string[];
   implementation: string;
-  means: string[];
-  amount: string;
+  sustainability: string;
+  fundType: number;
+  amount: number;
+  funds: { amount: number; fundTypeId: number }[];
 }
 
 interface FundTypeData {
@@ -76,17 +78,7 @@ export async function newClient(clientState: ClientData) {
   return newClientRecord;
 }
 
-export async function newRequest(requestState: {
-  userId: string;
-  clientId: number;
-  agencyId: number;
-  details: string;
-  implementation: string;
-  sustainability: string;
-  funds: { fundTypeId: number; amount: number }[];
-  sdoh: string[];
-  rff: string[];
-}) {
+export async function newRequest(requestState: RequestData) {
   if (!requestState.userId) {
     throw new Error("User not authenticated");
   }

@@ -65,7 +65,6 @@ model Fund {
   fundTypeId Int
   fundType   FundType @relation(fields: [fundTypeId], references: [id])
   amount     Int
-  details    String? // JSON string or link to more detailed information
 
   @@index([requestId, fundTypeId])
 }
@@ -103,9 +102,10 @@ model Request {
   requestFormAnswerId Int?
   preScreenAnswerId   Int?
   postScreenAnswerId  Int?
-  Funds               Fund[]
-  SDOHs               SDOH[]
-  RFFs                RFF[]
+  funds               Fund[]
+
+  SDOHs SDOH[]
+  RFFs  RFF[]
 
   @@index([clientId, userId, agencyId])
 }
