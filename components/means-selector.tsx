@@ -3,8 +3,8 @@ import React from "react";
 import MultipleSelector, { Option } from "@/components/ui/multiple-selector";
 
 interface MultipleSelectorControlledProps {
-  value: Option[]; // This remains the same, as the component receives Option[] for value
-  onChange: (selectedValues: Option[]) => void; // Correctly typed to match the implementation
+  value: Option[];
+  onChange: (selectedValues: Option[]) => void;
 }
 
 const OPTIONS: Option[] = [

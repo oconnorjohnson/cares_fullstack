@@ -18,6 +18,7 @@ model User {
   requests       Request[]
   isBanned       Boolean        @default(false)
   fundTypes      FundType[]
+  Agency         Agency[]
 
   @@index([userId])
 }
@@ -34,7 +35,11 @@ model EmailAddress {
 model Agency {
   id       Int       @id @default(autoincrement())
   name     String
+  userId   String
+  user     User      @relation(fields: [userId], references: [userId])
   requests Request[]
+
+  @@index([userId])
 }
 
 model Client {
@@ -59,8 +64,7 @@ model Fund {
   request    Request  @relation(fields: [requestId], references: [id])
   fundTypeId Int
   fundType   FundType @relation(fields: [fundTypeId], references: [id])
-  amount     Decimal? // Nullable for non-monetary funds like bus passes
-  details    String? // JSON string or link to more detailed information
+  amount     Int
 
   @@index([requestId, fundTypeId])
 }
@@ -76,41 +80,48 @@ model FundType {
 }
 
 model Request {
-  id                  Int                 @id @default(autoincrement())
+  id                  Int                @id @default(autoincrement())
   clientId            Int
-  client              Client              @relation(fields: [clientId], references: [id])
-  userId              Int
-  user                User                @relation(fields: [userId], references: [id])
+  client              Client             @relation(fields: [clientId], references: [id])
+  userId              String
+  user                User               @relation(fields: [userId], references: [userId])
   agencyId            Int
-  agency              Agency              @relation(fields: [agencyId], references: [id])
-  submitted           Boolean             @default(false)
-  pendingApproval     Boolean             @default(false)
-  approved            Boolean             @default(false)
-  pendingPayout       Boolean             @default(false)
-  paid                Boolean             @default(false)
-  hasPreScreen        Boolean             @default(false)
-  hasPostScreen       Boolean             @default(false)
-  createdAt           DateTime            @default(now())
-  updatedAt           DateTime            @updatedAt
-  requestFormAnswer   RequestFormAnswers?
+  agency              Agency             @relation(fields: [agencyId], references: [id])
+  pendingApproval     Boolean            @default(false)
+  approved            Boolean            @default(false)
+  pendingPayout       Boolean            @default(false)
+  paid                Boolean            @default(false)
+  hasPreScreen        Boolean            @default(false)
+  hasPostScreen       Boolean            @default(false)
+  createdAt           DateTime           @default(now())
+  details             String
+  implementation      String
+  sustainability      String
   preScreenAnswer     PreScreenAnswers?
   postScreenAnswer    PostScreenAnswers?
   requestFormAnswerId Int?
   preScreenAnswerId   Int?
   postScreenAnswerId  Int?
-  Fund                Fund[]
+  funds               Fund[]
+
+  SDOHs SDOH[]
+  RFFs  RFF[]
 
   @@index([clientId, userId, agencyId])
 }
 
-model RequestFormAnswers {
-  id        Int      @id @default(autoincrement())
-  answers   Json
-  createdAt DateTime @default(now())
-  requestId Int      @unique
-  request   Request  @relation(fields: [requestId], references: [id])
+model SDOH {
+  id        Int     @id @default(autoincrement())
+  value     String
+  requestId Int
+  request   Request @relation(fields: [requestId], references: [id])
+}
 
-  @@index([requestId])
+model RFF {
+  id        Int     @id @default(autoincrement())
+  value     String
+  requestId Int
+  request   Request @relation(fields: [requestId], references: [id])
 }
 
 model PreScreenAnswers {

@@ -1,7 +1,10 @@
 "use server";
-import { createClient } from "@/prisma/prismaFunctions";
-// import { createRequest } from "@/prisma/prismaFunctions";
-import { createFundType } from "@/prisma/prismaFunctions";
+import {
+  createClient,
+  createFundType,
+  createAgency,
+  createRequest,
+} from "@/prisma/prismaFunctions";
 
 interface ClientData {
   first_name: string;
@@ -17,18 +20,36 @@ interface ClientData {
 interface RequestData {
   userId: string;
   clientId: number;
-  agency: string;
+  agencyId: number;
   details: string;
   sdoh: string[];
   rff: string[];
   implementation: string;
-  means: string[];
-  amount: string;
+  sustainability: string;
+  fundType: number;
+  amount: number;
+  funds: { amount: number; fundTypeId: number }[];
 }
 
 interface FundTypeData {
   userId: string;
   typeName: string;
+}
+
+interface AgencyData {
+  userId: string;
+  name: string;
+}
+
+export async function newAgency(agencyState: AgencyData) {
+  if (!agencyState.userId) {
+    throw new Error("User not authenticated");
+  }
+  const newAgencyRecord = await createAgency(agencyState);
+  if (!newAgencyRecord) {
+    throw new Error("Failed to create new agency.");
+  }
+  return newAgencyRecord;
 }
 
 export async function newFundType(fundState: FundTypeData) {
@@ -57,16 +78,17 @@ export async function newClient(clientState: ClientData) {
   return newClientRecord;
 }
 
-// export async function newRequest(requestState: RequestData) {
-//   if (!requestState.userId) {
-//     throw new Error("User not authenticated");
-//   }
-
-//   const newRequestRecord = await createRequest(requestState);
-
-//   if (!newRequestRecord) {
-//     throw new Error("Failed to submit request.");
-//   }
-
-//   return newRequestRecord;
-// }
+export async function newRequest(requestState: RequestData) {
+  if (!requestState.userId) {
+    throw new Error("User not authenticated");
+  }
+  console.log("newRequest called with:", requestState);
+  try {
+    const newRequestRecord = await createRequest(requestState);
+    console.log("Request created successfully:", newRequestRecord);
+    return newRequestRecord;
+  } catch (error) {
+    console.error("Failed to create request:", error);
+    throw error; // Ensure errors are propagated back to the caller
+  }
+}

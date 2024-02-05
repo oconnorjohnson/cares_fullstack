@@ -2,13 +2,13 @@
 import React, { useState, useEffect } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { toast } from "sonner";
 import { cn } from "@/server/utils";
 import { trpc } from "@/app/_trpc/client";
 import { newRequest } from "@/server/actions";
-import Means from "@/components/means-selector";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -46,23 +46,46 @@ interface Client {
   last_name: string;
 }
 
+interface Agency {
+  id: number;
+  name: string;
+  userId: string;
+}
+
+interface FundType {
+  id: number;
+  typeName: string;
+}
+
+interface FundInput {
+  fundTypeId: number;
+  amount: number;
+}
+
+interface SelectedFunds {
+  [key: number]: { selected: boolean; amount: number };
+}
+const fundTypeSchema = z.object({
+  selected: z.boolean(),
+  amount: z.number(),
+});
 const formSchema = z.object({
+  userId: z.string(),
   clientId: z.number(),
-  agency: z
-    .string()
-    .min(10, {
-      message: "Agency must be selected.",
-    })
-    .max(55, {
-      message: "Agency must be selected.",
-    }),
+  agencyId: z.number(),
   details: z.string(),
   sdoh: z.array(z.string()),
   rff: z.array(z.string()),
   implementation: z.string(),
   sustainability: z.string(),
-  means: z.array(z.string()),
-  amount: z.string(),
+  fundType: z.number(),
+  amount: z.number(),
+  funds: z.array(
+    z.object({
+      fundTypeId: z.number(),
+      amount: z.number(),
+    }),
+  ),
 });
 const OPTIONS: Option[] = [
   { label: "Food", value: "Food" },
@@ -99,12 +122,52 @@ const stringsToOptions = (values: string[]): Option[] => {
 const optionsToStrings = (options: Option[]): string[] => {
   return options.map((option) => option.value);
 };
+
+type FormInputs = z.infer<typeof formSchema>;
+
 export default function NewRequest({ userId }: { userId: string | null }) {
+  // state to manage fund type data
+  const [fundTypesData, setFundTypesData] = useState<FundType[]>([]);
+  //state to manage selected funds types
+  const [selectedFunds, setSelectedFunds] = useState<SelectedFunds>({});
+  const [fundTypeId, setFundTypeId] = useState<number>(0);
+  const [amount, setAmount] = useState<number>(0);
   // state to manage active tab
   const [activeTab, setActiveTab] = useState("tab1");
   // set state for progress bar
   const [progress, setProgress] = useState(0);
-
+  // get fund types using trpc
+  const { data: fundTypes, isLoading: isLoadingFundTypes } =
+    trpc.getFundTypes.useQuery();
+  // use effect to manage currently imported fund types
+  useEffect(() => {
+    if (fundTypes) {
+      setFundTypesData(fundTypes);
+      // initialize selectedFunds state
+      const initialSelectedFunds: SelectedFunds =
+        fundTypes.reduce<SelectedFunds>((acc, fundType) => {
+          acc[fundType.id] = { selected: false, amount: 0 };
+          return acc;
+        }, {});
+      setSelectedFunds(initialSelectedFunds);
+    }
+  }, [fundTypes]);
+  // functioin to handle fund selection change
+  // Update the handleFundSelectionChange function to be more declarative
+  const [funds, setFunds] = useState<FundInput[]>([]);
+  // function to add new fund input set to UI
+  const handleAddFund = () => {
+    append({ fundTypeId: 0, amount: 0 }); // Append a new blank fund entry
+  };
+  // function to remove specific fund input set
+  const handleRemoveFund = (index: number) => {
+    console.log(funds.length);
+    if (fields.length > 1) {
+      remove(index);
+    } else {
+      toast.error("At least one fund must be specified");
+    }
+  };
   // update progress based on activeTab
   useEffect(() => {
     switch (activeTab) {
@@ -148,28 +211,75 @@ export default function NewRequest({ userId }: { userId: string | null }) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       clientId: undefined,
-      agency: "",
+      agencyId: undefined,
       details: "",
       sdoh: [],
       rff: [],
-      means: [],
-      amount: "",
+      fundType: undefined,
+      amount: undefined,
       sustainability: "",
       implementation: "",
+      funds: [{ fundTypeId: 0, amount: 0 }],
     },
   });
+  const { control, handleSubmit, setValue, register } = form;
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "funds",
+  });
   const watchedClientId = form.watch("clientId");
+  const watchedAgencyId = form.watch("agencyId");
   const trpcContext = trpc.useUtils();
-  const onSubmit = async (data: any) => {
-    console.log(data);
+  const onSubmit = async (data: FormInputs) => {
+    try {
+      await newRequest(data);
+      toast.success("Request submitted successrfully");
+    } catch (error) {
+      toast.error("Failed to submit request");
+      console.log("Form submission started", data);
+    }
+    alert("Form submitted. Check the console for details.");
+  };
+  // const onSubmit = async (formData: any) => {
+  //   console.log("Attempting form submission", formData);
+  //   const selectedFundTypes = Object.entries(selectedFunds)
+  //     .filter(([_, value]) => value.selected)
+  //     .map(([key, value]) => ({
+  //       fundTypeId: key,
+  //       amount: value.amount,
+  //     }));
 
-    // after form submission logic, go to next tab
-    goToNextTab();
-  };
-  const handleThirdTabSubmit = () => {
-    goToNextTab();
-    form.handleSubmit(onSubmit)();
-  };
+  //   //combine `data` with `selectedFundTypes` and submit
+  //   const submissionData = {
+  //     ...formData,
+  //     funds: Object.entries(selectedFundTypes)
+  //       .filter(([_, value]) => value.fundTypeId)
+  //       .map(([key, value]) => ({
+  //         fundTypeId: parseInt(key),
+  //         amount: value.amount,
+  //       })),
+  //   };
+  //   // use server action to call prismaFunction to submit data to database
+  //   newRequest(submissionData)
+  //     .then(() => {
+  //       // If the request is successful, show a success message and proceed
+  //       toast.success("Request submitted successfully");
+  //       form.reset(); // Reset the form to its initial state
+  //       goToNextTab(); // Navigate to the next tab
+  //     })
+  //     .catch((error) => {
+  //       // If the request fails, show an error message
+  //       toast.error("Failed to submit request");
+  //       console.error("Submission error:", error);
+  //     });
+  // };
+  // const handleThirdTabSubmit = () => {
+  //   console.log("handleThidTabSubmit clicked");
+  //   handleSubmit(onSubmit)();
+  // };
+  // Fetch agencies using TRPC
+  const { data: agencies, isLoading: isLoadingAgencies } =
+    trpc.getAgencies.useQuery();
 
   const {
     data: clients,
@@ -186,6 +296,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
         </DialogTrigger>
         <DialogContent>
           <p>Selected Client ID: {watchedClientId}</p>
+          <p>Selected Agency ID: {watchedAgencyId}</p>
           <Progress value={progress} className="w-full mt-4" />
           <DialogTitle>New Request</DialogTitle>
           <DialogDescription>
@@ -242,51 +353,48 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                       )}
                     />
                   )}
-
-                  <FormField
-                    control={form.control}
-                    name="agency"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Requesting Agency</FormLabel>
-                        <Select
-                          {...field}
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Agency" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="Yolo County Public Defender">
-                              Yolo County Public Defender
-                            </SelectItem>
-                            <SelectItem value="Yolo County Probation">
-                              Yolo County Probation
-                            </SelectItem>
-                            <SelectItem value="Yolo County Health & Human Services - RJP">
-                              Yolo County Health & Human Services - RJP
-                            </SelectItem>
-                            <SelectItem value="Yolo County Health & Human Services - AIC">
-                              Yolo County Health & Human Services - AIC
-                            </SelectItem>
-                            <SelectItem value="Yolo County Health & Human Services - Other">
-                              Yolo County Health & Human Services - Other
-                            </SelectItem>
-                            <SelectItem value="Yolo County District Attorny's Office - RJP">
-                              Yolo County District Attorny's Office - RJP
-                            </SelectItem>
-                            <SelectItem value="Conflict Panel Attorneys">
-                              Conflict Panel Attorneys
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  {!isLoadingAgencies && agencies && (
+                    <FormField
+                      control={form.control}
+                      name="agencyId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Agency</FormLabel>
+                          <Select
+                            {...field}
+                            value={
+                              field && field.value !== undefined
+                                ? field.value.toString()
+                                : ""
+                            }
+                            onValueChange={(value) =>
+                              field.onChange(parseInt(value, 10))
+                            }
+                            defaultValue={
+                              field.value ? field.value.toString() : ""
+                            }
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select an Agency" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {agencies.map((agency: Agency) => (
+                                <SelectItem
+                                  key={agency.id}
+                                  value={agency.id.toString()}
+                                >
+                                  {agency.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
                   <FormField
                     control={form.control}
                     name="details"
@@ -383,41 +491,57 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                   </div>
                 </TabsContent>
                 <TabsContent value="tab4" hidden={activeTab !== "tab4"}>
-                  <FormField
-                    control={form.control}
-                    name="means"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Means of utilizing support:</FormLabel>
-                        <Means
-                          value={stringsToOptions(field.value)}
-                          onChange={(selectedOptions: Option[]) =>
-                            field.onChange(optionsToStrings(selectedOptions))
-                          }
-                        />
+                  {fields.map((field, index) => (
+                    <div
+                      key={field.id}
+                      className="flex items-center gap-2 mb-4"
+                    >
+                      <Select
+                        {...register(`funds.${index}.fundTypeId` as const)}
+                        onValueChange={(value) => {
+                          setValue(
+                            `funds.${index}.fundTypeId`,
+                            parseInt(value),
+                          );
+                        }}
+                        defaultValue={`${field.fundTypeId}`}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select Fund Type" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {!isLoadingFundTypes &&
+                            fundTypes?.map((fundType) => (
+                              <SelectItem
+                                key={fundType.id}
+                                value={fundType.id.toString()}
+                              >
+                                {fundType.typeName}
+                              </SelectItem>
+                            ))}
+                        </SelectContent>
+                      </Select>
+                      <Input
+                        type="number"
+                        {...register(`funds.${index}.amount` as const)}
+                      />
 
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="amount"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          Amount Requested &#40;Ex&#58; Arco&#58; $25, Bus
-                          Passes&#58; 2&#41;
-                        </FormLabel>
-                        <Input {...field} />
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                      <Button
+                        type="button"
+                        onClick={() => handleRemoveFund(index)}
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                  ))}
+
+                  <Button onClick={handleAddFund}>Add Fund</Button>
                   <div className="p-1" />
                   <div className="flex flex-row justify-between">
                     <Button onClick={goToLastTab}>Last</Button>
-                    <Button onClick={handleThirdTabSubmit}>Submit</Button>
+                    <Button type="submit">Submit</Button>
                   </div>
                 </TabsContent>
                 <TabsContent value="tab5" hidden={activeTab !== "tab5"}>
