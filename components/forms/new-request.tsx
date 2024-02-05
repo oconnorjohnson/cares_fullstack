@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { toast } from "sonner";
 import { cn } from "@/server/utils";
 import { trpc } from "@/app/_trpc/client";
@@ -201,7 +201,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
   };
   // function to move to the last tab
   const goToLastTab = () => {
-    if (activeTab !== "tab`") {
+    if (activeTab !== "tab") {
       const lastTab = `tab${parseInt(activeTab[3]) - 1}`;
       setActiveTab(lastTab);
     }
@@ -313,41 +313,42 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                 <TabsContent value="tab1" hidden={activeTab !== "tab1"}>
                   {!isLoading && clients && (
                     <FormField
-                      control={form.control}
+                      control={control}
                       name="clientId"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Client</FormLabel>
-                          <Select
-                            {...field}
-                            value={
-                              field && field.value !== undefined
-                                ? field.value.toString()
-                                : ""
-                            }
-                            onValueChange={(value) =>
-                              field.onChange(parseInt(value, 10))
-                            }
-                            defaultValue={
-                              field.value ? field.value.toString() : ""
-                            }
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select a Client" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {clients.map((client: Client) => (
-                                <SelectItem
-                                  key={client.id}
-                                  value={client.id.toString()}
-                                >
-                                  {client.first_name} {client.last_name}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
+                          <FormControl>
+                            <Select
+                              value={
+                                field && field.value !== undefined
+                                  ? field.value.toString()
+                                  : ""
+                              }
+                              onValueChange={(value) =>
+                                field.onChange(parseInt(value, 10))
+                              }
+                              defaultValue={
+                                field.value ? field.value.toString() : ""
+                              }
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select a Client" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {clients.map((client: Client) => (
+                                  <SelectItem
+                                    key={client.id}
+                                    value={client.id.toString()}
+                                  >
+                                    {client.first_name} {client.last_name}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -355,54 +356,57 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                   )}
                   {!isLoadingAgencies && agencies && (
                     <FormField
-                      control={form.control}
+                      control={control}
                       name="agencyId"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Agency</FormLabel>
-                          <Select
-                            {...field}
-                            value={
-                              field && field.value !== undefined
-                                ? field.value.toString()
-                                : ""
-                            }
-                            onValueChange={(value) =>
-                              field.onChange(parseInt(value, 10))
-                            }
-                            defaultValue={
-                              field.value ? field.value.toString() : ""
-                            }
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select an Agency" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {agencies.map((agency: Agency) => (
-                                <SelectItem
-                                  key={agency.id}
-                                  value={agency.id.toString()}
-                                >
-                                  {agency.name}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
+                          <FormControl>
+                            <Select
+                              value={
+                                field && field.value !== undefined
+                                  ? field.value.toString()
+                                  : ""
+                              }
+                              onValueChange={(value) =>
+                                field.onChange(parseInt(value, 10))
+                              }
+                              defaultValue={
+                                field.value ? field.value.toString() : ""
+                              }
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select an Agency" />
+                                </SelectTrigger>
+                              </FormControl>
+
+                              <SelectContent>
+                                {agencies.map((agency: Agency) => (
+                                  <SelectItem
+                                    key={agency.id}
+                                    value={agency.id.toString()}
+                                  >
+                                    {agency.name}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
                   )}
                   <FormField
-                    control={form.control}
+                    control={control}
                     name="details"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Details of Client&apos;s Problem</FormLabel>
-                        <Textarea {...field} className="resize-none" />
-
+                        <FormLabel>Details of Client Problem</FormLabel>
+                        <FormControl>
+                          <Textarea className="resize-none" />
+                        </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -414,34 +418,38 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                 </TabsContent>
                 <TabsContent value="tab2" hidden={activeTab !== "tab2"}>
                   <FormField
-                    control={form.control}
+                    control={control}
                     name="sdoh"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>SDOH Categories</FormLabel>
-                        <SDOHSelect
-                          value={stringsToOptions(field.value)}
-                          onChange={(selectedOptions: Option[]) =>
-                            field.onChange(optionsToStrings(selectedOptions))
-                          }
-                        />
+                        <FormControl>
+                          <SDOHSelect
+                            value={stringsToOptions(field.value)}
+                            onChange={(selectedOptions: Option[]) =>
+                              field.onChange(optionsToStrings(selectedOptions))
+                            }
+                          />
+                        </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
                   <FormField
-                    control={form.control}
+                    control={control}
                     name="rff"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>How can RFF assist?</FormLabel>
-                        <RFFSelect
-                          value={stringsToOptions(field.value)}
-                          onChange={(selectedOptions: Option[]) =>
-                            field.onChange(optionsToStrings(selectedOptions))
-                          }
-                          // Pass other necessary props to RFFSelect
-                        />
+                        <FormControl>
+                          <RFFSelect
+                            value={stringsToOptions(field.value)}
+                            onChange={(selectedOptions: Option[]) =>
+                              field.onChange(optionsToStrings(selectedOptions))
+                            }
+                            // Pass other necessary props to RFFSelect
+                          />
+                        </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -455,21 +463,23 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                 </TabsContent>
                 <TabsContent value="tab3" hidden={activeTab !== "tab3"}>
                   <FormField
-                    control={form.control}
+                    control={control}
                     name="implementation"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>
                           Plan for implementation of RFF supports:
                         </FormLabel>
-                        <Textarea {...field} className="resize-none" />
+                        <FormControl>
+                          <Textarea className="resize-none" />
+                        </FormControl>
 
                         <FormMessage />
                       </FormItem>
                     )}
                   />
                   <FormField
-                    control={form.control}
+                    control={control}
                     name="sustainability"
                     render={({ field }) => (
                       <FormItem>
@@ -478,7 +488,9 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                           that has an ongoing cost. Write N/A if problem is NOT
                           ongoing.
                         </FormLabel>
-                        <Textarea {...field} className="resize-none" />
+                        <FormControl>
+                          <Textarea className="resize-none" />
+                        </FormControl>
 
                         <FormMessage />
                       </FormItem>
@@ -491,52 +503,58 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                   </div>
                 </TabsContent>
                 <TabsContent value="tab4" hidden={activeTab !== "tab4"}>
-                  {fields.map((field, index) => (
-                    <div
-                      key={field.id}
-                      className="flex items-center gap-2 mb-4"
-                    >
-                      <Select
-                        {...register(`funds.${index}.fundTypeId` as const)}
-                        onValueChange={(value) => {
-                          setValue(
-                            `funds.${index}.fundTypeId`,
-                            parseInt(value),
-                          );
-                        }}
-                        defaultValue={`${field.fundTypeId}`}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select Fund Type" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {!isLoadingFundTypes &&
-                            fundTypes?.map((fundType) => (
-                              <SelectItem
-                                key={fundType.id}
-                                value={fundType.id.toString()}
+                  <FormField
+                    control={control}
+                    name="funds"
+                    render={({ field }) => (
+                      <FormItem>
+                        {fields.map((field, index) => (
+                          <div
+                            key={field.id}
+                            className="flex items-center gap-2 mb-4"
+                          >
+                            <FormControl>
+                              <Select
+                                onValueChange={(value) => {
+                                  setValue(
+                                    `funds.${index}.fundTypeId`,
+                                    parseInt(value),
+                                  );
+                                }}
+                                defaultValue={`${field.fundTypeId}`}
                               >
-                                {fundType.typeName}
-                              </SelectItem>
-                            ))}
-                        </SelectContent>
-                      </Select>
-                      <Input
-                        type="number"
-                        {...register(`funds.${index}.amount` as const)}
-                      />
-
-                      <Button
-                        type="button"
-                        onClick={() => handleRemoveFund(index)}
-                      >
-                        Remove
-                      </Button>
-                    </div>
-                  ))}
-
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select Fund Type" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {!isLoadingFundTypes &&
+                                    fundTypes?.map((fundType) => (
+                                      <SelectItem
+                                        key={fundType.id}
+                                        value={fundType.id.toString()}
+                                      >
+                                        {fundType.typeName}
+                                      </SelectItem>
+                                    ))}
+                                </SelectContent>
+                              </Select>
+                            </FormControl>
+                            <FormControl>
+                              <Input type="number" />
+                            </FormControl>
+                            <Button
+                              type="button"
+                              onClick={() => handleRemoveFund(index)}
+                            >
+                              Remove
+                            </Button>
+                          </div>
+                        ))}
+                      </FormItem>
+                    )}
+                  />
                   <Button onClick={handleAddFund}>Add Fund</Button>
                   <div className="p-1" />
                   <div className="flex flex-row justify-between">
