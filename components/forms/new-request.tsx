@@ -130,6 +130,8 @@ export default function NewRequest({ userId }: { userId: string | null }) {
   const [fundTypesData, setFundTypesData] = useState<FundType[]>([]);
   //state to manage selected funds types
   const [selectedFunds, setSelectedFunds] = useState<SelectedFunds>({});
+  const [fundTypeId, setFundTypeId] = useState<number>(0);
+  const [amount, setAmount] = useState<number>(0);
   // state to manage active tab
   const [activeTab, setActiveTab] = useState("tab1");
   // set state for progress bar
@@ -154,54 +156,17 @@ export default function NewRequest({ userId }: { userId: string | null }) {
   // Update the handleFundSelectionChange function to be more declarative
   const [funds, setFunds] = useState<FundInput[]>([]);
   // function to add new fund input set to UI
-  const handleAddFund = (fundTypeId: number, amount: number) => {
-    setFunds((prevFunds) => [...prevFunds, { fundTypeId, amount }]);
+  const handleAddFund = () => {
+    append({ fundTypeId: 0, amount: 0 }); // Append a new blank fund entry
   };
-  // function to mreove specific fund input set
+  // function to remove specific fund input set
   const handleRemoveFund = (index: number) => {
-    setFunds((prevFunds) => prevFunds.filter((_, i) => i !== index));
-  };
-  // function to update specific fund input set
-  const handleUpdateFund = (index: number, fund: FundInput) => {
-    const newFunds = [...funds];
-    newFunds[index] = fund;
-    setFunds(newFunds);
-  };
-  // render fund inputs dynamically
-  const renderFundINputs = () => {
-    return funds.map((fund, index) => (
-      <div key={index} className="flex items-center gap-2 mb-4">
-        <Select
-          value={fund.fundTypeId.toString()}
-          onOpenChange={(e) =>
-            handleUpdateFund(index, {
-              ...fund,
-              fundTypeId: parseInt(e.target.value),
-            })
-          }
-        >
-          {fundTypesData.map((type) => (
-            <option key={type.id} value={type.id}>
-              {type.typeName}
-            </option>
-          ))}
-        </Select>
-        <Input
-          type="number"
-          value={fund.amount.toString()}
-          onChange={(e) =>
-            handleUpdateFund(index, {
-              ...fund,
-              amount: parseInt(e.target.value),
-            })
-          }
-          placeholder="Amount"
-        />
-        <Button variant="destructive" onClick={() => handleRemoveFund(index)}>
-          Remove
-        </Button>
-      </div>
-    ));
+    console.log(funds.length);
+    if (fields.length > 1) {
+      remove(index);
+    } else {
+      toast.error("At least one fund must be specified");
+    }
   };
   // update progress based on activeTab
   useEffect(() => {
@@ -257,7 +222,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
       funds: [{ fundTypeId: 0, amount: 0 }],
     },
   });
-  const { control, handleSubmit, register } = form;
+  const { control, handleSubmit, setValue, register } = form;
   const { fields, append, remove } = useFieldArray({
     control,
     name: "funds",
@@ -527,9 +492,19 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                 </TabsContent>
                 <TabsContent value="tab4" hidden={activeTab !== "tab4"}>
                   {fields.map((field, index) => (
-                    <div key={field.id}>
+                    <div
+                      key={field.id}
+                      className="flex items-center gap-2 mb-4"
+                    >
                       <Select
                         {...register(`funds.${index}.fundTypeId` as const)}
+                        onValueChange={(value) => {
+                          setValue(
+                            `funds.${index}.fundTypeId`,
+                            parseInt(value),
+                          );
+                        }}
+                        defaultValue={`${field.fundTypeId}`}
                       >
                         <FormControl>
                           <SelectTrigger>
@@ -553,19 +528,16 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                         {...register(`funds.${index}.amount` as const)}
                       />
 
-                      <Button type="button" onClick={() => remove(index)}>
+                      <Button
+                        type="button"
+                        onClick={() => handleRemoveFund(index)}
+                      >
                         Remove
                       </Button>
                     </div>
                   ))}
 
-                  <Button
-                    type="button"
-                    onClick={() => append({ fundTypeId: 0, amount: 0 })}
-                  >
-                    Add Fund
-                  </Button>
-
+                  <Button onClick={handleAddFund}>Add Fund</Button>
                   <div className="p-1" />
                   <div className="flex flex-row justify-between">
                     <Button onClick={goToLastTab}>Last</Button>
