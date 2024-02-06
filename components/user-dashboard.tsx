@@ -3,6 +3,7 @@ import NewClient from "@/components/forms/new-client";
 import GetClients from "@/components/get-clients";
 import NewRequest from "@/components/forms/new-request";
 import CurrentUser from "@/components/current-user";
+import GetRequests from "@/components/get-requests";
 
 export default function Dashboard() {
   const { userId } = auth();
@@ -18,6 +19,8 @@ export default function Dashboard() {
               <CurrentUser />
               <NewRequest userId={userId} />
             </div>
+            <GetRequests userId={userId} />
+            <div className="py-8" />
             <GetClients userId={userId} />
           </div>
         </div>

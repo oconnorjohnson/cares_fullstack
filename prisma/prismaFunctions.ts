@@ -216,3 +216,12 @@ export async function getClientsByUserId(userId: string) {
   });
   return clients;
 }
+
+export async function getRequestsByUserId(userId: string) {
+  const requests = await prisma.request.findMany({
+    where: {
+      userId: userId,
+    },
+  });
+  return requests;
+}

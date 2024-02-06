@@ -3,6 +3,7 @@ import { TRPCError } from "@trpc/server";
 import {
   prisma,
   getClientsByUserId,
+  getRequestsByUserId,
   deleteClient as deleteClientFromDB,
   deleteFundType as deleteFundTypeFromDB,
   deleteAgency as deleteAgencyFromDB,
@@ -29,6 +30,12 @@ export const appRouter = router({
     .query(async ({ input: userId }) => {
       const clients = await getClientsByUserId(userId);
       return clients;
+    }),
+  getRequests: publicProcedure
+    .input(z.string())
+    .query(async ({ input: userId }) => {
+      const requests = await getRequestsByUserId(userId);
+      return requests;
     }),
   deleteAgency: publicProcedure
     .input(z.number())
