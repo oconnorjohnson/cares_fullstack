@@ -1,0 +1,110 @@
+import React from "react";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+
+interface FundType {
+  id: number;
+  typeName: string;
+}
+
+interface FundInput {
+  fundTypeId: number;
+  amount: number;
+}
+
+interface FundSelectProps {
+  value: FundInput[]; // This represents the selected funds
+  onChange: (newValue: FundInput[]) => void;
+  fundTypesData: FundType[]; // Assuming fundTypesData is passed as a prop now
+}
+
+export default function FundSelect({
+  value,
+  onChange,
+  fundTypesData,
+}: FundSelectProps) {
+  const handleAddFund = () => {
+    const newFunds = [...value, { fundTypeId: 0, amount: 0 }];
+    onChange(newFunds);
+  };
+
+  const handleRemoveFund = (index: number) => {
+    if (value.length > 1) {
+      const newFunds = value.filter((_, i) => i !== index);
+      onChange(newFunds);
+    }
+  };
+
+  const handleFundTypeChange = (index: number, selectedValue: string) => {
+    console.log(`Changing fund type for index ${index} to ${selectedValue}`);
+    const newFunds = value.map((fund, idx) => {
+      if (idx === index) {
+        return { ...fund, fundTypeId: parseInt(selectedValue, 10) };
+      }
+      return fund;
+    });
+    console.log(newFunds);
+    onChange(newFunds);
+  };
+
+  const handleAmountChange = (index: number, newValue: string) => {
+    console.log(`Changing amount for index ${index} to ${newValue}`);
+    const newFunds = value.map((fund, idx) => {
+      if (idx === index) {
+        return { ...fund, amount: parseFloat(newValue) || 0 };
+      }
+      return fund;
+    });
+    console.log(newFunds);
+    onChange(newFunds);
+  };
+
+  return (
+    <>
+      <div className="flex flex-col">
+        <div className="flex flex-row pb-2">
+          <Button onClick={handleAddFund}>Add Fund</Button>
+        </div>
+        <div className="space-y-2">
+          {value.map((fund, index) => (
+            <div key={index} className="flex flex-row items-center gap-2">
+              <Select
+                value={(fund.fundTypeId ?? "").toString()} // Provide a fallback value
+                onValueChange={(selectedValue) =>
+                  handleFundTypeChange(index, selectedValue)
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Fund Type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {fundTypesData.map((fundType) => (
+                    <SelectItem
+                      key={fundType.id}
+                      value={fundType.id.toString()}
+                    >
+                      {fundType.typeName}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Input
+                type="number"
+                value={fund.amount.toString()}
+                onChange={(e) => handleAmountChange(index, e.target.value)}
+              />
+              <Button onClick={() => handleRemoveFund(index)}>Remove</Button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+}

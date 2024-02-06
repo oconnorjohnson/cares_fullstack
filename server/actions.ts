@@ -82,13 +82,13 @@ export async function newRequest(requestState: RequestData) {
   if (!requestState.userId) {
     throw new Error("User not authenticated");
   }
-  console.log("newRequest called with:", requestState);
+  console.log("newRequest server action called with:", requestState);
   try {
     const newRequestRecord = await createRequest(requestState);
     console.log("Request created successfully:", newRequestRecord);
     return newRequestRecord;
   } catch (error) {
     console.error("Failed to create request:", error);
-    throw error; // Ensure errors are propagated back to the caller
+    throw error;
   }
 }

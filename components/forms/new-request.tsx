@@ -1,10 +1,11 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useFieldArray } from "react-hook-form";
 import { toast } from "sonner";
 import { cn } from "@/server/utils";
+import FundSelect from "@/components/fund-select";
 import { trpc } from "@/app/_trpc/client";
 import { newRequest } from "@/server/actions";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -65,12 +66,8 @@ interface FundInput {
 interface SelectedFunds {
   [key: number]: { selected: boolean; amount: number };
 }
-const fundTypeSchema = z.object({
-  selected: z.boolean(),
-  amount: z.number(),
-});
+
 const formSchema = z.object({
-  userId: z.string(),
   clientId: z.number(),
   agencyId: z.number(),
   details: z.string(),
@@ -105,12 +102,6 @@ const OPTIONS: Option[] = [
   { label: "Neighborhood Safety", value: "Neighborhood Safety" },
   { label: "Social & Community", value: "Social & Community" },
   { label: "Economic Instability", value: "Economic Instability" },
-  { label: "Walmart Gift Card", value: "Walmart Gift Card" },
-  { label: "Arco Gift Card", value: "Arco Gift Card" },
-  { label: "Bus Passes", value: "Bus Passes" },
-  { label: "Invoice", value: "Invoice" },
-  { label: "Check", value: "Check" },
-  { label: "Cash", value: "Cash" },
 ];
 
 // helper function to convert strings -> option objs
@@ -126,48 +117,11 @@ const optionsToStrings = (options: Option[]): string[] => {
 type FormInputs = z.infer<typeof formSchema>;
 
 export default function NewRequest({ userId }: { userId: string | null }) {
-  // state to manage fund type data
-  const [fundTypesData, setFundTypesData] = useState<FundType[]>([]);
-  //state to manage selected funds types
-  const [selectedFunds, setSelectedFunds] = useState<SelectedFunds>({});
-  const [fundTypeId, setFundTypeId] = useState<number>(0);
-  const [amount, setAmount] = useState<number>(0);
   // state to manage active tab
   const [activeTab, setActiveTab] = useState("tab1");
   // set state for progress bar
   const [progress, setProgress] = useState(0);
-  // get fund types using trpc
-  const { data: fundTypes, isLoading: isLoadingFundTypes } =
-    trpc.getFundTypes.useQuery();
-  // use effect to manage currently imported fund types
-  useEffect(() => {
-    if (fundTypes) {
-      setFundTypesData(fundTypes);
-      // initialize selectedFunds state
-      const initialSelectedFunds: SelectedFunds =
-        fundTypes.reduce<SelectedFunds>((acc, fundType) => {
-          acc[fundType.id] = { selected: false, amount: 0 };
-          return acc;
-        }, {});
-      setSelectedFunds(initialSelectedFunds);
-    }
-  }, [fundTypes]);
-  // functioin to handle fund selection change
-  // Update the handleFundSelectionChange function to be more declarative
-  const [funds, setFunds] = useState<FundInput[]>([]);
-  // function to add new fund input set to UI
-  const handleAddFund = () => {
-    append({ fundTypeId: 0, amount: 0 }); // Append a new blank fund entry
-  };
-  // function to remove specific fund input set
-  const handleRemoveFund = (index: number) => {
-    console.log(funds.length);
-    if (fields.length > 1) {
-      remove(index);
-    } else {
-      toast.error("At least one fund must be specified");
-    }
-  };
+
   // update progress based on activeTab
   useEffect(() => {
     switch (activeTab) {
@@ -201,7 +155,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
   };
   // function to move to the last tab
   const goToLastTab = () => {
-    if (activeTab !== "tab`") {
+    if (activeTab !== "tab") {
       const lastTab = `tab${parseInt(activeTab[3]) - 1}`;
       setActiveTab(lastTab);
     }
@@ -219,68 +173,56 @@ export default function NewRequest({ userId }: { userId: string | null }) {
       amount: undefined,
       sustainability: "",
       implementation: "",
-      funds: [{ fundTypeId: 0, amount: 0 }],
+      funds: [{ fundTypeId: undefined, amount: 0 }],
     },
   });
-  const { control, handleSubmit, setValue, register } = form;
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = form;
   const { fields, append, remove } = useFieldArray({
     control,
     name: "funds",
   });
+
+  const handleFundsChange = useCallback(
+    (updatedFunds: FundInput[]) => {
+      console.log("Updated funds received:", updatedFunds);
+      const normalizedFunds = updatedFunds.map((fund) => ({
+        ...fund,
+        fundTypeId: Number(fund.fundTypeId),
+      }));
+      console.log("Normalized funds:", normalizedFunds);
+      setValue("funds", normalizedFunds);
+    },
+    [setValue],
+  );
   const watchedClientId = form.watch("clientId");
   const watchedAgencyId = form.watch("agencyId");
   const trpcContext = trpc.useUtils();
   const onSubmit = async (data: FormInputs) => {
-    try {
-      await newRequest(data);
-      toast.success("Request submitted successrfully");
-    } catch (error) {
-      toast.error("Failed to submit request");
-      console.log("Form submission started", data);
+    console.log("Form submission started", data);
+    console.log(typeof data.funds[0].amount);
+    if (!userId) {
+      console.log("User not authenticated, submission failed");
+    } else {
+      try {
+        await newRequest({ ...data, userId });
+        toast.success("Request submitted successrfully");
+      } catch (error) {
+        toast.error("Failed to submit request");
+        console.log("Form submission started", data);
+      }
     }
     alert("Form submitted. Check the console for details.");
   };
-  // const onSubmit = async (formData: any) => {
-  //   console.log("Attempting form submission", formData);
-  //   const selectedFundTypes = Object.entries(selectedFunds)
-  //     .filter(([_, value]) => value.selected)
-  //     .map(([key, value]) => ({
-  //       fundTypeId: key,
-  //       amount: value.amount,
-  //     }));
 
-  //   //combine `data` with `selectedFundTypes` and submit
-  //   const submissionData = {
-  //     ...formData,
-  //     funds: Object.entries(selectedFundTypes)
-  //       .filter(([_, value]) => value.fundTypeId)
-  //       .map(([key, value]) => ({
-  //         fundTypeId: parseInt(key),
-  //         amount: value.amount,
-  //       })),
-  //   };
-  //   // use server action to call prismaFunction to submit data to database
-  //   newRequest(submissionData)
-  //     .then(() => {
-  //       // If the request is successful, show a success message and proceed
-  //       toast.success("Request submitted successfully");
-  //       form.reset(); // Reset the form to its initial state
-  //       goToNextTab(); // Navigate to the next tab
-  //     })
-  //     .catch((error) => {
-  //       // If the request fails, show an error message
-  //       toast.error("Failed to submit request");
-  //       console.error("Submission error:", error);
-  //     });
-  // };
-  // const handleThirdTabSubmit = () => {
-  //   console.log("handleThidTabSubmit clicked");
-  //   handleSubmit(onSubmit)();
-  // };
-  // Fetch agencies using TRPC
   const { data: agencies, isLoading: isLoadingAgencies } =
     trpc.getAgencies.useQuery();
-
+  const { data: fundTypesData, isLoading: isLoadingFundTypes } =
+    trpc.getFundTypes.useQuery();
   const {
     data: clients,
     isLoading,
@@ -288,6 +230,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
   } = trpc.getClients.useQuery(userId as string, {
     enabled: !!userId,
   });
+  console.log(errors);
   return (
     <>
       <Dialog>
@@ -313,41 +256,42 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                 <TabsContent value="tab1" hidden={activeTab !== "tab1"}>
                   {!isLoading && clients && (
                     <FormField
-                      control={form.control}
+                      control={control}
                       name="clientId"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Client</FormLabel>
-                          <Select
-                            {...field}
-                            value={
-                              field && field.value !== undefined
-                                ? field.value.toString()
-                                : ""
-                            }
-                            onValueChange={(value) =>
-                              field.onChange(parseInt(value, 10))
-                            }
-                            defaultValue={
-                              field.value ? field.value.toString() : ""
-                            }
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select a Client" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {clients.map((client: Client) => (
-                                <SelectItem
-                                  key={client.id}
-                                  value={client.id.toString()}
-                                >
-                                  {client.first_name} {client.last_name}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
+                          <FormControl>
+                            <Select
+                              value={
+                                field && field.value !== undefined
+                                  ? field.value.toString()
+                                  : ""
+                              }
+                              onValueChange={(value) =>
+                                field.onChange(parseInt(value, 10))
+                              }
+                              defaultValue={
+                                field.value ? field.value.toString() : ""
+                              }
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select a Client" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {clients.map((client: Client) => (
+                                  <SelectItem
+                                    key={client.id}
+                                    value={client.id.toString()}
+                                  >
+                                    {client.first_name} {client.last_name}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -355,54 +299,57 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                   )}
                   {!isLoadingAgencies && agencies && (
                     <FormField
-                      control={form.control}
+                      control={control}
                       name="agencyId"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Agency</FormLabel>
-                          <Select
-                            {...field}
-                            value={
-                              field && field.value !== undefined
-                                ? field.value.toString()
-                                : ""
-                            }
-                            onValueChange={(value) =>
-                              field.onChange(parseInt(value, 10))
-                            }
-                            defaultValue={
-                              field.value ? field.value.toString() : ""
-                            }
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select an Agency" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {agencies.map((agency: Agency) => (
-                                <SelectItem
-                                  key={agency.id}
-                                  value={agency.id.toString()}
-                                >
-                                  {agency.name}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
+                          <FormControl>
+                            <Select
+                              value={
+                                field && field.value !== undefined
+                                  ? field.value.toString()
+                                  : ""
+                              }
+                              onValueChange={(value) =>
+                                field.onChange(parseInt(value, 10))
+                              }
+                              defaultValue={
+                                field.value ? field.value.toString() : ""
+                              }
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select an Agency" />
+                                </SelectTrigger>
+                              </FormControl>
+
+                              <SelectContent>
+                                {agencies.map((agency: Agency) => (
+                                  <SelectItem
+                                    key={agency.id}
+                                    value={agency.id.toString()}
+                                  >
+                                    {agency.name}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
                   )}
                   <FormField
-                    control={form.control}
+                    control={control}
                     name="details"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Details of Client&apos;s Problem</FormLabel>
-                        <Textarea {...field} className="resize-none" />
-
+                        <FormLabel>Details of Client Problem</FormLabel>
+                        <FormControl>
+                          <Textarea {...field} className="resize-none" />
+                        </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -414,34 +361,38 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                 </TabsContent>
                 <TabsContent value="tab2" hidden={activeTab !== "tab2"}>
                   <FormField
-                    control={form.control}
+                    control={control}
                     name="sdoh"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>SDOH Categories</FormLabel>
-                        <SDOHSelect
-                          value={stringsToOptions(field.value)}
-                          onChange={(selectedOptions: Option[]) =>
-                            field.onChange(optionsToStrings(selectedOptions))
-                          }
-                        />
+                        <FormControl>
+                          <SDOHSelect
+                            value={stringsToOptions(field.value)}
+                            onChange={(selectedOptions: Option[]) =>
+                              field.onChange(optionsToStrings(selectedOptions))
+                            }
+                          />
+                        </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
                   <FormField
-                    control={form.control}
+                    control={control}
                     name="rff"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>How can RFF assist?</FormLabel>
-                        <RFFSelect
-                          value={stringsToOptions(field.value)}
-                          onChange={(selectedOptions: Option[]) =>
-                            field.onChange(optionsToStrings(selectedOptions))
-                          }
-                          // Pass other necessary props to RFFSelect
-                        />
+                        <FormControl>
+                          <RFFSelect
+                            value={stringsToOptions(field.value)}
+                            onChange={(selectedOptions: Option[]) =>
+                              field.onChange(optionsToStrings(selectedOptions))
+                            }
+                            // Pass other necessary props to RFFSelect
+                          />
+                        </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -455,21 +406,23 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                 </TabsContent>
                 <TabsContent value="tab3" hidden={activeTab !== "tab3"}>
                   <FormField
-                    control={form.control}
+                    control={control}
                     name="implementation"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>
                           Plan for implementation of RFF supports:
                         </FormLabel>
-                        <Textarea {...field} className="resize-none" />
+                        <FormControl>
+                          <Textarea {...field} className="resize-none" />
+                        </FormControl>
 
                         <FormMessage />
                       </FormItem>
                     )}
                   />
                   <FormField
-                    control={form.control}
+                    control={control}
                     name="sustainability"
                     render={({ field }) => (
                       <FormItem>
@@ -478,7 +431,9 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                           that has an ongoing cost. Write N/A if problem is NOT
                           ongoing.
                         </FormLabel>
-                        <Textarea {...field} className="resize-none" />
+                        <FormControl>
+                          <Textarea {...field} className="resize-none" />
+                        </FormControl>
 
                         <FormMessage />
                       </FormItem>
@@ -491,57 +446,31 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                   </div>
                 </TabsContent>
                 <TabsContent value="tab4" hidden={activeTab !== "tab4"}>
-                  {fields.map((field, index) => (
-                    <div
-                      key={field.id}
-                      className="flex items-center gap-2 mb-4"
-                    >
-                      <Select
-                        {...register(`funds.${index}.fundTypeId` as const)}
-                        onValueChange={(value) => {
-                          setValue(
-                            `funds.${index}.fundTypeId`,
-                            parseInt(value),
-                          );
-                        }}
-                        defaultValue={`${field.fundTypeId}`}
-                      >
+                  <FormField
+                    control={control}
+                    name="funds"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          Select requested funds and note fund amounts.
+                        </FormLabel>
                         <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select Fund Type" />
-                          </SelectTrigger>
+                          <FundSelect
+                            value={field.value}
+                            onChange={handleFundsChange}
+                            fundTypesData={fundTypesData || []}
+                          />
                         </FormControl>
-                        <SelectContent>
-                          {!isLoadingFundTypes &&
-                            fundTypes?.map((fundType) => (
-                              <SelectItem
-                                key={fundType.id}
-                                value={fundType.id.toString()}
-                              >
-                                {fundType.typeName}
-                              </SelectItem>
-                            ))}
-                        </SelectContent>
-                      </Select>
-                      <Input
-                        type="number"
-                        {...register(`funds.${index}.amount` as const)}
-                      />
-
-                      <Button
-                        type="button"
-                        onClick={() => handleRemoveFund(index)}
-                      >
-                        Remove
-                      </Button>
-                    </div>
-                  ))}
-
-                  <Button onClick={handleAddFund}>Add Fund</Button>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   <div className="p-1" />
                   <div className="flex flex-row justify-between">
                     <Button onClick={goToLastTab}>Last</Button>
-                    <Button type="submit">Submit</Button>
+                    <Button type="submit" onClick={handleSubmit(onSubmit)}>
+                      Submit
+                    </Button>
                   </div>
                 </TabsContent>
                 <TabsContent value="tab5" hidden={activeTab !== "tab5"}>
