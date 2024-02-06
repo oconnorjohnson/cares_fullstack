@@ -1,5 +1,4 @@
-"use client";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   Select,
   SelectTrigger,
@@ -9,7 +8,6 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { trpc } from "@/app/_trpc/client";
 
 interface FundType {
   id: number;
@@ -18,36 +16,54 @@ interface FundType {
 
 interface FundInput {
   fundTypeId: number;
-  amount: string;
+  amount: number;
 }
 
-interface SelectedFunds {
-  [key: number]: { selected: boolean; amount: number };
+interface FundSelectProps {
+  value: FundInput[]; // This represents the selected funds
+  onChange: (newValue: FundInput[]) => void;
+  fundTypesData: FundType[]; // Assuming fundTypesData is passed as a prop now
 }
 
-export default function FundSelect() {
-  const [fundTypesData, setFundTypesData] = useState<FundType[]>([]);
-  const { data: fundTypes, isLoading: isLoadingFundTypes } =
-    trpc.getFundTypes.useQuery();
-  useEffect(() => {
-    if (fundTypes) {
-      setFundTypesData(fundTypes);
-    }
-  }, [fundTypes]);
-
-  const [funds, setFunds] = useState<FundInput[]>([
-    { fundTypeId: 0, amount: "" },
-  ]);
-
+export default function FundSelect({
+  value,
+  onChange,
+  fundTypesData,
+}: FundSelectProps) {
   const handleAddFund = () => {
-    setFunds([...funds, { fundTypeId: 0, amount: "" }]);
+    const newFunds = [...value, { fundTypeId: 0, amount: 0 }];
+    onChange(newFunds);
   };
 
   const handleRemoveFund = (index: number) => {
-    if (funds.length > 1) {
-      const newFunds = funds.filter((_, i) => i !== index);
-      setFunds(newFunds);
+    if (value.length > 1) {
+      const newFunds = value.filter((_, i) => i !== index);
+      onChange(newFunds);
     }
+  };
+
+  const handleFundTypeChange = (index: number, selectedValue: string) => {
+    console.log(`Changing fund type for index ${index} to ${selectedValue}`);
+    const newFunds = value.map((fund, idx) => {
+      if (idx === index) {
+        return { ...fund, fundTypeId: parseInt(selectedValue, 10) };
+      }
+      return fund;
+    });
+    console.log(newFunds);
+    onChange(newFunds);
+  };
+
+  const handleAmountChange = (index: number, newValue: string) => {
+    console.log(`Changing amount for index ${index} to ${newValue}`);
+    const newFunds = value.map((fund, idx) => {
+      if (idx === index) {
+        return { ...fund, amount: parseFloat(newValue) || 0 };
+      }
+      return fund;
+    });
+    console.log(newFunds);
+    onChange(newFunds);
   };
 
   return (
@@ -57,32 +73,32 @@ export default function FundSelect() {
           <Button onClick={handleAddFund}>Add Fund</Button>
         </div>
         <div className="space-y-2">
-          {funds.map((fund, index) => (
+          {value.map((fund, index) => (
             <div key={index} className="flex flex-row items-center gap-2">
-              <Select>
+              <Select
+                value={(fund.fundTypeId ?? "").toString()} // Provide a fallback value
+                onValueChange={(selectedValue) =>
+                  handleFundTypeChange(index, selectedValue)
+                }
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select Fund Type" />
                 </SelectTrigger>
                 <SelectContent>
-                  {!isLoadingFundTypes &&
-                    fundTypesData.map((fundType) => (
-                      <SelectItem
-                        key={fundType.id}
-                        value={fundType.id.toString()}
-                      >
-                        {fundType.typeName}
-                      </SelectItem>
-                    ))}
+                  {fundTypesData.map((fundType) => (
+                    <SelectItem
+                      key={fundType.id}
+                      value={fundType.id.toString()}
+                    >
+                      {fundType.typeName}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               <Input
                 type="number"
-                value={fund.amount}
-                onChange={(e) => {
-                  const newFunds = [...funds];
-                  newFunds[index].amount = e.target.value;
-                  setFunds(newFunds);
-                }}
+                value={fund.amount.toString()}
+                onChange={(e) => handleAmountChange(index, e.target.value)}
               />
               <Button onClick={() => handleRemoveFund(index)}>Remove</Button>
             </div>

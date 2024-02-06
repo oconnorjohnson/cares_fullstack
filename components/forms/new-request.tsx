@@ -1,8 +1,8 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, useFieldArray, Controller } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { toast } from "sonner";
 import { cn } from "@/server/utils";
 import FundSelect from "@/components/fund-select";
@@ -102,12 +102,6 @@ const OPTIONS: Option[] = [
   { label: "Neighborhood Safety", value: "Neighborhood Safety" },
   { label: "Social & Community", value: "Social & Community" },
   { label: "Economic Instability", value: "Economic Instability" },
-  { label: "Walmart Gift Card", value: "Walmart Gift Card" },
-  { label: "Arco Gift Card", value: "Arco Gift Card" },
-  { label: "Bus Passes", value: "Bus Passes" },
-  { label: "Invoice", value: "Invoice" },
-  { label: "Check", value: "Check" },
-  { label: "Cash", value: "Cash" },
 ];
 
 // helper function to convert strings -> option objs
@@ -187,9 +181,24 @@ export default function NewRequest({ userId }: { userId: string | null }) {
     handleSubmit,
     setValue,
     formState: { errors },
-    register,
   } = form;
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "funds",
+  });
 
+  const handleFundsChange = useCallback(
+    (updatedFunds: FundInput[]) => {
+      console.log("Updated funds received:", updatedFunds);
+      const normalizedFunds = updatedFunds.map((fund) => ({
+        ...fund,
+        fundTypeId: Number(fund.fundTypeId),
+      }));
+      console.log("Normalized funds:", normalizedFunds);
+      setValue("funds", normalizedFunds);
+    },
+    [setValue],
+  );
   const watchedClientId = form.watch("clientId");
   const watchedAgencyId = form.watch("agencyId");
   const trpcContext = trpc.useUtils();
@@ -212,7 +221,8 @@ export default function NewRequest({ userId }: { userId: string | null }) {
 
   const { data: agencies, isLoading: isLoadingAgencies } =
     trpc.getAgencies.useQuery();
-
+  const { data: fundTypesData, isLoading: isLoadingFundTypes } =
+    trpc.getFundTypes.useQuery();
   const {
     data: clients,
     isLoading,
@@ -436,6 +446,25 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                   </div>
                 </TabsContent>
                 <TabsContent value="tab4" hidden={activeTab !== "tab4"}>
+                  <FormField
+                    control={control}
+                    name="funds"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          Select requested funds and note fund amounts.
+                        </FormLabel>
+                        <FormControl>
+                          <FundSelect
+                            value={field.value}
+                            onChange={handleFundsChange}
+                            fundTypesData={fundTypesData || []}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   <div className="p-1" />
                   <div className="flex flex-row justify-between">
                     <Button onClick={goToLastTab}>Last</Button>
