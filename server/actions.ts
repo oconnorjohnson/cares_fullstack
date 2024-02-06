@@ -26,8 +26,6 @@ interface RequestData {
   rff: string[];
   implementation: string;
   sustainability: string;
-  fundType: number;
-  amount: number;
   funds: { amount: number; fundTypeId: number }[];
 }
 

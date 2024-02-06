@@ -20,9 +20,9 @@ interface FundInput {
 }
 
 interface FundSelectProps {
-  value: FundInput[]; // This represents the selected funds
+  value: FundInput[];
   onChange: (newValue: FundInput[]) => void;
-  fundTypesData: FundType[]; // Assuming fundTypesData is passed as a prop now
+  fundTypesData: FundType[];
 }
 
 export default function FundSelect({
@@ -43,26 +43,22 @@ export default function FundSelect({
   };
 
   const handleFundTypeChange = (index: number, selectedValue: string) => {
-    console.log(`Changing fund type for index ${index} to ${selectedValue}`);
     const newFunds = value.map((fund, idx) => {
       if (idx === index) {
         return { ...fund, fundTypeId: parseInt(selectedValue, 10) };
       }
       return fund;
     });
-    console.log(newFunds);
     onChange(newFunds);
   };
 
   const handleAmountChange = (index: number, newValue: string) => {
-    console.log(`Changing amount for index ${index} to ${newValue}`);
     const newFunds = value.map((fund, idx) => {
       if (idx === index) {
         return { ...fund, amount: parseFloat(newValue) || 0 };
       }
       return fund;
     });
-    console.log(newFunds);
     onChange(newFunds);
   };
 
@@ -76,7 +72,7 @@ export default function FundSelect({
           {value.map((fund, index) => (
             <div key={index} className="flex flex-row items-center gap-2">
               <Select
-                value={(fund.fundTypeId ?? "").toString()} // Provide a fallback value
+                value={(fund.fundTypeId ?? "").toString()}
                 onValueChange={(selectedValue) =>
                   handleFundTypeChange(index, selectedValue)
                 }

@@ -66,7 +66,7 @@ export async function createRequest(requestData: {
       implementation: requestData.implementation,
       sustainability: requestData.sustainability,
       // Handling funds creation
-      Funds: {
+      funds: {
         create: requestData.funds.map((fund) => ({
           fundTypeId: fund.fundTypeId,
           amount: fund.amount,

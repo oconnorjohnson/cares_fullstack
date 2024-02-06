@@ -75,8 +75,6 @@ const formSchema = z.object({
   rff: z.array(z.string()),
   implementation: z.string(),
   sustainability: z.string(),
-  fundType: z.number(),
-  amount: z.number(),
   funds: z.array(
     z.object({
       fundTypeId: z.number(),
@@ -169,8 +167,6 @@ export default function NewRequest({ userId }: { userId: string | null }) {
       details: "",
       sdoh: [],
       rff: [],
-      fundType: undefined,
-      amount: undefined,
       sustainability: "",
       implementation: "",
       funds: [{ fundTypeId: undefined, amount: 0 }],
@@ -483,7 +479,6 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                     <div className="py-2" />
                   </FormItem>
                   <div className="flex flex-row justify-between">
-                    {/* <Button onClick={goToLastTab}>Last</Button> */}
                     <DialogClose>
                       <Button
                         onClick={() => {
