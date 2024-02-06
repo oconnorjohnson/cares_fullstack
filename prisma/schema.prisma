@@ -125,21 +125,37 @@ model RFF {
 }
 
 model PreScreenAnswers {
-  id        Int      @id @default(autoincrement())
-  answers   Json
-  createdAt DateTime @default(now())
-  requestId Int      @unique
-  request   Request  @relation(fields: [requestId], references: [id])
+  id                    Int      @id @default(autoincrement())
+  housingSituation      Int
+  housingQuality        Int
+  utilityStress         Int
+  foodInsecurityStress  Int
+  foodMoneyStress       Int
+  transpoConfidence     Int
+  transpoStress         Int
+  financialDifficulties Int
+  additionalInformation String
+  createdAt             DateTime @default(now())
+  requestId             Int      @unique
+  request               Request  @relation(fields: [requestId], references: [id])
 
   @@index([requestId])
 }
 
 model PostScreenAnswers {
-  id        Int      @id @default(autoincrement())
-  answers   Json
-  createdAt DateTime @default(now())
-  requestId Int      @unique
-  request   Request  @relation(fields: [requestId], references: [id])
+  id                    Int      @id @default(autoincrement())
+  housingSituation      Int
+  housingQuality        Int
+  utilityStress         Int
+  foodInsecurityStress  Int
+  foodMoneyStress       Int
+  transpoConfidence     Int
+  transpoStress         Int
+  financialDifficulties Int
+  additionalInformation String
+  createdAt             DateTime @default(now())
+  requestId             Int      @unique
+  request               Request  @relation(fields: [requestId], references: [id])
 
   @@index([requestId])
 }

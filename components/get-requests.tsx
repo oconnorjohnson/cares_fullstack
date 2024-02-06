@@ -2,14 +2,8 @@
 import { useState } from "react";
 import { trpc } from "@/app/_trpc/client";
 import { format, parseISO } from "date-fns";
-import { toast } from "sonner";
-import {
-  MoreHorizontalIcon,
-  Terminal,
-  EditIcon,
-  TrashIcon,
-  PlusIcon,
-} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { MoreHorizontalIcon, Terminal, InfoIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -38,7 +32,32 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 
+export function formatDateWithSuffix(date: Date) {
+  const dayOfMonth = parseInt(format(date, "d"), 10);
+  let suffix = "th";
+
+  const j = dayOfMonth % 10,
+    k = dayOfMonth % 100;
+  if (j === 1 && k !== 11) {
+    suffix = "st";
+  } else if (j === 2 && k !== 12) {
+    suffix = "nd";
+  } else if (j === 3 && k !== 13) {
+    suffix = "rd";
+  }
+
+  return format(date, `MMMM d'${suffix}'`);
+}
+
 export default function GetRequests({ userId }: { userId: string | null }) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedRequestId, setSelectedRequestId] = useState<number | null>(
+    null,
+  );
+  const openConfirmDialog = (requestId: number) => {
+    setSelectedRequestId(requestId);
+    setIsDialogOpen(true);
+  };
   const {
     data: requests,
     isLoading,
@@ -72,12 +91,10 @@ export default function GetRequests({ userId }: { userId: string | null }) {
             <TableRow>
               <TableHead>Client</TableHead>
               <TableHead>Agency</TableHead>
-              <TableHead>Details</TableHead>
-              <TableHead>SDOH Categories</TableHead>
-              <TableHead>How RFF Can Assist</TableHead>
-              <TableHead>Implementation Plan</TableHead>
-              <TableHead>Sustainability Plan</TableHead>
-              <TableHead>Requested Funds</TableHead>
+              <TableHead>Submitted</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Actions</TableHead>
+              <TableHead></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -87,25 +104,181 @@ export default function GetRequests({ userId }: { userId: string | null }) {
                   {request.client?.first_name} {request.client?.last_name}
                 </TableCell>
                 <TableCell>{request.agency?.name}</TableCell>
-                <TableCell>{request.details}</TableCell>
                 <TableCell>
-                  {request.SDOHs.map((sdoh) => (
-                    <div key={sdoh.id}>{sdoh.value}</div>
-                  ))}
+                  {format(parseISO(request.createdAt), "MM/dd/yyyy")}
                 </TableCell>
                 <TableCell>
-                  {request.RFFs.map((rff) => (
-                    <div key={rff.id}>{rff.value}</div>
-                  ))}
+                  {request.pendingApproval ? (
+                    <Badge className="bg-orange-400 text-black">
+                      Pending Approval
+                    </Badge>
+                  ) : request.approved ? (
+                    <Badge className="bg-green-600">Approved</Badge>
+                  ) : (
+                    <Badge className="bg-yellow-400 text-black">
+                      Awaiting Review
+                    </Badge>
+                  )}
                 </TableCell>
-                <TableCell>{request.implementation}</TableCell>
-                <TableCell>{request.sustainability}</TableCell>
                 <TableCell>
-                  {request.funds.map((fund) => (
-                    <div key={fund.id}>
-                      ${fund.amount} - {fund.fundType.typeName}
-                    </div>
-                  ))}
+                  {!request.hasPreScreen ? (
+                    <Button
+                      onClick={() => {
+                        /* Function to handle PreScreen completion */
+                      }}
+                    >
+                      Complete Pre-Screen
+                    </Button>
+                  ) : request.hasPreScreen &&
+                    !request.hasPostScreen &&
+                    request.paid ? (
+                    <Button
+                      onClick={() => {
+                        /* Function to handle PostScreen completion */
+                      }}
+                    >
+                      Complete Post-Screen
+                    </Button>
+                  ) : request.hasPreScreen && request.hasPostScreen ? (
+                    <div>Request Completed and Closed.</div>
+                  ) : null}
+                </TableCell>
+                <TableCell>
+                  <Dialog>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button size="icon" variant="ghost">
+                          <MoreHorizontalIcon />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DialogTrigger asChild>
+                          <DropdownMenuItem>
+                            <div className="flex text-md flex-row items-center">
+                              <InfoIcon size={15} />
+                              <div className="px-1" />
+                              View Request
+                            </div>
+                          </DropdownMenuItem>
+                        </DialogTrigger>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Request Details</DialogTitle>
+                        <DialogDescription>
+                          A summary of {request.client?.first_name}&apos;s
+                          request from{" "}
+                          {formatDateWithSuffix(parseISO(request.createdAt))}.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-2 items-center gap-4">
+                          <Label htmlFor="first_name" className="text-right">
+                            Name
+                          </Label>
+                          <div>
+                            {request.client?.first_name}{" "}
+                            {request.client?.last_name}
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 items-center gap-4">
+                          <Label htmlFor="last_name" className="text-right">
+                            Agency
+                          </Label>
+                          <div>{request.agency.name}</div>
+                        </div>
+                        <div className="grid grid-cols-2 items-center gap-4">
+                          <Label htmlFor="sex" className="text-right">
+                            Submitted
+                          </Label>
+                          <div>
+                            {format(parseISO(request.createdAt), "MM/dd/yyyy")}
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 items-center gap-4">
+                          <Label htmlFor="race" className="text-right">
+                            Details
+                          </Label>
+                          <div>{request.details}</div>
+                        </div>
+                        <div className="grid grid-cols-2 items-center gap-4">
+                          <Label htmlFor="contactInfo" className="text-right">
+                            Selected SDOH Categories
+                          </Label>
+                          <div>
+                            {request.SDOHs.map((sdoh) => (
+                              <div key={sdoh.id}>{sdoh.value}</div>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 items-center gap-4">
+                          <Label htmlFor="contactInfo" className="text-right">
+                            Selected RFF Categories
+                          </Label>
+                          <div>
+                            {request.RFFs.map((rff) => (
+                              <div key={rff.id}>{rff.value}</div>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 items-center gap-4">
+                          <Label htmlFor="caseNumber" className="text-right">
+                            Plan for Implementation
+                          </Label>
+                          <div>{request.implementation}</div>
+                        </div>
+                        <div className="grid grid-cols-2 items-center gap-4">
+                          <Label htmlFor="contactInfo" className="text-right">
+                            Plan for Sustainability
+                          </Label>
+                          <div>{request.sustainability}</div>
+                        </div>
+                        <div className="grid grid-cols-2 items-center gap-4">
+                          <Label htmlFor="contactInfo" className="text-right">
+                            Requested Funds
+                          </Label>
+                          <div>
+                            {request.funds.map((fund) => (
+                              <div key={fund.id}>
+                                ${fund.amount} - {fund.fundType.typeName}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 items-center gap-4">
+                          <Label htmlFor="requestStatus" className="text-right">
+                            Request Status
+                          </Label>
+                          <div>
+                            {request.pendingApproval ? (
+                              <Badge className="bg-orange-400 text-black">
+                                Pending Approval
+                              </Badge>
+                            ) : request.approved ? (
+                              <Badge className="bg-green-600">Approved</Badge>
+                            ) : (
+                              <Badge className="bg-yellow-400 text-black">
+                                Awaiting Review
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <div className="flex justify-between w-full">
+                          <div className="flex justify-start">
+                            <DialogClose asChild>
+                              <Button>Cancel</Button>
+                            </DialogClose>
+                          </div>
+                          <div className="flex justify-end">
+                            <Button type="submit">Save changes</Button>
+                          </div>
+                        </div>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </TableCell>
               </TableRow>
             ))}

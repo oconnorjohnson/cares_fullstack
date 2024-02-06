@@ -139,22 +139,8 @@ export default function GetClients({ userId }: { userId: string | null }) {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
-                        {/* <DialogTrigger asChild>
-                          <DropdownMenuItem
-                          // onSelect={() => openConfirmDialog(client.id)}
-                          >
-                            <div className="flex text-md flex-row items-center">
-                              <PlusIcon size={15} />
-                              <div className="px-1" />
-                              New Request
-                            </div>
-                          </DropdownMenuItem>
-                        </DialogTrigger>
-                        <div className="py-1" /> */}
                         <DialogTrigger asChild>
-                          <DropdownMenuItem
-                          // onSelect={() => openConfirmDialog(client.id)}
-                          >
+                          <DropdownMenuItem>
                             <div className="flex text-md flex-row items-center">
                               <EditIcon size={15} />
                               <div className="px-1" />
@@ -173,7 +159,6 @@ export default function GetClients({ userId }: { userId: string | null }) {
                             Delete
                           </div>
                         </DropdownMenuItem>
-                        {/* Add more menu items here as needed */}
                       </DropdownMenuContent>
                     </DropdownMenu>
                     <DialogContent className="sm:max-w-[425px]">
