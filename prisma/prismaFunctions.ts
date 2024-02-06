@@ -65,12 +65,14 @@ export async function createRequest(requestData: {
       details: requestData.details,
       implementation: requestData.implementation,
       sustainability: requestData.sustainability,
+      // Handling funds creation
       Funds: {
         create: requestData.funds.map((fund) => ({
           fundTypeId: fund.fundTypeId,
           amount: fund.amount,
         })),
       },
+      // Assuming SDOHs and RFFs are handled similarly
       SDOHs: {
         create: requestData.sdoh.map((sdoh) => ({
           value: sdoh,

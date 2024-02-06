@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { toast } from "sonner";
 import { cn } from "@/server/utils";
+import FundSelect from "@/components/fund-select";
 import { trpc } from "@/app/_trpc/client";
 import { newRequest } from "@/server/actions";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -65,12 +66,8 @@ interface FundInput {
 interface SelectedFunds {
   [key: number]: { selected: boolean; amount: number };
 }
-const fundTypeSchema = z.object({
-  selected: z.boolean(),
-  amount: z.number(),
-});
+
 const formSchema = z.object({
-  userId: z.string(),
   clientId: z.number(),
   agencyId: z.number(),
   details: z.string(),
@@ -126,48 +123,11 @@ const optionsToStrings = (options: Option[]): string[] => {
 type FormInputs = z.infer<typeof formSchema>;
 
 export default function NewRequest({ userId }: { userId: string | null }) {
-  // state to manage fund type data
-  const [fundTypesData, setFundTypesData] = useState<FundType[]>([]);
-  //state to manage selected funds types
-  const [selectedFunds, setSelectedFunds] = useState<SelectedFunds>({});
-  const [fundTypeId, setFundTypeId] = useState<number>(0);
-  const [amount, setAmount] = useState<number>(0);
   // state to manage active tab
   const [activeTab, setActiveTab] = useState("tab1");
   // set state for progress bar
   const [progress, setProgress] = useState(0);
-  // get fund types using trpc
-  const { data: fundTypes, isLoading: isLoadingFundTypes } =
-    trpc.getFundTypes.useQuery();
-  // use effect to manage currently imported fund types
-  useEffect(() => {
-    if (fundTypes) {
-      setFundTypesData(fundTypes);
-      // initialize selectedFunds state
-      const initialSelectedFunds: SelectedFunds =
-        fundTypes.reduce<SelectedFunds>((acc, fundType) => {
-          acc[fundType.id] = { selected: false, amount: 0 };
-          return acc;
-        }, {});
-      setSelectedFunds(initialSelectedFunds);
-    }
-  }, [fundTypes]);
-  // functioin to handle fund selection change
-  // Update the handleFundSelectionChange function to be more declarative
-  const [funds, setFunds] = useState<FundInput[]>([]);
-  // function to add new fund input set to UI
-  const handleAddFund = () => {
-    append({ fundTypeId: 0, amount: 0 }); // Append a new blank fund entry
-  };
-  // function to remove specific fund input set
-  const handleRemoveFund = (index: number) => {
-    console.log(funds.length);
-    if (fields.length > 1) {
-      remove(index);
-    } else {
-      toast.error("At least one fund must be specified");
-    }
-  };
+
   // update progress based on activeTab
   useEffect(() => {
     switch (activeTab) {
@@ -219,65 +179,37 @@ export default function NewRequest({ userId }: { userId: string | null }) {
       amount: undefined,
       sustainability: "",
       implementation: "",
-      funds: [{ fundTypeId: 0, amount: 0 }],
+      funds: [{ fundTypeId: undefined, amount: 0 }],
     },
   });
-  const { control, handleSubmit, setValue, register } = form;
-  const { fields, append, remove } = useFieldArray({
+  const {
     control,
-    name: "funds",
-  });
+    handleSubmit,
+    setValue,
+    formState: { errors },
+    register,
+  } = form;
+
   const watchedClientId = form.watch("clientId");
   const watchedAgencyId = form.watch("agencyId");
   const trpcContext = trpc.useUtils();
   const onSubmit = async (data: FormInputs) => {
-    try {
-      await newRequest(data);
-      toast.success("Request submitted successrfully");
-    } catch (error) {
-      toast.error("Failed to submit request");
-      console.log("Form submission started", data);
+    console.log("Form submission started", data);
+    console.log(typeof data.funds[0].amount);
+    if (!userId) {
+      console.log("User not authenticated, submission failed");
+    } else {
+      try {
+        await newRequest({ ...data, userId });
+        toast.success("Request submitted successrfully");
+      } catch (error) {
+        toast.error("Failed to submit request");
+        console.log("Form submission started", data);
+      }
     }
     alert("Form submitted. Check the console for details.");
   };
-  // const onSubmit = async (formData: any) => {
-  //   console.log("Attempting form submission", formData);
-  //   const selectedFundTypes = Object.entries(selectedFunds)
-  //     .filter(([_, value]) => value.selected)
-  //     .map(([key, value]) => ({
-  //       fundTypeId: key,
-  //       amount: value.amount,
-  //     }));
 
-  //   //combine `data` with `selectedFundTypes` and submit
-  //   const submissionData = {
-  //     ...formData,
-  //     funds: Object.entries(selectedFundTypes)
-  //       .filter(([_, value]) => value.fundTypeId)
-  //       .map(([key, value]) => ({
-  //         fundTypeId: parseInt(key),
-  //         amount: value.amount,
-  //       })),
-  //   };
-  //   // use server action to call prismaFunction to submit data to database
-  //   newRequest(submissionData)
-  //     .then(() => {
-  //       // If the request is successful, show a success message and proceed
-  //       toast.success("Request submitted successfully");
-  //       form.reset(); // Reset the form to its initial state
-  //       goToNextTab(); // Navigate to the next tab
-  //     })
-  //     .catch((error) => {
-  //       // If the request fails, show an error message
-  //       toast.error("Failed to submit request");
-  //       console.error("Submission error:", error);
-  //     });
-  // };
-  // const handleThirdTabSubmit = () => {
-  //   console.log("handleThidTabSubmit clicked");
-  //   handleSubmit(onSubmit)();
-  // };
-  // Fetch agencies using TRPC
   const { data: agencies, isLoading: isLoadingAgencies } =
     trpc.getAgencies.useQuery();
 
@@ -288,6 +220,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
   } = trpc.getClients.useQuery(userId as string, {
     enabled: !!userId,
   });
+  console.log(errors);
   return (
     <>
       <Dialog>
@@ -405,7 +338,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                       <FormItem>
                         <FormLabel>Details of Client Problem</FormLabel>
                         <FormControl>
-                          <Textarea className="resize-none" />
+                          <Textarea {...field} className="resize-none" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -471,7 +404,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                           Plan for implementation of RFF supports:
                         </FormLabel>
                         <FormControl>
-                          <Textarea className="resize-none" />
+                          <Textarea {...field} className="resize-none" />
                         </FormControl>
 
                         <FormMessage />
@@ -489,7 +422,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                           ongoing.
                         </FormLabel>
                         <FormControl>
-                          <Textarea className="resize-none" />
+                          <Textarea {...field} className="resize-none" />
                         </FormControl>
 
                         <FormMessage />
@@ -503,63 +436,12 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                   </div>
                 </TabsContent>
                 <TabsContent value="tab4" hidden={activeTab !== "tab4"}>
-                  <FormField
-                    control={control}
-                    name="funds"
-                    render={({ field }) => (
-                      <FormItem>
-                        {fields.map((field, index) => (
-                          <div
-                            key={field.id}
-                            className="flex items-center gap-2 mb-4"
-                          >
-                            <FormControl>
-                              <Select
-                                onValueChange={(value) => {
-                                  setValue(
-                                    `funds.${index}.fundTypeId`,
-                                    parseInt(value),
-                                  );
-                                }}
-                                defaultValue={`${field.fundTypeId}`}
-                              >
-                                <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Select Fund Type" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  {!isLoadingFundTypes &&
-                                    fundTypes?.map((fundType) => (
-                                      <SelectItem
-                                        key={fundType.id}
-                                        value={fundType.id.toString()}
-                                      >
-                                        {fundType.typeName}
-                                      </SelectItem>
-                                    ))}
-                                </SelectContent>
-                              </Select>
-                            </FormControl>
-                            <FormControl>
-                              <Input type="number" />
-                            </FormControl>
-                            <Button
-                              type="button"
-                              onClick={() => handleRemoveFund(index)}
-                            >
-                              Remove
-                            </Button>
-                          </div>
-                        ))}
-                      </FormItem>
-                    )}
-                  />
-                  <Button onClick={handleAddFund}>Add Fund</Button>
                   <div className="p-1" />
                   <div className="flex flex-row justify-between">
                     <Button onClick={goToLastTab}>Last</Button>
-                    <Button type="submit">Submit</Button>
+                    <Button type="submit" onClick={handleSubmit(onSubmit)}>
+                      Submit
+                    </Button>
                   </div>
                 </TabsContent>
                 <TabsContent value="tab5" hidden={activeTab !== "tab5"}>
