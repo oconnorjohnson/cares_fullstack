@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { MoreHorizontalIcon, Terminal, InfoIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import CompletePreScreen from "@/components/forms/pre-screen";
 import {
   Table,
   TableHeader,
@@ -122,13 +123,7 @@ export default function GetRequests({ userId }: { userId: string | null }) {
                 </TableCell>
                 <TableCell>
                   {!request.hasPreScreen ? (
-                    <Button
-                      onClick={() => {
-                        /* Function to handle PreScreen completion */
-                      }}
-                    >
-                      Complete Pre-Screen
-                    </Button>
+                    <CompletePreScreen requestId={request.id} />
                   ) : request.hasPreScreen &&
                     !request.hasPostScreen &&
                     request.paid ? (

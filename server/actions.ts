@@ -4,6 +4,7 @@ import {
   createFundType,
   createAgency,
   createRequest,
+  createPreScreen,
 } from "@/prisma/prismaFunctions";
 
 interface ClientData {
@@ -39,6 +40,32 @@ interface AgencyData {
   name: string;
 }
 
+interface PreScreenData {
+  requestId: number;
+  housingSituation: number;
+  housingQuality: number;
+  utilityStress: number;
+  foodInsecurityStress: number;
+  foodMoneyStress: number;
+  transpoConfidence: number;
+  transpoStress: number;
+  financialDifficulties: number;
+  additionalInformation: string;
+}
+
+interface PostScreenData {
+  requestId: number;
+  housingSituation: number;
+  housingQuality: number;
+  utilityStress: number;
+  foodInsecurityStress: number;
+  foodMoneyStress: number;
+  transpoConfidence: number;
+  transpoStress: number;
+  financialDifficulties: number;
+  additionalInformation: string;
+}
+
 export async function newAgency(agencyState: AgencyData) {
   if (!agencyState.userId) {
     throw new Error("User not authenticated");
@@ -48,6 +75,24 @@ export async function newAgency(agencyState: AgencyData) {
     throw new Error("Failed to create new agency.");
   }
   return newAgencyRecord;
+}
+
+export async function newPreScreen(
+  preScreenState: PreScreenData,
+  requestId: number,
+) {
+  if (!requestId) {
+    throw new Error(
+      "Request ID is required to tie your prescreen to your request",
+    );
+  }
+  try {
+    const newPreScreenRecord = await createPreScreen(preScreenState, requestId);
+    return newPreScreenRecord;
+  } catch (error) {
+    console.error("Failed to create new prescreen record:", error);
+    throw error;
+  }
 }
 
 export async function newFundType(fundState: FundTypeData) {

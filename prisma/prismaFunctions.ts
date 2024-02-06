@@ -3,6 +3,31 @@ import { PrismaClient } from "@prisma/client";
 
 export const prisma = new PrismaClient();
 
+// TYPES
+interface PreScreenData {
+  housingSituation: number;
+  housingQuality: number;
+  utilityStress: number;
+  foodInsecurityStress: number;
+  foodMoneyStress: number;
+  transpoConfidence: number;
+  transpoStress: number;
+  financialDifficulties: number;
+  additionalInformation: string;
+}
+
+interface PostScreenData {
+  housingSituation: number;
+  housingQuality: number;
+  utilityStress: number;
+  foodInsecurityStress: number;
+  foodMoneyStress: number;
+  transpoConfidence: number;
+  transpoStress: number;
+  financialDifficulties: number;
+  additionalInformation: string;
+}
+
 // CREATE FUNCTIONS
 export async function createFundType(fundTypeData: {
   userId: string;
@@ -24,6 +49,23 @@ export async function createFundType(fundTypeData: {
       `Failed to create fund type: ${error instanceof Error ? error.message : "Unknown error"}`,
     );
   }
+}
+
+export async function createPreScreen(
+  preScreenData: PreScreenData,
+  requestId: number,
+) {
+  const preScreen = await prisma.preScreenAnswers.create({
+    data: {
+      ...preScreenData,
+      request: {
+        connect: {
+          id: requestId,
+        },
+      },
+    },
+  });
+  return preScreen;
 }
 
 export async function createUser(userData: any) {
