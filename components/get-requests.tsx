@@ -70,13 +70,43 @@ export default function GetRequests({ userId }: { userId: string | null }) {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>ID</TableHead>
+              <TableHead>Client</TableHead>
+              <TableHead>Agency</TableHead>
+              <TableHead>Details</TableHead>
+              <TableHead>SDOH Categories</TableHead>
+              <TableHead>How RFF Can Assist</TableHead>
+              <TableHead>Implementation Plan</TableHead>
+              <TableHead>Sustainability Plan</TableHead>
+              <TableHead>Requested Funds</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {requests.map((request: any) => (
+            {requests.map((request) => (
               <TableRow key={request.id}>
-                <TableCell>{request.id}</TableCell>
+                <TableCell>
+                  {request.client?.first_name} {request.client?.last_name}
+                </TableCell>
+                <TableCell>{request.agency?.name}</TableCell>
+                <TableCell>{request.details}</TableCell>
+                <TableCell>
+                  {request.SDOHs.map((sdoh) => (
+                    <div key={sdoh.id}>{sdoh.value}</div>
+                  ))}
+                </TableCell>
+                <TableCell>
+                  {request.RFFs.map((rff) => (
+                    <div key={rff.id}>{rff.value}</div>
+                  ))}
+                </TableCell>
+                <TableCell>{request.implementation}</TableCell>
+                <TableCell>{request.sustainability}</TableCell>
+                <TableCell>
+                  {request.funds.map((fund) => (
+                    <div key={fund.id}>
+                      ${fund.amount} - {fund.fundType.typeName}
+                    </div>
+                  ))}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

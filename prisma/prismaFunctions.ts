@@ -222,6 +222,18 @@ export async function getRequestsByUserId(userId: string) {
     where: {
       userId: userId,
     },
+    include: {
+      client: true,
+      user: true,
+      agency: true,
+      funds: {
+        include: {
+          fundType: true,
+        },
+      },
+      SDOHs: true,
+      RFFs: true,
+    },
   });
   return requests;
 }
