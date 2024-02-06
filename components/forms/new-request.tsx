@@ -4,12 +4,10 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useFieldArray } from "react-hook-form";
 import { toast } from "sonner";
-import { cn } from "@/server/utils";
 import FundSelect from "@/components/fund-select";
 import { trpc } from "@/app/_trpc/client";
 import { newRequest } from "@/server/actions";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import {
   Dialog,
   DialogContent,
@@ -34,7 +32,6 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import SDOHSelect from "@/components/sdoh-multi-select";
 import RFFSelect from "@/components/rff-assist-multi";
@@ -53,18 +50,9 @@ interface Agency {
   userId: string;
 }
 
-interface FundType {
-  id: number;
-  typeName: string;
-}
-
 interface FundInput {
   fundTypeId: number;
   amount: number;
-}
-
-interface SelectedFunds {
-  [key: number]: { selected: boolean; amount: number };
 }
 
 const formSchema = z.object({
@@ -82,6 +70,7 @@ const formSchema = z.object({
     }),
   ),
 });
+
 const OPTIONS: Option[] = [
   { label: "Food", value: "Food" },
   { label: "Clothing", value: "Clothing" },
@@ -102,12 +91,10 @@ const OPTIONS: Option[] = [
   { label: "Economic Instability", value: "Economic Instability" },
 ];
 
-// helper function to convert strings -> option objs
 const stringsToOptions = (values: string[]): Option[] => {
   return OPTIONS.filter((option) => values.includes(option.value));
 };
 
-// helper function to convert Option objs -> strings
 const optionsToStrings = (options: Option[]): string[] => {
   return options.map((option) => option.value);
 };
@@ -115,12 +102,8 @@ const optionsToStrings = (options: Option[]): string[] => {
 type FormInputs = z.infer<typeof formSchema>;
 
 export default function NewRequest({ userId }: { userId: string | null }) {
-  // state to manage active tab
   const [activeTab, setActiveTab] = useState("tab1");
-  // set state for progress bar
   const [progress, setProgress] = useState(0);
-
-  // update progress based on activeTab
   useEffect(() => {
     switch (activeTab) {
       case "tab1":
@@ -138,12 +121,11 @@ export default function NewRequest({ userId }: { userId: string | null }) {
       case "tab5":
         setProgress(100);
         break;
-      // in future, add fifth tab case to 100% here
       default:
-        setProgress(0); // reset to 20% if it's none of the above for safety
+        setProgress(0);
     }
   }, [activeTab]);
-  // function to move to the next tab
+
   const goToNextTab = () => {
     let currentTabIndex = parseInt(activeTab.substring(3));
     if (currentTabIndex < 5) {
@@ -151,14 +133,14 @@ export default function NewRequest({ userId }: { userId: string | null }) {
       setActiveTab(nextTab);
     }
   };
-  // function to move to the last tab
+
   const goToLastTab = () => {
     if (activeTab !== "tab") {
       const lastTab = `tab${parseInt(activeTab[3]) - 1}`;
       setActiveTab(lastTab);
     }
   };
-  // initialize useForm with formSchema type
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -172,12 +154,14 @@ export default function NewRequest({ userId }: { userId: string | null }) {
       funds: [{ fundTypeId: undefined, amount: 0 }],
     },
   });
+
   const {
     control,
     handleSubmit,
     setValue,
     formState: { errors },
   } = form;
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "funds",
@@ -195,9 +179,11 @@ export default function NewRequest({ userId }: { userId: string | null }) {
     },
     [setValue],
   );
+
   const watchedClientId = form.watch("clientId");
   const watchedAgencyId = form.watch("agencyId");
   const trpcContext = trpc.useUtils();
+
   const onSubmit = async (data: FormInputs) => {
     console.log("Form submission started", data);
     console.log(typeof data.funds[0].amount);
@@ -217,8 +203,10 @@ export default function NewRequest({ userId }: { userId: string | null }) {
 
   const { data: agencies, isLoading: isLoadingAgencies } =
     trpc.getAgencies.useQuery();
+
   const { data: fundTypesData, isLoading: isLoadingFundTypes } =
     trpc.getFundTypes.useQuery();
+
   const {
     data: clients,
     isLoading,
@@ -226,7 +214,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
   } = trpc.getClients.useQuery(userId as string, {
     enabled: !!userId,
   });
-  console.log(errors);
+
   return (
     <>
       <Dialog>
@@ -241,7 +229,6 @@ export default function NewRequest({ userId }: { userId: string | null }) {
           <DialogDescription>
             Fill in the details to add a new client.
           </DialogDescription>
-
           <Tabs
             value={activeTab}
             onValueChange={setActiveTab}
@@ -386,7 +373,6 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                             onChange={(selectedOptions: Option[]) =>
                               field.onChange(optionsToStrings(selectedOptions))
                             }
-                            // Pass other necessary props to RFFSelect
                           />
                         </FormControl>
                         <FormMessage />

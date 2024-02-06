@@ -33,7 +33,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon } from "lucide-react";
-import { format, isToday, startOfToday } from "date-fns";
+import { format } from "date-fns";
 import { toast } from "sonner";
 import { cn } from "@/server/utils";
 import { newClient } from "@/server/actions";
@@ -87,7 +87,6 @@ const formSchema = z.object({
 export default function NewClient({ userId }: { userId: string | null }) {
   console.log("User ID:", userId);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  // define form
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -103,7 +102,7 @@ export default function NewClient({ userId }: { userId: string | null }) {
   const { reset } = form;
   const trpcContext = trpc.useUtils();
   async function onSubmit(data: z.infer<typeof formSchema>) {
-    setIsSubmitting(true); // Start submitting
+    setIsSubmitting(true);
     console.log("Form submitted", data);
     try {
       if (!userId) {
