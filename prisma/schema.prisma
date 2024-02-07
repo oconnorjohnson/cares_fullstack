@@ -134,7 +134,7 @@ model PreScreenAnswers {
   transpoConfidence     Int
   transpoStress         Int
   financialDifficulties Int
-  additionalInformation String
+  additionalInformation String   @db.Text
   createdAt             DateTime @default(now())
   requestId             Int      @unique
   request               Request  @relation(fields: [requestId], references: [id])
@@ -152,7 +152,7 @@ model PostScreenAnswers {
   transpoConfidence     Int
   transpoStress         Int
   financialDifficulties Int
-  additionalInformation String
+  additionalInformation String   @db.Text
   createdAt             DateTime @default(now())
   requestId             Int      @unique
   request               Request  @relation(fields: [requestId], references: [id])

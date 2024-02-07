@@ -119,6 +119,7 @@ export async function createRequest(requestData: {
       details: requestData.details,
       implementation: requestData.implementation,
       sustainability: requestData.sustainability,
+      pendingApproval: true,
       funds: {
         create: requestData.funds.map((fund) => ({
           fundTypeId: fund.fundTypeId,
