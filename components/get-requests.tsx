@@ -122,7 +122,11 @@ export default function GetRequests({ userId }: { userId: string | null }) {
                   )}
                 </TableCell>
                 <TableCell>
-                  {!request.hasPreScreen ? (
+                  {request.hasPreScreen &&
+                  !request.hasPostScreen &&
+                  !request.paid ? (
+                    <div>No actions required at this time.</div>
+                  ) : !request.hasPreScreen ? (
                     <CompletePreScreen requestId={request.id} />
                   ) : request.hasPreScreen &&
                     !request.hasPostScreen &&
