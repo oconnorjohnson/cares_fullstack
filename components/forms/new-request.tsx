@@ -4,7 +4,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useFieldArray } from "react-hook-form";
 import { toast } from "sonner";
-import FundSelect from "@/components/fund-select";
+import FundSelect from "@/components/forms/sub-components/fund-select";
 import { trpc } from "@/app/_trpc/client";
 import { newRequest } from "@/server/actions";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
@@ -33,8 +33,8 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import SDOHSelect from "@/components/sdoh-multi-select";
-import RFFSelect from "@/components/rff-assist-multi";
+import SDOHSelect from "@/components/forms/sub-components/sdoh-multi-select";
+import RFFSelect from "@/components/forms/sub-components/rff-assist-multi";
 import { Progress } from "@/components/ui/progress";
 import { Option } from "@/components/ui/multiple-selector";
 

@@ -1,9 +1,9 @@
-import GetFundTypes from "@/components/get-fundTypes";
+import GetFundTypes from "@/components/admin/get-fundTypes";
 import { auth } from "@clerk/nextjs";
-import CurrentUser from "@/components/current-user";
+import CurrentUser from "@/components/shared/current-user";
 import NewFundType from "@/components/forms/new-fund-type";
 import NewAgency from "@/components/forms/new-agency";
-import GetAgencies from "@/components/get-agencies";
+import GetAgencies from "@/components/admin/get-agencies";
 
 export default async function Dashboard() {
   const { userId } = auth();

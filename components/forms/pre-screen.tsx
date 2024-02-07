@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { newPreScreen } from "@/server/actions";
@@ -12,10 +12,7 @@ import {
   Dialog,
   DialogContent,
   DialogTrigger,
-  DialogClose,
   DialogHeader,
-  DialogDescription,
-  DialogFooter,
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
@@ -25,7 +22,6 @@ import {
   FormField,
   FormItem,
   FormDescription,
-  FormMessage,
 } from "@/components/ui/form";
 import {
   Select,
@@ -34,19 +30,8 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-interface PreScreenData {
-  housingSituation: number;
-  housingQuality: number;
-  utilityStress: number;
-  foodInsecurityStress: number;
-  foodMoneyStress: number;
-  transpoConfidence: number;
-  transpoStress: number;
-  financialDifficulties: number;
-  additionalInformation: string;
-}
+
 const formSchema = z.object({
   housingSituation: z.number().min(1).max(5),
   housingQuality: z.number().min(1).max(5),
@@ -74,7 +59,6 @@ export default function PreScreen({ requestId }: { requestId: number }) {
       additionalInformation: "",
     },
   });
-  const { reset } = form;
   useEffect(() => {
     if (Object.keys(form.formState.errors).length > 0) {
       console.log("Form errors:", form.formState.errors);
@@ -83,15 +67,12 @@ export default function PreScreen({ requestId }: { requestId: number }) {
   const trpcContext = trpc.useUtils();
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
-      console.log("Form data:", data); // Log the form data to see what's being submitted
-
-      // Assuming newPreScreen is your function to handle the form data on the server
-      const newPreScreenRecord = await newPreScreen(data, requestId); // Make sure to replace `requestId` with the actual requestId you have in scope
-
+      console.log("Form data:", data);
+      const newPreScreenRecord = await newPreScreen(data, requestId);
       if (newPreScreenRecord) {
         toast.success("Prescreen completed!");
-        form.reset(); // Reset the form using react-hook-form's reset method
-        trpcContext.getRequests.invalidate(); // Invalidate queries or refetch as needed
+        form.reset();
+        trpcContext.getRequests.invalidate();
       } else {
         toast.error("Failed to submit prescreen form.");
       }
@@ -449,21 +430,11 @@ export default function PreScreen({ requestId }: { requestId: number }) {
                       </FormItem>
                     )}
                   />
-                  <Button
-                    type="submit"
-                    // onClick={() => form.handleSubmit(onSubmit)}
-                  >
-                    Submit Form
-                  </Button>
+                  <Button type="submit">Submit Form</Button>
                 </form>
               </Form>
             </ScrollArea>
           </div>
-          <DialogFooter className="">
-            {/* <DialogClose asChild>
-              <Button>Cancel</Button>
-            </DialogClose> */}
-          </DialogFooter>
         </DialogContent>
       </Dialog>
     </>

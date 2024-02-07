@@ -1,9 +1,9 @@
 import { auth } from "@clerk/nextjs";
 import NewClient from "@/components/forms/new-client";
-import GetClients from "@/components/get-clients";
+import GetClients from "@/components/user/get-clients";
 import NewRequest from "@/components/forms/new-request";
-import CurrentUser from "@/components/current-user";
-import GetRequests from "@/components/get-requests";
+import CurrentUser from "@/components/shared/current-user";
+import GetRequests from "@/components/user/get-requests";
 
 export default function Dashboard() {
   const { userId } = auth();
