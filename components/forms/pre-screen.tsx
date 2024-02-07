@@ -36,17 +36,27 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
+interface PreScreenData {
+  housingSituation: number;
+  housingQuality: number;
+  utilityStress: number;
+  foodInsecurityStress: number;
+  foodMoneyStress: number;
+  transpoConfidence: number;
+  transpoStress: number;
+  financialDifficulties: number;
+  additionalInformation: string;
+}
 const formSchema = z.object({
-  housingSituation: z.number(),
-  housingQuality: z.number(),
-  utilityStress: z.number(),
-  foodInsecurityStress: z.number(),
-  foodMoneyStress: z.number(),
-  transpoConfidence: z.number(),
-  transpoStress: z.number(),
-  financialDifficulties: z.number(),
-  additionalInformation: z.string(),
+  housingSituation: z.number().min(1).max(5),
+  housingQuality: z.number().min(1).max(5),
+  utilityStress: z.number().min(1).max(5),
+  foodInsecurityStress: z.number().min(1).max(5),
+  foodMoneyStress: z.number().min(1).max(5),
+  transpoConfidence: z.number().min(1).max(5),
+  transpoStress: z.number().min(1).max(5),
+  financialDifficulties: z.number().min(1).max(5),
+  additionalInformation: z.string().min(1).max(500),
 });
 
 export default function PreScreen({ requestId }: { requestId: number }) {
@@ -64,20 +74,31 @@ export default function PreScreen({ requestId }: { requestId: number }) {
       additionalInformation: "",
     },
   });
-  const { register, handleSubmit, formState } = form;
   const { reset } = form;
-  const trpcContext = trpc.useUtils();
-  const onSubmit = async (data: any) => {
-    console.log(data);
-    const newPreScreenRecord = await newPreScreen(data, requestId);
-    if (newPreScreenRecord) {
-      toast.success("Prescreen completed!");
-      reset();
-      trpcContext.getRequests.invalidate();
-    } else {
-      toast.error("Failed to submit prescreen form.");
+  useEffect(() => {
+    if (Object.keys(form.formState.errors).length > 0) {
+      console.log("Form errors:", form.formState.errors);
     }
-    console.log(newPreScreenRecord);
+  }, [form.formState.errors]);
+  const trpcContext = trpc.useUtils();
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    try {
+      console.log("Form data:", data); // Log the form data to see what's being submitted
+
+      // Assuming newPreScreen is your function to handle the form data on the server
+      const newPreScreenRecord = await newPreScreen(data, requestId); // Make sure to replace `requestId` with the actual requestId you have in scope
+
+      if (newPreScreenRecord) {
+        toast.success("Prescreen completed!");
+        form.reset(); // Reset the form using react-hook-form's reset method
+        trpcContext.getRequests.invalidate(); // Invalidate queries or refetch as needed
+      } else {
+        toast.error("Failed to submit prescreen form.");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast.error("An error occurred while submitting the form.");
+    }
   };
 
   return (
@@ -106,24 +127,27 @@ export default function PreScreen({ requestId }: { requestId: number }) {
                         <FormDescription>
                           How stressed are you about your housing situation?
                         </FormDescription>
-                        <FormControl>
-                          <Select>
+                        <Select
+                          onValueChange={(value) =>
+                            field.onChange(Number(value))
+                          }
+                          defaultValue={
+                            field.value ? field.value.toString() : ""
+                          }
+                        >
+                          <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select a number between 1 and 5" />
                             </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value={"1 - Not at all."}>
-                                1
-                              </SelectItem>
-                              <SelectItem value={"2 - Somewhat."}>2</SelectItem>
-                              <SelectItem value={"3 - Neutral."}>3</SelectItem>
-                              <SelectItem value={"4 - Very."}>4</SelectItem>
-                              <SelectItem value={"5 - Extremely."}>
-                                5
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value={"1"}>1 - Not at all.</SelectItem>
+                            <SelectItem value={"2"}>2 - Somewhat.</SelectItem>
+                            <SelectItem value={"3"}>3 - Neutral.</SelectItem>
+                            <SelectItem value={"4"}>4 - Very.</SelectItem>
+                            <SelectItem value={"5"}>5 - Extremely.</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </FormItem>
                     )}
                   />
@@ -133,29 +157,67 @@ export default function PreScreen({ requestId }: { requestId: number }) {
                     name="housingSituation"
                     render={({ field }) => (
                       <FormItem>
+                        <FormLabel>Housing Situation</FormLabel>
+                        <FormDescription>
+                          Today, how stressed are you about your housing
+                          situation?
+                        </FormDescription>
+                        <Select
+                          onValueChange={(value) =>
+                            field.onChange(Number(value))
+                          }
+                          defaultValue={
+                            field.value ? field.value.toString() : ""
+                          }
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a number between 1 and 5" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value={"1"}>1 - Not at all.</SelectItem>
+                            <SelectItem value={"2"}>2 - Somewhat.</SelectItem>
+                            <SelectItem value={"3"}>3 - Neutral.</SelectItem>
+                            <SelectItem value={"4"}>4 - Very.</SelectItem>
+                            <SelectItem value={"5"}>5 - Extremely.</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormItem>
+                    )}
+                  />
+                  <div className="py-2" />
+                  <FormField
+                    control={form.control}
+                    name="housingQuality"
+                    render={({ field }) => (
+                      <FormItem>
                         <FormLabel>Housing Quality</FormLabel>
                         <FormDescription>
                           How stressed are you about the quality of your housing
                           right now?
                         </FormDescription>
-                        <FormControl>
-                          <Select>
+                        <Select
+                          onValueChange={(value) =>
+                            field.onChange(Number(value))
+                          }
+                          defaultValue={
+                            field.value ? field.value.toString() : ""
+                          }
+                        >
+                          <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select a number between 1 and 5" />
                             </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value={"1 - Not at all."}>
-                                1
-                              </SelectItem>
-                              <SelectItem value={"2 - Somewhat."}>2</SelectItem>
-                              <SelectItem value={"3 - Neutral."}>3</SelectItem>
-                              <SelectItem value={"4 - Very."}>4</SelectItem>
-                              <SelectItem value={"5 - Extremely."}>
-                                5
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value={"1"}>1 - Not at all.</SelectItem>
+                            <SelectItem value={"2"}>2 - Somewhat.</SelectItem>
+                            <SelectItem value={"3"}>3 - Neutral.</SelectItem>
+                            <SelectItem value={"4"}>4 - Very.</SelectItem>
+                            <SelectItem value={"5"}>5 - Extremely.</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </FormItem>
                     )}
                   />
@@ -170,24 +232,27 @@ export default function PreScreen({ requestId }: { requestId: number }) {
                           How stressed are you about your access to utilities
                           right now? (Electric, heating, gas, water, etc...)
                         </FormDescription>
-                        <FormControl>
-                          <Select>
+                        <Select
+                          onValueChange={(value) =>
+                            field.onChange(Number(value))
+                          }
+                          defaultValue={
+                            field.value ? field.value.toString() : ""
+                          }
+                        >
+                          <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select a number between 1 and 5" />
                             </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value={"1 - Not at all."}>
-                                1
-                              </SelectItem>
-                              <SelectItem value={"2 - Somewhat."}>2</SelectItem>
-                              <SelectItem value={"3 - Neutral."}>3</SelectItem>
-                              <SelectItem value={"4 - Very."}>4</SelectItem>
-                              <SelectItem value={"5 - Extremely."}>
-                                5
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value={"1"}>1 - Not at all.</SelectItem>
+                            <SelectItem value={"2"}>2 - Somewhat.</SelectItem>
+                            <SelectItem value={"3"}>3 - Neutral.</SelectItem>
+                            <SelectItem value={"4"}>4 - Very.</SelectItem>
+                            <SelectItem value={"5"}>5 - Extremely.</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </FormItem>
                     )}
                   />
@@ -202,24 +267,27 @@ export default function PreScreen({ requestId }: { requestId: number }) {
                           How stressed are you due to issues related to food
                           insecurity?
                         </FormDescription>
-                        <FormControl>
-                          <Select>
+                        <Select
+                          onValueChange={(value) =>
+                            field.onChange(Number(value))
+                          }
+                          defaultValue={
+                            field.value ? field.value.toString() : ""
+                          }
+                        >
+                          <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select a number between 1 and 5" />
                             </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value={"1 - Not at all."}>
-                                1
-                              </SelectItem>
-                              <SelectItem value={"2 - Somewhat."}>2</SelectItem>
-                              <SelectItem value={"3 - Neutral."}>3</SelectItem>
-                              <SelectItem value={"4 - Very."}>4</SelectItem>
-                              <SelectItem value={"5 - Extremely."}>
-                                5
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value={"1"}>1 - Not at all.</SelectItem>
+                            <SelectItem value={"2"}>2 - Somewhat.</SelectItem>
+                            <SelectItem value={"3"}>3 - Neutral.</SelectItem>
+                            <SelectItem value={"4"}>4 - Very.</SelectItem>
+                            <SelectItem value={"5"}>5 - Extremely.</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </FormItem>
                     )}
                   />
@@ -234,24 +302,27 @@ export default function PreScreen({ requestId }: { requestId: number }) {
                           How stressed are you about your food running out
                           before you get money to buy more?
                         </FormDescription>
-                        <FormControl>
-                          <Select>
+                        <Select
+                          onValueChange={(value) =>
+                            field.onChange(Number(value))
+                          }
+                          defaultValue={
+                            field.value ? field.value.toString() : ""
+                          }
+                        >
+                          <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select a number between 1 and 5" />
                             </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value={"1 - Not at all."}>
-                                1
-                              </SelectItem>
-                              <SelectItem value={"2 - Somewhat."}>2</SelectItem>
-                              <SelectItem value={"3 - Neutral."}>3</SelectItem>
-                              <SelectItem value={"4 - Very."}>4</SelectItem>
-                              <SelectItem value={"5 - Extremely."}>
-                                5
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value={"1"}>1 - Not at all.</SelectItem>
+                            <SelectItem value={"2"}>2 - Somewhat.</SelectItem>
+                            <SelectItem value={"3"}>3 - Neutral.</SelectItem>
+                            <SelectItem value={"4"}>4 - Very.</SelectItem>
+                            <SelectItem value={"5"}>5 - Extremely.</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </FormItem>
                     )}
                   />
@@ -267,24 +338,27 @@ export default function PreScreen({ requestId }: { requestId: number }) {
                           important medical appointments, legal hearings, work,
                           etc...?
                         </FormDescription>
-                        <FormControl>
-                          <Select>
+                        <Select
+                          onValueChange={(value) =>
+                            field.onChange(Number(value))
+                          }
+                          defaultValue={
+                            field.value ? field.value.toString() : ""
+                          }
+                        >
+                          <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select a number between 1 and 5" />
                             </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value={"1 - Not at all."}>
-                                1
-                              </SelectItem>
-                              <SelectItem value={"2 - Somewhat."}>2</SelectItem>
-                              <SelectItem value={"3 - Neutral."}>3</SelectItem>
-                              <SelectItem value={"4 - Very."}>4</SelectItem>
-                              <SelectItem value={"5 - Extremely."}>
-                                5
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value={"1"}>1 - Not at all.</SelectItem>
+                            <SelectItem value={"2"}>2 - Somewhat.</SelectItem>
+                            <SelectItem value={"3"}>3 - Neutral.</SelectItem>
+                            <SelectItem value={"4"}>4 - Very.</SelectItem>
+                            <SelectItem value={"5"}>5 - Extremely.</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </FormItem>
                     )}
                   />
@@ -299,24 +373,27 @@ export default function PreScreen({ requestId }: { requestId: number }) {
                           How much stress does transportation insecurity cause
                           you?
                         </FormDescription>
-                        <FormControl>
-                          <Select>
+                        <Select
+                          onValueChange={(value) =>
+                            field.onChange(Number(value))
+                          }
+                          defaultValue={
+                            field.value ? field.value.toString() : ""
+                          }
+                        >
+                          <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select a number between 1 and 5" />
                             </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value={"1 - Not at all."}>
-                                1
-                              </SelectItem>
-                              <SelectItem value={"2 - Somewhat."}>2</SelectItem>
-                              <SelectItem value={"3 - Neutral."}>3</SelectItem>
-                              <SelectItem value={"4 - Very."}>4</SelectItem>
-                              <SelectItem value={"5 - Extremely."}>
-                                5
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value={"1"}>1 - Not at all.</SelectItem>
+                            <SelectItem value={"2"}>2 - Somewhat.</SelectItem>
+                            <SelectItem value={"3"}>3 - Neutral.</SelectItem>
+                            <SelectItem value={"4"}>4 - Very.</SelectItem>
+                            <SelectItem value={"5"}>5 - Extremely.</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </FormItem>
                     )}
                   />
@@ -331,24 +408,27 @@ export default function PreScreen({ requestId }: { requestId: number }) {
                           How difficult is it for you to pay for the very basics
                           like housing, food, medical care, etc...?
                         </FormDescription>
-                        <FormControl>
-                          <Select>
+                        <Select
+                          onValueChange={(value) =>
+                            field.onChange(Number(value))
+                          }
+                          defaultValue={
+                            field.value ? field.value.toString() : ""
+                          }
+                        >
+                          <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select a number between 1 and 5" />
                             </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value={"1 - Not at all."}>
-                                1
-                              </SelectItem>
-                              <SelectItem value={"2 - Somewhat."}>2</SelectItem>
-                              <SelectItem value={"3 - Neutral."}>3</SelectItem>
-                              <SelectItem value={"4 - Very."}>4</SelectItem>
-                              <SelectItem value={"5 - Extremely."}>
-                                5
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value={"1"}>1 - Not at all.</SelectItem>
+                            <SelectItem value={"2"}>2 - Somewhat.</SelectItem>
+                            <SelectItem value={"3"}>3 - Neutral.</SelectItem>
+                            <SelectItem value={"4"}>4 - Very.</SelectItem>
+                            <SelectItem value={"5"}>5 - Extremely.</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </FormItem>
                     )}
                   />
@@ -369,6 +449,12 @@ export default function PreScreen({ requestId }: { requestId: number }) {
                       </FormItem>
                     )}
                   />
+                  <Button
+                    type="submit"
+                    // onClick={() => form.handleSubmit(onSubmit)}
+                  >
+                    Submit Form
+                  </Button>
                 </form>
               </Form>
             </ScrollArea>
@@ -377,10 +463,6 @@ export default function PreScreen({ requestId }: { requestId: number }) {
             {/* <DialogClose asChild>
               <Button>Cancel</Button>
             </DialogClose> */}
-
-            <Button onClick={() => form.handleSubmit(onSubmit)}>
-              Submit Form
-            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

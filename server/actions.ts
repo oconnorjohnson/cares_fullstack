@@ -41,7 +41,6 @@ interface AgencyData {
 }
 
 interface PreScreenData {
-  requestId: number;
   housingSituation: number;
   housingQuality: number;
   utilityStress: number;
