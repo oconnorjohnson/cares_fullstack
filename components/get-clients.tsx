@@ -104,7 +104,6 @@ export default function GetClients({ userId }: { userId: string | null }) {
   } else {
     return (
       <>
-        <div className="font-bold text-2xl">My Clients</div>
         <Table>
           <TableHeader>
             <TableRow>

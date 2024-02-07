@@ -87,7 +87,6 @@ export default function GetRequests({ userId }: { userId: string | null }) {
   } else {
     return (
       <>
-        <div className="font-bold text-2xl">My Requests</div>
         <Table>
           <TableHeader>
             <TableRow>
@@ -111,7 +110,7 @@ export default function GetRequests({ userId }: { userId: string | null }) {
                 </TableCell>
                 <TableCell>
                   {request.pendingApproval ? (
-                    <Badge className="bg-orange-400 text-black">
+                    <Badge className="bg-yellow-400 text-black">
                       Pending Approval
                     </Badge>
                   ) : request.approved ? (
@@ -256,7 +255,7 @@ export default function GetRequests({ userId }: { userId: string | null }) {
                             </Label>
                             <div>
                               {request.pendingApproval ? (
-                                <Badge className="bg-orange-400 text-black">
+                                <Badge className="bg-yellow-400 text-black">
                                   Pending Approval
                                 </Badge>
                               ) : request.approved ? (

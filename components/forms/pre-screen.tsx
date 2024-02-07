@@ -13,6 +13,10 @@ import {
   DialogContent,
   DialogTrigger,
   DialogClose,
+  DialogHeader,
+  DialogDescription,
+  DialogFooter,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -80,9 +84,14 @@ export default function PreScreen({ requestId }: { requestId: number }) {
     <>
       <Dialog>
         <DialogTrigger asChild>
-          <Button>Complete Pre-Screen with Client</Button>
+          <Button>Complete Pre-Screen</Button>
         </DialogTrigger>
         <DialogContent>
+          <DialogTitle>RFF Pre-Screen Form</DialogTitle>
+          <DialogHeader>
+            Help your client answer the following questions to receive your
+            funds.
+          </DialogHeader>
           <div className="p-2">
             {" "}
             <ScrollArea className="h-96 p-4 rounded-md border">
@@ -364,6 +373,15 @@ export default function PreScreen({ requestId }: { requestId: number }) {
               </Form>
             </ScrollArea>
           </div>
+          <DialogFooter className="">
+            {/* <DialogClose asChild>
+              <Button>Cancel</Button>
+            </DialogClose> */}
+
+            <Button onClick={() => form.handleSubmit(onSubmit)}>
+              Submit Form
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </>
