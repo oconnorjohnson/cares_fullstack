@@ -19,15 +19,11 @@ export default function Dashboard() {
               <CurrentUser />
               <NewClient userId={userId} />
             </div>
-            <div className="flex flex-row justify-between">
-              <div className="flex flex-col justify-start">
-                <GetRequests userId={userId} />
-              </div>
-              <div className="px-2" />
-              <div className="flex flex-col justify-start">
-                <GetClients userId={userId} />
-              </div>
-            </div>
+            <div className="text-3xl font-bold">My Requests</div>
+            <GetRequests userId={userId} />
+            <div className="py-8" />
+            <div className="text-3xl font-bold">My Clients</div>
+            <GetClients userId={userId} />
           </div>
         </div>
       </>
