@@ -275,6 +275,8 @@ export async function getAdminRequests(filter: string, userId?: string) {
 
   if (filter === "pendingApproval") {
     whereClause = { pendingApproval: true };
+  } else if (filter === "approved") {
+    whereClause = { pendingApproval: false }; // Handle the "approved" filter
   } else if (filter === "byUser" && userId) {
     whereClause = { userId: userId };
   }

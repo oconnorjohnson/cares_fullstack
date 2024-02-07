@@ -40,6 +40,7 @@ export default function GetRequests() {
   const [selectedUserId, setSelectedUserId] = useState<string | undefined>(
     undefined,
   );
+  const trpcContext = trpc.useUtils();
   const {
     data: requests,
     isLoading,
@@ -62,6 +63,7 @@ export default function GetRequests() {
     setFilter(newFilter);
     // reset selected user when changing filters to avoid confusion
     setSelectedUserId(undefined);
+    trpcContext.getAdminRequests.invalidate();
   };
 
   return (
@@ -72,10 +74,15 @@ export default function GetRequests() {
             <Button>Filter: {filter}</Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem>Filter: All</DropdownMenuItem>
-            <DropdownMenuItem>Filter: Pending</DropdownMenuItem>
-            <DropdownMenuItem>Filter: Approved</DropdownMenuItem>
-            {/* <DropdownMenuItem>Filter: Denied</DropdownMenuItem> */}
+            <DropdownMenuItem onSelect={() => handleFilterChange("all")}>
+              Filter: All
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => handleFilterChange("pending")}>
+              Filter: Pending
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => handleFilterChange("approved")}>
+              Filter: Approved
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
         {filter === "byUser" && (
