@@ -245,7 +245,13 @@ export default function GetRequests({ userId }: { userId: string | null }) {
                             <div>
                               {request.funds.map((fund) => (
                                 <div key={fund.id}>
-                                  ${fund.amount} - {fund.fundType.typeName}
+                                  {fund.fundType.typeName === "Bus Pass"
+                                    ? ""
+                                    : "$"}
+                                  {fund.amount} - {fund.fundType.typeName}
+                                  {fund.fundType.typeName === "Bus Pass"
+                                    ? "es"
+                                    : ""}
                                 </div>
                               ))}
                             </div>
