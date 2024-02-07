@@ -4,6 +4,7 @@ import {
   prisma,
   getClientsByUserId,
   getRequestsByUserId,
+  getAdminRequests,
   deleteClient as deleteClientFromDB,
   deleteFundType as deleteFundTypeFromDB,
   deleteAgency as deleteAgencyFromDB,
@@ -36,6 +37,17 @@ export const appRouter = router({
     .query(async ({ input: userId }) => {
       const requests = await getRequestsByUserId(userId);
       return requests;
+    }),
+  getAdminRequests: publicProcedure
+    .input(
+      z.object({
+        filter: z.string(),
+        userId: z.string().optional(),
+      }),
+    )
+    .query(async ({ input }) => {
+      const { filter, userId } = input;
+      return await getAdminRequests(filter, userId);
     }),
   deleteAgency: publicProcedure
     .input(z.number())

@@ -270,6 +270,32 @@ export async function getClientsByUserId(userId: string) {
   return clients;
 }
 
+export async function getAdminRequests(filter: string, userId?: string) {
+  let whereClause = {};
+
+  if (filter === "pendingApproval") {
+    whereClause = { pendingApproval: true };
+  } else if (filter === "byUser" && userId) {
+    whereClause = { userId: userId };
+  }
+
+  const requests = await prisma.request.findMany({
+    where: whereClause,
+    include: {
+      client: true,
+      agency: true,
+      funds: {
+        include: {
+          fundType: true,
+        },
+      },
+      SDOHs: true,
+      RFFs: true,
+    },
+  });
+  return requests;
+}
+
 export async function getRequestsByUserId(userId: string) {
   const requests = await prisma.request.findMany({
     where: {

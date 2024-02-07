@@ -4,6 +4,7 @@ import CurrentUser from "@/components/shared/current-user";
 import NewFundType from "@/components/forms/new-fund-type";
 import NewAgency from "@/components/forms/new-agency";
 import GetAgencies from "@/components/admin/get-agencies";
+import GetFilteredRequests from "@/components/admin/get-requests";
 
 export default async function Dashboard() {
   const { userId } = auth();
@@ -30,6 +31,9 @@ export default async function Dashboard() {
               <NewAgency userId={userId} />
               <div className="py-4" />
               <GetAgencies />
+            </div>
+            <div className="flex flex-col items-center">
+              <GetFilteredRequests />
             </div>
           </div>
         </div>
