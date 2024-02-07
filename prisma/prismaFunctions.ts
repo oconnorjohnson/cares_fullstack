@@ -65,6 +65,18 @@ export async function createPreScreen(
       },
     },
   });
+  // Check if the PreScreen record was successfully created
+  if (preScreen) {
+    // Update the corresponding Request record's hasPreScreen field to true
+    await prisma.request.update({
+      where: {
+        id: requestId,
+      },
+      data: {
+        hasPreScreen: true,
+      },
+    });
+  }
   return preScreen;
 }
 

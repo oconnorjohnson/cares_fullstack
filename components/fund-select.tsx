@@ -66,7 +66,9 @@ export default function FundSelect({
     <>
       <div className="flex flex-col">
         <div className="flex flex-row pb-2">
-          <Button onClick={handleAddFund}>Add Fund</Button>
+          <Button type="button" onClick={handleAddFund}>
+            Add Fund
+          </Button>
         </div>
         <div className="space-y-2">
           {value.map((fund, index) => (

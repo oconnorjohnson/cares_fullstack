@@ -56,17 +56,17 @@ interface FundInput {
 }
 
 const formSchema = z.object({
-  clientId: z.number(),
-  agencyId: z.number(),
-  details: z.string(),
-  sdoh: z.array(z.string()),
-  rff: z.array(z.string()),
-  implementation: z.string(),
-  sustainability: z.string(),
+  clientId: z.number().min(1, "clientId is required"),
+  agencyId: z.number().min(1, "agencyId is required"),
+  details: z.string().min(1, "details are required"),
+  sdoh: z.array(z.string().min(1, "SDOH category selection is required")),
+  rff: z.array(z.string().min(1, "RFF category selection is required")),
+  implementation: z.string().min(1, "implementation plan is required"),
+  sustainability: z.string().min(1, "sustainability plan is required"),
   funds: z.array(
     z.object({
-      fundTypeId: z.number(),
-      amount: z.number(),
+      fundTypeId: z.number().min(1, "fundTypeId is required"),
+      amount: z.number().min(1, "amount is required"),
     }),
   ),
 });

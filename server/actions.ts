@@ -126,6 +126,12 @@ export async function newRequest(requestState: RequestData) {
     throw new Error("User not authenticated");
   }
   console.log("newRequest server action called with:", requestState);
+  const hasInvalidFunds = requestState.funds.some(
+    (fund) => !fund.fundTypeId || fund.fundTypeId <= 0,
+  );
+  if (hasInvalidFunds) {
+    throw new Error("Each fund must have a valid fund type.");
+  }
   try {
     const newRequestRecord = await createRequest(requestState);
     console.log("Request created successfully:", newRequestRecord);

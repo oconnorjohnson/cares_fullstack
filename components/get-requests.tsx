@@ -7,6 +7,7 @@ import { MoreHorizontalIcon, Terminal, InfoIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import CompletePreScreen from "@/components/forms/pre-screen";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Table,
   TableHeader,
@@ -158,6 +159,7 @@ export default function GetRequests({ userId }: { userId: string | null }) {
                         </DialogTrigger>
                       </DropdownMenuContent>
                     </DropdownMenu>
+
                     <DialogContent>
                       <DialogHeader>
                         <DialogTitle>Request Details</DialogTitle>
@@ -167,99 +169,107 @@ export default function GetRequests({ userId }: { userId: string | null }) {
                           {formatDateWithSuffix(parseISO(request.createdAt))}.
                         </DialogDescription>
                       </DialogHeader>
-                      <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-2 items-center gap-4">
-                          <Label htmlFor="first_name" className="text-right">
-                            Name
-                          </Label>
-                          <div>
-                            {request.client?.first_name}{" "}
-                            {request.client?.last_name}
+                      <ScrollArea className="h-96 w-100 rounded-md border">
+                        <div className="grid gap-4 py-4">
+                          <div className="grid grid-cols-2 items-center gap-4">
+                            <Label htmlFor="first_name" className="text-right">
+                              Name
+                            </Label>
+                            <div>
+                              {request.client?.first_name}{" "}
+                              {request.client?.last_name}
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-2 items-center gap-4">
+                            <Label htmlFor="last_name" className="text-right">
+                              Agency
+                            </Label>
+                            <div>{request.agency.name}</div>
+                          </div>
+                          <div className="grid grid-cols-2 items-center gap-4">
+                            <Label htmlFor="sex" className="text-right">
+                              Submitted
+                            </Label>
+                            <div>
+                              {format(
+                                parseISO(request.createdAt),
+                                "MM/dd/yyyy",
+                              )}
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-2 items-center gap-4">
+                            <Label htmlFor="race" className="text-right">
+                              Details
+                            </Label>
+                            <div>{request.details}</div>
+                          </div>
+                          <div className="grid grid-cols-2 items-center gap-4">
+                            <Label htmlFor="contactInfo" className="text-right">
+                              Selected SDOH Categories
+                            </Label>
+                            <div>
+                              {request.SDOHs.map((sdoh) => (
+                                <div key={sdoh.id}>{sdoh.value}</div>
+                              ))}
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-2 items-center gap-4">
+                            <Label htmlFor="contactInfo" className="text-right">
+                              Selected RFF Categories
+                            </Label>
+                            <div>
+                              {request.RFFs.map((rff) => (
+                                <div key={rff.id}>{rff.value}</div>
+                              ))}
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-2 items-center gap-4">
+                            <Label htmlFor="caseNumber" className="text-right">
+                              Plan for Implementation
+                            </Label>
+                            <div>{request.implementation}</div>
+                          </div>
+                          <div className="grid grid-cols-2 items-center gap-4">
+                            <Label htmlFor="contactInfo" className="text-right">
+                              Plan for Sustainability
+                            </Label>
+                            <div>{request.sustainability}</div>
+                          </div>
+                          <div className="grid grid-cols-2 items-center gap-4">
+                            <Label htmlFor="contactInfo" className="text-right">
+                              Requested Funds
+                            </Label>
+                            <div>
+                              {request.funds.map((fund) => (
+                                <div key={fund.id}>
+                                  ${fund.amount} - {fund.fundType.typeName}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-2 items-center gap-4">
+                            <Label
+                              htmlFor="requestStatus"
+                              className="text-right"
+                            >
+                              Request Status
+                            </Label>
+                            <div>
+                              {request.pendingApproval ? (
+                                <Badge className="bg-orange-400 text-black">
+                                  Pending Approval
+                                </Badge>
+                              ) : request.approved ? (
+                                <Badge className="bg-green-600">Approved</Badge>
+                              ) : (
+                                <Badge className="bg-yellow-400 text-black">
+                                  Awaiting Review
+                                </Badge>
+                              )}
+                            </div>
                           </div>
                         </div>
-                        <div className="grid grid-cols-2 items-center gap-4">
-                          <Label htmlFor="last_name" className="text-right">
-                            Agency
-                          </Label>
-                          <div>{request.agency.name}</div>
-                        </div>
-                        <div className="grid grid-cols-2 items-center gap-4">
-                          <Label htmlFor="sex" className="text-right">
-                            Submitted
-                          </Label>
-                          <div>
-                            {format(parseISO(request.createdAt), "MM/dd/yyyy")}
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-2 items-center gap-4">
-                          <Label htmlFor="race" className="text-right">
-                            Details
-                          </Label>
-                          <div>{request.details}</div>
-                        </div>
-                        <div className="grid grid-cols-2 items-center gap-4">
-                          <Label htmlFor="contactInfo" className="text-right">
-                            Selected SDOH Categories
-                          </Label>
-                          <div>
-                            {request.SDOHs.map((sdoh) => (
-                              <div key={sdoh.id}>{sdoh.value}</div>
-                            ))}
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-2 items-center gap-4">
-                          <Label htmlFor="contactInfo" className="text-right">
-                            Selected RFF Categories
-                          </Label>
-                          <div>
-                            {request.RFFs.map((rff) => (
-                              <div key={rff.id}>{rff.value}</div>
-                            ))}
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-2 items-center gap-4">
-                          <Label htmlFor="caseNumber" className="text-right">
-                            Plan for Implementation
-                          </Label>
-                          <div>{request.implementation}</div>
-                        </div>
-                        <div className="grid grid-cols-2 items-center gap-4">
-                          <Label htmlFor="contactInfo" className="text-right">
-                            Plan for Sustainability
-                          </Label>
-                          <div>{request.sustainability}</div>
-                        </div>
-                        <div className="grid grid-cols-2 items-center gap-4">
-                          <Label htmlFor="contactInfo" className="text-right">
-                            Requested Funds
-                          </Label>
-                          <div>
-                            {request.funds.map((fund) => (
-                              <div key={fund.id}>
-                                ${fund.amount} - {fund.fundType.typeName}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-2 items-center gap-4">
-                          <Label htmlFor="requestStatus" className="text-right">
-                            Request Status
-                          </Label>
-                          <div>
-                            {request.pendingApproval ? (
-                              <Badge className="bg-orange-400 text-black">
-                                Pending Approval
-                              </Badge>
-                            ) : request.approved ? (
-                              <Badge className="bg-green-600">Approved</Badge>
-                            ) : (
-                              <Badge className="bg-yellow-400 text-black">
-                                Awaiting Review
-                              </Badge>
-                            )}
-                          </div>
-                        </div>
-                      </div>
+                      </ScrollArea>
                       <DialogFooter>
                         <div className="flex justify-between w-full">
                           <div className="flex justify-start">
