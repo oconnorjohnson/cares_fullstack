@@ -41,11 +41,6 @@ export const columns: ColumnDef<Request>[] = [
     accessorKey: "user",
     header: "User",
   },
-  // array of fund objects { might need to rethink how funds are rendered in this table. Maybe just as a link to a different table with related fund objects and their fundType objects }
-  {
-    accessorKey: "funds",
-    header: "Funds",
-  },
   // name of submitting agency
   {
     accessorKey: "agency",
