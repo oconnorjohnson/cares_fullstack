@@ -276,7 +276,7 @@ export async function getAdminRequests(filter: string, userId?: string) {
   if (filter === "pendingApproval") {
     whereClause = { pendingApproval: true };
   } else if (filter === "approved") {
-    whereClause = { pendingApproval: false }; // Handle the "approved" filter
+    whereClause = { pendingApproval: false };
   } else if (filter === "byUser" && userId) {
     whereClause = { userId: userId };
   }
@@ -296,6 +296,45 @@ export async function getAdminRequests(filter: string, userId?: string) {
     },
   });
   return requests;
+}
+
+export async function getAllRequests() {
+  const requests = await prisma.request.findMany({
+    select: {
+      client: {
+        select: {
+          id: true,
+          first_name: true,
+          last_name: true,
+        },
+      },
+      user: true,
+      agency: true,
+      details: true,
+    },
+  });
+  return requests;
+}
+
+export async function getRequestById(requestId: number) {
+  const request = await prisma.request.findUnique({
+    where: {
+      id: requestId,
+    },
+    include: {
+      client: true,
+      user: true,
+      agency: true,
+      funds: {
+        include: {
+          fundType: true,
+        },
+      },
+      SDOHs: true,
+      RFFs: true,
+    },
+  });
+  return request;
 }
 
 export async function getRequestsByUserId(userId: string) {

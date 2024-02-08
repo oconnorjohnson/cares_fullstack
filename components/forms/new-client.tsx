@@ -36,7 +36,7 @@ import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { cn } from "@/server/utils";
-import { newClient } from "@/server/actions";
+import { newClient } from "@/server/actions/create/actions";
 import { trpc } from "@/app/_trpc/client";
 
 const formSchema = z.object({

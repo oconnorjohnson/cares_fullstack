@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { cn } from "@/server/utils";
 import { trpc } from "@/app/_trpc/client";
-import { newFundType } from "@/server/actions";
+import { newFundType } from "@/server/actions/create/actions";
 import {
   Dialog,
   DialogContent,

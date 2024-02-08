@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { trpc } from "@/app/_trpc/client";
-import { newAgency } from "@/server/actions";
+import { newAgency } from "@/server/actions/create/actions";
 import {
   Dialog,
   DialogContent,

@@ -1,5 +1,5 @@
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
-import { appRouter } from "@/server";
+import { appRouter } from "@/server/trpc";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
