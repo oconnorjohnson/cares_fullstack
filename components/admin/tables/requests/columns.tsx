@@ -31,6 +31,11 @@ export type Request = {
   createdAt: Date;
 };
 export const columns: ColumnDef<Request>[] = [
+  // checkboxes
+  {
+    accessorKey: "checkbox",
+    header: "Checkbox",
+  },
   // name of logged in user
   {
     accessorKey: "user",
@@ -61,5 +66,9 @@ export const columns: ColumnDef<Request>[] = [
     accessorKey: "details",
     header: "Details",
   },
-  // the string of implementation details submitted to explain the request
+  // actions
+  {
+    accessorKey: "actions",
+    header: "Actions",
+  },
 ];
