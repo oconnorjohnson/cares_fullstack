@@ -1,9 +1,11 @@
 // server component where we'll fetch data and render our table
 import { Request, columns } from "@/components/admin/tables/requests/columns";
 import { DataTable } from "@/components/ui/data-table";
+import { requestAllRequests } from "@/server/actions/request/actions";
 
 async function getRequests(): Promise<Request[]> {
-  // fetch data here
+  const requests = await requestAllRequests();
+  return requests as Request[];
 }
 
 export default async function DemoPage() {

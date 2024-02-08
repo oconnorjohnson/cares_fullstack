@@ -301,6 +301,7 @@ export async function getAdminRequests(filter: string, userId?: string) {
 export async function getAllRequests() {
   const requests = await prisma.request.findMany({
     select: {
+      userId: true,
       client: {
         select: {
           id: true,
@@ -311,6 +312,13 @@ export async function getAllRequests() {
       user: true,
       agency: true,
       details: true,
+      pendingApproval: true,
+      approved: true,
+      pendingPayout: true,
+      paid: true,
+      hasPreScreen: true,
+      hasPostScreen: true,
+      createdAt: true,
     },
   });
   return requests;
