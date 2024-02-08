@@ -53,13 +53,43 @@ export const columns: ColumnDef<Request>[] = [
   },
   // the date the request was submitted
   {
-    accessorKey: "createdat",
-    header: "CreatedAt",
+    accessorKey: "createdAt",
+    header: "Created At",
   },
   // the string of details submitted to explain the request
   {
     accessorKey: "details",
     header: "Details",
+  },
+  // pendingApproval: boolean;
+  {
+    accessorKey: "pendingApproval",
+    header: "Pending Approval",
+  },
+  //   approved: boolean;
+  {
+    accessorKey: "approved",
+    header: "Approved",
+  },
+  //   pendingPayout: boolean;
+  {
+    accessorKey: "pendingPayout",
+    header: "Pending Payout",
+  },
+  //   paid: boolean;
+  {
+    accessorKey: "paid",
+    header: "Paid",
+  },
+  //   hasPreScreen: boolean;
+  {
+    accessorKey: "hasPreScreen",
+    header: "Completed Pre-Screen",
+  },
+  //   hasPostScreen: boolean;
+  {
+    accessorKey: "hasPostScreen",
+    header: "Completed Post-Screen",
   },
   // actions
   {

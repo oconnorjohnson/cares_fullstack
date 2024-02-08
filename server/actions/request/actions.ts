@@ -22,6 +22,13 @@ interface RequestData {
     first_name: string;
     last_name: string;
   };
+  pendingApproval: boolean;
+  approved: boolean;
+  pendingPayout: boolean;
+  paid: boolean;
+  hasPreScreen: boolean;
+  hasPostScreen: boolean;
+  createdAt: Date;
 }
 
 export async function requestAllRequests(): Promise<RequestData[]> {
