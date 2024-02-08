@@ -1,10 +1,11 @@
-import GetFundTypes from "@/components/admin/get-fundTypes";
+import GetFundTypes from "@/components/admin/tables/funds/get-fundTypes";
 import { auth } from "@clerk/nextjs";
 import CurrentUser from "@/components/shared/current-user";
 import NewFundType from "@/components/forms/new-fund-type";
 import NewAgency from "@/components/forms/new-agency";
-import GetAgencies from "@/components/admin/get-agencies";
-import GetFilteredRequests from "@/components/admin/get-requests";
+import GetAgencies from "@/components/admin/tables/agencies/get-agencies";
+import GetFilteredRequests from "@/components/admin/requests-table";
+import GetServerRequests from "@/components/admin/tables/requests/page";
 
 export default async function Dashboard() {
   const { userId } = auth();
@@ -19,7 +20,10 @@ export default async function Dashboard() {
           <div className="text-md font-extralight">
             You are an administrator.
           </div>
-
+          <GetServerRequests />
+          <div className="flex flex-col items-center py-12">
+            <GetFilteredRequests />
+          </div>
           <div className="flex py-8">
             <div className="flex flex-col items-center">
               <NewFundType userId={userId} />
@@ -31,9 +35,6 @@ export default async function Dashboard() {
               <NewAgency userId={userId} />
               <div className="py-4" />
               <GetAgencies />
-            </div>
-            <div className="flex flex-col items-center">
-              <GetFilteredRequests />
             </div>
           </div>
         </div>
