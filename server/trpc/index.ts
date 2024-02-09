@@ -5,6 +5,7 @@ import {
   getClientsByUserId,
   getRequestsByUserId,
   getAdminRequests,
+  getRequestById,
   deleteClient as deleteClientFromDB,
   deleteFundType as deleteFundTypeFromDB,
   deleteAgency as deleteAgencyFromDB,
@@ -37,6 +38,12 @@ export const appRouter = router({
     .query(async ({ input: userId }) => {
       const requests = await getRequestsByUserId(userId);
       return requests;
+    }),
+  getRequest: publicProcedure
+    .input(z.number())
+    .query(async ({ input: requestId }) => {
+      const request = await getRequestById(requestId);
+      return request;
     }),
   getAdminRequests: publicProcedure
     .input(

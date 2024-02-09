@@ -8,6 +8,7 @@ async function getRequests(): Promise<Request[]> {
   const requests = await requestAllRequests();
   const modifiedRequests = requests.map((request) => ({
     ...request,
+    id: request.id,
     user: request.user
       ? `${request.user.first_name} ${request.user.last_name}`
       : "N/A",

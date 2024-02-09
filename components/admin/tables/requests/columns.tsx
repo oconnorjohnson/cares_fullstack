@@ -5,6 +5,8 @@ import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+import ViewRequest from "@/components/shared/view-request";
+import Link from "next/link";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,6 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export type Request = {
+  id: number;
   userId: string;
   client: {
     id: number;
@@ -226,8 +229,11 @@ export const columns: ColumnDef<Request>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>View Details</DropdownMenuItem>
+            <Link href={`/${request.id}`}>
+              <DropdownMenuItem>View Request</DropdownMenuItem>
+            </Link>
             <DropdownMenuSeparator />
+
             {/* 
             add function to dropdown menu item like:
             onClick={() => navigator.clipboard.writeText(payment.id)}
