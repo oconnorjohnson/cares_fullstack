@@ -319,6 +319,26 @@ export async function getAllRequests() {
       hasPreScreen: true,
       hasPostScreen: true,
       createdAt: true,
+      funds: {
+        select: {
+          fundType: {
+            select: {
+              typeName: true,
+            },
+          },
+          amount: true,
+        },
+      },
+      SDOHs: {
+        select: {
+          value: true,
+        },
+      },
+      RFFs: {
+        select: {
+          value: true,
+        },
+      },
     },
   });
   return requests;

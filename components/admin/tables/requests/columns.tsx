@@ -228,6 +228,10 @@ export const columns: ColumnDef<Request>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem>View Details</DropdownMenuItem>
             <DropdownMenuSeparator />
+            {/* 
+            add function to dropdown menu item like:
+            onClick={() => navigator.clipboard.writeText(payment.id)}
+             */}
             <DropdownMenuItem className="bg-green-600 text-white">
               Approve
             </DropdownMenuItem>

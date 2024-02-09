@@ -29,6 +29,19 @@ interface RequestData {
   hasPreScreen: boolean;
   hasPostScreen: boolean;
   createdAt: Date;
+  funds: {
+    fundType: {
+      id: number;
+      typeName: string;
+    };
+    amount: number;
+  };
+  SDOHs: {
+    value: string;
+  };
+  RFFs: {
+    value: string;
+  };
 }
 
 export async function requestAllRequests(): Promise<RequestData[]> {
