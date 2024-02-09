@@ -226,10 +226,15 @@ export const columns: ColumnDef<Request>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>Copy payment ID</DropdownMenuItem>
+            <DropdownMenuItem>View Details</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <DropdownMenuItem className="bg-green-600 text-white">
+              Approve
+            </DropdownMenuItem>
+            <div className="py-0.5" />
+            <DropdownMenuItem className="bg-red-600 text-white">
+              Deny
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

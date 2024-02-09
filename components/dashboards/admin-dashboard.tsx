@@ -4,7 +4,6 @@ import CurrentUser from "@/components/shared/current-user";
 import NewFundType from "@/components/forms/new-fund-type";
 import NewAgency from "@/components/forms/new-agency";
 import GetAgencies from "@/components/admin/tables/agencies/get-agencies";
-import GetFilteredRequests from "@/components/admin/requests-table";
 import GetServerRequests from "@/components/admin/tables/requests/page";
 
 export default async function Dashboard() {
