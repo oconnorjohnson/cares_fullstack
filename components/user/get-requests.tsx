@@ -33,23 +33,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-
-export function formatDateWithSuffix(date: Date) {
-  const dayOfMonth = parseInt(format(date, "d"), 10);
-  let suffix = "th";
-
-  const j = dayOfMonth % 10,
-    k = dayOfMonth % 100;
-  if (j === 1 && k !== 11) {
-    suffix = "st";
-  } else if (j === 2 && k !== 12) {
-    suffix = "nd";
-  } else if (j === 3 && k !== 13) {
-    suffix = "rd";
-  }
-
-  return format(date, `MMMM d'${suffix}'`);
-}
+import { formatDateWithSuffix } from "@/server/utils";
 
 export default function GetRequests({ userId }: { userId: string | null }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);

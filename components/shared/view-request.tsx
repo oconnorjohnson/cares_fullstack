@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Label } from "@/components/ui/label";
-import { formatDateWithSuffix } from "@/components/user/get-requests";
+import { formatDateWithSuffix } from "@/server/utils";
 import { format, parseISO } from "date-fns";
 import { requestRequestByRequestId } from "@/server/actions/request/actions";
 import { trpc } from "@/app/_trpc/client";
