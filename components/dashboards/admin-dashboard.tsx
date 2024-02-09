@@ -20,9 +20,9 @@ export default async function Dashboard() {
           <div className="text-md font-extralight">
             You are an administrator.
           </div>
-          <GetServerRequests />
-          <div className="flex flex-col items-center py-12">
-            <GetFilteredRequests />
+
+          <div className="">
+            <GetServerRequests />
           </div>
           <div className="flex py-8">
             <div className="flex flex-col items-center">

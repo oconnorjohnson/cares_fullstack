@@ -21,8 +21,8 @@ async function getRequests(): Promise<Request[]> {
     approved: request.approved ? "True" : "False",
     pendingPayout: request.pendingPayout ? "True" : "False",
     paid: request.paid ? "True" : "False",
-    hasPreScreen: request.hasPreScreen ? "True" : "False",
-    hasPostScreen: request.hasPostScreen ? "True" : "False",
+    hasPreScreen: request.hasPreScreen ? "Complete" : "Incomplete",
+    hasPostScreen: request.hasPostScreen ? "Complete" : "Incomplete",
   }));
   console.log(modifiedRequests);
   return modifiedRequests as unknown as Request[];

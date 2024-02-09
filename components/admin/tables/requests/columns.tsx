@@ -73,6 +73,7 @@ export const columns: ColumnDef<Request>[] = [
       return (
         <Button
           variant="ghost"
+          size="sm"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           User
@@ -88,6 +89,7 @@ export const columns: ColumnDef<Request>[] = [
       return (
         <Button
           variant="ghost"
+          size="sm"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Agency
@@ -99,37 +101,82 @@ export const columns: ColumnDef<Request>[] = [
   // name of client request is submitted on behalf of
   {
     accessorKey: "client",
-    header: "Client",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Client
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   // the date the request was submitted
   {
     accessorKey: "createdAt",
-    header: "Created At",
-  },
-  // the string of details submitted to explain the request
-  {
-    accessorKey: "details",
-    header: "Details",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Created
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   // pendingApproval: boolean;
   {
     accessorKey: "pendingApproval",
-    header: "Pending Approval",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Pending
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   //   approved: boolean;
   {
     accessorKey: "approved",
-    header: "Approved",
-  },
-  //   pendingPayout: boolean;
-  {
-    accessorKey: "pendingPayout",
-    header: "Pending Payout",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Approved
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   //   paid: boolean;
   {
     accessorKey: "paid",
-    header: "Paid",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Paid
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   //   hasPreScreen: boolean;
   {
@@ -138,9 +185,10 @@ export const columns: ColumnDef<Request>[] = [
       return (
         <Button
           variant="ghost"
+          size="sm"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Completed Pre-Screen
+          Pre-Screen
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -149,7 +197,18 @@ export const columns: ColumnDef<Request>[] = [
   //   hasPostScreen: boolean;
   {
     accessorKey: "hasPostScreen",
-    header: "Completed Post-Screen",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Post-Screen
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   // actions
   {
