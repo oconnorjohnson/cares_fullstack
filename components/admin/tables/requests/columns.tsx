@@ -39,6 +39,7 @@ export type Request = {
   details: string;
   pendingApproval: boolean;
   approved: boolean;
+  denied: boolean;
   pendingPayout: boolean;
   paid: boolean;
   hasPreScreen: boolean;

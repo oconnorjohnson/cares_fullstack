@@ -26,6 +26,7 @@ export interface RequestData {
   };
   pendingApproval: boolean;
   approved: boolean;
+  denied: boolean;
   pendingPayout: boolean;
   paid: boolean;
   hasPreScreen: boolean;

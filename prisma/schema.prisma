@@ -88,6 +88,7 @@ model Request {
   agencyId            Int
   agency              Agency             @relation(fields: [agencyId], references: [id])
   pendingApproval     Boolean            @default(true)
+  denied              Boolean            @default(false)
   approved            Boolean            @default(false)
   pendingPayout       Boolean            @default(false)
   paid                Boolean            @default(false)
