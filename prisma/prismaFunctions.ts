@@ -323,6 +323,7 @@ export async function getAllRequests() {
         select: {
           fundType: {
             select: {
+              id: true,
               typeName: true,
             },
           },

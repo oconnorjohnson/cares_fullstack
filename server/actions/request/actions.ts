@@ -35,13 +35,13 @@ interface RequestData {
       typeName: string;
     };
     amount: number;
-  };
+  }[];
   SDOHs: {
     value: string;
-  };
+  }[];
   RFFs: {
     value: string;
-  };
+  }[];
 }
 
 export async function requestAllRequests(): Promise<RequestData[]> {
