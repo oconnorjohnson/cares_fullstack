@@ -33,6 +33,7 @@ export interface RequestData {
   hasPostScreen: boolean;
   createdAt: Date;
   funds: {
+    id: number;
     fundType: {
       id: number;
       typeName: string;

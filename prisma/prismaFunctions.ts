@@ -323,6 +323,7 @@ export async function getAllRequests() {
       createdAt: true,
       funds: {
         select: {
+          id: true,
           fundType: {
             select: {
               id: true,
@@ -375,6 +376,7 @@ export async function getRequestById(requestId: number) {
       createdAt: true,
       funds: {
         select: {
+          id: true,
           fundType: {
             select: {
               id: true,
