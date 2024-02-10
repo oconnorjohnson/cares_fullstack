@@ -224,97 +224,211 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
               </CardTitle>
             </CardHeader>
             <CardContent className="border py-4 mx-4 rounded-lg">
-              <div className="flex flex-col">
-                <div className="flex flex-cols-2 justify-between">
-                  <div className="text-xl font-extralight pr-4">
-                    Housing Situation
+              {request.preScreenAnswer ? (
+                <>
+                  <div className="flex flex-col">
+                    <div className="flex flex-cols-2 justify-between">
+                      <div className="text-xl font-extralight pr-4">
+                        Housing Situation
+                      </div>
+                      <div className="text-xl font-bold">
+                        {request.preScreenAnswer?.housingSituation}
+                      </div>
+                    </div>
+                    <Separator className="my-2" />
+                    <div className="flex flex-cols-2 justify-between">
+                      <div className="text-xl font-extralight pr-4">
+                        Housing Quality
+                      </div>
+                      <div className="text-xl font-bold">
+                        {request.preScreenAnswer?.housingQuality}
+                      </div>
+                    </div>
+                    <Separator className="my-2" />
+                    <div className="flex flex-cols-2 justify-between">
+                      <div className="text-xl font-extralight pr-4">
+                        Utility Stress
+                      </div>
+                      <div className="text-xl font-bold">
+                        {request.preScreenAnswer?.utilityStress}
+                      </div>
+                    </div>
+                    <Separator className="my-2" />
+                    <div className="flex flex-cols-2 justify-between">
+                      <div className="text-xl font-extralight pr-4">
+                        Food Insecurity Stress
+                      </div>
+                      <div className="text-xl font-bold">
+                        {request.preScreenAnswer?.foodInsecurityStress}
+                      </div>
+                    </div>
+                    <Separator className="my-2" />
+                    <div className="flex flex-cols-2 justify-between">
+                      <div className="text-xl font-extralight pr-4">
+                        Food Money Stress
+                      </div>
+                      <div className="text-xl font-bold">
+                        {request.preScreenAnswer?.foodMoneyStress}
+                      </div>
+                    </div>
+                    <Separator className="my-2" />
+                    <div className="flex flex-cols-2 justify-between">
+                      <div className="text-xl font-extralight pr-4">
+                        Transportation Confidence
+                      </div>
+                      <div className="text-xl font-bold">
+                        {request.preScreenAnswer?.transpoConfidence}
+                      </div>
+                    </div>
+                    <Separator className="my-2" />
+                    <div className="flex flex-cols-2 justify-between">
+                      <div className="text-xl font-extralight pr-4">
+                        Transportation Stress
+                      </div>
+                      <div className="text-xl font-bold">
+                        {request.preScreenAnswer?.transpoStress}
+                      </div>
+                    </div>
+                    <Separator className="my-2" />
+                    <div className="flex flex-cols-2 justify-between">
+                      <div className="text-xl font-extralight pr-4">
+                        Financial Difficulties
+                      </div>
+                      <div className="text-xl font-bold">
+                        {request.preScreenAnswer?.financialDifficulties}
+                      </div>
+                    </div>
+                    <Separator className="my-2" />
+                    <div className="flex flex-cols-2 justify-between">
+                      <div className="text-xl font-extralight pr-4">
+                        Additional Information
+                      </div>
+                      <div className="text-xl font-bold">
+                        {request.preScreenAnswer?.additionalInformation}
+                      </div>
+                    </div>
+                    <Separator className="my-2" />
+                    <div className="flex flex-cols-2 justify-between">
+                      <div className="text-xl font-extralight pr-4">
+                        Submitted On:
+                      </div>
+                      <div className="text-xl font-bold">
+                        {request.preScreenAnswer?.createdAt.toDateString()}
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-xl font-bold">
-                    {request.preScreenAnswer?.housingSituation}
+                </>
+              ) : (
+                <div className="text-xl font-bold">Incomplete</div>
+              )}
+            </CardContent>
+            <CardFooter></CardFooter>
+          </Card>
+          <div className="py-4" />
+          <Card className="w-2/3">
+            <CardHeader>
+              <CardTitle className="flex flex-col text-2xl font-bold">
+                Post-Screen Answers
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="border py-4 mx-4 rounded-lg">
+              {request.postScreenAnswer ? (
+                <>
+                  <div className="flex flex-col">
+                    <div className="flex flex-cols-2 justify-between">
+                      <div className="text-xl font-extralight pr-4">
+                        Housing Situation
+                      </div>
+                      <div className="text-xl font-bold">
+                        {request.postScreenAnswer?.housingSituation}
+                      </div>
+                    </div>
+                    <Separator className="my-2" />
+                    <div className="flex flex-cols-2 justify-between">
+                      <div className="text-xl font-extralight pr-4">
+                        Housing Quality
+                      </div>
+                      <div className="text-xl font-bold">
+                        {request.postScreenAnswer?.housingQuality}
+                      </div>
+                    </div>
+                    <Separator className="my-2" />
+                    <div className="flex flex-cols-2 justify-between">
+                      <div className="text-xl font-extralight pr-4">
+                        Utility Stress
+                      </div>
+                      <div className="text-xl font-bold">
+                        {request.postScreenAnswer?.utilityStress}
+                      </div>
+                    </div>
+                    <Separator className="my-2" />
+                    <div className="flex flex-cols-2 justify-between">
+                      <div className="text-xl font-extralight pr-4">
+                        Food Insecurity Stress
+                      </div>
+                      <div className="text-xl font-bold">
+                        {request.postScreenAnswer?.foodInsecurityStress}
+                      </div>
+                    </div>
+                    <Separator className="my-2" />
+                    <div className="flex flex-cols-2 justify-between">
+                      <div className="text-xl font-extralight pr-4">
+                        Food Money Stress
+                      </div>
+                      <div className="text-xl font-bold">
+                        {request.postScreenAnswer?.foodMoneyStress}
+                      </div>
+                    </div>
+                    <Separator className="my-2" />
+                    <div className="flex flex-cols-2 justify-between">
+                      <div className="text-xl font-extralight pr-4">
+                        Transportation Confidence
+                      </div>
+                      <div className="text-xl font-bold">
+                        {request.postScreenAnswer?.transpoConfidence}
+                      </div>
+                    </div>
+                    <Separator className="my-2" />
+                    <div className="flex flex-cols-2 justify-between">
+                      <div className="text-xl font-extralight pr-4">
+                        Transportation Stress
+                      </div>
+                      <div className="text-xl font-bold">
+                        {request.postScreenAnswer?.transpoStress}
+                      </div>
+                    </div>
+                    <Separator className="my-2" />
+                    <div className="flex flex-cols-2 justify-between">
+                      <div className="text-xl font-extralight pr-4">
+                        Financial Difficulties
+                      </div>
+                      <div className="text-xl font-bold">
+                        {request.postScreenAnswer?.financialDifficulties}
+                      </div>
+                    </div>
+                    <Separator className="my-2" />
+                    <div className="flex flex-cols-2 justify-between">
+                      <div className="text-xl font-extralight pr-4">
+                        Additional Information
+                      </div>
+                      <div className="text-xl font-bold">
+                        {request.postScreenAnswer?.additionalInformation}
+                      </div>
+                    </div>
+                    <Separator className="my-2" />
+                    <div className="flex flex-cols-2 justify-between">
+                      <div className="text-xl font-extralight pr-4">
+                        Submitted On:
+                      </div>
+                      <div className="text-xl font-bold">
+                        {request.postScreenAnswer?.createdAt.toDateString()}
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <Separator className="my-2" />
-                <div className="flex flex-cols-2 justify-between">
-                  <div className="text-xl font-extralight pr-4">
-                    Housing Quality
-                  </div>
-                  <div className="text-xl font-bold">
-                    {request.preScreenAnswer?.housingQuality}
-                  </div>
-                </div>
-                <Separator className="my-2" />
-                <div className="flex flex-cols-2 justify-between">
-                  <div className="text-xl font-extralight pr-4">
-                    Utility Stress
-                  </div>
-                  <div className="text-xl font-bold">
-                    {request.preScreenAnswer?.utilityStress}
-                  </div>
-                </div>
-                <Separator className="my-2" />
-                <div className="flex flex-cols-2 justify-between">
-                  <div className="text-xl font-extralight pr-4">
-                    Food Insecurity Stress
-                  </div>
-                  <div className="text-xl font-bold">
-                    {request.preScreenAnswer?.foodInsecurityStress}
-                  </div>
-                </div>
-                <Separator className="my-2" />
-                <div className="flex flex-cols-2 justify-between">
-                  <div className="text-xl font-extralight pr-4">
-                    Food Money Stress
-                  </div>
-                  <div className="text-xl font-bold">
-                    {request.preScreenAnswer?.foodMoneyStress}
-                  </div>
-                </div>
-                <Separator className="my-2" />
-                <div className="flex flex-cols-2 justify-between">
-                  <div className="text-xl font-extralight pr-4">
-                    Transportation Confidence
-                  </div>
-                  <div className="text-xl font-bold">
-                    {request.preScreenAnswer?.transpoConfidence}
-                  </div>
-                </div>
-                <Separator className="my-2" />
-                <div className="flex flex-cols-2 justify-between">
-                  <div className="text-xl font-extralight pr-4">
-                    Transportation Stress
-                  </div>
-                  <div className="text-xl font-bold">
-                    {request.preScreenAnswer?.transpoStress}
-                  </div>
-                </div>
-                <Separator className="my-2" />
-                <div className="flex flex-cols-2 justify-between">
-                  <div className="text-xl font-extralight pr-4">
-                    Financial Difficulties
-                  </div>
-                  <div className="text-xl font-bold">
-                    {request.preScreenAnswer?.financialDifficulties}
-                  </div>
-                </div>
-                <Separator className="my-2" />
-                <div className="flex flex-cols-2 justify-between">
-                  <div className="text-xl font-extralight pr-4">
-                    Additional Information
-                  </div>
-                  <div className="text-xl font-bold">
-                    {request.preScreenAnswer?.additionalInformation}
-                  </div>
-                </div>
-                <Separator className="my-2" />
-                <div className="flex flex-cols-2 justify-between">
-                  <div className="text-xl font-extralight pr-4">
-                    Submitted On:
-                  </div>
-                  <div className="text-xl font-bold">
-                    {request.preScreenAnswer?.createdAt.toDateString()}
-                  </div>
-                </div>
-              </div>
+                </>
+              ) : (
+                <div className="text-xl font-bold">Incomplete</div>
+              )}
             </CardContent>
             <CardFooter></CardFooter>
           </Card>

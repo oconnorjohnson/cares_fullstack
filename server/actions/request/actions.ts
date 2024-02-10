@@ -44,6 +44,19 @@ export interface RequestData {
     createdAt: Date;
   } | null;
   hasPostScreen: boolean;
+  postScreenAnswer: {
+    id: number;
+    housingSituation: number;
+    housingQuality: number;
+    utilityStress: number;
+    foodInsecurityStress: number;
+    foodMoneyStress: number;
+    transpoConfidence: number;
+    transpoStress: number;
+    financialDifficulties: number;
+    additionalInformation: string;
+    createdAt: Date;
+  } | null;
   createdAt: Date;
   funds: {
     id: number;
