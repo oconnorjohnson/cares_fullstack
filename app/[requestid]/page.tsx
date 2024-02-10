@@ -31,7 +31,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
   ));
   const FundsBadges = request.funds.map((fund, index) => (
     <div key={index} className="flex items-center justify-end space-x-2 mb-2">
-      <Badge className="bg-purple-500">{fund.fundType.typeName}</Badge>
+      <Badge>{fund.fundType.typeName}</Badge>
       <span className="text-lg font-semibold">${fund.amount}</span>
       <FundAction
         fundId={fund.id}
@@ -47,23 +47,10 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
       <div className="flex flex-col items-center justify-center py-12">
         <Card className="w-2/3">
           <CardHeader>
-            <CardTitle className="flex flex-col text-2xl font-extralight">
-              <div className="flex flex-row">
-                <Badge className="font-bold text-lg bg-green-600">
-                  {request.user.first_name}&apos;s
-                </Badge>
-                <div className="px-1" />
-                request for
-                <div className="px-1" />
-                <Badge className="font-bold text-lg bg-blue-600">
-                  {request.client.first_name}
-                </Badge>
-                <div className="px-1" />
-                made on
-                <a className="pl-1 font-bold">
-                  {formatDateWithSuffix(request.createdAt)}.
-                </a>
-              </div>
+            <CardTitle className="flex flex-col text-4xl">
+              {request.user.first_name}&apos;s request for{" "}
+              {request.client.first_name} from{" "}
+              {formatDateWithSuffix(request.createdAt)}.
             </CardTitle>
           </CardHeader>
           <CardContent className="border py-4 mx-4 rounded-lg">
@@ -91,13 +78,13 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                 <div className="text-xl font-extralight pr-4">Status</div>
                 <div className="text-xl font-bold">
                   {request.pendingApproval ? (
-                    <Badge className="bg-yellow-500 text-lg">
+                    <Badge className="bg-yellow-500 text-sm">
                       Pending Approval
                     </Badge>
                   ) : request.approved ? (
-                    <Badge className="bg-green-600 text-lg">Approved</Badge>
+                    <Badge className="bg-green-600 text-sm">Approved</Badge>
                   ) : (
-                    <Badge className="bg-red-600 text-lg">Not Approved</Badge>
+                    <Badge className="bg-red-600 text-sm">Not Approved</Badge>
                   )}
                 </div>
               </div>

@@ -84,9 +84,9 @@ export default function FundDropdown({
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Edit profile</DialogTitle>
+            <DialogTitle>Edit Fund</DialogTitle>
             <DialogDescription>
-              Make changes to your profile here. Click save when you're done.
+              Adjust the fund as necessary. Click save when you're done.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
@@ -111,7 +111,7 @@ export default function FundDropdown({
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="username" className="text-right">
-                Amount
+                Amount $
               </Label>
               <Input
                 id="username"
