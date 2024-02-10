@@ -230,6 +230,7 @@ export const columns: ColumnDef<Request>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuSeparator />
             <Link href={`/admin/request/${request.id}`}>
               <DropdownMenuItem>View Request</DropdownMenuItem>
             </Link>
@@ -239,13 +240,13 @@ export const columns: ColumnDef<Request>[] = [
             add function to dropdown menu item like:
             onClick={() => navigator.clipboard.writeText(payment.id)}
              */}
-            <DropdownMenuItem className="bg-green-600 text-white">
+            {/* <DropdownMenuItem className="bg-green-600 text-white">
               Approve
             </DropdownMenuItem>
             <div className="py-0.5" />
             <DropdownMenuItem className="bg-red-600 text-white">
               Deny
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
           </DropdownMenuContent>
         </DropdownMenu>
       );

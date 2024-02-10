@@ -30,6 +30,19 @@ export interface RequestData {
   pendingPayout: boolean;
   paid: boolean;
   hasPreScreen: boolean;
+  preScreenAnswer: {
+    id: number;
+    housingSituation: number;
+    housingQuality: number;
+    utilityStress: number;
+    foodInsecurityStress: number;
+    foodMoneyStress: number;
+    transpoConfidence: number;
+    transpoStress: number;
+    financialDifficulties: number;
+    additionalInformation: string;
+    createdAt: Date;
+  } | null;
   hasPostScreen: boolean;
   createdAt: Date;
   funds: {

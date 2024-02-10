@@ -319,6 +319,21 @@ export async function getAllRequests() {
       pendingPayout: true,
       paid: true,
       hasPreScreen: true,
+      preScreenAnswer: {
+        select: {
+          id: true,
+          housingSituation: true,
+          housingQuality: true,
+          utilityStress: true,
+          foodInsecurityStress: true,
+          foodMoneyStress: true,
+          transpoConfidence: true,
+          transpoStress: true,
+          financialDifficulties: true,
+          additionalInformation: true,
+          createdAt: true,
+        },
+      },
       hasPostScreen: true,
       createdAt: true,
       funds: {
@@ -372,6 +387,21 @@ export async function getRequestById(requestId: number) {
       pendingPayout: true,
       paid: true,
       hasPreScreen: true,
+      preScreenAnswer: {
+        select: {
+          id: true,
+          housingSituation: true,
+          housingQuality: true,
+          utilityStress: true,
+          foodInsecurityStress: true,
+          foodMoneyStress: true,
+          transpoConfidence: true,
+          transpoStress: true,
+          financialDifficulties: true,
+          additionalInformation: true,
+          createdAt: true,
+        },
+      },
       hasPostScreen: true,
       createdAt: true,
       funds: {
