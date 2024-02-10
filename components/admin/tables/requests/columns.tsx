@@ -230,7 +230,7 @@ export const columns: ColumnDef<Request>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <Link href={`/${request.id}`}>
+            <Link href={`/admin/request/${request.id}`}>
               <DropdownMenuItem>View Request</DropdownMenuItem>
             </Link>
             <DropdownMenuSeparator />
