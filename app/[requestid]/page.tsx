@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { requestRequestByRequestId } from "@/server/actions/request/actions";
 import { formatDateWithSuffix } from "@/server/utils";
 import { MoreHorizontalIcon } from "lucide-react";
-import FundAction from "@/components/admin/fund-dropdown";
+import FundAction from "@/components/admin/fund-actions";
 
 const RequestPage = async ({ requestid }: { requestid: string }) => {
   const requestId = Number(requestid);
@@ -33,9 +33,12 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
     <div key={index} className="flex items-center justify-end space-x-2 mb-2">
       <Badge className="bg-purple-500">{fund.fundType.typeName}</Badge>
       <span className="text-lg font-semibold">${fund.amount}</span>
-      <FundAction fundId={fund.id}>
-        <MoreHorizontalIcon />
-      </FundAction>
+      <FundAction
+        fundId={fund.id}
+        fundTypeId={fund.fundType.id}
+        fundTypeName={fund.fundType.typeName}
+        fundAmount={fund.amount}
+      />
     </div>
   ));
 

@@ -59,7 +59,7 @@ export default function getAgencies() {
                   <DropdownMenuContent>
                     <DropdownMenuItem>Edit</DropdownMenuItem>
                     <DropdownMenuItem
-                      className="text-destructive"
+                      className="bg-destructive"
                       onClick={() => handleDeleteAgency(agency.id)}
                     >
                       Delete
