@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { requestRequestByRequestId } from "@/server/actions/request/actions";
 import { formatDateWithSuffix } from "@/server/utils";
 import { MoreHorizontalIcon } from "lucide-react";
-import FundAction from "@/components/admin/fund-action";
+import FundAction from "@/components/admin/fund-dropdown";
 
 const RequestPage = async ({ requestid }: { requestid: string }) => {
   const requestId = Number(requestid);
