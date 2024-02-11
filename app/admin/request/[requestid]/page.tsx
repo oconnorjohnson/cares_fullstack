@@ -61,9 +61,10 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
         <div className="flex flex-col items-center justify-center py-12">
           <Card className="w-2/3">
             <CardHeader>
-              <CardTitle className="flex flex-cols-3 justify-around">
-                <Button className="bg-red-500">
+              <CardTitle className="flex flex-cols-3 justify-between">
+                <Button variant="destructive">
                   Deny
+                  <div className="px-1" />
                   <XIcon />
                 </Button>
                 <div className="text-center text-3xl pt-0.5">
@@ -71,8 +72,9 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                   {request.client.first_name} from{" "}
                   {formatDateWithSuffix(request.createdAt)}.
                 </div>
-                <Button className="bg-green-600">
+                <Button variant="confirmation">
                   Approve
+                  <div className="px-1" />
                   <CheckIcon />
                 </Button>
               </CardTitle>
@@ -81,16 +83,20 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
               <div className="flex flex-col">
                 <div className="flex flex-cols-2 justify-between">
                   <div className="text-xl font-extralight pr-4">User</div>
-                  <div className="text-xl font-bold">
-                    {request.user.first_name} {request.user.last_name}
-                  </div>
+                  <Link href={`/admin/user/${request.user.id}`}>
+                    <div className="text-xl font-bold hover:underline">
+                      {request.user.first_name} {request.user.last_name}
+                    </div>
+                  </Link>
                 </div>
                 <Separator className="my-2" />
                 <div className="flex flex-cols-2 justify-between">
                   <div className="text-xl font-extralight pr-4">Client</div>
-                  <div className="text-xl font-bold">
-                    {request.client.first_name} {request.client.last_name}
-                  </div>
+                  <Link href={`/admin/user/${request.user.id}`}>
+                    <div className="text-xl font-bold hover:underline">
+                      {request.client.first_name} {request.client.last_name}
+                    </div>
+                  </Link>
                 </div>
                 <Separator className="my-2" />
                 <div className="flex flex-cols-2 justify-between">
@@ -104,13 +110,18 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                   </div>
                   <div className="text-xl font-bold">
                     {request.pendingApproval ? (
-                      <Badge className="bg-yellow-500 text-sm">
+                      <Badge className="bg-yellow-300 text-black text-sm">
                         Pending Approval
                       </Badge>
                     ) : request.approved ? (
                       <Badge className="bg-green-600 text-sm">Approved</Badge>
+                    ) : request.denied ? (
+                      <Badge className="bg-red-600 text-sm">Denied</Badge>
                     ) : (
-                      <Badge className="bg-red-600 text-sm">Not Approved</Badge>
+                      <Badge className="bg-pink-500">
+                        Error, this request isn&apos;t pending, approved or
+                        denied.
+                      </Badge>
                     )}
                   </div>
                 </div>
@@ -121,9 +132,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                     {request.hasPreScreen ? (
                       <Badge className="bg-green-600 text-sm">Completed</Badge>
                     ) : (
-                      <Badge className="bg-yellow-500 text-sm">
-                        Not Started
-                      </Badge>
+                      <Badge className="bg-red-500 text-sm">Not Started</Badge>
                     )}
                   </div>
                 </div>
@@ -136,9 +145,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                     {request.hasPostScreen ? (
                       <Badge className="bg-green-600 text-sm">Completed</Badge>
                     ) : (
-                      <Badge className="bg-yellow-500 text-sm">
-                        Not Started
-                      </Badge>
+                      <Badge className="bg-red-500 text-sm">Not Started</Badge>
                     )}
                   </div>
                 </div>
