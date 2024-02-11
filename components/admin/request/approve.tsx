@@ -40,7 +40,7 @@ export default function Approve({ requestId }: { requestId: number }) {
   };
 
   return (
-    <Button onClick={handleApprove} variant="destructive">
+    <Button onClick={handleApprove} variant="confirmation">
       {isLoading ? (
         <LoadingSpinner className="w-4 h-4 text-white" />
       ) : (
