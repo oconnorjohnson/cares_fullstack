@@ -32,13 +32,15 @@ import {
 interface DataTableProps<TData extends { isHighlighted?: boolean }, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  defaultSorting?: SortingState;
 }
 
 export function DataTable<TData extends { isHighlighted?: boolean }, TValue>({
   columns,
   data,
+  defaultSorting = [],
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [sorting, setSorting] = React.useState<SortingState>(defaultSorting);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   );

@@ -1,12 +1,6 @@
 "use server";
 
-import {
-  getClientsByUserId,
-  getAdminRequests,
-  getRequestsByUserId,
-  getRequestById,
-  getAllRequests,
-} from "@/prisma/prismaFunctions";
+import { deleteFundById } from "@/prisma/prismaFunctions";
 
 interface RequestData {
   id: number;
@@ -72,30 +66,4 @@ interface RequestData {
   RFFs: {
     value: string;
   }[];
-}
-
-export async function requestAllRequests(): Promise<RequestData[]> {
-  try {
-    const allRequestRecords: RequestData[] = await getAllRequests();
-    return allRequestRecords;
-  } catch (error) {
-    console.error("Failed to call getAllRequests from prismaFunctions:", error);
-    throw error;
-  }
-}
-
-export async function requestRequestByRequestId(
-  requestId: number,
-): Promise<RequestData> {
-  try {
-    const request = await getRequestById(requestId);
-    if (!request) {
-      throw new Error(`Request with ID ${requestId} not found.`);
-    }
-    // Assuming the structure returned by getRequestById matches RequestData interface
-    return request as RequestData;
-  } catch (error) {
-    console.error("Failed to retrieve request by ID:", error);
-    throw error;
-  }
 }
