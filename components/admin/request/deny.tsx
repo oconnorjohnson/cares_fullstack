@@ -4,6 +4,7 @@ import { XIcon } from "lucide-react";
 import { DenyRequest } from "@/server/actions/update/actions";
 import { useState } from "react";
 import { cn } from "@/server/utils";
+import { trpc } from "@/app/_trpc/client";
 export const LoadingSpinner = ({ className }: { className: any }) => {
   return (
     <svg
@@ -25,15 +26,16 @@ export const LoadingSpinner = ({ className }: { className: any }) => {
 
 export default function Deny({ requestId }: { requestId: number }) {
   const [isLoading, setIsLoading] = useState(false);
-  const RequestId = requestId;
+  const trpcContext = trpc.useUtils();
   const handleDeny = async () => {
-    setIsLoading(true); // Start loading
+    setIsLoading(true);
     try {
       await DenyRequest(requestId);
     } catch (error) {
       console.error("Error approving request:", error);
     } finally {
-      setIsLoading(false); // Stop loading regardless of outcome
+      setIsLoading(false);
+      trpcContext.invalidate();
     }
   };
 
