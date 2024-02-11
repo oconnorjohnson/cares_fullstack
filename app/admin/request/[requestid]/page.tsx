@@ -92,7 +92,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                 <Separator className="my-2" />
                 <div className="flex flex-cols-2 justify-between">
                   <div className="text-xl font-extralight pr-4">Client</div>
-                  <Link href={`/admin/user/${request.user.id}`}>
+                  <Link href={`/admin/client/${request.client.id}`}>
                     <div className="text-xl font-bold hover:underline">
                       {request.client.first_name} {request.client.last_name}
                     </div>
