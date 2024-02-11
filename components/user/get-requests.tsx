@@ -99,6 +99,8 @@ export default function GetRequests({ userId }: { userId: string | null }) {
                     </Badge>
                   ) : request.approved ? (
                     <Badge className="bg-green-600">Approved</Badge>
+                  ) : request.denied ? (
+                    <Badge className="bg-red-500">Denied</Badge>
                   ) : (
                     <Badge className="bg-yellow-400 text-black">
                       Awaiting Review
