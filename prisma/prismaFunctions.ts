@@ -194,6 +194,30 @@ export async function updateUser(userId: string, userData: any) {
   return updatedUser;
 }
 
+export async function denyRequestById(requestId: number) {
+  const deniedRequest = await prisma.request.update({
+    where: { id: requestId },
+    data: {
+      denied: true,
+      approved: false,
+      pendingApproval: false,
+    },
+  });
+  return deniedRequest;
+}
+
+export async function approveRequestById(requestId: number) {
+  const approvedRequest = await prisma.request.update({
+    where: { id: requestId },
+    data: {
+      denied: false,
+      approved: true,
+      pendingApproval: false,
+    },
+  });
+  return approvedRequest;
+}
+
 // DELETE FUNCTIONS
 export async function deleteUser(userId: string) {
   await prisma.emailAddress.deleteMany({

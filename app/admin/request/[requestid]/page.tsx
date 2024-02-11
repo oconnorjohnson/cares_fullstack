@@ -16,6 +16,20 @@ import { formatDateWithSuffix } from "@/server/utils";
 import { XIcon, CheckIcon, ArrowLeftIcon } from "lucide-react";
 import FundAction from "@/components/admin/fund-actions";
 import Link from "next/link";
+import DenyButton from "@/components/admin/request/deny";
+import ApproveButton from "@/components/admin/request/approve";
+
+// const ApproveFunction = async ({ requestId }: { requestId: string }) => {
+//   const RequestId = Number(requestId);
+//   const approve = await ApproveRequest(RequestId);
+//   return approve;
+// };
+
+// const DenyFunction = async ({ requestId }: { requestId: string }) => {
+//   const RequestId = Number(requestId);
+//   const deny = await DenyRequest(RequestId);
+//   return deny;
+// };
 
 const RequestPage = async ({ requestid }: { requestid: string }) => {
   const requestId = Number(requestid);
@@ -62,21 +76,13 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
           <Card className="w-2/3">
             <CardHeader>
               <CardTitle className="flex flex-cols-3 justify-between">
-                <Button variant="destructive">
-                  Deny
-                  <div className="px-1" />
-                  <XIcon />
-                </Button>
+                <DenyButton requestId={requestId} />
                 <div className="text-center text-3xl pt-0.5">
                   {request.user.first_name}&apos;s request for{" "}
                   {request.client.first_name} from{" "}
                   {formatDateWithSuffix(request.createdAt)}.
                 </div>
-                <Button variant="confirmation">
-                  Approve
-                  <div className="px-1" />
-                  <CheckIcon />
-                </Button>
+                <ApproveButton requestId={requestId} />
               </CardTitle>
             </CardHeader>
             <CardContent className="border py-4 mx-4 rounded-lg">
