@@ -45,6 +45,7 @@ export type Request = {
   hasPreScreen: boolean;
   hasPostScreen: boolean;
   createdAt: Date;
+  isHighlighted?: boolean;
 };
 export const columns: ColumnDef<Request>[] = [
   // checkboxes

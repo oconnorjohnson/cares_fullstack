@@ -29,12 +29,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData extends { isHighlighted?: boolean }, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends { isHighlighted?: boolean }, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -128,6 +128,7 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className={row.original.isHighlighted ? "bg-yellow-100" : ""}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
