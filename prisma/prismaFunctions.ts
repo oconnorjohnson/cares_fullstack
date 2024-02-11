@@ -194,6 +194,43 @@ export async function updateUser(userId: string, userData: any) {
   return updatedUser;
 }
 
+export async function updateFundById(
+  fundId: number,
+  amount: number,
+  fundTypeId: number,
+) {
+  // First, check if the fundTypeId exists to prevent foreign key constraint errors
+  const fundTypeExists = await prisma.fundType.findUnique({
+    where: {
+      id: fundTypeId,
+    },
+  });
+
+  if (!fundTypeExists) {
+    throw new Error(`FundType with ID: ${fundTypeId} does not exist.`);
+  }
+
+  // Proceed with the update if the fundType exists
+  try {
+    const updatedFund = await prisma.fund.update({
+      where: {
+        id: fundId,
+      },
+      data: {
+        amount: amount,
+        // Ensure the fundTypeId is correctly associated
+        fundTypeId: fundTypeId,
+      },
+    });
+
+    console.log("Updated fund:", updatedFund);
+    return updatedFund;
+  } catch (error) {
+    console.error(`Failed to update fund with ID: ${fundId}`, error);
+    throw new Error(`Failed to update fund with ID: ${fundId}`);
+  }
+}
+
 export async function denyRequestById(requestId: number) {
   const deniedRequest = await prisma.request.update({
     where: { id: requestId },
@@ -228,6 +265,15 @@ export async function deleteUser(userId: string) {
   });
   console.log(`User ${userId} and related email addresses deleted`);
   return deletedUser;
+}
+
+export async function deleteFundById(fundId: number) {
+  const deletedFund = await prisma.fund.delete({
+    where: {
+      id: fundId,
+    },
+  });
+  return deletedFund;
 }
 
 export async function deleteFundType(fundTypeId: number) {

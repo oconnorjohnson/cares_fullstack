@@ -30,7 +30,6 @@ import ApproveButton from "@/components/admin/request/approve";
 //   const deny = await DenyRequest(RequestId);
 //   return deny;
 // };
-
 const RequestPage = async ({ requestid }: { requestid: string }) => {
   const requestId = Number(requestid);
   const request = await requestRequestByRequestId(requestId);
@@ -57,7 +56,8 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
         fundId={fund.id}
         fundTypeId={fund.fundType.id}
         fundTypeName={fund.fundType.typeName}
-        fundAmount={fund.amount}
+        amount={fund.amount}
+        requestId={requestId}
       />
     </div>
   ));

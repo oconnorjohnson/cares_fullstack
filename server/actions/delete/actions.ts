@@ -1,6 +1,7 @@
 "use server";
 
 import { deleteFundById } from "@/prisma/prismaFunctions";
+import { revalidatePath } from "next/cache";
 
 interface RequestData {
   id: number;
@@ -66,4 +67,14 @@ interface RequestData {
   RFFs: {
     value: string;
   }[];
+}
+
+export async function DeleteFund(fundId: number, requestId: number) {
+  try {
+    await deleteFundById(fundId);
+    await revalidatePath(`/admin/request/${requestId}/page`);
+  } catch (error) {
+    console.error(`Failed to delete fund with id ${fundId}:`, error);
+    throw error;
+  }
 }

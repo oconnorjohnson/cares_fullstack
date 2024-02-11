@@ -154,7 +154,7 @@ export const columns: ColumnDef<Request>[] = [
           badgeColor = "red";
           break;
         default:
-          badgeColor = undefined; // Or set a default color if you prefer
+          badgeColor = undefined;
       }
 
       return <Badge color={badgeColor}>{status}</Badge>;
