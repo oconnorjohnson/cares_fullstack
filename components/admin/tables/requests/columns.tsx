@@ -135,36 +135,29 @@ export const columns: ColumnDef<Request>[] = [
       );
     },
   },
-  // pendingApproval: boolean;
+  // status: complex conditional render;
   {
-    accessorKey: "pendingApproval",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Pending
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-  //   approved: boolean;
-  {
-    accessorKey: "approved",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Approved
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
+    accessorKey: "combinedStatus",
+    header: "Status",
+    cell: ({ getValue }) => {
+      const status = getValue() as string;
+      let badgeColor: "yellow" | "green" | "red" | undefined;
+
+      switch (status) {
+        case "Pending":
+          badgeColor = "yellow";
+          break;
+        case "Approved":
+          badgeColor = "green";
+          break;
+        case "Denied":
+          badgeColor = "red";
+          break;
+        default:
+          badgeColor = undefined; // Or set a default color if you prefer
+      }
+
+      return <Badge color={badgeColor}>{status}</Badge>;
     },
   },
   //   paid: boolean;

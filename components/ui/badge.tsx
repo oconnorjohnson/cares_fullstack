@@ -24,11 +24,31 @@ const badgeVariants = cva(
 
 export interface BadgeProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof badgeVariants> {}
+    VariantProps<typeof badgeVariants> {
+  color?: "yellow" | "green" | "red";
+}
 
-function Badge({ className, variant, ...props }: BadgeProps) {
+function Badge({ className, variant, color, ...props }: BadgeProps) {
+  // Define the mapping object
+  const colorClasses = {
+    yellow: "bg-yellow-500",
+    green: "bg-green-500",
+    red: "bg-red-500",
+  };
+
+  // Handle undefined color by providing a default class or an empty string
+  // This ensures that colorClass is always a valid string, even if color is undefined
+  const colorClass = color ? colorClasses[color] : "";
+
   return (
-    <div className={cn(badgeVariants({ variant }), className)} {...props} />
+    <div
+      className={cn(
+        badgeVariants({ variant }),
+        colorClass, // Use the resolved color class
+        className,
+      )}
+      {...props}
+    />
   );
 }
 
