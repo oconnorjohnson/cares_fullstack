@@ -5,6 +5,7 @@ import {
   createAgency,
   createRequest,
   createPreScreen,
+  createPostScreen,
   createNewFundByRequestId,
 } from "@/prisma/prismaFunctions";
 import { revalidatePath } from "next/cache";
@@ -60,7 +61,6 @@ interface PreScreenData {
 }
 
 interface PostScreenData {
-  requestId: number;
   housingSituation: number;
   housingQuality: number;
   utilityStress: number;
@@ -111,6 +111,27 @@ export async function newPreScreen(
     return newPreScreenRecord;
   } catch (error) {
     console.error("Failed to create new prescreen record:", error);
+    throw error;
+  }
+}
+
+export async function newPostScreen(
+  postScreenState: PostScreenData,
+  requestId: number,
+) {
+  if (!requestId) {
+    throw new Error(
+      "Request ID is required to tie your post screen to your request",
+    );
+  }
+  try {
+    const newPostScreenRecord = await createPostScreen(
+      postScreenState,
+      requestId,
+    );
+    return newPostScreenRecord;
+  } catch (error) {
+    console.error("Failed to create new postscreen record:", error);
     throw error;
   }
 }

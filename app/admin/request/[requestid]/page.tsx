@@ -19,18 +19,8 @@ import Link from "next/link";
 import DenyButton from "@/components/admin/request/deny";
 import ApproveButton from "@/components/admin/request/approve";
 import AddFundToRequestById from "@/components/admin/request/add-fund";
+import MarkPaidButton from "@/components/admin/request/mark-paid";
 
-// const ApproveFunction = async ({ requestId }: { requestId: string }) => {
-//   const RequestId = Number(requestId);
-//   const approve = await ApproveRequest(RequestId);
-//   return approve;
-// };
-
-// const DenyFunction = async ({ requestId }: { requestId: string }) => {
-//   const RequestId = Number(requestId);
-//   const deny = await DenyRequest(RequestId);
-//   return deny;
-// };
 const RequestPage = async ({ requestid }: { requestid: string }) => {
   const requestId = Number(requestid);
   const request = await requestRequestByRequestId(requestId);
@@ -94,7 +84,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                 <div className="flex flex-cols-2 justify-between">
                   <div className="text-xl font-extralight pr-4">User</div>
                   <Link href={`/admin/user/${request.user.id}`}>
-                    <div className="text-xl font-bold underline hover:text-green-500">
+                    <div className="text-xl font-bold underline hover:text-zinc-500">
                       {request.user.first_name} {request.user.last_name}
                     </div>
                   </Link>
@@ -103,7 +93,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                 <div className="flex flex-cols-2 justify-between">
                   <div className="text-xl font-extralight pr-4">Client</div>
                   <Link href={`/admin/client/${request.client.id}`}>
-                    <div className="text-xl font-bold underline hover:text-green-500">
+                    <div className="text-xl font-bold underline hover:text-zinc-500">
                       {request.client.first_name} {request.client.last_name}
                     </div>
                   </Link>
@@ -156,6 +146,23 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                       <Badge className="bg-green-600 text-sm">Completed</Badge>
                     ) : (
                       <Badge className="bg-red-500 text-sm">Not Started</Badge>
+                    )}
+                  </div>
+                </div>
+                <Separator className="my-2" />
+                <div className="flex flex-cols-2 justify-between">
+                  <div className="text-xl font-extralight pr-4">
+                    Paid Status
+                  </div>
+                  <div className="text-xl font-bold">
+                    {request.paid ? (
+                      <Badge className="bg-green-600 text-white text-sm">
+                        Paid
+                      </Badge>
+                    ) : (
+                      <Badge className="bg-yellow-500">
+                        Not marked as paid.
+                      </Badge>
                     )}
                   </div>
                 </div>
@@ -340,12 +347,37 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                 </>
               ) : (
                 <div className="text-xl font-bold text-destructive">
-                  Not Started
+                  Not Started. Once {request.user.first_name} completes the
+                  Pre-Screen questionnaire with {request.client.first_name},
+                  you&apos;ll see their answers and an option to mark this
+                  request as &quot;Paid&quot;.
                 </div>
               )}
             </CardContent>
             <CardFooter></CardFooter>
           </Card>
+          {request.preScreenAnswer && !request.paid ? (
+            <>
+              <div className="py-4" />
+              <Card className="w-2/3">
+                <CardHeader>
+                  <CardTitle>Mark Request as Paid</CardTitle>
+                  <CardDescription className="text-md">
+                    Mark as paid in order to prompt user to complete post-screen
+                    questionnaire with their client. If you wish to backtrack on
+                    a request approval, simply click Deny here or at the top of
+                    the page.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="flex flex-row justify-around">
+                  <DenyButton requestId={request.id} />
+                  <MarkPaidButton requestId={request.id} />
+                </CardContent>
+              </Card>
+            </>
+          ) : (
+            <></>
+          )}
           <div className="py-4" />
           <Card className="w-2/3">
             <CardHeader>

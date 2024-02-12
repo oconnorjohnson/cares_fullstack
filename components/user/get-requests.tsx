@@ -7,6 +7,7 @@ import { MoreHorizontalIcon, Terminal, InfoIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import CompletePreScreen from "@/components/forms/pre-screen";
+import CompletePostScreen from "@/components/forms/post-screen";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Table,
@@ -117,13 +118,7 @@ export default function GetRequests({ userId }: { userId: string | null }) {
                   ) : request.hasPreScreen &&
                     !request.hasPostScreen &&
                     request.paid ? (
-                    <Button
-                      onClick={() => {
-                        /* Function to handle PostScreen completion */
-                      }}
-                    >
-                      Complete Post-Screen
-                    </Button>
+                    <CompletePostScreen requestId={request.id} />
                   ) : request.hasPreScreen && request.hasPostScreen ? (
                     <div>Request Completed and Closed.</div>
                   ) : null}

@@ -4,6 +4,7 @@ import {
   denyRequestById,
   approveRequestById,
   updateFundById,
+  markRequestPaidById,
 } from "@/prisma/prismaFunctions";
 import { revalidatePath } from "next/cache";
 
@@ -38,6 +39,20 @@ export async function ApproveRequest(requestId: number): Promise<RequestData> {
     return updatedRequest;
   } catch (error) {
     console.error(`Failed to approve request with ID ${requestId}:`, error);
+    throw error;
+  }
+}
+
+export async function MarkPaid(requestId: number): Promise<RequestData> {
+  try {
+    const updatedRequest = await markRequestPaidById(requestId);
+    await revalidatePath(`/admin/request/${requestId}/page`);
+    return updatedRequest;
+  } catch (error) {
+    console.error(
+      `Failed to mark request with ID ${requestId} as paid:`,
+      error,
+    );
     throw error;
   }
 }

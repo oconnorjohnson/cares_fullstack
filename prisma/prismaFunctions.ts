@@ -102,6 +102,33 @@ export async function createPreScreen(
   return preScreen;
 }
 
+export async function createPostScreen(
+  postScreenData: PostScreenData,
+  requestId: number,
+) {
+  const postScreen = await prisma.postScreenAnswers.create({
+    data: {
+      ...postScreenData,
+      request: {
+        connect: {
+          id: requestId,
+        },
+      },
+    },
+  });
+  if (postScreen) {
+    await prisma.request.update({
+      where: {
+        id: requestId,
+      },
+      data: {
+        hasPostScreen: true,
+      },
+    });
+  }
+  return postScreen;
+}
+
 export async function createUser(userData: any) {
   const user = await prisma.user.create({
     data: userData,
@@ -255,6 +282,16 @@ export async function updateFundById(
   }
 }
 
+export async function markRequestPaidById(requestId: number) {
+  const markedPaidRequest = await prisma.request.update({
+    where: { id: requestId },
+    data: {
+      paid: true,
+    },
+  });
+  return markedPaidRequest;
+}
+
 export async function denyRequestById(requestId: number) {
   const deniedRequest = await prisma.request.update({
     where: { id: requestId },
@@ -262,6 +299,7 @@ export async function denyRequestById(requestId: number) {
       denied: true,
       approved: false,
       pendingApproval: false,
+      paid: false,
     },
   });
   return deniedRequest;
