@@ -287,6 +287,7 @@ export async function markRequestPaidById(requestId: number) {
     where: { id: requestId },
     data: {
       paid: true,
+      approved: true,
     },
   });
   return markedPaidRequest;
@@ -602,6 +603,8 @@ export async function getRequestsByUserId(userId: string) {
       client: true,
       user: true,
       agency: true,
+      preScreenAnswer: true,
+      postScreenAnswer: true,
       funds: {
         include: {
           fundType: true,

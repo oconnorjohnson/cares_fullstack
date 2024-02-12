@@ -3,9 +3,9 @@
 import {
   getClientsByUserId,
   getAdminRequests,
-  getRequestsByUserId,
   getRequestById,
   getAllRequests,
+  getRequestsByUserId,
 } from "@/prisma/prismaFunctions";
 
 interface RequestData {
@@ -73,7 +73,21 @@ interface RequestData {
     value: string;
   }[];
 }
-
+export async function requestUsersRequests(
+  userId: string,
+): Promise<RequestData[]> {
+  try {
+    const allUserRequestRecords: RequestData[] =
+      await getRequestsByUserId(userId);
+    return allUserRequestRecords;
+  } catch (error) {
+    console.error(
+      "Failed to get call getRequestsByUserId from prismaFunctions:",
+      error,
+    );
+    throw error;
+  }
+}
 export async function requestAllRequests(): Promise<RequestData[]> {
   try {
     const allRequestRecords: RequestData[] = await getAllRequests();

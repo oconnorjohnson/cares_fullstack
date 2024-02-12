@@ -3,10 +3,11 @@ import NewClient from "@/components/forms/new-client";
 import GetClients from "@/components/user/get-clients";
 import NewRequest from "@/components/forms/new-request";
 import CurrentUser from "@/components/shared/current-user";
-import GetRequests from "@/components/user/get-requests";
+import GetRequests from "@/components/user/tables/requests/page";
 
 export default function Dashboard() {
   const { userId } = auth();
+  console.log(userId);
   if (!userId) {
     return <div>User not authenticated!</div>;
   } else {

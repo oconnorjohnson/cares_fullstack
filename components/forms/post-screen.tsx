@@ -87,13 +87,14 @@ export default function PreScreen({ requestId }: { requestId: number }) {
     <>
       <Dialog>
         <DialogTrigger asChild>
-          <Button>Complete Pre-Screen</Button>
+          <Button>Complete Post-Screen</Button>
         </DialogTrigger>
         <DialogContent>
-          <DialogTitle>RFF Pre-Screen Form</DialogTitle>
+          <DialogTitle>RFF Post-Screen Form</DialogTitle>
           <DialogHeader>
-            Help your client answer the following questions to receive your
-            funds.
+            Help your client answer the following questions to help us
+            understand how their answers from the pre-screen questionnaire have
+            changed after receiving our assistance.
           </DialogHeader>
           <div className="p-2">
             {" "}
