@@ -33,11 +33,8 @@ export async function createFundType(fundTypeData: {
   userId: string;
   typeName: string;
 }) {
-  if (!fundTypeData.userId) {
-    throw new Error("UserId is required.");
-  }
-  if (!fundTypeData.typeName) {
-    throw new Error("TypeName is required.");
+  if (!fundTypeData.userId || !fundTypeData.typeName) {
+    throw new Error("UserId and Type Name are required.");
   }
   try {
     const fundType = await prisma.fundType.create({
@@ -47,6 +44,33 @@ export async function createFundType(fundTypeData: {
   } catch (error) {
     throw new Error(
       `Failed to create fund type: ${error instanceof Error ? error.message : "Unknown error"}`,
+    );
+  }
+}
+
+export async function createNewFundByRequestId(newFundData: {
+  requestId: number;
+  fundTypeId: number;
+  amount: number;
+}) {
+  if (
+    !newFundData.requestId ||
+    !newFundData.fundTypeId ||
+    !newFundData.amount
+  ) {
+    throw new Error("Request ID, Fund Type ID, and Amount are required.");
+  }
+  console.log("Creating new fund with data:", newFundData);
+  try {
+    const newFund = await prisma.fund.create({
+      data: newFundData,
+    });
+    console.log("New fund created successfully:", newFund);
+    return newFund;
+  } catch (error) {
+    console.error("Failed to create new fund:", error);
+    throw new Error(
+      `Failed to add new fund: ${error instanceof Error ? error.message : "Unknown error"}`,
     );
   }
 }
@@ -194,6 +218,67 @@ export async function updateUser(userId: string, userData: any) {
   return updatedUser;
 }
 
+export async function updateFundById(
+  fundId: number,
+  amount: number,
+  fundTypeId: number,
+) {
+  // First, check if the fundTypeId exists to prevent foreign key constraint errors
+  const fundTypeExists = await prisma.fundType.findUnique({
+    where: {
+      id: fundTypeId,
+    },
+  });
+
+  if (!fundTypeExists) {
+    throw new Error(`FundType with ID: ${fundTypeId} does not exist.`);
+  }
+
+  // Proceed with the update if the fundType exists
+  try {
+    const updatedFund = await prisma.fund.update({
+      where: {
+        id: fundId,
+      },
+      data: {
+        amount: amount,
+        // Ensure the fundTypeId is correctly associated
+        fundTypeId: fundTypeId,
+      },
+    });
+
+    console.log("Updated fund:", updatedFund);
+    return updatedFund;
+  } catch (error) {
+    console.error(`Failed to update fund with ID: ${fundId}`, error);
+    throw new Error(`Failed to update fund with ID: ${fundId}`);
+  }
+}
+
+export async function denyRequestById(requestId: number) {
+  const deniedRequest = await prisma.request.update({
+    where: { id: requestId },
+    data: {
+      denied: true,
+      approved: false,
+      pendingApproval: false,
+    },
+  });
+  return deniedRequest;
+}
+
+export async function approveRequestById(requestId: number) {
+  const approvedRequest = await prisma.request.update({
+    where: { id: requestId },
+    data: {
+      denied: false,
+      approved: true,
+      pendingApproval: false,
+    },
+  });
+  return approvedRequest;
+}
+
 // DELETE FUNCTIONS
 export async function deleteUser(userId: string) {
   await prisma.emailAddress.deleteMany({
@@ -204,6 +289,15 @@ export async function deleteUser(userId: string) {
   });
   console.log(`User ${userId} and related email addresses deleted`);
   return deletedUser;
+}
+
+export async function deleteFundById(fundId: number) {
+  const deletedFund = await prisma.fund.delete({
+    where: {
+      id: fundId,
+    },
+  });
+  return deletedFund;
 }
 
 export async function deleteFundType(fundTypeId: number) {
@@ -319,7 +413,37 @@ export async function getAllRequests() {
       pendingPayout: true,
       paid: true,
       hasPreScreen: true,
+      preScreenAnswer: {
+        select: {
+          id: true,
+          housingSituation: true,
+          housingQuality: true,
+          utilityStress: true,
+          foodInsecurityStress: true,
+          foodMoneyStress: true,
+          transpoConfidence: true,
+          transpoStress: true,
+          financialDifficulties: true,
+          additionalInformation: true,
+          createdAt: true,
+        },
+      },
       hasPostScreen: true,
+      postScreenAnswer: {
+        select: {
+          id: true,
+          housingSituation: true,
+          housingQuality: true,
+          utilityStress: true,
+          foodInsecurityStress: true,
+          foodMoneyStress: true,
+          transpoConfidence: true,
+          transpoStress: true,
+          financialDifficulties: true,
+          additionalInformation: true,
+          createdAt: true,
+        },
+      },
       createdAt: true,
       funds: {
         select: {
@@ -372,7 +496,37 @@ export async function getRequestById(requestId: number) {
       pendingPayout: true,
       paid: true,
       hasPreScreen: true,
+      preScreenAnswer: {
+        select: {
+          id: true,
+          housingSituation: true,
+          housingQuality: true,
+          utilityStress: true,
+          foodInsecurityStress: true,
+          foodMoneyStress: true,
+          transpoConfidence: true,
+          transpoStress: true,
+          financialDifficulties: true,
+          additionalInformation: true,
+          createdAt: true,
+        },
+      },
       hasPostScreen: true,
+      postScreenAnswer: {
+        select: {
+          id: true,
+          housingSituation: true,
+          housingQuality: true,
+          utilityStress: true,
+          foodInsecurityStress: true,
+          foodMoneyStress: true,
+          transpoConfidence: true,
+          transpoStress: true,
+          financialDifficulties: true,
+          additionalInformation: true,
+          createdAt: true,
+        },
+      },
       createdAt: true,
       funds: {
         select: {

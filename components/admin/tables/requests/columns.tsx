@@ -45,31 +45,32 @@ export type Request = {
   hasPreScreen: boolean;
   hasPostScreen: boolean;
   createdAt: Date;
+  isHighlighted?: boolean;
 };
 export const columns: ColumnDef<Request>[] = [
   // checkboxes
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
+  // {
+  //   id: "select",
+  //   header: ({ table }) => (
+  //     <Checkbox
+  //       checked={
+  //         table.getIsAllPageRowsSelected() ||
+  //         (table.getIsSomePageRowsSelected() && "indeterminate")
+  //       }
+  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+  //       aria-label="Select all"
+  //     />
+  //   ),
+  //   cell: ({ row }) => (
+  //     <Checkbox
+  //       checked={row.getIsSelected()}
+  //       onCheckedChange={(value) => row.toggleSelected(!!value)}
+  //       aria-label="Select row"
+  //     />
+  //   ),
+  //   enableSorting: false,
+  //   enableHiding: false,
+  // },
   // name of logged in user
   {
     accessorKey: "user",
@@ -134,36 +135,29 @@ export const columns: ColumnDef<Request>[] = [
       );
     },
   },
-  // pendingApproval: boolean;
+  // status: complex conditional render;
   {
-    accessorKey: "pendingApproval",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Pending
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-  //   approved: boolean;
-  {
-    accessorKey: "approved",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Approved
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
+    accessorKey: "combinedStatus",
+    header: "Status",
+    cell: ({ getValue }) => {
+      const status = getValue() as string;
+      let badgeColor: "yellow" | "green" | "red" | undefined;
+
+      switch (status) {
+        case "Pending":
+          badgeColor = "yellow";
+          break;
+        case "Approved":
+          badgeColor = "green";
+          break;
+        case "Denied":
+          badgeColor = "red";
+          break;
+        default:
+          badgeColor = undefined;
+      }
+
+      return <Badge color={badgeColor}>{status}</Badge>;
     },
   },
   //   paid: boolean;
@@ -230,6 +224,7 @@ export const columns: ColumnDef<Request>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuSeparator />
             <Link href={`/admin/request/${request.id}`}>
               <DropdownMenuItem>View Request</DropdownMenuItem>
             </Link>
@@ -239,13 +234,13 @@ export const columns: ColumnDef<Request>[] = [
             add function to dropdown menu item like:
             onClick={() => navigator.clipboard.writeText(payment.id)}
              */}
-            <DropdownMenuItem className="bg-green-600 text-white">
+            {/* <DropdownMenuItem className="bg-green-600 text-white">
               Approve
             </DropdownMenuItem>
             <div className="py-0.5" />
             <DropdownMenuItem className="bg-red-600 text-white">
               Deny
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
           </DropdownMenuContent>
         </DropdownMenu>
       );

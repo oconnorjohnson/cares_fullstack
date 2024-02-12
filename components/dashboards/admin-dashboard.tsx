@@ -23,7 +23,7 @@ export default async function Dashboard() {
           <div className="">
             <GetServerRequests />
           </div>
-          <div className="flex py-8">
+          {/* <div className="flex py-8">
             <div className="flex flex-col items-center">
               <NewFundType userId={userId} />
               <div className="py-4" />
@@ -35,7 +35,7 @@ export default async function Dashboard() {
               <div className="py-4" />
               <GetAgencies />
             </div>
-          </div>
+          </div> */}
         </div>
       </>
     );

@@ -3,7 +3,8 @@ import { Request, columns } from "@/components/admin/tables/requests/columns";
 import { DataTable } from "@/components/ui/data-table";
 import { requestAllRequests } from "@/server/actions/request/actions";
 import { format } from "date-fns";
-
+import { Badge } from "@/components/ui/badge";
+type RequestStatus = "Pending" | "Approved" | "Denied" | "Error";
 async function getRequests(): Promise<Request[]> {
   const requests = await requestAllRequests();
   const modifiedRequests = requests.map((request) => ({
@@ -18,14 +19,34 @@ async function getRequests(): Promise<Request[]> {
       : "N/A",
     createdAt: format(new Date(request.createdAt), "PPpp"), // Adjust the format string as needed
     // Convert boolean fields to readable strings (if necessary)
-    pendingApproval: request.pendingApproval ? "True" : "False",
-    approved: request.approved ? "True" : "False",
-    pendingPayout: request.pendingPayout ? "True" : "False",
-    paid: request.paid ? "True" : "False",
+    combinedStatus: request.pendingApproval
+      ? "Pending"
+      : request.approved
+        ? "Approved"
+        : request.denied
+          ? "Denied"
+          : "Error",
+    pendingPayout: request.pendingPayout ? true : false,
+    paid: request.paid ? true : false,
     hasPreScreen: request.hasPreScreen ? "Complete" : "Incomplete",
     hasPostScreen: request.hasPostScreen ? "Complete" : "Incomplete",
+    isHighlighted: request.pendingApproval,
   }));
   console.log(modifiedRequests);
+  const statusPriority: { [key in RequestStatus]: number } = {
+    Pending: 1,
+    Approved: 2,
+    Denied: 3,
+    Error: 4,
+  };
+
+  modifiedRequests.sort((a, b) => {
+    // Explicitly assert the type of combinedStatus as RequestStatus
+    const statusA = a.combinedStatus as RequestStatus;
+    const statusB = b.combinedStatus as RequestStatus;
+
+    return statusPriority[statusA] - statusPriority[statusB];
+  });
   return modifiedRequests as unknown as Request[];
 }
 
@@ -34,7 +55,16 @@ export default async function DemoPage() {
 
   return (
     <div className="container mx-auto py-10">
-      <DataTable columns={columns} data={requests} />
+      <DataTable
+        columns={columns}
+        data={requests}
+        defaultSorting={[
+          {
+            id: "pendingApproval",
+            desc: true,
+          },
+        ]}
+      />
     </div>
   );
 }

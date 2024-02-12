@@ -29,16 +29,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData extends { isHighlighted?: boolean }, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  defaultSorting?: SortingState;
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends { isHighlighted?: boolean }, TValue>({
   columns,
   data,
+  defaultSorting = [],
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [sorting, setSorting] = React.useState<SortingState>(defaultSorting);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   );
@@ -128,6 +130,11 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className={
+                    row.original.isHighlighted
+                      ? "bg-zinc-300 border-2 dark:bg-zinc-700"
+                      : ""
+                  }
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
