@@ -225,7 +225,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
               <div className="flex flex-col">
                 <div className="flex flex-cols-2 justify-between">
                   <div className="flex flex-row">
-                    <div className="text-xl font-extralight pt-1 pr-4">
+                    <div className="text-xl font-extralight pt-1.5 pr-4">
                       Funds
                     </div>
                     <AddFundToRequestById requestId={requestId} />
