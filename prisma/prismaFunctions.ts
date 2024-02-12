@@ -33,11 +33,8 @@ export async function createFundType(fundTypeData: {
   userId: string;
   typeName: string;
 }) {
-  if (!fundTypeData.userId) {
-    throw new Error("UserId is required.");
-  }
-  if (!fundTypeData.typeName) {
-    throw new Error("TypeName is required.");
+  if (!fundTypeData.userId || !fundTypeData.typeName) {
+    throw new Error("UserId and Type Name are required.");
   }
   try {
     const fundType = await prisma.fundType.create({
@@ -47,6 +44,33 @@ export async function createFundType(fundTypeData: {
   } catch (error) {
     throw new Error(
       `Failed to create fund type: ${error instanceof Error ? error.message : "Unknown error"}`,
+    );
+  }
+}
+
+export async function createNewFundByRequestId(newFundData: {
+  requestId: number;
+  fundTypeId: number;
+  amount: number;
+}) {
+  if (
+    !newFundData.requestId ||
+    !newFundData.fundTypeId ||
+    !newFundData.amount
+  ) {
+    throw new Error("Request ID, Fund Type ID, and Amount are required.");
+  }
+  console.log("Creating new fund with data:", newFundData);
+  try {
+    const newFund = await prisma.fund.create({
+      data: newFundData,
+    });
+    console.log("New fund created successfully:", newFund);
+    return newFund;
+  } catch (error) {
+    console.error("Failed to create new fund:", error);
+    throw new Error(
+      `Failed to add new fund: ${error instanceof Error ? error.message : "Unknown error"}`,
     );
   }
 }

@@ -130,7 +130,11 @@ export function DataTable<TData extends { isHighlighted?: boolean }, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className={row.original.isHighlighted ? "bg-yellow-100" : ""}
+                  className={
+                    row.original.isHighlighted
+                      ? "bg-zinc-300 border-2 dark:bg-zinc-700"
+                      : ""
+                  }
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

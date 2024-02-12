@@ -18,6 +18,7 @@ import FundAction from "@/components/admin/fund-actions";
 import Link from "next/link";
 import DenyButton from "@/components/admin/request/deny";
 import ApproveButton from "@/components/admin/request/approve";
+import AddFundToRequestById from "@/components/admin/request/add-fund";
 
 // const ApproveFunction = async ({ requestId }: { requestId: string }) => {
 //   const RequestId = Number(requestId);
@@ -76,13 +77,16 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
           <Card className="w-2/3">
             <CardHeader>
               <CardTitle className="flex flex-cols-3 justify-between">
-                <DenyButton requestId={requestId} />
                 <div className="text-center text-3xl pt-0.5">
                   {request.user.first_name}&apos;s request for{" "}
                   {request.client.first_name} from{" "}
                   {formatDateWithSuffix(request.createdAt)}.
                 </div>
-                <ApproveButton requestId={requestId} />
+                <div className="flex flex-row justify-between px-6">
+                  <DenyButton requestId={requestId} />
+                  <div className="px-2" />
+                  <ApproveButton requestId={requestId} />
+                </div>
               </CardTitle>
             </CardHeader>
             <CardContent className="border py-4 mx-4 rounded-lg">
@@ -90,7 +94,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                 <div className="flex flex-cols-2 justify-between">
                   <div className="text-xl font-extralight pr-4">User</div>
                   <Link href={`/admin/user/${request.user.id}`}>
-                    <div className="text-xl font-bold hover:underline">
+                    <div className="text-xl font-bold underline hover:text-green-500">
                       {request.user.first_name} {request.user.last_name}
                     </div>
                   </Link>
@@ -99,7 +103,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                 <div className="flex flex-cols-2 justify-between">
                   <div className="text-xl font-extralight pr-4">Client</div>
                   <Link href={`/admin/client/${request.client.id}`}>
-                    <div className="text-xl font-bold hover:underline">
+                    <div className="text-xl font-bold underline hover:text-green-500">
                       {request.client.first_name} {request.client.last_name}
                     </div>
                   </Link>
@@ -214,15 +218,18 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
           </Card>
           <div className="py-4" />
           <Card className="w-2/3">
-            <CardHeader>
-              <CardTitle className="flex flex-col text-2xl font-bold">
-                Requested Funds
-              </CardTitle>
+            <CardHeader className="flex flex-row text-2xl font-bold">
+              <CardTitle className="pt-1 pr-1">Requested Funds</CardTitle>
             </CardHeader>
             <CardContent className="border py-4 mx-4 rounded-lg">
               <div className="flex flex-col">
                 <div className="flex flex-cols-2 justify-between">
-                  <div className="text-xl font-extralight pr-4">Funds</div>
+                  <div className="flex flex-row">
+                    <div className="text-xl font-extralight pt-1 pr-4">
+                      Funds
+                    </div>
+                    <AddFundToRequestById requestId={requestId} />
+                  </div>
                   <div className="text-xl font-bold">{FundsBadges}</div>
                 </div>
               </div>
@@ -332,7 +339,9 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                   </div>
                 </>
               ) : (
-                <div className="text-xl font-bold">Incomplete</div>
+                <div className="text-xl font-bold text-destructive">
+                  Not Started
+                </div>
               )}
             </CardContent>
             <CardFooter></CardFooter>
@@ -440,7 +449,9 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                   </div>
                 </>
               ) : (
-                <div className="text-xl font-bold">Incomplete</div>
+                <div className="text-xl font-bold text-destructive">
+                  Not Started
+                </div>
               )}
             </CardContent>
             <CardFooter></CardFooter>

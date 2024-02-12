@@ -5,8 +5,9 @@ import {
   createAgency,
   createRequest,
   createPreScreen,
+  createNewFundByRequestId,
 } from "@/prisma/prismaFunctions";
-
+import { revalidatePath } from "next/cache";
 interface ClientData {
   first_name: string;
   last_name: string;
@@ -34,6 +35,12 @@ interface FundTypeData {
   userId: string;
   typeName: string;
 }
+
+type NewFundData = {
+  requestId: number;
+  fundTypeId: number;
+  amount: number;
+};
 
 interface AgencyData {
   userId: string;
@@ -74,6 +81,20 @@ export async function newAgency(agencyState: AgencyData) {
     throw new Error("Failed to create new agency.");
   }
   return newAgencyRecord;
+}
+
+export async function newFund(fundState: NewFundData) {
+  console.log(fundState);
+  if (!fundState.requestId || !fundState.amount || !fundState.fundTypeId) {
+    throw new Error("Data incomplete");
+  }
+  const newFundRecord = await createNewFundByRequestId(fundState);
+  if (!newFundRecord) {
+    throw new Error("Failed to create a new fund.");
+  }
+  const requestId = fundState.requestId;
+  await revalidatePath(`/admin/request/${requestId}/page`);
+  return newFundRecord;
 }
 
 export async function newPreScreen(

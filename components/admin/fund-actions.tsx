@@ -101,7 +101,9 @@ export default function FundDropdown({
   const { data: fundTypes, isLoading, isError } = trpc.getFundTypes.useQuery();
   const { register, handleSubmit, setValue, watch } = form;
   const selectedFundTypeId = watch("fundTypeId");
-  const handleDelete = async () => {
+  const handleDelete = async (requestId: number, fundId: number) => {
+    console.log("handleDelete clicked with requestId:", requestId);
+    console.log("handleDelete also clicked with fundId:", fundId);
     setIsDeleting(true);
     try {
       await DeleteFund(requestId, fundId);
@@ -135,7 +137,6 @@ export default function FundDropdown({
     }
   };
 
-  // const deleteFundMutation = trpc.deleteFundType.useMutation(fundId);
   return (
     <>
       <AlertDialog>
@@ -148,14 +149,16 @@ export default function FundDropdown({
           <AlertDialogHeader>
             <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
             <AlertDialogDescription>
-              Type 'Delete' to confirm fund deletion.
-              <div className="py-2" />
-              <Input placeholder="Delete" />
+              Are you sure? This will delete {fundTypeName} of ${amount} from
+              the request permanently.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction className="bg-destructive">
+            <AlertDialogAction
+              onClick={() => handleDelete(fundId, requestId)}
+              className="bg-destructive"
+            >
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -234,14 +237,16 @@ export default function FundDropdown({
                             setValue("fundTypeId", parsedValue);
                           }}
                         >
-                          <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Select Fund Type" />
-                          </SelectTrigger>
+                          <FormControl>
+                            <SelectTrigger className="w-[180px]">
+                              <SelectValue placeholder="Select Fund Type" />
+                            </SelectTrigger>
+                          </FormControl>
                           <SelectContent>
                             {fundTypes?.map((fundType) => (
                               <SelectItem
                                 key={fundType.id}
-                                value={fundType.id.toString()} // Ensure this is the fundTypeId
+                                value={fundType.id.toString()}
                               >
                                 {fundType.typeName}
                               </SelectItem>
@@ -265,9 +270,7 @@ export default function FundDropdown({
                           {...field}
                           id="amount"
                           type="number"
-                          // Ensure the value is a string, as some custom Input components might expect that
                           value={field.value.toString()}
-                          // Handle changes by converting the input value back to a number
                           onChange={(e) =>
                             field.onChange(parseInt(e.target.value, 10))
                           }
