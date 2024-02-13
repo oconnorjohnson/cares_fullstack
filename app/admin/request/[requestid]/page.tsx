@@ -356,7 +356,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
             </CardContent>
             <CardFooter></CardFooter>
           </Card>
-          {request.preScreenAnswer && !request.paid ? (
+          {request.preScreenAnswer && request.approved && !request.paid ? (
             <>
               <div className="py-4" />
               <Card className="w-2/3">

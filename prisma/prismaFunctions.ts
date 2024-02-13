@@ -288,6 +288,7 @@ export async function markRequestPaidById(requestId: number) {
     data: {
       paid: true,
       approved: true,
+      pendingPayout: false,
     },
   });
   return markedPaidRequest;
@@ -300,6 +301,7 @@ export async function denyRequestById(requestId: number) {
       denied: true,
       approved: false,
       pendingApproval: false,
+      pendingPayout: true,
       paid: false,
     },
   });
@@ -313,6 +315,8 @@ export async function approveRequestById(requestId: number) {
       denied: false,
       approved: true,
       pendingApproval: false,
+      pendingPayout: true,
+      paid: false,
     },
   });
   return approvedRequest;

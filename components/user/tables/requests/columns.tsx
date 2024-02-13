@@ -4,6 +4,8 @@ import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+import PreScreen from "@/components/forms/pre-screen";
+import PostScreen from "@/components/forms/post-screen";
 import Link from "next/link";
 import {
   DropdownMenu,
@@ -96,58 +98,65 @@ export const columns: ColumnDef<Request>[] = [
   {
     accessorKey: "combinedStatus",
     header: "Status",
-    cell: ({ getValue }) => {
-      const status = getValue() as string;
+    cell: ({ row }) => {
+      const { pendingApproval, approved, denied } = row.original;
+      let content;
       let badgeColor: "yellow" | "green" | "red" | undefined;
 
-      switch (status) {
-        case "Pending":
-          badgeColor = "yellow";
-          break;
-        case "Approved":
-          badgeColor = "green";
-          break;
-        case "Denied":
-          badgeColor = "red";
-          break;
-        default:
-          badgeColor = undefined;
+      if (denied) {
+        content = "Denied";
+        badgeColor = "red";
+      } else if (pendingApproval) {
+        content = "Pending";
+        badgeColor = "yellow";
+      } else if (approved) {
+        content = "Approved";
+        badgeColor = "green";
       }
 
-      return <Badge color={badgeColor}>{status}</Badge>;
+      return <Badge color={badgeColor}>{content}</Badge>;
     },
   },
   {
     accessorKey: "hasPreScreen",
     header: "Actions",
     cell: ({ row }) => {
-      const { hasPreScreen, hasPostScreen, paid, denied } = row.original;
+      const {
+        hasPreScreen,
+        hasPostScreen,
+        paid,
+        denied,
+        id: requestId,
+      } = row.original;
       let content;
       let badgeColor: "green" | "yellow" | "red" | undefined;
 
-      if (!hasPreScreen) {
-        content = "Complete PreScreen";
-        badgeColor = "yellow";
-      } else if (hasPreScreen && !paid && !denied) {
-        content = "Awaiting Payment";
-        badgeColor = undefined;
-      } else if (hasPreScreen && paid && !hasPostScreen) {
-        content = paid
-          ? "Complete PostScreen"
-          : "No actions required at this time";
-        badgeColor = "yellow";
-      } else if (hasPreScreen && hasPostScreen && paid) {
-        content = "Closed";
-        badgeColor = "green";
-      } else if (denied) {
-        content = "Closed";
-        badgeColor = "red";
-      } else {
-        content = "Contact Support";
-        badgeColor = "red";
+      // Check if denied first, as it overrides other statuses
+      if (denied) {
+        content = <Badge color="red">Closed</Badge>;
+      }
+      // Check if both pre and post screens are complete and paid
+      else if (hasPreScreen && hasPostScreen && paid) {
+        content = <Badge color="green">Request Completed and Closed</Badge>;
+      }
+      // Check if pre-screen is complete but not paid
+      else if (hasPreScreen && !paid) {
+        content = <Badge color="yellow">Awaiting Payment</Badge>;
+      } else if (hasPreScreen && !hasPostScreen && paid) {
+        return <PostScreen requestId={requestId} />;
+      }
+      // Check if pre-screen is not complete
+      else if (!hasPreScreen) {
+        // Render the PreScreen component for rows where pre-screen is not complete
+        // Pass the requestId to the PreScreen component
+        return <PreScreen requestId={requestId} />;
+      }
+      // Default case if none of the above conditions are met
+      else {
+        content = <Badge color="red">Check request details</Badge>;
       }
 
-      return <Badge color={badgeColor}>{content}</Badge>;
+      return content;
     },
   },
   {

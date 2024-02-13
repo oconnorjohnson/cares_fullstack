@@ -108,6 +108,8 @@ export async function newPreScreen(
   }
   try {
     const newPreScreenRecord = await createPreScreen(preScreenState, requestId);
+    await revalidatePath(`/admin/request/${requestId}/page`);
+    await revalidatePath(`/dashboard/page`);
     return newPreScreenRecord;
   } catch (error) {
     console.error("Failed to create new prescreen record:", error);
@@ -129,6 +131,8 @@ export async function newPostScreen(
       postScreenState,
       requestId,
     );
+    await revalidatePath(`/admin/request/${requestId}/page`);
+    await revalidatePath(`/dashboard/page`);
     return newPostScreenRecord;
   } catch (error) {
     console.error("Failed to create new postscreen record:", error);

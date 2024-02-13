@@ -24,8 +24,12 @@ async function getRequests({ userId }: { userId: string }): Promise<Request[]> {
         : request.denied
           ? "Denied"
           : "Error",
-    hasPreScreen: request.hasPreScreen ? "Complete" : "Incomplete",
-    hasPostScreen: request.hasPostScreen ? "Complete" : "Incomplete",
+    hasPreScreen: request.hasPreScreen,
+    hasPostScreen: request.hasPostScreen,
+    pendingApproval: request.pendingApproval,
+    paid: request.paid,
+    approved: request.approved,
+    denied: request.denied,
     isHighlighted: request.pendingApproval,
   }));
   const statusPriority: { [key in RequestStatus]: number } = {
