@@ -193,8 +193,8 @@ export default function NewRequest({ userId }: { userId: string | null }) {
       try {
         await newRequest({ ...data, userId });
         toast.success("Request submitted successrfully");
-        form.reset();
         setActiveTab("tab5");
+        form.reset();
       } catch (error) {
         toast.error("Failed to submit request");
         console.log("Form submission started", data);

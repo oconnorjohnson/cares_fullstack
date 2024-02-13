@@ -22,9 +22,6 @@ export default function Dashboard() {
             </div>
             <div className="text-3xl font-bold">My Requests</div>
             <GetRequests userId={userId} />
-            <div className="py-8" />
-            <div className="text-3xl font-bold">My Clients</div>
-            <GetClients userId={userId} />
           </div>
         </div>
       </>

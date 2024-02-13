@@ -7,6 +7,7 @@ import {
   getAllRequests,
   getRequestsByUserId,
 } from "@/prisma/prismaFunctions";
+import { revalidatePath } from "next/cache";
 
 interface RequestData {
   id: number;

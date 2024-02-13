@@ -175,6 +175,7 @@ export async function newRequest(requestState: RequestData) {
   }
   try {
     const newRequestRecord = await createRequest(requestState);
+    await revalidatePath(`/dashboard/page`);
     console.log("Request created successfully:", newRequestRecord);
     return newRequestRecord;
   } catch (error) {

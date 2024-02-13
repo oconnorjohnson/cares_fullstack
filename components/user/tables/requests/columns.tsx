@@ -121,28 +121,32 @@ export const columns: ColumnDef<Request>[] = [
     accessorKey: "hasPreScreen",
     header: "Actions",
     cell: ({ row }) => {
-      const { hasPreScreen, hasPostScreen, paid } = row.original;
+      const { hasPreScreen, hasPostScreen, paid, denied } = row.original;
       let content;
       let badgeColor: "green" | "yellow" | "red" | undefined;
 
-      if (hasPreScreen && !hasPostScreen && !paid) {
-        content = "No actions required at this time";
-        badgeColor = "green";
-      } else if (!hasPreScreen) {
+      if (!hasPreScreen) {
         content = "Complete PreScreen";
         badgeColor = "yellow";
-      } else if (hasPreScreen && !hasPostScreen && paid) {
-        content = "Complete PostScreen";
-        badgeColor = "yellow";
-      } else if (hasPreScreen && hasPostScreen) {
-        content = "Request Completed and Closed";
+      } else if (hasPreScreen && !paid && !denied) {
+        content = "Awaiting Payment";
         badgeColor = undefined;
+      } else if (hasPreScreen && paid && !hasPostScreen) {
+        content = paid
+          ? "Complete PostScreen"
+          : "No actions required at this time";
+        badgeColor = "yellow";
+      } else if (hasPreScreen && hasPostScreen && paid) {
+        content = "Closed";
+        badgeColor = "green";
+      } else if (denied) {
+        content = "Closed";
+        badgeColor = "red";
       } else {
-        content = "Check request details"; // Default or error state content
+        content = "Contact Support";
         badgeColor = "red";
       }
 
-      // Return the content wrapped in a Badge component
       return <Badge color={badgeColor}>{content}</Badge>;
     },
   },
