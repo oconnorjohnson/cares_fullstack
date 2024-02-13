@@ -309,14 +309,25 @@ export async function denyRequestById(requestId: number) {
 }
 
 export async function approveRequestById(requestId: number) {
+  const request = await prisma.request.findUnique({
+    where: { id: requestId },
+  });
+
+  if (!request) {
+    throw new Error(`Request with ID: ${requestId} not found.`);
+  } else if (!request.hasPreScreen) {
+    throw new Error(
+      `Request with ID: ${requestId} cannot be approved without a complete pre-screen questionnaire.`,
+    );
+  }
+
   const approvedRequest = await prisma.request.update({
     where: { id: requestId },
     data: {
-      denied: false,
       approved: true,
       pendingApproval: false,
+      denied: false,
       pendingPayout: true,
-      paid: false,
     },
   });
   return approvedRequest;

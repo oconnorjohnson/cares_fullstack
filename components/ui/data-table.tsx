@@ -12,6 +12,12 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationPrevious,
+  PaginationNext,
+} from "@/components/ui/pagination";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -167,22 +173,23 @@ export function DataTable<TData extends { isHighlighted?: boolean }, TValue>({
           </div> */}
         </div>
         <div className="flex items-center justify-end space-x-2 py-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
+          <Pagination>
+            <PaginationContent>
+              <PaginationPrevious
+                onClick={() => table.previousPage()}
+                // disabled={!table.getCanPreviousPage()}
+              />
+              {/* Display the current page number and total page count */}
+              <div className="flex items-center justify-center text-sm text-zinc-500 px-4">
+                Page {table.getState().pagination.pageIndex + 1} of{" "}
+                {table.getPageCount()}
+              </div>
+              <PaginationNext
+                onClick={() => table.nextPage()}
+                // disabled={!table.getCanNextPage()}
+              />
+            </PaginationContent>
+          </Pagination>
         </div>
       </div>
     </div>

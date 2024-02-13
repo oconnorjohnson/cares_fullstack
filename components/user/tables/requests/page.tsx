@@ -27,7 +27,7 @@ async function getRequests({ userId }: { userId: string }): Promise<Request[]> {
     hasPreScreen: request.hasPreScreen,
     hasPostScreen: request.hasPostScreen,
     pendingApproval: request.pendingApproval,
-    paid: request.paid,
+    paid: request.paid ? "Yes" : "No",
     approved: request.approved,
     denied: request.denied,
     isHighlighted: request.pendingApproval,
@@ -56,7 +56,7 @@ export default async function UserRequests({ userId }: { userId: string }) {
         data={requests}
         defaultSorting={[
           {
-            id: "pendingApproval",
+            id: "actions",
             desc: true,
           },
         ]}

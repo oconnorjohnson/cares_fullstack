@@ -52,20 +52,6 @@ export type Request = {
 
 export const columns: ColumnDef<Request>[] = [
   {
-    accessorKey: "agency",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Agency <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-  {
     accessorKey: "client",
     header: ({ column }) => {
       return (
@@ -81,7 +67,7 @@ export const columns: ColumnDef<Request>[] = [
     },
   },
   {
-    accessorKey: "createdAt",
+    accessorKey: "agency",
     header: ({ column }) => {
       return (
         <Button
@@ -89,12 +75,26 @@ export const columns: ColumnDef<Request>[] = [
           size="sm"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Created
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          Agency <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
+  //   {
+  //     accessorKey: "createdAt",
+  //     header: ({ column }) => {
+  //       return (
+  //         <Button
+  //           variant="ghost"
+  //           size="sm"
+  //           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //         >
+  //           Created
+  //           <ArrowUpDown className="ml-2 h-4 w-4" />
+  //         </Button>
+  //       );
+  //     },
+  //   },
   {
     accessorKey: "combinedStatus",
     header: "Status",
@@ -129,30 +129,18 @@ export const columns: ColumnDef<Request>[] = [
         id: requestId,
       } = row.original;
       let content;
-      let badgeColor: "green" | "yellow" | "red" | undefined;
 
-      // Check if denied first, as it overrides other statuses
       if (denied) {
         content = <Badge color="red">Closed</Badge>;
-      }
-      // Check if both pre and post screens are complete and paid
-      else if (hasPreScreen && hasPostScreen && paid) {
+      } else if (hasPreScreen && hasPostScreen && paid) {
         content = <Badge color="green">Request Completed and Closed</Badge>;
-      }
-      // Check if pre-screen is complete but not paid
-      else if (hasPreScreen && !paid) {
+      } else if (hasPreScreen && !paid) {
         content = <Badge color="yellow">Awaiting Payment</Badge>;
       } else if (hasPreScreen && !hasPostScreen && paid) {
         return <PostScreen requestId={requestId} />;
-      }
-      // Check if pre-screen is not complete
-      else if (!hasPreScreen) {
-        // Render the PreScreen component for rows where pre-screen is not complete
-        // Pass the requestId to the PreScreen component
+      } else if (!hasPreScreen) {
         return <PreScreen requestId={requestId} />;
-      }
-      // Default case if none of the above conditions are met
-      else {
+      } else {
         content = <Badge color="red">Check request details</Badge>;
       }
 
