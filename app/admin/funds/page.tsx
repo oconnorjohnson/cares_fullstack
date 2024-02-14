@@ -84,20 +84,6 @@ export default async function Requests() {
                 <LogOutIcon className="w-5 h-5" />
               </div>
             </SignOutButton>
-            ;
-            <Separator className="my-0.5" />
-            <div className="flex flex-col justify-start">
-              <div className="flex flex-row px-4 pt-4 pb-2">Got issues?</div>
-              <div className="text-sm text-zinc-400 px-4 pb-4">
-                Report &apos;em here.
-              </div>
-              <div className="flex flex-row justify-start space-x-1 pb-4 px-4">
-                <Input placeholder="Report bug..." />
-                <Button size="icon" variant="ghost">
-                  <SendIcon size={15} />
-                </Button>
-              </div>
-            </div>
           </div>
           <div className="flex border-t flex-col w-5/6 items-center justify-start"></div>
         </div>
