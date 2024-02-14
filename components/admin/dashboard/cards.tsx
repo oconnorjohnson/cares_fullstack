@@ -7,33 +7,25 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { ClockIcon, CheckSquare2Icon, XSquareIcon } from "lucide-react";
 import RequestsByAgencyChart from "@/components/admin/dashboard/request-agency-chart";
 
 export function PendingCard({ pendingRequests }: { pendingRequests: number }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{pendingRequests}</CardTitle>
+        <CardTitle className="text-4xl font-bold flex flex-row justify-between items-center">
+          <div>{pendingRequests}</div>
+          <ClockIcon className="w-8 h-8" />
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="text-xl">
         {pendingRequests > 1 ? (
           <div>Requests Pending Approval</div>
         ) : (
           <div>Request Pending Approval</div>
         )}
-      </CardHeader>
-      <CardContent></CardContent>
-      <CardFooter className="flex justify-between">
-        <Button variant="outline">Cancel</Button>
-        <Button>Deploy</Button>
-      </CardFooter>
+      </CardContent>
     </Card>
   );
 }
@@ -46,18 +38,18 @@ export function CompletedCard({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{completedRequests}</CardTitle>
+        <CardTitle className="text-4xl font-bold flex flex-row justify-between items-center">
+          <div>{completedRequests}</div>
+          <CheckSquare2Icon className="h-8 w-8" />
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="text-xl">
         {completedRequests > 1 ? (
           <div>Requests Completed & Closed</div>
         ) : (
           <div>Request Completed & Closed</div>
         )}
-      </CardHeader>
-      <CardContent></CardContent>
-      <CardFooter className="flex justify-between">
-        <Button variant="outline">Cancel</Button>
-        <Button>Deploy</Button>
-      </CardFooter>
+      </CardContent>
     </Card>
   );
 }
@@ -66,18 +58,18 @@ export function DeniedCard({ deniedRequests }: { deniedRequests: number }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{deniedRequests}</CardTitle>
+        <CardTitle className="text-4xl font-bold flex flex-row justify-between items-center">
+          <div>{deniedRequests}</div>
+          <XSquareIcon className="h-8 w-8" />
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="text-xl">
         {deniedRequests > 1 ? (
           <div>Requests Denied</div>
         ) : (
           <div>Request Denied</div>
         )}
-      </CardHeader>
-      <CardContent></CardContent>
-      <CardFooter className="flex justify-between">
-        <Button variant="outline">Cancel</Button>
-        <Button>Deploy</Button>
-      </CardFooter>
+      </CardContent>
     </Card>
   );
 }
@@ -90,19 +82,14 @@ export function RequestsTimeGraph({
   return (
     <>
       <Card>
-        <CardHeader>
-          <CardTitle>Requests By Agency</CardTitle>
-          <CardDescription>
-            Deploy your new project in one-click.
-          </CardDescription>
+        <CardHeader className="text-xl">
+          <CardTitle className="text-4xl font-bold pb-12">
+            Requests By Agency
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <RequestsByAgencyChart AgencyData={AgencyData} />
         </CardContent>
-        <CardFooter className="flex justify-between">
-          <Button variant="outline">Cancel</Button>
-          <Button>Deploy</Button>
-        </CardFooter>
       </Card>
     </>
   );

@@ -6,7 +6,6 @@ import {
   XAxis,
   YAxis,
   Bar,
-  CartesianGrid,
   Tooltip,
 } from "recharts";
 
@@ -16,10 +15,12 @@ export default function RequestAgencyChart({
   AgencyData: { agencyName: string | null; requestCount: number }[];
 }) {
   console.log(AgencyData);
+  const TooltipWrapperStyle = {
+    color: "black",
+  };
   return (
     <ResponsiveContainer width={"100%"} height={350}>
       <BarChart data={AgencyData}>
-        <CartesianGrid strokeDasharray="3 3" />
         <XAxis
           dataKey={"agencyName"}
           tickLine={false}
@@ -34,8 +35,8 @@ export default function RequestAgencyChart({
           fontSize={12}
           tickFormatter={(value) => `${value}`}
         />
-        <Tooltip />
-        <Bar dataKey={"requestCount"} radius={[4, 4, 0, 0]} />
+        <Tooltip wrapperStyle={TooltipWrapperStyle} />
+        <Bar dataKey={"requestCount"} radius={[20, 20, 0, 0]} fill="#f59e0b" />
       </BarChart>
     </ResponsiveContainer>
   );
