@@ -6,6 +6,7 @@ import {
   getRequestById,
   getAllRequests,
   getRequestsByUserId,
+  getAgencyNameById,
 } from "@/prisma/prismaFunctions";
 import { revalidatePath } from "next/cache";
 
@@ -107,10 +108,14 @@ export async function requestRequestByRequestId(
     if (!request) {
       throw new Error(`Request with ID ${requestId} not found.`);
     }
-    // Assuming the structure returned by getRequestById matches RequestData interface
     return request as RequestData;
   } catch (error) {
     console.error("Failed to retrieve request by ID:", error);
     throw error;
   }
+}
+
+export async function AgencyById(agencyId: number) {
+  const agencyName = await getAgencyNameById(agencyId);
+  return agencyName;
 }

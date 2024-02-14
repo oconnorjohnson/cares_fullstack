@@ -16,25 +16,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import RequestsByAgencyChart from "@/components/admin/dashboard/request-agency-chart";
 
-export function PendingCard() {
+export function PendingCard({ pendingRequests }: { pendingRequests: number }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Create project</CardTitle>
-        <CardDescription>Deploy your new project in one-click.</CardDescription>
+        <CardTitle>{pendingRequests}</CardTitle>
+        {pendingRequests > 1 ? (
+          <div>Requests Pending Approval</div>
+        ) : (
+          <div>Request Pending Approval</div>
+        )}
       </CardHeader>
-      <CardContent>
-        <form>
-          <div className="grid w-full items-center gap-4">
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" placeholder="Name of your project" />
-            </div>
-            <div className="flex flex-col space-y-1.5"></div>
-          </div>
-        </form>
-      </CardContent>
+      <CardContent></CardContent>
       <CardFooter className="flex justify-between">
         <Button variant="outline">Cancel</Button>
         <Button>Deploy</Button>
@@ -43,24 +38,22 @@ export function PendingCard() {
   );
 }
 
-export function CompletedCard() {
+export function CompletedCard({
+  completedRequests,
+}: {
+  completedRequests: number;
+}) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Create project</CardTitle>
-        <CardDescription>Deploy your new project in one-click.</CardDescription>
+        <CardTitle>{completedRequests}</CardTitle>
+        {completedRequests > 1 ? (
+          <div>Requests Completed & Closed</div>
+        ) : (
+          <div>Request Completed & Closed</div>
+        )}
       </CardHeader>
-      <CardContent>
-        <form>
-          <div className="grid w-full items-center gap-4">
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" placeholder="Name of your project" />
-            </div>
-            <div className="flex flex-col space-y-1.5"></div>
-          </div>
-        </form>
-      </CardContent>
+      <CardContent></CardContent>
       <CardFooter className="flex justify-between">
         <Button variant="outline">Cancel</Button>
         <Button>Deploy</Button>
@@ -69,24 +62,18 @@ export function CompletedCard() {
   );
 }
 
-export function ActiveUsersCard() {
+export function DeniedCard({ deniedRequests }: { deniedRequests: number }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Create project</CardTitle>
-        <CardDescription>Deploy your new project in one-click.</CardDescription>
+        <CardTitle>{deniedRequests}</CardTitle>
+        {deniedRequests > 1 ? (
+          <div>Requests Denied</div>
+        ) : (
+          <div>Request Denied</div>
+        )}
       </CardHeader>
-      <CardContent>
-        <form>
-          <div className="grid w-full items-center gap-4">
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" placeholder="Name of your project" />
-            </div>
-            <div className="flex flex-col space-y-1.5"></div>
-          </div>
-        </form>
-      </CardContent>
+      <CardContent></CardContent>
       <CardFooter className="flex justify-between">
         <Button variant="outline">Cancel</Button>
         <Button>Deploy</Button>
@@ -95,26 +82,22 @@ export function ActiveUsersCard() {
   );
 }
 
-export function RequestsTimeGraph() {
+export function RequestsTimeGraph({
+  AgencyData,
+}: {
+  AgencyData: { agencyName: string | null; requestCount: number }[];
+}) {
   return (
     <>
       <Card>
         <CardHeader>
-          <CardTitle>Create project</CardTitle>
+          <CardTitle>Requests By Agency</CardTitle>
           <CardDescription>
             Deploy your new project in one-click.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
-            <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="name">Name</Label>
-                <Input id="name" placeholder="Name of your project" />
-              </div>
-              <div className="flex flex-col space-y-1.5"></div>
-            </div>
-          </form>
+          <RequestsByAgencyChart AgencyData={AgencyData} />
         </CardContent>
         <CardFooter className="flex justify-between">
           <Button variant="outline">Cancel</Button>

@@ -409,6 +409,18 @@ export async function deleteAgency(agencyId: number) {
 }
 
 // GET FUNCTIONS
+export async function getAgencyNameById(agencyId: number) {
+  const agency = await prisma.agency.findUnique({
+    where: {
+      id: agencyId,
+    },
+    select: {
+      name: true,
+    },
+  });
+  return agency;
+}
+
 export async function getClientsByUserId(userId: string) {
   const clients = await prisma.client.findMany({
     where: {
@@ -630,4 +642,47 @@ export async function getRequestsByUserId(userId: string) {
     },
   });
   return requests;
+}
+
+// COUNT FUNCTIONS
+export async function countPendingRequests() {
+  const requestsCount = await prisma.request.count({
+    where: {
+      pendingApproval: true,
+    },
+  });
+  return requestsCount;
+}
+
+export async function countCompletedRequests() {
+  const requestsCount = await prisma.request.count({
+    where: {
+      approved: true,
+      paid: true,
+    },
+  });
+  return requestsCount;
+}
+
+export async function countDeniedRequests() {
+  const requestsCount = await prisma.request.count({
+    where: {
+      denied: true,
+    },
+  });
+  return requestsCount;
+}
+
+export async function countRequestsByAgency() {
+  const requestsCountByAgency = await prisma.request.groupBy({
+    by: ["agencyId"],
+    _count: {
+      id: true,
+    },
+  });
+
+  return requestsCountByAgency.map(({ agencyId, _count }) => ({
+    agencyId,
+    requestCount: _count.id,
+  }));
 }
