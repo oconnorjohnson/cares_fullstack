@@ -36,7 +36,7 @@ export default function RequestAgencyChart({
           tickFormatter={(value) => `${value}`}
         />
         <Tooltip wrapperStyle={TooltipWrapperStyle} />
-        <Bar dataKey={"requestCount"} radius={[20, 20, 0, 0]} fill="#f59e0b" />
+        <Bar dataKey={"requestCount"} radius={[10, 10, 0, 0]} fill="#f59e0b" />
       </BarChart>
     </ResponsiveContainer>
   );

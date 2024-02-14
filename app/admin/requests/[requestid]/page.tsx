@@ -58,7 +58,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
     <>
       <div>
         <div className="pl-12">
-          <Link href="/dashboard">
+          <Link href="/admin/requests">
             <Button size="icon">
               <ArrowLeftIcon />
             </Button>

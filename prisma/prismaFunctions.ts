@@ -421,6 +421,28 @@ export async function getAgencyNameById(agencyId: number) {
   return agency;
 }
 
+export async function getUsers() {
+  const users = await prisma.user.findMany({
+    include: {
+      emailAddresses: true, // Include all email addresses
+      clients: {
+        select: {
+          first_name: true,
+          last_name: true,
+        },
+      },
+      requests: {
+        select: {
+          pendingApproval: true,
+          approved: true,
+          denied: true,
+        },
+      },
+    },
+  });
+  return users;
+}
+
 export async function getClientsByUserId(userId: string) {
   const clients = await prisma.client.findMany({
     where: {

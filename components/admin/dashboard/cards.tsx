@@ -19,7 +19,7 @@ export function PendingCard({ pendingRequests }: { pendingRequests: number }) {
           <ClockIcon className="w-8 h-8" />
         </CardTitle>
       </CardHeader>
-      <CardContent className="text-xl">
+      <CardContent className="font-light text-xl">
         {pendingRequests > 1 ? (
           <div>Requests Pending Approval</div>
         ) : (
@@ -43,7 +43,7 @@ export function CompletedCard({
           <CheckSquare2Icon className="h-8 w-8" />
         </CardTitle>
       </CardHeader>
-      <CardContent className="text-xl">
+      <CardContent className="font-light text-xl">
         {completedRequests > 1 ? (
           <div>Requests Completed & Closed</div>
         ) : (
@@ -63,7 +63,7 @@ export function DeniedCard({ deniedRequests }: { deniedRequests: number }) {
           <XSquareIcon className="h-8 w-8" />
         </CardTitle>
       </CardHeader>
-      <CardContent className="text-xl">
+      <CardContent className="font-light text-xl">
         {deniedRequests > 1 ? (
           <div>Requests Denied</div>
         ) : (
@@ -82,8 +82,8 @@ export function RequestsTimeGraph({
   return (
     <>
       <Card>
-        <CardHeader className="text-xl">
-          <CardTitle className="text-4xl font-bold pb-12">
+        <CardHeader>
+          <CardTitle className="text-xl font-bold pb-12">
             Requests By Agency
           </CardTitle>
         </CardHeader>

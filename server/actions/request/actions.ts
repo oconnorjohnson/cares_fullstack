@@ -7,6 +7,7 @@ import {
   getAllRequests,
   getRequestsByUserId,
   getAgencyNameById,
+  getUsers,
 } from "@/prisma/prismaFunctions";
 import { revalidatePath } from "next/cache";
 
@@ -118,4 +119,9 @@ export async function requestRequestByRequestId(
 export async function AgencyById(agencyId: number) {
   const agencyName = await getAgencyNameById(agencyId);
   return agencyName;
+}
+
+export async function GetAllUsers() {
+  const users = await getUsers();
+  return users;
 }

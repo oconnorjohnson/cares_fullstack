@@ -21,6 +21,7 @@ import {
   SendIcon,
 } from "lucide-react";
 import { SignOutButton } from "@clerk/nextjs";
+import UserTable from "@/components/admin/tables/users/page";
 
 export default async function Requests() {
   const { sessionClaims } = auth();
@@ -85,7 +86,9 @@ export default async function Requests() {
               </div>
             </SignOutButton>
           </div>
-          <div className="flex border-t flex-col w-5/6 items-center justify-start"></div>
+          <div className="flex border-t flex-col w-5/6 items-center justify-start">
+            <UserTable />
+          </div>
         </div>
       </>
     );

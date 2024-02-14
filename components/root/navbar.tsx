@@ -63,9 +63,15 @@ export default function SignedInNavBar() {
   return (
     <>
       <SignedIn>
-        <div className="p-4 flex flex-row justify-between  m-4">
+        <div className="p-4 flex flex-row justify-between">
           <Link href="/">
-            <Image src="/logo.png" height="50" width="50" alt="logo" />
+            <Image
+              src="/logo.png"
+              height="50"
+              width="50"
+              alt="logo"
+              className="rounded-xl"
+            />
           </Link>
           <NavigationMenu>
             <NavigationMenuList>
