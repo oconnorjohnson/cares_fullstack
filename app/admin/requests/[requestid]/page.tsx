@@ -20,6 +20,7 @@ import DenyButton from "@/components/admin/request/deny";
 import ApproveButton from "@/components/admin/request/approve";
 import AddFundToRequestById from "@/components/admin/request/add-fund";
 import MarkPaidButton from "@/components/admin/request/mark-paid";
+import { format } from "date-fns";
 
 const RequestPage = async ({ requestid }: { requestid: string }) => {
   const requestId = Number(requestid);
@@ -73,9 +74,14 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                   {formatDateWithSuffix(request.createdAt)}.
                 </div>
                 <div className="flex flex-row justify-between px-6">
-                  <DenyButton requestId={requestId} />
-                  <div className="px-2" />
-                  <ApproveButton requestId={requestId} />
+                  {request.pendingApproval && (
+                    <>
+                      <DenyButton requestId={requestId} />
+                      <div className="px-2" />{" "}
+                      {/* This div acts as a spacer between the buttons */}
+                      <ApproveButton requestId={requestId} />
+                    </>
+                  )}
                 </div>
               </CardTitle>
             </CardHeader>
@@ -164,6 +170,15 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Not marked as paid.
                       </Badge>
                     )}
+                  </div>
+                </div>
+                <Separator className="my-2" />
+                <div className="flex flex-cols-2 justify-between">
+                  <div className="text-xl font-extralight pr-4">
+                    Submitted On
+                  </div>
+                  <div className="text-xl font-bold">
+                    {format(new Date(request.createdAt), "MM/dd/yyyy")}
                   </div>
                 </div>
               </div>

@@ -58,6 +58,11 @@ export function DataTable<TData extends { isHighlighted?: boolean }, TValue>({
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    initialState: {
+      pagination: {
+        pageSize: 5,
+      },
+    },
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
@@ -76,10 +81,10 @@ export function DataTable<TData extends { isHighlighted?: boolean }, TValue>({
     <div>
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter users..."
-          value={(table.getColumn("user")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter clients..."
+          value={(table.getColumn("client")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("user")?.setFilterValue(event.target.value)
+            table.getColumn("client")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />

@@ -26,8 +26,8 @@ async function getRequests(): Promise<Request[]> {
         : request.denied
           ? "Denied"
           : "Error",
-    pendingPayout: request.pendingPayout ? true : false,
-    paid: request.paid ? true : false,
+    pendingPayout: request.pendingPayout ? "True" : "False",
+    paid: request.paid ? "True" : "False",
     hasPreScreen: request.hasPreScreen ? "Complete" : "Incomplete",
     hasPostScreen: request.hasPostScreen ? "Complete" : "Incomplete",
     isHighlighted: request.pendingApproval,
@@ -54,7 +54,7 @@ export default async function DemoPage() {
   const requests = await getRequests();
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="container mx-auto">
       <DataTable
         columns={columns}
         data={requests}

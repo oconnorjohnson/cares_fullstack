@@ -21,9 +21,10 @@ import {
   SendIcon,
 } from "lucide-react";
 
-export default async function Dashboard() {
-  const { userId } = auth();
-  if (!userId) {
+export default async function Requests() {
+  const { sessionClaims } = auth();
+  const isAdmin = (sessionClaims?.publicMetadata as any)?.admin;
+  if (!isAdmin) {
     return <div>Not authenticated</div>;
   } else {
     return (
@@ -34,7 +35,7 @@ export default async function Dashboard() {
               <CurrentUser />
             </div>
             <Link href="/dashboard">
-              <div className="rounded-xl cursor-pointer py-2 px-6 mx-2 text-md font-semibold bg-zinc-200 dark:bg-zinc-800 flex flex-row justify-between items-center">
+              <div className="rounded-xl cursor-pointer py-2 px-6 mx-2 text-md font-semibold hover:bg-zinc-200 dark:hover:bg-zinc-800 flex flex-row justify-between items-center">
                 Dashboard
                 <HomeIcon className="w-5 h-5" />
               </div>
@@ -71,13 +72,13 @@ export default async function Dashboard() {
             </Link>
             <Separator className="my-0.5" />
             <Link href="/admin/settings">
-              <div className="rounded-xl cursor-pointer py-2 px-6 mx-2 text-md font-semibold hover:bg-zinc-200 dark:hover:bg-zinc-800 flex flex-row justify-between items-center">
+              <div className="rounded-xl cursor-pointer py-2 px-6 mx-2 text-md font-semibold bg-zinc-200 dark:bg-zinc-800 flex flex-row justify-between items-center">
                 Settings
                 <SettingsIcon className="w-5 h-5" />
               </div>
             </Link>
 
-            <Link href="/dashboard">
+            <Link href="/">
               <div className="rounded-xl cursor-pointer py-2 px-6 mx-2 text-md font-semibold hover:bg-zinc-200 dark:hover:bg-zinc-800 flex flex-row justify-between items-center">
                 Sign Out
                 <LogOutIcon className="w-5 h-5" />
@@ -97,9 +98,7 @@ export default async function Dashboard() {
               </div>
             </div>
           </div>
-          <div className="flex border-t flex-col w-5/6 items-center justify-start">
-            {/* <GetServerRequests /> */}
-          </div>
+          <div className="flex border-t flex-col w-5/6 items-center justify-start"></div>
         </div>
       </>
     );
