@@ -20,6 +20,7 @@ import {
   LogOutIcon,
   SendIcon,
 } from "lucide-react";
+import { SignOutButton } from "@clerk/nextjs";
 
 export default async function Dashboard() {
   const { userId } = auth();
@@ -77,12 +78,12 @@ export default async function Dashboard() {
               </div>
             </Link>
 
-            <Link href="/dashboard">
+            <SignOutButton>
               <div className="rounded-xl cursor-pointer py-2 px-6 mx-2 text-md font-semibold hover:bg-zinc-200 dark:hover:bg-zinc-800 flex flex-row justify-between items-center">
                 Sign Out
                 <LogOutIcon className="w-5 h-5" />
               </div>
-            </Link>
+            </SignOutButton>
             <Separator className="my-0.5" />
             <div className="flex flex-col justify-start">
               <div className="flex flex-row px-4 pt-4 pb-2">Got issues?</div>
