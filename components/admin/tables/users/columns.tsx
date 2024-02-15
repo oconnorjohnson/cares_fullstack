@@ -12,7 +12,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { trpc } from "@/app/_trpc/client";
 
 export type User = {
   id: number;

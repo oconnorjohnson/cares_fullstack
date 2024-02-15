@@ -27,7 +27,7 @@ export interface UserData {
   isBanned: boolean;
 }
 
-export async function banUser(userId: string): Promise<UserData> {
+export async function BanUser(userId: string): Promise<UserData> {
   try {
     const updatedUser = await banUserById(userId);
     await revalidatePath(`/dashboard/page`);

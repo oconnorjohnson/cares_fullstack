@@ -8,8 +8,14 @@ import {
   getRequestsByUserId,
   getAgencyNameById,
   getUsers,
+  getFunds,
 } from "@/prisma/prismaFunctions";
 import { revalidatePath } from "next/cache";
+
+export type FundData = {
+  amount: number;
+  fundType: { typeName: string };
+};
 
 interface RequestData {
   id: number;
@@ -97,6 +103,15 @@ export async function requestAllRequests(): Promise<RequestData[]> {
     return allRequestRecords;
   } catch (error) {
     console.error("Failed to call getAllRequests from prismaFunctions:", error);
+    throw error;
+  }
+}
+export async function getPaidFunds(): Promise<FundData[]> {
+  try {
+    const paidFunds = await getFunds();
+    return paidFunds;
+  } catch (error) {
+    console.error("Failed to get paid funds:", error);
     throw error;
   }
 }
