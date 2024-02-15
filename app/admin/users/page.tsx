@@ -60,7 +60,7 @@ export default async function Requests() {
                 <DollarSignIcon className="w-5 h-5" />
               </div>
             </Link>
-            <Link href="/admin/stats">
+            <Link href="/admin/metrics">
               <div className="rounded-xl cursor-pointer py-2 px-6 mx-2 text-md font-semibold hover:bg-zinc-200 dark:hover:bg-zinc-800 flex flex-row justify-between items-center">
                 Metrics
                 <BarChart2 className="w-5 h-5" />
