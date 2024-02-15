@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import { SignOutButton } from "@clerk/nextjs";
 import FundTypes from "@/components/admin/tables/funds/get-fundTypes";
-import AgencyTypes from "@/components/admin/tables/agencies/get-agencies";
+import AgencyTypes from "@/components/admin/tables/agencies/page";
 import AddAgency from "@/components/forms/new-agency";
 import AddFundType from "@/components/forms/new-fund-type";
 

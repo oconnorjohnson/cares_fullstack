@@ -9,6 +9,7 @@ import {
   getAgencyNameById,
   getUsers,
   getFunds,
+  getAllAgencies,
 } from "@/prisma/prismaFunctions";
 import { revalidatePath } from "next/cache";
 
@@ -130,6 +131,11 @@ export async function requestRequestByRequestId(
     console.error("Failed to retrieve request by ID:", error);
     throw error;
   }
+}
+
+export async function requestAllAgencies() {
+  const agencies = await getAllAgencies();
+  return agencies;
 }
 
 export async function AgencyById(agencyId: number) {
