@@ -10,6 +10,7 @@ async function getFunds(): Promise<Fund[]> {
   console.log(funds);
   const modifiedFunds = funds.map((fund) => ({
     ...fund,
+    requestId: fund.request.id,
     typeName: fund.fundType.typeName,
     amount: fund.amount,
   }));

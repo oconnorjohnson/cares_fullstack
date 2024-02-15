@@ -21,6 +21,8 @@ import {
   SendIcon,
 } from "lucide-react";
 import { SignOutButton } from "@clerk/nextjs";
+import FundTypes from "@/components/admin/tables/funds/get-fundTypes";
+import AgencyTypes from "@/components/admin/tables/agencies/get-agencies";
 
 export default async function Requests() {
   const { sessionClaims } = auth();
@@ -59,7 +61,7 @@ export default async function Requests() {
                 <DollarSignIcon className="w-5 h-5" />
               </div>
             </Link>
-            <Link href="/admin/metrics">
+            {/* <Link href="/admin/metrics">
               <div className="rounded-xl cursor-pointer py-2 px-6 mx-2 text-md font-semibold hover:bg-zinc-200 dark:hover:bg-zinc-800 flex flex-row justify-between items-center">
                 Metrics
                 <BarChart2 className="w-5 h-5" />
@@ -70,14 +72,15 @@ export default async function Requests() {
                 Mail
                 <MailIcon className="w-5 h-5" />
               </div>
-            </Link>
-            <Separator className="my-0.5" />
+            </Link> */}
+
             <Link href="/admin/settings">
               <div className="rounded-xl cursor-pointer py-2 px-6 mx-2 text-md font-semibold bg-zinc-200 dark:bg-zinc-800 flex flex-row justify-between items-center">
                 Settings
                 <SettingsIcon className="w-5 h-5" />
               </div>
             </Link>
+            <Separator className="my-0.5" />
             <SignOutButton>
               <div className="rounded-xl cursor-pointer py-2 px-6 mx-2 text-md font-semibold hover:bg-zinc-200 dark:hover:bg-zinc-800 flex flex-row justify-between items-center">
                 Sign Out
@@ -85,7 +88,16 @@ export default async function Requests() {
               </div>
             </SignOutButton>
           </div>
-          <div className="flex border-t flex-col w-5/6 items-center justify-start"></div>
+          <div className="flex border-t flex-col w-5/6 items-center justify-start">
+            <div className="flex flex-row items-center justify-between">
+              <div className="border-2 rounded-xl">
+                <FundTypes />
+              </div>
+              <div className="border-2 rounded-xl">
+                <AgencyTypes />
+              </div>
+            </div>
+          </div>
         </div>
       </>
     );
