@@ -35,13 +35,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-interface DataTableProps<TData extends { isHighlighted?: boolean }, TValue> {
+interface DataTableProps<TData = {}, TValue = unknown> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   defaultSorting?: SortingState;
 }
 
-export function DataTable<TData extends { isHighlighted?: boolean }, TValue>({
+export function DataTable<TData, TValue>({
   columns,
   data,
   defaultSorting = [],
@@ -140,21 +140,42 @@ export function DataTable<TData extends { isHighlighted?: boolean }, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={row.getIsSelected() ? "selected" : undefined}
                   className={
-                    row.original.isHighlighted
-                      ? "bg-zinc-300 border-2 dark:bg-zinc-700"
-                      : ""
+                    row.original ? "bg-zinc-300 border-2 dark:bg-zinc-700" : ""
                   }
                 >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
+                  {row.getVisibleCells().map((cell) => {
+                    // Ensure cell value is treated as a string before performing operations
+                    const cellValue = cell.getValue();
+                    // Check if the cell value is a string and includes the "|" character
+                    if (
+                      typeof cellValue === "string" &&
+                      cellValue.includes("|")
+                    ) {
+                      // Split the string by "|" and map over the parts to render them with <br /> in between
+                      return (
+                        <TableCell key={cell.id}>
+                          {cellValue.split("|").map((part, index, array) => (
+                            <React.Fragment key={index}>
+                              {part}
+                              {index < array.length - 1 && <br />}
+                            </React.Fragment>
+                          ))}
+                        </TableCell>
+                      );
+                    } else {
+                      // Use flexRender for other cell values
+                      return (
+                        <TableCell key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </TableCell>
+                      );
+                    }
+                  })}
                 </TableRow>
               ))
             ) : (

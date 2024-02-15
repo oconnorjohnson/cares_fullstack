@@ -23,35 +23,8 @@ export type User = {
     email: string;
   }[];
   clients: {
-    id: number;
     first_name: string;
     last_name: string;
-    contactInfo: string | null;
-    caseNumber: string | null;
-    dateOfBirth: Date;
-    sex: string;
-    race: string;
-  }[];
-  requests: {
-    id: number;
-    clientId: number;
-    agencyId: number;
-    pendingApproval: boolean;
-    denied: boolean;
-    approved: boolean;
-    paid: boolean;
-    pendingPayout: boolean;
-    hasPreScreen: boolean;
-    hasPostScreen: boolean;
-    funds: {
-      id: number;
-      requestId: number;
-      fundType: {
-        id: number;
-        typeName: string;
-      };
-      amount: number;
-    }[];
   }[];
 };
 
