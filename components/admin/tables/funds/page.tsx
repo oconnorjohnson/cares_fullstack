@@ -10,8 +10,8 @@ async function getFunds(): Promise<Fund[]> {
   console.log(funds);
   const modifiedFunds = funds.map((fund) => ({
     ...fund,
+    typeName: fund.fundType.typeName,
     amount: fund.amount,
-    fundType: fund.fundType.typeName,
   }));
   return modifiedFunds as unknown as Fund[];
 }

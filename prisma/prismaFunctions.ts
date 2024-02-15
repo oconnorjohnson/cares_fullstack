@@ -440,6 +440,11 @@ export async function getFunds() {
     },
     select: {
       amount: true,
+      request: {
+        select: {
+          id: true,
+        },
+      },
       fundType: {
         select: {
           typeName: true,

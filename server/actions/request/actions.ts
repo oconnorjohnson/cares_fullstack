@@ -15,6 +15,7 @@ import { revalidatePath } from "next/cache";
 export type FundData = {
   amount: number;
   fundType: { typeName: string };
+  request: { id: number };
 };
 
 interface RequestData {

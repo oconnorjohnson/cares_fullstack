@@ -16,19 +16,22 @@ import { Button } from "@/components/ui/button";
 export type Fund = {
   amount: number;
   fundType: { typeName: string };
+  request: { id: number };
 };
 
 export const columns: ColumnDef<Fund>[] = [
   {
-    accessorKey: "id",
-    header: ({ column }) => {
+    accessorKey: "requestId",
+    cell: ({ row }) => {
+      const fund = row.original;
       return (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          ID
+        <Button size="icon">
+          <Link
+            href="/admin/requests/[requestId]"
+            as={`/admin/requests/${fund.request.id}`}
+          >
+            {fund.request.id}
+          </Link>
         </Button>
       );
     },
