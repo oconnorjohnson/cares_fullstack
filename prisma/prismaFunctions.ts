@@ -245,6 +245,16 @@ export async function updateUser(userId: string, userData: any) {
   return updatedUser;
 }
 
+export async function banUserById(userId: string) {
+  const bannedUser = await prisma.user.update({
+    where: { userId: userId },
+    data: {
+      isBanned: true,
+    },
+  });
+  return bannedUser;
+}
+
 export async function updateFundById(
   fundId: number,
   amount: number,

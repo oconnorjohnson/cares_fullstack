@@ -9,10 +9,17 @@ import {
   deleteClient as deleteClientFromDB,
   deleteFundType as deleteFundTypeFromDB,
   deleteAgency as deleteAgencyFromDB,
+  banUserById as banUserFromDB,
 } from "@/prisma/prismaFunctions";
 import { z } from "zod";
 
 export const appRouter = router({
+  banUser: publicProcedure
+    .input(z.string())
+    .mutation(async ({ input: userId }) => {
+      const bannedUser = await banUserFromDB(userId);
+      return bannedUser;
+    }),
   getUser: publicProcedure
     .input(z.string())
     .query(async ({ input: userId }) => {

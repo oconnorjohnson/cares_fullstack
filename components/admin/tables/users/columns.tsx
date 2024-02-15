@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { trpc } from "@/app/_trpc/client";
 
 export type User = {
   id: number;
@@ -75,7 +76,7 @@ export const columns: ColumnDef<User>[] = [
     },
   },
   {
-    accessorKey: "actions",
+    id: "actions",
     cell: ({ row }) => {
       const request = row.original;
 
@@ -88,10 +89,14 @@ export const columns: ColumnDef<User>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel></DropdownMenuLabel>
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-
-            <DropdownMenuItem>View Request</DropdownMenuItem>
+            <Link
+              href="/admin/users/[userId]"
+              as={`/admin/users/${request.userId}`}
+            >
+              <DropdownMenuItem>View User</DropdownMenuItem>
+            </Link>
 
             <DropdownMenuSeparator />
 

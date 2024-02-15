@@ -5,6 +5,7 @@ import {
   approveRequestById,
   updateFundById,
   markRequestPaidById,
+  banUserById,
 } from "@/prisma/prismaFunctions";
 import { revalidatePath } from "next/cache";
 
@@ -19,6 +20,22 @@ export interface RequestData {
   hasPreScreen: boolean;
   hasPostScreen: boolean;
   createdAt: Date;
+}
+
+export interface UserData {
+  userId: string;
+  isBanned: boolean;
+}
+
+export async function banUser(userId: string): Promise<UserData> {
+  try {
+    const updatedUser = await banUserById(userId);
+    await revalidatePath(`/dashboard/page`);
+    return updatedUser;
+  } catch (error) {
+    console.error(`Failed to ban user with ID ${userId}:`, error);
+    throw error;
+  }
 }
 
 export async function DenyRequest(requestId: number): Promise<RequestData> {
