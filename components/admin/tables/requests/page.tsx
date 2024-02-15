@@ -64,6 +64,8 @@ export default async function DemoPage() {
             desc: true,
           },
         ]}
+        searchColumn="client"
+        searchPlaceholder="Filter clients..."
       />
     </div>
   );

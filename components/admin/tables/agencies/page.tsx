@@ -9,7 +9,6 @@ async function getAgencies(): Promise<Agency[]> {
   const modifiedAgencies = agencies.map((agency) => ({
     ...agency,
     name: agency.name,
-    id: agency.id,
   }));
   return modifiedAgencies;
 }
@@ -22,6 +21,8 @@ export default async function AgenciesTable() {
         columns={columns}
         data={agencies}
         defaultSorting={[{ id: "name", desc: true }]}
+        searchColumn="name"
+        searchPlaceholder="Filter agencies..."
       />
     </div>
   );

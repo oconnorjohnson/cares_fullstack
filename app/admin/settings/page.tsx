@@ -21,7 +21,7 @@ import {
   SendIcon,
 } from "lucide-react";
 import { SignOutButton } from "@clerk/nextjs";
-import FundTypes from "@/components/admin/tables/funds/get-fundTypes";
+import FundTypes from "@/components/admin/tables/fund-types/page";
 import AgencyTypes from "@/components/admin/tables/agencies/page";
 import AddAgency from "@/components/forms/new-agency";
 import AddFundType from "@/components/forms/new-fund-type";
@@ -92,15 +92,15 @@ export default async function Requests() {
         </div>
         <div className="flex border-t flex-col w-5/6 ">
           <div className="flex flex-row items-start justify-start space-x-24 pt-24 pl-24">
-            <div>
+            <div className="flex flex-col justify-center space-y-12">
               <AddAgency userId={user} />
-              <div className="border-2 rounded-xl">
+              <div className="border-2 rounded-xl w-full">
                 <AgencyTypes />
               </div>
             </div>
-            <div>
+            <div className="flex flex-col justify-center space-y-12">
               <AddFundType userId={user} />
-              <div className="border-2 rounded-xl">
+              <div className="border-2 rounded-xl w-full">
                 <FundTypes />
               </div>
             </div>

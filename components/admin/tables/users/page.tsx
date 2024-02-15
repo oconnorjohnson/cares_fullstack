@@ -33,6 +33,8 @@ export default async function UserTable() {
             desc: true,
           },
         ]}
+        searchColumn="users"
+        searchPlaceholder="Filter users..."
       />
     </div>
   );

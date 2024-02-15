@@ -431,6 +431,11 @@ export async function getAgencyNameById(agencyId: number) {
   return agency;
 }
 
+export async function getFundTypes() {
+  const fundTypes = await prisma.fundType.findMany();
+  return fundTypes;
+}
+
 export async function getFunds() {
   const funds = await prisma.fund.findMany({
     where: {

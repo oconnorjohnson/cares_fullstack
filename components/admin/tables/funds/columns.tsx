@@ -25,7 +25,7 @@ export const columns: ColumnDef<Fund>[] = [
     cell: ({ row }) => {
       const fund = row.original;
       return (
-        <Button size="icon">
+        <Button size="icon" variant="outline">
           <Link
             href="/admin/requests/[requestId]"
             as={`/admin/requests/${fund.request.id}`}

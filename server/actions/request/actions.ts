@@ -10,9 +10,15 @@ import {
   getUsers,
   getFunds,
   getAllAgencies,
+  getFundTypes,
 } from "@/prisma/prismaFunctions";
 import { revalidatePath } from "next/cache";
 
+export type FundTypeData = {
+  id: number;
+  typeName: string;
+  userId: string;
+};
 export type FundData = {
   amount: number;
   fundType: { typeName: string };
@@ -96,6 +102,15 @@ export async function requestUsersRequests(
       "Failed to get call getRequestsByUserId from prismaFunctions:",
       error,
     );
+    throw error;
+  }
+}
+export async function requestAllFundTypes() {
+  try {
+    const allFundTypeRecords: FundTypeData[] = await getFundTypes();
+    return allFundTypeRecords;
+  } catch (error) {
+    console.error("Failed to call getFundTypes from prismaFunctions:", error);
     throw error;
   }
 }

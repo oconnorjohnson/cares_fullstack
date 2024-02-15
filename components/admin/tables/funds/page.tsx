@@ -30,6 +30,8 @@ export default async function FundsTable() {
             desc: true,
           },
         ]}
+        searchColumn="typeName"
+        searchPlaceholder="Filter fund types..."
       />
     </div>
   );

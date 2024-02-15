@@ -14,23 +14,22 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export type Agency = {
+export type FundType = {
   id: number;
-  name: string;
+  typeName: string;
   userId: string;
 };
 
-export const columns: ColumnDef<Agency>[] = [
+export const columns: ColumnDef<FundType>[] = [
   {
-    accessorKey: "name",
+    accessorKey: "typeName",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Agency
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          Fund Types <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
