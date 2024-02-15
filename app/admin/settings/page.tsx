@@ -88,13 +88,13 @@ export default async function Requests() {
               </div>
             </SignOutButton>
           </div>
-          <div className="flex border-t flex-col w-5/6 items-center justify-start">
-            <div className="flex flex-row items-center justify-between">
-              <div className="border-2 rounded-xl">
-                <FundTypes />
-              </div>
+          <div className="flex border-t flex-col w-5/6 ">
+            <div className="flex flex-row items-start justify-start space-x-24 pt-24 pl-24">
               <div className="border-2 rounded-xl">
                 <AgencyTypes />
+              </div>
+              <div className="border-2 rounded-xl">
+                <FundTypes />
               </div>
             </div>
           </div>
