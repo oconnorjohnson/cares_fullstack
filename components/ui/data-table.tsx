@@ -19,6 +19,7 @@ import {
   PaginationNext,
 } from "@/components/ui/pagination";
 import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -64,7 +65,7 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     initialState: {
       pagination: {
-        pageSize: 5,
+        pageSize: 8,
       },
     },
     onSortingChange: setSorting,
@@ -83,7 +84,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center py-4">
+      <div className="flex items-center py-4 space-x-4">
         {searchColumn && (
           <Input
             placeholder={searchPlaceholder}
@@ -209,19 +210,28 @@ export function DataTable<TData, TValue>({
         <div className="flex items-center justify-end space-x-2 py-4">
           <Pagination>
             <PaginationContent>
-              <PaginationPrevious
+              <Button
+                variant="ghost"
                 onClick={() => table.previousPage()}
-                // disabled={!table.getCanPreviousPage()}
-              />
+                disabled={!table.getCanPreviousPage()}
+              >
+                <ChevronLeft />
+                Previous
+              </Button>
               {/* Display the current page number and total page count */}
               <div className="flex items-center justify-center text-sm text-zinc-500 px-4">
                 Page {table.getState().pagination.pageIndex + 1} of{" "}
                 {table.getPageCount()}
               </div>
-              <PaginationNext
+              <Button
+                variant="ghost"
                 onClick={() => table.nextPage()}
+                disabled={!table.getCanNextPage()}
                 // disabled={!table.getCanNextPage()}
-              />
+              >
+                Next
+                <ChevronRight />
+              </Button>
             </PaginationContent>
           </Pagination>
         </div>
