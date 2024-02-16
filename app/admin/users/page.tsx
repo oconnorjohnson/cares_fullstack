@@ -7,8 +7,7 @@ import GetAgencies from "@/components/admin/tables/agencies/get-agencies";
 import GetServerRequests from "@/components/admin/tables/requests/page";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { FreshPageAlert } from "@/components/shared/alerts";
 import {
   HomeIcon,
   GitPullRequestIcon,
@@ -88,6 +87,7 @@ export default async function Requests() {
             </SignOutButton>
           </div>
           <div className="flex border-t flex-col w-5/6 items-center justify-start">
+            <FreshPageAlert />
             <UserTable />
           </div>
         </div>

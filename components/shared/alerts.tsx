@@ -5,7 +5,7 @@ import Link from "next/link";
 export function FreshPageAlert() {
   return (
     <>
-      <div className="pt-12 px-10">
+      <div className="pt-8 px-10">
         <Alert variant="destructive">
           <Terminal className="h-4 w-4" />
           <AlertTitle>Heads up!</AlertTitle>
