@@ -1,22 +1,6 @@
 import { auth } from "@clerk/nextjs";
-import CurrentUser from "@/components/shared/current-user";
-import { Separator } from "@/components/ui/separator";
-import Link from "next/link";
 import { FreshPageAlert } from "@/components/shared/alerts";
 import SideNavBar from "@/components/admin/dashboard/side-nav";
-
-import {
-  HomeIcon,
-  GitPullRequestIcon,
-  UsersIcon,
-  DollarSignIcon,
-  BarChart2,
-  MailIcon,
-  SettingsIcon,
-  LogOutIcon,
-  SendIcon,
-} from "lucide-react";
-import { SignOutButton } from "@clerk/nextjs";
 import DashboardPage from "@/components/admin/dashboard/admin-overview";
 
 export default async function Dashboard() {
