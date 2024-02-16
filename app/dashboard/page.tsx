@@ -2,10 +2,10 @@ import { auth, SignedIn } from "@clerk/nextjs";
 import dynamic from "next/dynamic";
 
 const UserDashboard = dynamic(
-  () => import("@/components/dashboards/user-dashboard"),
+  () => import("@/components/user/dashboard/user-dashboard"),
 );
 const AdminDashboard = dynamic(
-  () => import("@/components/dashboards/admin-dashboard"),
+  () => import("@/components/admin/dashboard/admin-dashboard"),
 );
 
 export default function Home() {

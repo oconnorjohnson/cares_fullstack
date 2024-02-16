@@ -34,8 +34,7 @@ export default function Dashboard() {
           <SideNavBar />
           <div className="flex border-t flex-col w-5/6">
             <div className="flex flex-row justify-between py-6"></div>
-            <div className="text-3xl font-bold">My Requests</div>
-            <GetRequests userId={userId} />
+            <div className="text-3xl font-bold pl-12">My Dashboard</div>
           </div>
         </div>
       </>
