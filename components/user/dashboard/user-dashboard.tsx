@@ -73,26 +73,10 @@ export default function Dashboard() {
               {/* Second row of cards */}
               <div className="flex space-x-8">
                 <div className="flex flex-col flex-grow">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>New Request</CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex flex-row justify-start space-x-4 items-center">
-                      <XCircleIcon />
-                      <div className="text-4xl font-black">2</div>
-                    </CardContent>
-                  </Card>
+                  <NewRequest userId={userId} />
                 </div>
                 <div className="flex flex-col flex-grow">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>New Client</CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex flex-row justify-start space-x-4 items-center">
-                      <XCircleIcon />
-                      <div className="text-4xl font-black">2</div>
-                    </CardContent>
-                  </Card>
+                  <NewClient userId={userId} />
                 </div>
               </div>
             </div>
