@@ -3,6 +3,7 @@ import { DataTable } from "@/components/ui/data-table";
 import { requestAllAgencies } from "@/server/actions/request/actions";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
+import { DeleteAgency } from "@/server/actions/delete/actions";
 
 async function getAgencies(): Promise<Agency[]> {
   const agencies = await requestAllAgencies();
@@ -11,6 +12,10 @@ async function getAgencies(): Promise<Agency[]> {
     name: agency.name,
   }));
   return modifiedAgencies;
+}
+
+async function deleteAgency(agencyId: number) {
+  await DeleteAgency(agencyId);
 }
 
 export default async function AgenciesTable() {

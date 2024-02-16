@@ -34,39 +34,4 @@ export const columns: ColumnDef<FundType>[] = [
       );
     },
   },
-  {
-    id: "actions",
-    cell: ({ row }) => {
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <Link href="/">
-              <DropdownMenuItem>View agency</DropdownMenuItem>
-            </Link>
-            <DropdownMenuSeparator />
-
-            {/* 
-                add function to dropdown menu item like:
-                onClick={() => navigator.clipboard.writeText(payment.id)}
-                 */}
-            {/* <DropdownMenuItem className="bg-green-600 text-white">
-                  Approve
-                </DropdownMenuItem>
-                <div className="py-0.5" />
-                <DropdownMenuItem className="bg-red-600 text-white">
-                  Deny
-                </DropdownMenuItem> */}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
 ];

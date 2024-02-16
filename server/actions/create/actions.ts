@@ -77,6 +77,7 @@ export async function newAgency(agencyState: AgencyData) {
     throw new Error("User not authenticated");
   }
   const newAgencyRecord = await createAgency(agencyState);
+  revalidatePath(`/admin/settings/page`);
   if (!newAgencyRecord) {
     throw new Error("Failed to create new agency.");
   }
