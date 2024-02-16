@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { XIcon } from "lucide-react";
 import { DenyRequest } from "@/server/actions/update/actions";
 import { useState } from "react";
+import { toast } from "sonner";
 import { cn } from "@/server/utils";
 import { trpc } from "@/app/_trpc/client";
 export const LoadingSpinner = ({ className }: { className: any }) => {
@@ -31,8 +32,10 @@ export default function Deny({ requestId }: { requestId: number }) {
     setIsLoading(true);
     try {
       await DenyRequest(requestId);
+      toast.success("Request denied successfully.");
     } catch (error) {
       console.error("Error approving request:", error);
+      toast.error("Error denying request successfully.");
     } finally {
       setIsLoading(false);
       trpcContext.invalidate();
