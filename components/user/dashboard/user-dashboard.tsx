@@ -79,6 +79,31 @@ export default function Dashboard() {
                   <NewClient userId={userId} />
                 </div>
               </div>
+              {/* third row */}
+              <div className="flex space-x-8">
+                <div className="flex flex-col flex-grow">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Denied Requests</CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex flex-row justify-start space-x-4 items-center">
+                      <XCircleIcon />
+                      <div className="text-4xl font-black">2</div>
+                    </CardContent>
+                  </Card>
+                </div>
+                <div className="flex flex-col flex-grow">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Denied Requests</CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex flex-row justify-start space-x-4 items-center">
+                      <XCircleIcon />
+                      <div className="text-4xl font-black">2</div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
             </div>
           </div>
         </div>
