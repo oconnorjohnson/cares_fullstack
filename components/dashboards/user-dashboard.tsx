@@ -4,6 +4,23 @@ import GetClients from "@/components/user/get-clients";
 import NewRequest from "@/components/forms/new-request";
 import CurrentUser from "@/components/shared/current-user";
 import GetRequests from "@/components/user/tables/requests/page";
+import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
+import { FreshPageAlert } from "@/components/shared/alerts";
+import SideNavBar from "@/components/user/dashboard/side-nav";
+
+import {
+  HomeIcon,
+  GitPullRequestIcon,
+  UsersIcon,
+  DollarSignIcon,
+  BarChart2,
+  MailIcon,
+  SettingsIcon,
+  LogOutIcon,
+  SendIcon,
+} from "lucide-react";
+import { SignOutButton } from "@clerk/nextjs";
 
 export default function Dashboard() {
   const { userId } = auth();
@@ -13,13 +30,10 @@ export default function Dashboard() {
   } else {
     return (
       <>
-        <div className="m-4">
-          <div className="flex flex-col justify-center">
-            <div className="flex flex-row justify-between py-6">
-              <NewRequest userId={userId} />
-              <CurrentUser />
-              <NewClient userId={userId} />
-            </div>
+        <div className="flex flex-row">
+          <SideNavBar />
+          <div className="flex border-t flex-col w-5/6">
+            <div className="flex flex-row justify-between py-6"></div>
             <div className="text-3xl font-bold">My Requests</div>
             <GetRequests userId={userId} />
           </div>

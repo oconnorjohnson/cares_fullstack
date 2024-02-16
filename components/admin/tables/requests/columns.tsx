@@ -157,7 +157,7 @@ export const columns: ColumnDef<Request>[] = [
           badgeColor = undefined;
       }
 
-      return <Badge color={badgeColor}>{status}</Badge>;
+      return <Badge color={badgeColor}>{status.toUpperCase()}</Badge>;
     },
   },
   //   paid: boolean;
@@ -174,6 +174,21 @@ export const columns: ColumnDef<Request>[] = [
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
+    },
+    cell: ({ getValue }) => {
+      const status = getValue() as string;
+      let badgeColor: "yellow" | "green" | "red" | undefined;
+
+      switch (status) {
+        case "True":
+          badgeColor = "green";
+          break;
+        case "False":
+          badgeColor = "red";
+          break;
+      }
+
+      return <Badge color={badgeColor}>{status.toUpperCase()}</Badge>;
     },
   },
   //   hasPreScreen: boolean;

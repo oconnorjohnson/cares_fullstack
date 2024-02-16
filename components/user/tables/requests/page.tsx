@@ -60,6 +60,7 @@ export default async function UserRequests({ userId }: { userId: string }) {
             desc: true,
           },
         ]}
+        searchPlaceholder="Search requests"
       />
     </div>
   );
