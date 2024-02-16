@@ -86,7 +86,7 @@ export default async function Requests() {
               </div>
             </SignOutButton>
           </div>
-          <div className="flex border-t flex-col w-5/6 items-center justify-start">
+          <div className="flex border-t flex-col w-5/6 items-center justify-start pt-4">
             <GetServerRequests />
           </div>
         </div>

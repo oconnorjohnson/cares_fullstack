@@ -89,11 +89,10 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
               <div className="flex flex-col">
                 <div className="flex flex-cols-2 justify-between">
                   <div className="text-xl font-extralight pr-4">User</div>
-                  <Link href={`/admin/user/${request.user.id}`}>
-                    <div className="text-xl font-bold underline hover:text-zinc-500">
-                      {request.user.first_name} {request.user.last_name}
-                    </div>
-                  </Link>
+
+                  <div className="text-xl font-bold">
+                    {request.user.first_name} {request.user.last_name}
+                  </div>
                 </div>
                 <Separator className="my-2" />
                 <div className="flex flex-cols-2 justify-between">

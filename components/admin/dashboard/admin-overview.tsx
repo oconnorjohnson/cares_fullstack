@@ -17,8 +17,8 @@ async function getAgencyDataWithNames() {
   const agencyData = await CountRequestsByAgency();
   const agencyDataWithNames = await Promise.all(
     agencyData.map(async ({ agencyId, requestCount }) => {
-      const agency = await AgencyById(agencyId); // Assuming AgencyById returns an object with a name property
-      return { agencyName: agency ? agency.name : null, requestCount }; // Directly use the string name
+      const agency = await AgencyById(agencyId);
+      return { agencyName: agency ? agency.name : null, requestCount };
     }),
   );
   return agencyDataWithNames;

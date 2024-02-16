@@ -5,6 +5,7 @@ import { ApproveRequest } from "@/server/actions/update/actions";
 import { cn } from "@/server/utils";
 import { useState } from "react";
 import { trpc } from "@/app/_trpc/client";
+import { toast } from "sonner";
 export const LoadingSpinner = ({ className }: { className: any }) => {
   return (
     <svg
@@ -31,8 +32,10 @@ export default function Approve({ requestId }: { requestId: number }) {
     setIsLoading(true);
     try {
       await ApproveRequest(requestId);
+      toast.success("Request approved.");
     } catch (error) {
       console.error("Error approving request:", error);
+      toast.error("Failed to approve request.");
     } finally {
       setIsLoading(false);
       trpcContext.invalidate();
