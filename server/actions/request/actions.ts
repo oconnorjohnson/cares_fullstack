@@ -110,7 +110,7 @@ export async function requestAllFundTypes() {
     const allFundTypeRecords: FundTypeData[] = await getFundTypes();
     return allFundTypeRecords;
   } catch (error) {
-    console.error("Failed to call getFundTypes from prismaFunctions:", error);
+    console.error("Failed to call get Fund Types from prismaFunctions:", error);
     throw error;
   }
 }
