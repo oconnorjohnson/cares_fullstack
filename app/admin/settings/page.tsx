@@ -96,13 +96,13 @@ export default async function Requests() {
             <FreshPageAlert />
 
             <div className="flex flex-row items-start justify-center space-x-12 px-10 pt-12">
-              <div className="flex flex-col justify-center space-y-12">
+              <div className="flex flex-col justify-center space-y-8">
                 <AddAgency userId={user} />
                 <div className="border-2 rounded-xl w-full">
                   <AgencyTypes />
                 </div>
               </div>
-              <div className="flex flex-col justify-center space-y-12">
+              <div className="flex flex-col justify-center space-y-8">
                 <AddFundType userId={user} />
                 <div className="border-2 rounded-xl w-full">
                   <FundTypes />

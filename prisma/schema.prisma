@@ -19,6 +19,7 @@ model User {
   isBanned       Boolean        @default(false)
   fundTypes      FundType[]
   Agency         Agency[]
+  Receipt        Receipt[]
 
   @@index([userId])
 }
@@ -59,12 +60,13 @@ model Client {
 }
 
 model Fund {
-  id         Int      @id @default(autoincrement())
+  id         Int       @id @default(autoincrement())
   requestId  Int
-  request    Request  @relation(fields: [requestId], references: [id])
+  request    Request   @relation(fields: [requestId], references: [id])
   fundTypeId Int
-  fundType   FundType @relation(fields: [fundTypeId], references: [id])
+  fundType   FundType  @relation(fields: [fundTypeId], references: [id])
   amount     Int
+  Receipt    Receipt[]
 
   @@index([requestId, fundTypeId])
 }
@@ -105,10 +107,24 @@ model Request {
   postScreenAnswerId  Int?
   funds               Fund[]
 
-  SDOHs SDOH[]
-  RFFs  RFF[]
+  SDOHs   SDOH[]
+  RFFs    RFF[]
+  Receipt Receipt[]
 
   @@index([clientId, userId, agencyId])
+}
+
+model Receipt {
+  id        Int     @id @default(autoincrement())
+  url       String
+  requestId Int
+  fundId    Int
+  userId    String
+  request   Request @relation(fields: [requestId], references: [id])
+  fund      Fund    @relation(fields: [fundId], references: [id])
+  user      User    @relation(fields: [userId], references: [userId])
+
+  @@index([requestId, fundId, userId])
 }
 
 model SDOH {

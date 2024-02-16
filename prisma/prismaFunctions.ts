@@ -48,6 +48,36 @@ export async function createFundType(fundTypeData: {
   }
 }
 
+export async function createNewReceiptRecord(newReceiptRecord: {
+  userId: string;
+  url: string;
+  requestId: number;
+  fundId: number;
+}) {
+  if (
+    !newReceiptRecord.userId ||
+    !newReceiptRecord.url ||
+    !newReceiptRecord.requestId ||
+    !newReceiptRecord.fundId
+  ) {
+    throw new Error("UserId, URL, Request ID, and Fund ID are required.");
+  }
+  console.log("Creating new receipt record with data:", newReceiptRecord);
+  try {
+    const newReceipt = await prisma.receipt.create({
+      data: newReceiptRecord,
+    });
+    console.log("New receipt record created successfully:", newReceipt);
+    return newReceipt;
+  } catch (error) {
+    throw new Error(
+      `Failed to create new receipt record: ${
+        error instanceof Error ? error.message : "Unknown error"
+      }`,
+    );
+  }
+}
+
 export async function createNewFundByRequestId(newFundData: {
   requestId: number;
   fundTypeId: number;

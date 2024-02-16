@@ -8,7 +8,6 @@ import { extractRouterConfig } from "uploadthing/server";
 import Providers from "@/app/_trpc/Provider";
 import NavBar from "@/components/root/navbar";
 import { Toaster } from "@/components/ui/sonner";
-
 import { ourFileRouter } from "@/app/api/uploadthing/core";
 
 const inter = Inter({ subsets: ["latin"] });
