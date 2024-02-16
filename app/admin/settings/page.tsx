@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { FreshPageAlert } from "@/components/shared/alerts";
 import {
   HomeIcon,
   GitPullRequestIcon,
@@ -91,17 +92,21 @@ export default async function Requests() {
           </SignOutButton>
         </div>
         <div className="flex border-t flex-col w-5/6 ">
-          <div className="flex flex-row items-start justify-start space-x-24 pt-24 pl-24">
-            <div className="flex flex-col justify-center space-y-12">
-              <AddAgency userId={user} />
-              <div className="border-2 rounded-xl w-full">
-                <AgencyTypes />
+          <div className="flex flex-col justify-center w-full">
+            <FreshPageAlert />
+
+            <div className="flex flex-row items-start justify-center space-x-12 px-10 pt-12">
+              <div className="flex flex-col justify-center space-y-12">
+                <AddAgency userId={user} />
+                <div className="border-2 rounded-xl w-full">
+                  <AgencyTypes />
+                </div>
               </div>
-            </div>
-            <div className="flex flex-col justify-center space-y-12">
-              <AddFundType userId={user} />
-              <div className="border-2 rounded-xl w-full">
-                <FundTypes />
+              <div className="flex flex-col justify-center space-y-12">
+                <AddFundType userId={user} />
+                <div className="border-2 rounded-xl w-full">
+                  <FundTypes />
+                </div>
               </div>
             </div>
           </div>

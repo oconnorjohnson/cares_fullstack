@@ -1,14 +1,9 @@
-import GetFundTypes from "@/components/admin/tables/funds/get-fundTypes";
 import { auth } from "@clerk/nextjs";
 import CurrentUser from "@/components/shared/current-user";
-import NewFundType from "@/components/forms/new-fund-type";
-import NewAgency from "@/components/forms/new-agency";
-import GetAgencies from "@/components/admin/tables/agencies/get-agencies";
-import GetServerRequests from "@/components/admin/tables/requests/page";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { FreshPageAlert } from "@/components/shared/alerts";
+
 import {
   HomeIcon,
   GitPullRequestIcon,
@@ -86,8 +81,11 @@ export default async function Dashboard() {
               </div>
             </SignOutButton>
           </div>
-          <div className="flex border-t flex-col w-5/6 items-center justify-start">
-            <DashboardPage />
+          <div className="flex border-t flex-col w-5/6">
+            <div className="flex flex-col justify-center w-full">
+              <FreshPageAlert />
+              <DashboardPage />
+            </div>
           </div>
         </div>
       </>
