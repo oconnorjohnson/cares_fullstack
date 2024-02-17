@@ -105,6 +105,20 @@ export async function requestUsersRequests(
     throw error;
   }
 }
+
+export async function requestUsersClients(userId: string) {
+  try {
+    const allUserClients = await getClientsByUserId(userId);
+    return allUserClients;
+  } catch (error) {
+    console.error(
+      "Failed to get call getClientsByUserId from prismaFunctions:",
+      error,
+    );
+    throw error;
+  }
+}
+
 export async function requestAllFundTypes() {
   try {
     const allFundTypeRecords: FundTypeData[] = await getFundTypes();
