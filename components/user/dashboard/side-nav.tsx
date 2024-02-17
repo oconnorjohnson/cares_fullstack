@@ -13,7 +13,8 @@ import {
   SendIcon,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { SignOutButton } from "@clerk/nextjs";
+import { SignOutButton, auth } from "@clerk/nextjs";
+export async function getRequestCount(userId: number) {}
 
 export default function SideNavBar() {
   const pathname = usePathname();

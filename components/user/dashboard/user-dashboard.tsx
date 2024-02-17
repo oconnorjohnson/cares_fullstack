@@ -55,10 +55,10 @@ export default function Dashboard() {
                 </div>
               </div>
               <div className="flex space-x-8">
-                <div className="flex flex-col flex-grow">
+                <div className="flex flex-col w-1/2 flex-grow">
                   <NewRequest userId={userId} />
                 </div>
-                <div className="flex flex-col flex-grow">
+                <div className="flex flex-col w-1/2 flex-grow">
                   <NewClient userId={userId} />
                 </div>
               </div>

@@ -782,3 +782,13 @@ export async function countRequestsByAgency() {
     requestCount: _count.id,
   }));
 }
+
+export async function countOpenRequestsByUserId(userId: string) {
+  const requestsCount = await prisma.request.count({
+    where: {
+      userId: userId,
+      pendingApproval: true,
+    },
+  });
+  return requestsCount;
+}
