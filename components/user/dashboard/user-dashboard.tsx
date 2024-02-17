@@ -21,7 +21,7 @@ export default function Dashboard() {
             <div className="flex flex-col space-y-8 px-12 pt-6">
               <div className="flex space-x-8">
                 <div className="flex flex-col flex-grow">
-                  <Card>
+                  <Card className="bg-yellow-100">
                     <CardHeader>
                       <CardTitle>Open Requests</CardTitle>
                     </CardHeader>
@@ -32,7 +32,7 @@ export default function Dashboard() {
                   </Card>
                 </div>
                 <div className="flex flex-col flex-grow">
-                  <Card>
+                  <Card className="bg-green-100">
                     <CardHeader>
                       <CardTitle>Approved Requests</CardTitle>
                     </CardHeader>
@@ -43,7 +43,7 @@ export default function Dashboard() {
                   </Card>
                 </div>
                 <div className="flex flex-col flex-grow">
-                  <Card>
+                  <Card className="bg-red-100">
                     <CardHeader>
                       <CardTitle>Denied Requests</CardTitle>
                     </CardHeader>
