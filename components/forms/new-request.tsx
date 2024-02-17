@@ -223,8 +223,6 @@ export default function NewRequest({ userId }: { userId: string | null }) {
           <Button variant="default">Submit New Request</Button>
         </DialogTrigger>
         <DialogContent>
-          <p>Selected Client ID: {watchedClientId}</p>
-          <p>Selected Agency ID: {watchedAgencyId}</p>
           <Progress value={progress} className="w-full mt-4" />
           <DialogTitle>New Request</DialogTitle>
           <DialogDescription>
