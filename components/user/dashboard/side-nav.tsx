@@ -43,13 +43,13 @@ export default function SideNavBar() {
             Clients <UsersIcon className="w-5 h-5" />
           </div>
         </Link>
-        <Link href="/user/messages">
+        {/* <Link href="/user/messages">
           <div
             className={`rounded-xl hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 py-2 px-6 mx-2 text-md font-semibold flex flex-row justify-between items-center ${pathname === "/user/messages" ? "bg-zinc-200 dark:bg-zinc-800" : ""}`}
           >
             Messages <MailIcon className="w-5 h-5" />
           </div>
-        </Link>
+        </Link> */}
         <Link href="/user/settings">
           <div
             className={`rounded-xl hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 py-2 px-6 mx-2 text-md font-semibold flex flex-row justify-between items-center ${pathname === "/user/settings" ? "bg-zinc-200 dark:bg-zinc-800" : ""}`}
