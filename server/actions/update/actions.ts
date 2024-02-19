@@ -7,6 +7,7 @@ import {
   markRequestPaidById,
   banUserById,
 } from "@/prisma/prismaFunctions";
+import { sendTestEmail } from "@/server/actions/resend/actions";
 import { revalidatePath } from "next/cache";
 
 export interface RequestData {
@@ -43,6 +44,7 @@ export async function DenyRequest(requestId: number): Promise<RequestData> {
     const updatedRequest = await denyRequestById(requestId);
     await revalidatePath(`/admin/request/${requestId}/page`);
     await revalidatePath(`/dashboard/page`);
+    await sendTestEmail();
     return updatedRequest;
   } catch (error) {
     console.error(`Failed to deny request with ID ${requestId}:`, error);
