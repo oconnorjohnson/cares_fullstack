@@ -21,7 +21,6 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
   firstName,
 }) => (
   <Html lang="en">
-    <Head />
     <Preview>This is a test email.</Preview>
     <Tailwind
       config={{
@@ -34,6 +33,7 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
         },
       }}
     >
+      <Head />
       <Body className="">
         <Container className="">
           <Section className="bg-zinc-200 rounded-2xl px-12 py-8">
@@ -44,7 +44,7 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
               click the button below to get started.
             </Text>
             <Button
-              className="bg-orange-500 p-4 rounded-xl text-white text-xl font-bold"
+              className="bg-orange-500 p-4 rounded-xl text-white dark:text-white text-xl font-bold"
               href="https://yolopublicdefendercares.org"
             >
               Get Started
