@@ -1,10 +1,13 @@
 "use client";
-import { useCallback } from "react";
 import SideNavBar from "@/components/user/dashboard/side-nav";
 import { Button } from "@/components/ui/button";
-import { EmailTemplate } from "@/components/emails/test";
+import { useUser } from "@clerk/nextjs";
 
 export default function ClientsPage() {
+  const user = useUser();
+  const firstName = user?.user?.firstName;
+  const email = user?.user?.emailAddresses[0].emailAddress;
+  console.log(firstName, email);
   const handleSendEmail = async () => {
     try {
       const response = await fetch("/api/send", {
@@ -12,7 +15,17 @@ export default function ClientsPage() {
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          firstName,
+        }),
       });
+
+      if (!response.ok) {
+        // If the response is not OK, log the status and avoid parsing as JSON
+        console.error("Failed to send email, status:", response.status);
+        return;
+      }
+
       const data = await response.json();
       console.log(data);
     } catch (error) {
@@ -29,7 +42,6 @@ export default function ClientsPage() {
         <Button onClick={handleSendEmail}>Call Route!</Button>
 
         <div className="py-12" />
-        <EmailTemplate firstName="Daniel" />
       </div>
     </div>
   );

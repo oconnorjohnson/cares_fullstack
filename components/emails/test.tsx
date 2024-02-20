@@ -17,19 +17,6 @@ interface EmailTemplateProps {
   firstName: string;
 }
 
-const button = {
-  backgroundColor: "#007ee6",
-  borderRadius: "25px",
-  color: "#fff",
-  fontFamily: "'Open Sans', 'Helvetica Neue', Arial",
-  fontSize: "15px",
-  textDecoration: "none",
-  textAlign: "center" as const,
-  display: "block",
-  width: "210px",
-  padding: "14px 7px",
-};
-
 export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
   firstName,
 }) => (
