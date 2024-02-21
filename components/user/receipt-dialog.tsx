@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { UploadButton } from "@/server/uploadthing";
 import { toast } from "sonner";
 import { trpc } from "@/app/_trpc/client";
+import { useState } from "react";
 
 export default function ReceiptDialog({ requestId }: { requestId: number }) {
   const {
@@ -22,7 +23,7 @@ export default function ReceiptDialog({ requestId }: { requestId: number }) {
     isLoading,
     isError,
   } = trpc.getFundsThatNeedReceipts.useQuery(requestId);
-
+  const [completedUploads, setCompletedUploads] = useState<number[]>([]);
   if (isLoading) return <p>Loading...</p>;
   if (isError || !funds) return <p>Error loading funds.</p>;
   return (
@@ -48,6 +49,7 @@ export default function ReceiptDialog({ requestId }: { requestId: number }) {
               </div>
               <UploadButton
                 endpoint="pdfUploader"
+                input={{ fundId: fund.id, requestId: requestId }}
                 onClientUploadComplete={(res) => {
                   console.log("Files: ", res);
                   toast.success(
@@ -61,6 +63,11 @@ export default function ReceiptDialog({ requestId }: { requestId: number }) {
             </div>
           ))}
         </DialogContent>
+        <DialogFooter>
+          <DialogClose>
+            <Button>Close</Button>
+          </DialogClose>
+        </DialogFooter>
       </DialogPortal>
     </Dialog>
   );

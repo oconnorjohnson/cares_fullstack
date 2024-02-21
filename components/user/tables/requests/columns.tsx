@@ -143,7 +143,7 @@ export const columns: ColumnDef<Request>[] = [
         return <Badge color="yellow">Awaiting Payment</Badge>;
       } else if (hasPreScreen && paid && needsReceipts && !hasReceipts) {
         return <ReceiptDialog requestId={requestId} />;
-      } else if (hasPreScreen && paid && !hasPostScreen) {
+      } else if (hasPreScreen && paid && hasReceipts && !hasPostScreen) {
         return <PostScreen requestId={requestId} />;
       } else if (!hasPreScreen) {
         return <PreScreen requestId={requestId} />;

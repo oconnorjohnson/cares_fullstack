@@ -1,6 +1,7 @@
 import { currentUser } from "@clerk/nextjs";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
-
+import { z } from "zod";
+import { createNewReceiptRecord } from "@/prisma/prismaFunctions";
 const f = createUploadthing();
 
 const auth = async () => {
@@ -8,29 +9,53 @@ const auth = async () => {
   return user;
 };
 
+const uploadInputSchema = z.object({
+  fundId: z.number(),
+  requestId: z.number(),
+});
+
 // FileRouter for your app, can contain multiple FileRoutes
 export const ourFileRouter = {
   // Define as many FileRoutes as you like, each with a unique routeSlug
   pdfUploader: f({ pdf: { maxFileSize: "16MB", maxFileCount: 1 } })
     // Set permissions and file types for this FileRoute
-    .middleware(async ({ files }) => {
+    .input(uploadInputSchema)
+    .middleware(async ({ files, input }) => {
       // This code runs on your server before upload
       const user = await auth();
       const uploadCount = files.length;
       // If you throw, the user will not be able to upload
       if (!user) throw new Error("Unauthorized");
+      const { fundId, requestId } = input;
 
       // Whatever is returned here is accessible in onUploadComplete as `metadata`
-      return { userId: user?.id };
+      return { userId: user?.id, fundId, requestId };
     })
     .onUploadComplete(async ({ metadata, file }) => {
       // This code RUNS ON YOUR SERVER after upload
       console.log("Upload complete for userId:", metadata.userId);
 
       console.log("file url", file.url);
+      console.log("FundID:", metadata.fundId);
 
-      // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
-      return { uploadedBy: metadata.userId };
+      try {
+        const newReceipt = await createNewReceiptRecord({
+          userId: metadata.userId,
+          fundId: metadata.fundId,
+          requestId: metadata.requestId,
+          url: file.url,
+        });
+        console.log("New receipt record created successfully:", newReceipt);
+
+        // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
+        return {
+          uploadedBy: metadata.userId,
+          fileUrl: file.url,
+          fundId: metadata.fundId,
+        };
+      } catch (error) {
+        console.error("Error creating new receipt record:", error);
+      }
     }),
 } satisfies FileRouter;
 
