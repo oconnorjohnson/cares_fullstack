@@ -6,6 +6,8 @@ import { cn } from "@/server/utils";
 import { useState } from "react";
 import { trpc } from "@/app/_trpc/client";
 import { toast } from "sonner";
+import { useUser } from "@clerk/nextjs";
+import { Approved } from "@/server/actions/resend/actions";
 export const LoadingSpinner = ({ className }: { className: any }) => {
   return (
     <svg
@@ -28,11 +30,19 @@ export const LoadingSpinner = ({ className }: { className: any }) => {
 export default function Approve({ requestId }: { requestId: number }) {
   const [isLoading, setIsLoading] = useState(false);
   const trpcContext = trpc.useUtils();
+  const { user } = useUser();
+  const email = user?.emailAddresses[0]?.emailAddress || "";
+  const firstName = user?.firstName || "";
   const handleApprove = async () => {
     setIsLoading(true);
     try {
       await ApproveRequest(requestId);
       toast.success("Request approved.");
+      try {
+        await Approved({ firstName, email });
+      } catch (error) {
+        console.error("Failed to submit:", error);
+      }
     } catch (error) {
       console.error("Error approving request:", error);
       toast.error("Failed to approve request.");

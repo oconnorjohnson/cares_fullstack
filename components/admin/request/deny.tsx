@@ -6,6 +6,8 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { cn } from "@/server/utils";
 import { trpc } from "@/app/_trpc/client";
+import { Denied } from "@/server/actions/resend/actions";
+import { useUser } from "@clerk/nextjs";
 export const LoadingSpinner = ({ className }: { className: any }) => {
   return (
     <svg
@@ -28,11 +30,19 @@ export const LoadingSpinner = ({ className }: { className: any }) => {
 export default function Deny({ requestId }: { requestId: number }) {
   const [isLoading, setIsLoading] = useState(false);
   const trpcContext = trpc.useUtils();
+  const { user } = useUser();
+  const email = user?.emailAddresses[0]?.emailAddress || "";
+  const firstName = user?.firstName || "";
   const handleDeny = async () => {
     setIsLoading(true);
     try {
       await DenyRequest(requestId);
       toast.success("Request denied successfully.");
+      try {
+        await Denied({ firstName, email });
+      } catch (error) {
+        console.error("Failed to submit:", error);
+      }
     } catch (error) {
       console.error("Error approving request:", error);
       toast.error("Error denying request successfully.");

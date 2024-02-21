@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import FundSelect from "@/components/forms/sub-components/fund-select";
 import { trpc } from "@/app/_trpc/client";
 import { newRequest } from "@/server/actions/create/actions";
+import { Submitted } from "@/server/actions/resend/actions";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import {
   Dialog,
@@ -37,6 +38,7 @@ import SDOHSelect from "@/components/forms/sub-components/sdoh-multi-select";
 import RFFSelect from "@/components/forms/sub-components/rff-assist-multi";
 import { Progress } from "@/components/ui/progress";
 import { Option } from "@/components/ui/multiple-selector";
+import { useUser } from "@clerk/nextjs";
 
 interface Client {
   id: number;
@@ -140,7 +142,9 @@ export default function NewRequest({ userId }: { userId: string | null }) {
       setActiveTab(lastTab);
     }
   };
-
+  const { user } = useUser();
+  const email = user?.emailAddresses[0]?.emailAddress || "";
+  const firstName = user?.firstName || "";
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -180,10 +184,6 @@ export default function NewRequest({ userId }: { userId: string | null }) {
     [setValue],
   );
 
-  const watchedClientId = form.watch("clientId");
-  const watchedAgencyId = form.watch("agencyId");
-  const trpcContext = trpc.useUtils();
-
   const onSubmit = async (data: FormInputs) => {
     console.log("Form submission started", data);
     console.log(typeof data.funds[0].amount);
@@ -192,6 +192,11 @@ export default function NewRequest({ userId }: { userId: string | null }) {
     } else {
       try {
         await newRequest({ ...data, userId });
+        try {
+          await Submitted({ firstName, email });
+        } catch (error) {
+          console.error("Failed to submit:", error);
+        }
         toast.success("Request submitted successrfully");
         setActiveTab("tab5");
         form.reset();

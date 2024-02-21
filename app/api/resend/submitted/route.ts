@@ -5,8 +5,6 @@ import * as React from "react";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: Request, res: Response) {
-  console.log("Received request to /api/send");
-
   try {
     const body = await req.json();
     const { firstName, email } = body;

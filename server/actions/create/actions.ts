@@ -8,7 +8,9 @@ import {
   createPostScreen,
   createNewFundByRequestId,
 } from "@/prisma/prismaFunctions";
+import { Submitted } from "@/server/actions/resend/actions";
 import { revalidatePath } from "next/cache";
+
 interface ClientData {
   first_name: string;
   last_name: string;

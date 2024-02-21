@@ -52,7 +52,7 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
               className="bg-orange-500 p-4 rounded-xl text-white dark:text-white text-xl font-bold"
               href="https://yolopublicdefendercares.org/user/requests"
             >
-              View Request
+              View Requests
             </Button>
           </Section>
         </Container>
