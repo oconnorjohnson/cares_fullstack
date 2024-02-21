@@ -68,6 +68,14 @@ export async function createNewReceiptRecord(newReceiptRecord: {
       data: newReceiptRecord,
     });
     console.log("New receipt record created successfully:", newReceipt);
+    await prisma.request.update({
+      where: {
+        id: newReceiptRecord.requestId, // Assuming the request ID is directly related and stored as `id`
+      },
+      data: {
+        hasReceipts: true, // Update this field name if your schema uses a different name
+      },
+    });
     return newReceipt;
   } catch (error) {
     throw new Error(

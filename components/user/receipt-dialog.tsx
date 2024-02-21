@@ -26,6 +26,10 @@ export default function ReceiptDialog({ requestId }: { requestId: number }) {
   const [completedUploads, setCompletedUploads] = useState<number[]>([]);
   if (isLoading) return <p>Loading...</p>;
   if (isError || !funds) return <p>Error loading funds.</p>;
+  const handleUploadComplete = (fundId: number) => {
+    setCompletedUploads((prev) => [...prev, fundId]);
+    toast.success("UploadCompleted");
+  };
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -47,19 +51,23 @@ export default function ReceiptDialog({ requestId }: { requestId: number }) {
               <div>
                 {fund.fundType.typeName} - ${fund.amount}
               </div>
-              <UploadButton
-                endpoint="pdfUploader"
-                input={{ fundId: fund.id, requestId: requestId }}
-                onClientUploadComplete={(res) => {
-                  console.log("Files: ", res);
-                  toast.success(
-                    "Upload Completed for " + fund.fundType.typeName,
-                  );
-                }}
-                onUploadError={(error: Error) => {
-                  toast.error(`ERROR! ${error.message}`);
-                }}
-              />
+              {completedUploads.includes(fund.id) ? (
+                <Button
+                  disabled
+                  style={{ pointerEvents: "none", opacity: 0.5 }}
+                >
+                  Uploaded
+                </Button>
+              ) : (
+                <UploadButton
+                  endpoint="pdfUploader"
+                  input={{ fundId: fund.id, requestId: requestId }}
+                  onClientUploadComplete={() => handleUploadComplete(fund.id)}
+                  onUploadError={(error: Error) =>
+                    toast.error(`ERROR! ${error.message}`)
+                  }
+                />
+              )}
             </div>
           ))}
         </DialogContent>
