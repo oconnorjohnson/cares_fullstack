@@ -30,9 +30,9 @@ export const LoadingSpinner = ({ className }: { className: any }) => {
 export default function Deny({ requestId }: { requestId: number }) {
   const [isLoading, setIsLoading] = useState(false);
   const trpcContext = trpc.useUtils();
-  const { user } = useUser();
-  const email = user?.emailAddresses[0]?.emailAddress || "";
-  const firstName = user?.firstName || "";
+  const { data: user } = trpc.getUserByRequestId.useQuery(requestId);
+  const email = user?.user.emailAddresses[0]?.email || "";
+  const firstName = user?.user.first_name || "";
   const handleDeny = async () => {
     setIsLoading(true);
     try {
