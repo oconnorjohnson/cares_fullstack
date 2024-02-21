@@ -37,11 +37,12 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
       <Body className="">
         <Container className="">
           <Section className="bg-zinc-200 rounded-2xl px-12 py-8">
+            {/* <Img src="logo.png" alt="Cares Logo" width="40" height="33" /> */}
             <Text className="text-3xl font-bold">Hi {firstName},</Text>
             <Text className="text-lg">
               Your request has been received! Once reviewed, you&apos;ll receive
               an email detailing our decision. If you have any questions, please
-              reach out to us at <br />
+              reach out to us at{" "}
               <Link href="mailto:help@yolopublicdefendercares.org">
                 help@yolopublicdefendercares.org
               </Link>

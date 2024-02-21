@@ -22,7 +22,6 @@ export default function ClientsPage() {
       });
 
       if (!response.ok) {
-        // If the response is not OK, log the status and avoid parsing as JSON
         console.error("Failed to send email, status:", response.status);
         return;
       }

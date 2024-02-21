@@ -9,12 +9,12 @@ export async function POST(req: Request, res: Response) {
 
   try {
     const body = await req.json();
-    const { firstName } = body;
-    console.log("Parsed firstName:", firstName, body);
+    const { firstName, email } = body;
+    console.log("Parsed firstName:", firstName, email, body);
 
     const { data, error } = await resend.emails.send({
       from: "CARES <help@yolocountycares.com>",
-      to: ["dajohnson@yolocounty.org"],
+      to: [email],
       subject: "We've received your request!",
       react: EmailTemplate({
         firstName: firstName,
