@@ -190,6 +190,29 @@ export async function createRequest(requestData: {
   sdoh: string[];
   rff: string[];
 }) {
+  // fetch all fundtype records and store in map
+  const fundTypes = await prisma.fundType.findMany();
+  const fundTypeMap = fundTypes.reduce(
+    (
+      acc: { [key: number]: string },
+      fundType: { id: number; typeName: string },
+    ) => {
+      acc[fundType.id] = fundType.typeName;
+      return acc;
+    },
+    {},
+  );
+  // process funds with conditional needsReceipt bool
+  const processedFunds = requestData.funds.map((fund) => {
+    const needsReceipt = fundTypeMap[fund.fundTypeId] !== "Bus Pass";
+    return {
+      ...fund,
+      needsReceipt,
+    };
+  });
+  // do any funds need a receipt? if so set needsReceipts bool on request model to true
+  const anyFundsNeedReceipt = processedFunds.some((fund) => fund.needsReceipt);
+  // create request with processed funds
   const newRequest = await prisma.request.create({
     data: {
       clientId: requestData.clientId,
@@ -199,11 +222,9 @@ export async function createRequest(requestData: {
       implementation: requestData.implementation,
       sustainability: requestData.sustainability,
       pendingApproval: true,
+      needsReceipts: anyFundsNeedReceipt,
       funds: {
-        create: requestData.funds.map((fund) => ({
-          fundTypeId: fund.fundTypeId,
-          amount: fund.amount,
-        })),
+        create: processedFunds,
       },
       SDOHs: {
         create: requestData.sdoh.map((sdoh) => ({

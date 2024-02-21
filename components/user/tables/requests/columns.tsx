@@ -15,6 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import ReceiptDialog from "@/components/user/receipt-dialog";
 
 export type Request = {
   id: number;
@@ -46,6 +47,8 @@ export type Request = {
   paid: boolean;
   hasPreScreen: boolean;
   hasPostScreen: boolean;
+  needsReceipts: boolean;
+  hasReceipts: boolean;
   createdAt: Date;
   isHighlighted?: boolean;
 };
@@ -80,21 +83,21 @@ export const columns: ColumnDef<Request>[] = [
       );
     },
   },
-  //   {
-  //     accessorKey: "createdAt",
-  //     header: ({ column }) => {
-  //       return (
-  //         <Button
-  //           variant="ghost"
-  //           size="sm"
-  //           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-  //         >
-  //           Created
-  //           <ArrowUpDown className="ml-2 h-4 w-4" />
-  //         </Button>
-  //       );
-  //     },
-  //   },
+  {
+    accessorKey: "createdAt",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Created
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+  },
   {
     accessorKey: "combinedStatus",
     header: "Status",
@@ -122,29 +125,33 @@ export const columns: ColumnDef<Request>[] = [
     header: "Actions",
     cell: ({ row }) => {
       const {
+        user,
         hasPreScreen,
         hasPostScreen,
+        pendingApproval,
         paid,
         denied,
+        needsReceipts,
+        hasReceipts,
         id: requestId,
       } = row.original;
       let content;
 
       if (denied) {
-        content = <Badge color="red">Closed</Badge>;
-      } else if (hasPreScreen && hasPostScreen && paid) {
-        content = <Badge color="green">Request Completed and Closed</Badge>;
-      } else if (hasPreScreen && !paid) {
-        content = <Badge color="yellow">Awaiting Payment</Badge>;
-      } else if (hasPreScreen && !hasPostScreen && paid) {
+        return <Badge color="red">Closed</Badge>;
+      } else if (hasPreScreen && pendingApproval) {
+        return <Badge color="yellow">Awaiting Payment</Badge>;
+      } else if (hasPreScreen && paid && needsReceipts && !hasReceipts) {
+        return <ReceiptDialog userId={user.userId} />;
+      } else if (hasPreScreen && paid && !hasPostScreen) {
         return <PostScreen requestId={requestId} />;
       } else if (!hasPreScreen) {
         return <PreScreen requestId={requestId} />;
+      } else if (hasPreScreen && hasPostScreen && paid) {
+        return <Badge color="green">Request Completed and Closed</Badge>;
       } else {
-        content = <Badge color="red">Check request details</Badge>;
+        return <Badge color="red">Check request details</Badge>;
       }
-
-      return content;
     },
   },
   {

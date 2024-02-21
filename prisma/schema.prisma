@@ -60,13 +60,14 @@ model Client {
 }
 
 model Fund {
-  id         Int       @id @default(autoincrement())
-  requestId  Int
-  request    Request   @relation(fields: [requestId], references: [id])
-  fundTypeId Int
-  fundType   FundType  @relation(fields: [fundTypeId], references: [id])
-  amount     Int
-  Receipt    Receipt[]
+  id           Int       @id @default(autoincrement())
+  requestId    Int
+  request      Request   @relation(fields: [requestId], references: [id])
+  fundTypeId   Int
+  fundType     FundType  @relation(fields: [fundTypeId], references: [id])
+  amount       Int
+  needsReceipt Boolean   @default(false)
+  Receipt      Receipt[]
 
   @@index([requestId, fundTypeId])
 }
@@ -95,6 +96,8 @@ model Request {
   pendingPayout       Boolean            @default(false)
   paid                Boolean            @default(false)
   hasPreScreen        Boolean            @default(false)
+  needsReceipts       Boolean            @default(false)
+  hasReceipts         Boolean            @default(false)
   hasPostScreen       Boolean            @default(false)
   createdAt           DateTime           @default(now())
   details             String             @db.Text
