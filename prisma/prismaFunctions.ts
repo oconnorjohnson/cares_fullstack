@@ -856,3 +856,23 @@ export async function countOpenRequestsByUserId(userId: string) {
   });
   return requestsCount;
 }
+
+export async function countApprovedRequestsByUserId(userId: string) {
+  const requestsCount = await prisma.request.count({
+    where: {
+      userId: userId,
+      approved: true,
+    },
+  });
+  return requestsCount;
+}
+
+export async function countDeniedRequestsByUserId(userId: string) {
+  const requestsCount = await prisma.request.count({
+    where: {
+      userId: userId,
+      denied: true,
+    },
+  });
+  return requestsCount;
+}

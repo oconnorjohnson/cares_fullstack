@@ -4,6 +4,8 @@ import {
   countDeniedRequests,
   countRequestsByAgency,
   countOpenRequestsByUserId,
+  countApprovedRequestsByUserId,
+  countDeniedRequestsByUserId,
 } from "@/prisma/prismaFunctions";
 import { revalidatePath } from "next/cache";
 
@@ -30,4 +32,14 @@ export async function CountRequestsByAgency() {
 export async function CountOpenRequestsByUserId(userId: string) {
   const openRequests = await countOpenRequestsByUserId(userId);
   return openRequests;
+}
+
+export async function CountApprovedRequestsByUserId(userId: string) {
+  const approvedRequests = await countApprovedRequestsByUserId(userId);
+  return approvedRequests;
+}
+
+export async function CountDeniedRequestsByUserId(userId: string) {
+  const deniedRequests = await countDeniedRequestsByUserId(userId);
+  return deniedRequests;
 }
