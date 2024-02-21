@@ -10,13 +10,14 @@ export default function ClientsPage() {
   console.log(firstName, email);
   const handleSendEmail = async () => {
     try {
-      const response = await fetch("/api/send", {
+      const response = await fetch("/api/resend/submitted", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           firstName,
+          email,
         }),
       });
 
@@ -39,7 +40,9 @@ export default function ClientsPage() {
       <div className="flex border-t flex-col w-5/6">
         <div className="flex flex-row justify-between py-6"></div>
         <div className="text-3xl font-bold pl-12">My Clients</div>
-        <Button onClick={handleSendEmail}>Call Route!</Button>
+        <div className="w-1/3">
+          <Button onClick={handleSendEmail}>Call Route!</Button>
+        </div>
 
         <div className="py-12" />
       </div>

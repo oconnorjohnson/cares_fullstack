@@ -1,4 +1,4 @@
-import { EmailTemplate } from "@/components/emails/test";
+import { EmailTemplate } from "@/components/emails/submitted";
 import { Resend } from "resend";
 import * as React from "react";
 
@@ -13,9 +13,9 @@ export async function POST(req: Request, res: Response) {
     console.log("Parsed firstName:", firstName, body);
 
     const { data, error } = await resend.emails.send({
-      from: "CARES <onboarding@resend.dev>",
-      to: ["admin@foreveryone.ai"],
-      subject: "Testing, testing...1-2-3, 1-2-3...",
+      from: "CARES <help@yolocountycares.com>",
+      to: ["dajohnson@yolocounty.org"],
+      subject: "We've received your request!",
       react: EmailTemplate({
         firstName: firstName,
       }) as React.ReactElement,

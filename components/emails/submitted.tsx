@@ -21,7 +21,7 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
   firstName,
 }) => (
   <Html lang="en">
-    <Preview>This is a test email.</Preview>
+    <Preview>Request Submitted!</Preview>
     <Tailwind
       config={{
         theme: {
@@ -39,15 +39,19 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
           <Section className="bg-zinc-200 rounded-2xl px-12 py-8">
             <Text className="text-3xl font-bold">Hi {firstName},</Text>
             <Text className="text-lg">
-              Welcome to the Yolo County Public Defender CARES program! We are
-              excited to work with you to help you get back on your feet. Please
-              click the button below to get started.
+              Your request has been received! Once reviewed, you&apos;ll receive
+              an email detailing our decision. If you have any questions, please
+              reach out to us at <br />
+              <Link href="mailto:help@yolopublicdefendercares.org">
+                help@yolopublicdefendercares.org
+              </Link>
+              .
             </Text>
             <Button
               className="bg-orange-500 p-4 rounded-xl text-white dark:text-white text-xl font-bold"
-              href="https://yolopublicdefendercares.org"
+              href="https://yolopublicdefendercares.org/user/requests"
             >
-              Get Started
+              View Request
             </Button>
           </Section>
         </Container>
