@@ -11,6 +11,7 @@ import {
   deleteAgency as deleteAgencyFromDB,
   banUserById as banUserFromDB,
   getFundsThatNeedReceiptsByRequestId,
+  getUserIdAndEmailByRequestId,
 } from "@/prisma/prismaFunctions";
 import { z } from "zod";
 
@@ -58,6 +59,12 @@ export const appRouter = router({
     .query(async ({ input: requestId }) => {
       const request = await getRequestById(requestId);
       return request;
+    }),
+  getUserByRequestId: publicProcedure
+    .input(z.number())
+    .query(async ({ input: requestId }) => {
+      const user = await getUserIdAndEmailByRequestId(requestId);
+      return user;
     }),
   getAdminRequests: publicProcedure
     .input(

@@ -489,7 +489,21 @@ export async function getAgencyNameById(agencyId: number) {
   });
   return agency;
 }
-
+export async function getUserIdAndEmailByRequestId(requestId: number) {
+  const user = await prisma.request.findUnique({
+    where: { id: requestId },
+    select: {
+      userId: true,
+      user: {
+        select: {
+          first_name: true,
+          emailAddresses: true,
+        },
+      },
+    },
+  });
+  return user;
+}
 export async function getFundsThatNeedReceiptsByRequestId(requestId: number) {
   const funds = await prisma.fund.findMany({
     where: {

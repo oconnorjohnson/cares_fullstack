@@ -28,13 +28,13 @@ export const LoadingSpinner = ({ className }: { className: any }) => {
 };
 
 export default function Approve({ requestId }: { requestId: number }) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isDataLoading, setIsDataLoading] = useState(false);
   const trpcContext = trpc.useUtils();
-  const { user } = useUser();
-  const email = user?.emailAddresses[0]?.emailAddress || "";
-  const firstName = user?.firstName || "";
+  const { data: user } = trpc.getUserByRequestId.useQuery(requestId);
+  const email = user?.user.emailAddresses[0]?.email || "";
+  const firstName = user?.user.first_name || "";
   const handleApprove = async () => {
-    setIsLoading(true);
+    setIsDataLoading(true);
     try {
       await ApproveRequest(requestId);
       toast.success("Request approved.");
@@ -47,14 +47,14 @@ export default function Approve({ requestId }: { requestId: number }) {
       console.error("Error approving request:", error);
       toast.error("Failed to approve request.");
     } finally {
-      setIsLoading(false);
+      setIsDataLoading(false);
       trpcContext.invalidate();
     }
   };
 
   return (
     <Button onClick={handleApprove} variant="confirmation">
-      {isLoading ? (
+      {isDataLoading ? (
         <LoadingSpinner className="w-4 h-4 text-white" />
       ) : (
         <>
