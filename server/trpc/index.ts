@@ -10,6 +10,7 @@ import {
   deleteFundType as deleteFundTypeFromDB,
   deleteAgency as deleteAgencyFromDB,
   banUserById as banUserFromDB,
+  getFundsThatNeedReceiptsByRequestId,
 } from "@/prisma/prismaFunctions";
 import { z } from "zod";
 
@@ -34,6 +35,12 @@ export const appRouter = router({
     const getAgencies = await prisma.agency.findMany();
     return getAgencies;
   }),
+  getFundsThatNeedReceipts: publicProcedure
+    .input(z.number())
+    .query(async ({ input: requestId }) => {
+      const funds = await getFundsThatNeedReceiptsByRequestId(requestId);
+      return funds;
+    }),
   getClients: publicProcedure
     .input(z.string())
     .query(async ({ input: userId }) => {

@@ -488,6 +488,17 @@ export async function getFundsThatNeedReceiptsByRequestId(requestId: number) {
       requestId: requestId,
       needsReceipt: true,
     },
+    select: {
+      id: true,
+      requestId: true,
+      amount: true,
+      fundType: {
+        select: {
+          id: true,
+          typeName: true,
+        },
+      },
+    },
   });
   return funds;
 }

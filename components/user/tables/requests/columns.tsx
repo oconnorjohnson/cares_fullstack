@@ -142,7 +142,7 @@ export const columns: ColumnDef<Request>[] = [
       } else if (hasPreScreen && pendingApproval) {
         return <Badge color="yellow">Awaiting Payment</Badge>;
       } else if (hasPreScreen && paid && needsReceipts && !hasReceipts) {
-        return <ReceiptDialog userId={user.userId} />;
+        return <ReceiptDialog requestId={requestId} />;
       } else if (hasPreScreen && paid && !hasPostScreen) {
         return <PostScreen requestId={requestId} />;
       } else if (!hasPreScreen) {

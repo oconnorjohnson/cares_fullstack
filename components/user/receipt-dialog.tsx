@@ -14,8 +14,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { UploadButton } from "@/server/uploadthing";
 import { toast } from "sonner";
+import { trpc } from "@/app/_trpc/client";
 
-export default function ReceiptDialog({ userId }: { userId: string }) {
+export default function ReceiptDialog({ requestId }: { requestId: number }) {
+  const {
+    data: funds,
+    isLoading,
+    isError,
+  } = trpc.getFundsThatNeedReceipts.useQuery(requestId);
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -25,7 +31,7 @@ export default function ReceiptDialog({ userId }: { userId: string }) {
       <DialogPortal>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Upload Receipts, {userId}</DialogTitle>
+            <DialogTitle>Upload Receipts, {requestId}</DialogTitle>
             <DialogClose />
           </DialogHeader>
           <UploadButton
