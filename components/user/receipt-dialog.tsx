@@ -22,6 +22,9 @@ export default function ReceiptDialog({ requestId }: { requestId: number }) {
     isLoading,
     isError,
   } = trpc.getFundsThatNeedReceipts.useQuery(requestId);
+
+  if (isLoading) return <p>Loading...</p>;
+  if (isError || !funds) return <p>Error loading funds.</p>;
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -31,21 +34,32 @@ export default function ReceiptDialog({ requestId }: { requestId: number }) {
       <DialogPortal>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Upload Receipts, {requestId}</DialogTitle>
+            <DialogTitle>Upload Receipts</DialogTitle>
             <DialogClose />
           </DialogHeader>
-          <UploadButton
-            endpoint="pdfUploader"
-            onClientUploadComplete={(res) => {
-              // Do something with the response
-              console.log("Files: ", res);
-              toast.success("Upload Completed");
-            }}
-            onUploadError={(error: Error) => {
-              // Do something with the error.
-              toast.error(`ERROR! ${error.message}`);
-            }}
-          />
+          {funds.map((fund, index) => (
+            <div
+              className="flex flex-row justify-between"
+              key={index}
+              style={{ marginBottom: "10px" }}
+            >
+              <div>
+                {fund.fundType.typeName} - ${fund.amount}
+              </div>
+              <UploadButton
+                endpoint="pdfUploader"
+                onClientUploadComplete={(res) => {
+                  console.log("Files: ", res);
+                  toast.success(
+                    "Upload Completed for " + fund.fundType.typeName,
+                  );
+                }}
+                onUploadError={(error: Error) => {
+                  toast.error(`ERROR! ${error.message}`);
+                }}
+              />
+            </div>
+          ))}
         </DialogContent>
       </DialogPortal>
     </Dialog>
