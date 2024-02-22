@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { ModeToggle } from "@/components/root/mode-toggle";
 import { cn } from "@/server/utils";
 import {
@@ -61,7 +60,6 @@ const components: { title: string; href: string; description: string }[] = [
   },
 ];
 export default function SignedInNavBar() {
-  const pathname = usePathname();
   return (
     <>
       <SignedIn>
@@ -145,7 +143,7 @@ export default function SignedInNavBar() {
                     <li className="row-span-3">
                       <NavigationMenuLink asChild>
                         <Link
-                          className={`flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md ${pathname === "/" ? "bg-zinc-200 dark:bg-zinc-800" : ""}`}
+                          className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
                           href="/"
                         >
                           {/* <Icons.logo className="h-6 w-6" /> */}
