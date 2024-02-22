@@ -4,7 +4,6 @@ import * as React from "react";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Extracted reusable function
 export async function sendWelcomeEmail(firstName: string, email: string) {
   const { data, error } = await resend.emails.send({
     from: "CARES <help@yolocountycares.com>",
@@ -24,7 +23,6 @@ export async function sendWelcomeEmail(firstName: string, email: string) {
   return data;
 }
 
-// Updated POST function to use the extracted function
 export async function POST(req: Request) {
   try {
     const body = await req.json();
