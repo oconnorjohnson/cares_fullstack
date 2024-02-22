@@ -11,6 +11,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogClose,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogOverlay,
+} from "@/components/ui/dialog";
+import BanUserButton from "@/components/admin/tables/requests/ban-user-button";
 import { Button } from "@/components/ui/button";
 
 export type User = {
@@ -90,15 +101,7 @@ export const columns: ColumnDef<User>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <Link
-              href="/admin/users/[userId]"
-              as={`/admin/users/${request.userId}`}
-            >
-              <DropdownMenuItem className="bg-destructive text-white">
-                Ban User
-              </DropdownMenuItem>
-            </Link>
-
+            <BanUserButton userId={request.userId} />
             <DropdownMenuSeparator />
           </DropdownMenuContent>
         </DropdownMenu>
