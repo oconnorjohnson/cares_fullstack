@@ -100,18 +100,14 @@ export default function SignedInNavBar() {
                         </Link>
                       </NavigationMenuLink>
                     </li>
-                    <ListItem href="/docs" title="Introduction">
-                      Re-usable components built using Radix UI and Tailwind
-                      CSS.
+                    <ListItem href="/about" title="About">
+                      Learn about our mission and team.
                     </ListItem>
-                    <ListItem href="/docs/installation" title="Installation">
-                      How to install dependencies and structure your app.
+                    <ListItem href="/get-help" title="Get Help">
+                      How can CARES help you or your loved ones?
                     </ListItem>
-                    <ListItem
-                      href="/docs/primitives/typography"
-                      title="Typography"
-                    >
-                      Styles for headings, paragraphs, lists...etc
+                    <ListItem href="/get-involved" title="Get Involved">
+                      Stay up-to-date with volunteer opportunities.
                     </ListItem>
                   </ul>
                 </NavigationMenuContent>
