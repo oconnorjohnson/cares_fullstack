@@ -15,7 +15,7 @@ export default async function Dashboard() {
           <div className="flex border-t flex-col w-5/6">
             <div className="flex flex-col justify-center text-center w-full">
               <FreshPageAlert />
-              <div className="text-4xl font-bold py-8">Dashboard</div>
+              <div className="text-4xl font-bold pt-10">Dashboard</div>
               <DashboardPage />
             </div>
           </div>

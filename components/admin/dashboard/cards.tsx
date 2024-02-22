@@ -14,16 +14,17 @@ export function PendingCard({ pendingRequests }: { pendingRequests: number }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-4xl font-bold flex flex-row justify-between items-center">
+        <CardTitle className="text-5xl font-bold flex flex-row justify-between items-center">
+          <div className="h-8 w-8" />
           <div>{pendingRequests}</div>
           <ClockIcon className="w-8 h-8" />
         </CardTitle>
       </CardHeader>
       <CardContent className="font-light text-xl">
-        {pendingRequests > 1 ? (
-          <div>Requests Pending Approval</div>
-        ) : (
+        {pendingRequests == 1 ? (
           <div>Request Pending Approval</div>
+        ) : (
+          <div>Requests Pending Approval</div>
         )}
       </CardContent>
     </Card>
@@ -38,16 +39,17 @@ export function CompletedCard({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-4xl font-bold flex flex-row justify-between items-center">
+        <CardTitle className="text-5xl font-bold flex flex-row justify-between items-center">
+          <div className="h-8 w-8" />
           <div>{completedRequests}</div>
           <CheckSquare2Icon className="h-8 w-8" />
         </CardTitle>
       </CardHeader>
       <CardContent className="font-light text-xl">
-        {completedRequests > 1 ? (
-          <div>Requests Completed & Closed</div>
-        ) : (
+        {completedRequests == 1 ? (
           <div>Request Completed & Closed</div>
+        ) : (
+          <div>Requests Completed & Closed</div>
         )}
       </CardContent>
     </Card>
@@ -58,16 +60,17 @@ export function DeniedCard({ deniedRequests }: { deniedRequests: number }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-4xl font-bold flex flex-row justify-between items-center">
+        <CardTitle className="text-5xl font-bold flex flex-row justify-between items-center">
+          <div className="h-8 w-8" />
           <div>{deniedRequests}</div>
           <XSquareIcon className="h-8 w-8" />
         </CardTitle>
       </CardHeader>
       <CardContent className="font-light text-xl">
-        {deniedRequests > 1 ? (
-          <div>Requests Denied</div>
-        ) : (
+        {deniedRequests == 1 ? (
           <div>Request Denied</div>
+        ) : (
+          <div>Requests Denied</div>
         )}
       </CardContent>
     </Card>
