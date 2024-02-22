@@ -26,7 +26,7 @@ export type Client = {
 
 export const columns: ColumnDef<Client>[] = [
   {
-    accessorKey: "client",
+    accessorKey: "name",
     header: ({ column }) => {
       return (
         <Button
@@ -35,6 +35,76 @@ export const columns: ColumnDef<Client>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Client
+        </Button>
+      );
+    },
+  },
+  {
+    accessorKey: "dateOfBirth",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Date of Birth
+        </Button>
+      );
+    },
+  },
+  {
+    accessorKey: "contactInfo",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Contact Info
+        </Button>
+      );
+    },
+  },
+  {
+    accessorKey: "caseNumber",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Case Number
+        </Button>
+      );
+    },
+  },
+  {
+    accessorKey: "sex",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Sex
+        </Button>
+      );
+    },
+  },
+  {
+    accessorKey: "race",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Race
         </Button>
       );
     },

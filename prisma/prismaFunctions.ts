@@ -819,14 +819,13 @@ export async function getRequestsByUserId(userId: string) {
     ...request,
     funds: request.funds.map((fund) => ({
       ...fund,
-      // Check if the Receipt array is empty and set Receipt to undefined if so
-      Receipt:
-        fund.Receipt.length > 0
-          ? {
-              id: fund.Receipt[0].id,
-              url: fund.Receipt[0].url,
-            }
-          : undefined,
+      // Since Receipt is now a one-to-one relationship, check directly if it exists
+      Receipt: fund.Receipt
+        ? {
+            id: fund.Receipt.id,
+            url: fund.Receipt.url,
+          }
+        : undefined,
     })),
   }));
 
