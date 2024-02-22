@@ -43,7 +43,8 @@ export default async function Requests() {
         <div className="flex border-t flex-col w-5/6 ">
           <div className="flex flex-col justify-center w-full">
             <div className="flex flex-row items-start justify-center space-x-12 px-10 pt-12">
-              <div className="flex flex-col justify-center space-y-8">
+              <div className="flex flex-col justify-center text-center space-y-8">
+                <div className="text-4xl font-bold py-8">Fund Types</div>
                 <AddFundType userId={user} />
                 <div className="border-2 rounded-xl w-full">
                   <FundTypes />

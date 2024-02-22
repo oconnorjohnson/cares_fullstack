@@ -35,6 +35,7 @@ export default async function Requests() {
           <SideNavBar />
           <div className="flex border-t flex-col w-5/6 items-center justify-start">
             <FreshPageAlert />
+            <div className="text-4xl font-bold py-8">Users</div>
             <UserTable />
           </div>
         </div>
