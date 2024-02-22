@@ -2,7 +2,6 @@ import { Client, columns } from "@/components/user/tables/clients/columns";
 import { DataTable } from "@/components/ui/data-table";
 import { requestUsersClients } from "@/server/actions/request/actions";
 import { format } from "date-fns";
-import { Badge } from "@/components/ui/badge";
 
 async function getClients({ userId }: { userId: string }): Promise<Client[]> {
   const clients = await requestUsersClients(userId);
