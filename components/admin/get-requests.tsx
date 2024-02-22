@@ -33,7 +33,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { formatDateWithSuffix } from "@/components/user/get-requests";
+import { formatDateWithSuffix } from "@/server/utils";
 
 export default function GetRequests() {
   const [filter, setFilter] = useState("all");

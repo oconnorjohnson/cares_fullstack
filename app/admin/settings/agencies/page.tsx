@@ -39,21 +39,14 @@ export default async function Requests() {
     return (
       <div className="flex flex-row">
         <SideNavBar />
+        <SettingsSideNav />
         <div className="flex border-t flex-col w-5/6 ">
           <div className="flex flex-col justify-center w-full">
-            <SettingsSideNav />
-
             <div className="flex flex-row items-start justify-center space-x-12 px-10 pt-12">
               <div className="flex flex-col justify-center space-y-8">
                 <AddAgency userId={user} />
                 <div className="border-2 rounded-xl w-full">
                   <AgencyTypes />
-                </div>
-              </div>
-              <div className="flex flex-col justify-center space-y-8">
-                <AddFundType userId={user} />
-                <div className="border-2 rounded-xl w-full">
-                  <FundTypes />
                 </div>
               </div>
             </div>
