@@ -489,6 +489,7 @@ export async function getAgencyNameById(agencyId: number) {
   });
   return agency;
 }
+
 export async function getUserIdAndEmailByRequestId(requestId: number) {
   const user = await prisma.request.findUnique({
     where: { id: requestId },
@@ -764,6 +765,12 @@ export async function getRequestById(requestId: number) {
             },
           },
           amount: true,
+          Receipt: {
+            select: {
+              id: true,
+              url: true,
+            },
+          },
         },
       },
       SDOHs: {
@@ -795,13 +802,31 @@ export async function getRequestsByUserId(userId: string) {
       funds: {
         include: {
           fundType: true,
+          Receipt: true,
         },
       },
       SDOHs: true,
       RFFs: true,
     },
   });
-  return requests;
+
+  // Transform the structure of each request to match the RequestData type
+  const transformedRequests = requests.map((request) => ({
+    ...request,
+    funds: request.funds.map((fund) => ({
+      ...fund,
+      // Check if the Receipt array is empty and set Receipt to undefined if so
+      Receipt:
+        fund.Receipt.length > 0
+          ? {
+              id: fund.Receipt[0].id,
+              url: fund.Receipt[0].url,
+            }
+          : undefined,
+    })),
+  }));
+
+  return transformedRequests;
 }
 
 // COUNT FUNCTIONS

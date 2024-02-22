@@ -35,6 +35,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
       {rff.value}
     </Badge>
   ));
+  console.log(request.funds);
   const FundsBadges = request.funds.map((fund, index) => (
     <div
       key={index}
@@ -43,6 +44,19 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
       <Badge className="text-sm">{fund.fundType.typeName}</Badge>
       <div className="px-2" />
       <span className="text-lg font-semibold">${fund.amount}</span>
+      <div className="px-2" />
+      {fund.Receipt?.url ? (
+        <Link
+          href={fund.Receipt.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-lg font-semibold underline"
+        >
+          View Receipt
+        </Link>
+      ) : (
+        <span>No Receipt</span>
+      )}
       <div className="px-2" />
       <FundAction
         fundId={fund.id}
@@ -249,7 +263,11 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                     <div className="text-xl font-extralight pt-1.5 pr-4">
                       Funds
                     </div>
-                    <AddFundToRequestById requestId={requestId} />
+                    {request.paid ? (
+                      <div></div>
+                    ) : (
+                      <AddFundToRequestById requestId={requestId} />
+                    )}
                   </div>
                   <div className="text-xl font-bold">{FundsBadges}</div>
                 </div>
