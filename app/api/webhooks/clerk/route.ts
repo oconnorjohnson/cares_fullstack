@@ -2,6 +2,7 @@ import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
 import { createUser, updateUser, deleteUser } from "@/prisma/prismaFunctions";
+import { sendWelcomeEmail } from "@/app/api/resend/welcome/route";
 
 interface EmailAddress {
   email_address: string;
@@ -79,6 +80,13 @@ export async function POST(req: Request) {
       };
       const user = await createUser(userData);
       console.log(`User ${user.id} created`);
+
+      // Assuming email_addresses[0] contains the primary email
+      if (email_addresses.length > 0) {
+        const primaryEmail = email_addresses[0].email_address;
+        await sendWelcomeEmail(first_name, primaryEmail);
+        console.log(`Welcome email sent to ${primaryEmail}`);
+      }
       break;
     }
     case "user.updated": {
