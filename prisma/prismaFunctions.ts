@@ -639,6 +639,8 @@ export async function getAllRequests() {
       denied: true,
       pendingPayout: true,
       paid: true,
+      implementation: true,
+      sustainability: true,
       hasPreScreen: true,
       preScreenAnswer: {
         select: {
@@ -721,6 +723,8 @@ export async function getRequestById(requestId: number) {
       approved: true,
       denied: true,
       pendingPayout: true,
+      implementation: true,
+      sustainability: true,
       paid: true,
       hasPreScreen: true,
       preScreenAnswer: {

@@ -42,6 +42,8 @@ interface RequestData {
     last_name: string;
   };
   pendingApproval: boolean;
+  implementation: string;
+  sustainability: string | null;
   approved: boolean;
   denied: boolean;
   pendingPayout: boolean;
