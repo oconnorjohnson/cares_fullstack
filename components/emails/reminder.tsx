@@ -41,8 +41,12 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
             <Text className="text-lg">
               We are awaiting your post-screen form completion. Head to your
               profile to complete asap. Failure to do so by the deadline will
-              result in a ban from future requests. Please click the button
-              below to get started.
+              result in a ban from future requests. If you have any questions,
+              please reach out to us at{" "}
+              <Link href="mailto:help@yolopublicdefendercares.org">
+                help@yolopublicdefendercares.org
+              </Link>
+              .
             </Text>
             <Button
               className="bg-orange-500 p-4 rounded-xl text-white dark:text-white text-xl font-bold"

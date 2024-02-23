@@ -77,7 +77,7 @@ export default function SignedInNavBar() {
             <NavigationMenuList>
               <NavigationMenuItem>
                 <NavigationMenuTrigger className="text-md xl:stext-xl">
-                  Getting started
+                  Learn More
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
@@ -98,40 +98,19 @@ export default function SignedInNavBar() {
                         </Link>
                       </NavigationMenuLink>
                     </li>
-                    <ListItem href="/docs" title="Introduction">
-                      Re-usable components built using Radix UI and Tailwind
-                      CSS.
+                    <ListItem href="/about" title="About">
+                      Learn about our mission and team.
                     </ListItem>
-                    <ListItem href="/docs/installation" title="Installation">
-                      How to install dependencies and structure your app.
+                    <ListItem href="/get-help" title="Get Help">
+                      How can CARES help you or your loved ones?
                     </ListItem>
-                    <ListItem
-                      href="/docs/primitives/typography"
-                      title="Typography"
-                    >
-                      Styles for headings, paragraphs, lists...etc
+                    <ListItem href="/get-involved" title="Get Involved">
+                      Stay up-to-date with volunteer opportunities.
                     </ListItem>
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-md xl:stext-xl">
-                  Components
-                </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                    {components.map((component) => (
-                      <ListItem
-                        key={component.title}
-                        title={component.title}
-                        href={component.href}
-                      >
-                        {component.description}
-                      </ListItem>
-                    ))}
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
+
               <NavigationMenuItem>
                 <Link href="/dashboard" legacyBehavior passHref>
                   <NavigationMenuLink className={navigationMenuTriggerStyle()}>
@@ -157,7 +136,7 @@ export default function SignedInNavBar() {
             <NavigationMenuList>
               <NavigationMenuItem>
                 <NavigationMenuTrigger className="text-md xl:stext-xl">
-                  Getting started
+                  Learn More
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
@@ -178,40 +157,19 @@ export default function SignedInNavBar() {
                         </Link>
                       </NavigationMenuLink>
                     </li>
-                    <ListItem href="/docs" title="Introduction">
-                      Re-usable components built using Radix UI and Tailwind
-                      CSS.
+                    <ListItem href="/about" title="About">
+                      Learn about our mission and team.
                     </ListItem>
-                    <ListItem href="/docs/installation" title="Installation">
-                      How to install dependencies and structure your app.
+                    <ListItem href="/get-help" title="Get Help">
+                      How can CARES help you or your loved ones?
                     </ListItem>
-                    <ListItem
-                      href="/docs/primitives/typography"
-                      title="Typography"
-                    >
-                      Styles for headings, paragraphs, lists...etc
+                    <ListItem href="/get-involved" title="Get Involved">
+                      Stay up-to-date with volunteer opportunities.
                     </ListItem>
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-md xl:stext-xl">
-                  Components
-                </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                    {components.map((component) => (
-                      <ListItem
-                        key={component.title}
-                        title={component.title}
-                        href={component.href}
-                      >
-                        {component.description}
-                      </ListItem>
-                    ))}
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
+
               <NavigationMenuItem>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                   <SignUpButton>Sign Up</SignUpButton>

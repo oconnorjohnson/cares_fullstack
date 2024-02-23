@@ -31,7 +31,7 @@ export default async function AdminOverview() {
 
   return (
     <>
-      <div className="grid grid-cols-3 py-10 w-full gap-10 px-10">
+      <div className="flex flex-col lg:grid lg:grid-cols-3 py-10 w-full gap-10 px-10">
         <PendingCard pendingRequests={pendingRequests} />
         <CompletedCard completedRequests={completedRequests} />
         <DeniedCard deniedRequests={deniedRequests} />

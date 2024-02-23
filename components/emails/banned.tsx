@@ -39,8 +39,12 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
           <Section className="bg-zinc-200 rounded-2xl px-12 py-8">
             <Text className="text-3xl font-bold">Hi {firstName},</Text>
             <Text className="text-lg">
-              You have been banned from submitting future requests to CARES.
-              Please click the button below to get started.
+              You have been banned from submitting future requests to CARES. If
+              you have any questions, please reach out to us at{" "}
+              <Link href="mailto:help@yolopublicdefendercares.org">
+                help@yolopublicdefendercares.org
+              </Link>
+              .
             </Text>
             <Button
               className="bg-orange-500 p-4 rounded-xl text-white dark:text-white text-xl font-bold"

@@ -489,6 +489,7 @@ export async function getAgencyNameById(agencyId: number) {
   });
   return agency;
 }
+
 export async function getUserIdAndEmailByRequestId(requestId: number) {
   const user = await prisma.request.findUnique({
     where: { id: requestId },
@@ -638,6 +639,8 @@ export async function getAllRequests() {
       denied: true,
       pendingPayout: true,
       paid: true,
+      implementation: true,
+      sustainability: true,
       hasPreScreen: true,
       preScreenAnswer: {
         select: {
@@ -720,6 +723,8 @@ export async function getRequestById(requestId: number) {
       approved: true,
       denied: true,
       pendingPayout: true,
+      implementation: true,
+      sustainability: true,
       paid: true,
       hasPreScreen: true,
       preScreenAnswer: {
@@ -764,6 +769,12 @@ export async function getRequestById(requestId: number) {
             },
           },
           amount: true,
+          Receipt: {
+            select: {
+              id: true,
+              url: true,
+            },
+          },
         },
       },
       SDOHs: {
@@ -795,13 +806,30 @@ export async function getRequestsByUserId(userId: string) {
       funds: {
         include: {
           fundType: true,
+          Receipt: true,
         },
       },
       SDOHs: true,
       RFFs: true,
     },
   });
-  return requests;
+
+  // Transform the structure of each request to match the RequestData type
+  const transformedRequests = requests.map((request) => ({
+    ...request,
+    funds: request.funds.map((fund) => ({
+      ...fund,
+      // Since Receipt is now a one-to-one relationship, check directly if it exists
+      Receipt: fund.Receipt
+        ? {
+            id: fund.Receipt.id,
+            url: fund.Receipt.url,
+          }
+        : undefined,
+    })),
+  }));
+
+  return transformedRequests;
 }
 
 // COUNT FUNCTIONS

@@ -60,14 +60,14 @@ model Client {
 }
 
 model Fund {
-  id           Int       @id @default(autoincrement())
+  id           Int      @id @default(autoincrement())
   requestId    Int
-  request      Request   @relation(fields: [requestId], references: [id])
+  request      Request  @relation(fields: [requestId], references: [id])
   fundTypeId   Int
-  fundType     FundType  @relation(fields: [fundTypeId], references: [id])
+  fundType     FundType @relation(fields: [fundTypeId], references: [id])
   amount       Int
-  needsReceipt Boolean   @default(false)
-  Receipt      Receipt[]
+  needsReceipt Boolean  @default(false)
+  Receipt      Receipt?
 
   @@index([requestId, fundTypeId])
 }
@@ -121,7 +121,7 @@ model Receipt {
   id        Int     @id @default(autoincrement())
   url       String
   requestId Int
-  fundId    Int
+  fundId    Int     @unique
   userId    String
   request   Request @relation(fields: [requestId], references: [id])
   fund      Fund    @relation(fields: [fundId], references: [id])

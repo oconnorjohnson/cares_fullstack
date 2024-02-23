@@ -1,4 +1,3 @@
-// server component where we'll fetch data and render our table
 import { Request, columns } from "@/components/admin/tables/requests/columns";
 import { DataTable } from "@/components/ui/data-table";
 import { requestAllRequests } from "@/server/actions/request/actions";
@@ -7,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 type RequestStatus = "Pending" | "Approved" | "Denied" | "Error";
 async function getRequests(): Promise<Request[]> {
   const requests = await requestAllRequests();
+  console.log(requests);
   const modifiedRequests = requests.map((request) => ({
     ...request,
     id: request.id,

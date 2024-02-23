@@ -1,30 +1,35 @@
-import { EmailTemplate } from "@/components/emails/reminder";
+import { EmailTemplate } from "@/components/emails/welcome";
 import { Resend } from "resend";
 import * as React from "react";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function POST(req: Request, res: Response) {
+export async function sendWelcomeEmail(firstName: string, email: string) {
+  const { data, error } = await resend.emails.send({
+    from: "CARES <help@yolocountycares.com>",
+    to: [email],
+    subject: "Welcome!",
+    react: EmailTemplate({
+      firstName: firstName,
+    }) as React.ReactElement,
+  });
+
+  if (error) {
+    console.error("Error from Resend API:", error);
+    throw new Error(`Error sending welcome email: ${error}`);
+  }
+
+  console.log("Success response from Resend API:", data);
+  return data;
+}
+
+export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { firstName, email } = body;
-    console.log("Parsed firstName:", firstName, email, body);
 
-    const { data, error } = await resend.emails.send({
-      from: "CARES <help@yolocountycares.com>",
-      to: [email],
-      subject: "Post-Screen Reminder!",
-      react: EmailTemplate({
-        firstName: firstName,
-      }) as React.ReactElement,
-    });
+    const data = await sendWelcomeEmail(firstName, email);
 
-    if (error) {
-      console.log("Error from Resend API:", error);
-      return new Response(JSON.stringify({ error }), { status: 400 });
-    }
-
-    console.log("Success response from Resend API:", data);
     return new Response(JSON.stringify({ data }), { status: 200 });
   } catch (error: unknown) {
     if (error instanceof Error) {

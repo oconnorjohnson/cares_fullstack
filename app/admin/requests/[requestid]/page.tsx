@@ -35,6 +35,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
       {rff.value}
     </Badge>
   ));
+  console.log(request.funds);
   const FundsBadges = request.funds.map((fund, index) => (
     <div
       key={index}
@@ -43,6 +44,19 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
       <Badge className="text-sm">{fund.fundType.typeName}</Badge>
       <div className="px-2" />
       <span className="text-lg font-semibold">${fund.amount}</span>
+      <div className="px-2" />
+      {fund.Receipt?.url ? (
+        <Link
+          href={fund.Receipt.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-lg font-semibold underline"
+        >
+          View Receipt
+        </Link>
+      ) : (
+        <span>No Receipt</span>
+      )}
       <div className="px-2" />
       <FundAction
         fundId={fund.id}
@@ -239,6 +253,44 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
           </Card>
           <div className="py-4" />
           <Card className="w-2/3">
+            <CardHeader>
+              <CardTitle className="flex flex-col text-2xl font-bold">
+                Plan for Implementation
+              </CardTitle>
+              <CardDescription className="text-lg">
+                User&apos;s plan for implementing the support:
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="border py-4 mx-4 rounded-lg">
+              <div className="flex flex-col">
+                <div className="flex flex-cols-2 justify-between">
+                  {request.implementation}
+                </div>
+              </div>
+            </CardContent>
+            <CardFooter></CardFooter>
+          </Card>
+          <div className="py-4" />
+          <Card className="w-2/3">
+            <CardHeader>
+              <CardTitle className="flex flex-col text-2xl font-bold">
+                Plan for Sustainability
+              </CardTitle>
+              <CardDescription className="text-lg">
+                User&apos;s plan for sustaining ongoing support, if applicable:
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="border py-4 mx-4 rounded-lg">
+              <div className="flex flex-col">
+                <div className="flex flex-cols-2 justify-between">
+                  {request.sustainability}
+                </div>
+              </div>
+            </CardContent>
+            <CardFooter></CardFooter>
+          </Card>
+          <div className="py-4" />
+          <Card className="w-2/3">
             <CardHeader className="flex flex-row text-2xl font-bold">
               <CardTitle className="pt-1 pr-1">Requested Funds</CardTitle>
             </CardHeader>
@@ -249,7 +301,11 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                     <div className="text-xl font-extralight pt-1.5 pr-4">
                       Funds
                     </div>
-                    <AddFundToRequestById requestId={requestId} />
+                    {request.paid ? (
+                      <div></div>
+                    ) : (
+                      <AddFundToRequestById requestId={requestId} />
+                    )}
                   </div>
                   <div className="text-xl font-bold">{FundsBadges}</div>
                 </div>

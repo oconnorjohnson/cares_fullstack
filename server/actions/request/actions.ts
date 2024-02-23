@@ -42,6 +42,8 @@ interface RequestData {
     last_name: string;
   };
   pendingApproval: boolean;
+  implementation: string;
+  sustainability: string | null;
   approved: boolean;
   denied: boolean;
   pendingPayout: boolean;
@@ -81,6 +83,10 @@ interface RequestData {
       id: number;
       typeName: string;
     };
+    Receipt?: {
+      id: number;
+      url: string;
+    };
     amount: number;
   }[];
   SDOHs: {
@@ -90,6 +96,7 @@ interface RequestData {
     value: string;
   }[];
 }
+
 export async function requestUsersRequests(
   userId: string,
 ): Promise<RequestData[]> {
@@ -155,7 +162,7 @@ export async function requestRequestByRequestId(
     if (!request) {
       throw new Error(`Request with ID ${requestId} not found.`);
     }
-    return request as RequestData;
+    return request as unknown as RequestData;
   } catch (error) {
     console.error("Failed to retrieve request by ID:", error);
     throw error;
