@@ -24,7 +24,7 @@ export default function About() {
           </div>
         </div>
         <div className="flex lg:flex-cols-3">
-          <div className="hidden lg:flex lg:flex-col lg:justify-end w-1/6">
+          <div className="hidden lg:flex lg:flex-col lg:justify-end lg:mx-4 w-1/6">
             <Image
               src="muslim-woman.svg"
               height="250"
@@ -80,9 +80,9 @@ export default function About() {
               <div className="">
                 We&apos;re organized under the California Nonprofit Public
                 Benefit Corporation Law and operate exclusively within the
-                boundaries set by the Internal Revenue Code section 501(c)(3),
-                and we do not participate or intervene in any legislative or
-                political campaigns.
+                boundaries set by the Internal Revenue Code section
+                501&#40;c&#41;&#40;3&#41;, and we do not participate or
+                intervene in any legislative or political campaigns.
               </div>
             </div>
             <div className="flex flex-col text-2xl justify-center my-12 text-start">
@@ -96,7 +96,7 @@ export default function About() {
               </div>
             </div>
           </div>
-          <div className="hidden lg:flex lg:flex-col lg:justify-start w-1/6">
+          <div className="hidden lg:flex lg:flex-col lg:justify-start lg:mx-4 w-1/6">
             <Image
               src="old-men-sitting-with-leg-up.svg"
               height="250"
