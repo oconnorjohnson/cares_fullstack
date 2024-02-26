@@ -46,7 +46,7 @@ export default function SideNavBar() {
           <div
             className={`rounded-xl hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 py-2 px-2 lg:px-6 mx-1 lg:mx-2 text-sm lg:text-md font-semibold flex flex-row justify-between items-center ${pathname === "/admin/funds" ? "bg-zinc-200 dark:bg-zinc-800" : ""}`}
           >
-            Funds <SettingsIcon className="hidden lg:block w-5 h-5" />
+            Funds <DollarSignIcon className="hidden lg:block w-5 h-5" />
           </div>
         </Link>
         <Link href="/admin/settings/agencies">

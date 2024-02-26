@@ -1,8 +1,11 @@
 "use client";
 
 import * as React from "react";
+import { useTransition } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ModeToggle } from "@/components/root/mode-toggle";
+import { LoadingSpinner } from "@/components/admin/request/approve";
 import { cn } from "@/server/utils";
 import {
   NavigationMenu,
@@ -22,43 +25,6 @@ import {
 } from "@clerk/nextjs";
 import Image from "next/image";
 
-const components: { title: string; href: string; description: string }[] = [
-  {
-    title: "Alert Dialog",
-    href: "/docs/primitives/alert-dialog",
-    description:
-      "A modal dialog that interrupts the user with important content and expects a response.",
-  },
-  {
-    title: "Hover Card",
-    href: "/docs/primitives/hover-card",
-    description:
-      "For sighted users to preview content available behind a link.",
-  },
-  {
-    title: "Progress",
-    href: "/docs/primitives/progress",
-    description:
-      "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
-  },
-  {
-    title: "Scroll-area",
-    href: "/docs/primitives/scroll-area",
-    description: "Visually or semantically separates content.",
-  },
-  {
-    title: "Tabs",
-    href: "/docs/primitives/tabs",
-    description:
-      "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
-  },
-  {
-    title: "Tooltip",
-    href: "/docs/primitives/tooltip",
-    description:
-      "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
-  },
-];
 export default function SignedInNavBar() {
   return (
     <>
@@ -70,7 +36,7 @@ export default function SignedInNavBar() {
               height="50"
               width="50"
               alt="logo"
-              className="rounded-xl"
+              className=" hidden lg:block rounded-xl"
             />
           </Link>
           <NavigationMenu>
@@ -104,8 +70,8 @@ export default function SignedInNavBar() {
                     <ListItem href="/get-help" title="Get Help">
                       How can CARES help you or your loved ones?
                     </ListItem>
-                    <ListItem href="/get-involved" title="Get Involved">
-                      Stay up-to-date with volunteer opportunities.
+                    <ListItem href="/get-involved" title="Donate">
+                      Support your community by supporting us.
                     </ListItem>
                   </ul>
                 </NavigationMenuContent>
@@ -128,7 +94,7 @@ export default function SignedInNavBar() {
         </div>
       </SignedIn>
       <SignedOut>
-        <div className="p-4 flex flex-row justify-between  m-4">
+        <div className="p-4 flex flex-row justify-between">
           <Link href="/">
             <Image src="/logo.png" height="50" width="50" alt="logo" />
           </Link>
@@ -139,7 +105,7 @@ export default function SignedInNavBar() {
                   Learn More
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
+                  <ul className="grid gap-3 p-6 w-[275px] md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                     <li className="row-span-3">
                       <NavigationMenuLink asChild>
                         <Link
@@ -163,14 +129,14 @@ export default function SignedInNavBar() {
                     <ListItem href="/get-help" title="Get Help">
                       How can CARES help you or your loved ones?
                     </ListItem>
-                    <ListItem href="/get-involved" title="Get Involved">
-                      Stay up-to-date with volunteer opportunities.
+                    <ListItem href="/get-involved" title="Donate">
+                      Support your community by supporting us.
                     </ListItem>
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
 
-              <NavigationMenuItem>
+              <NavigationMenuItem className="hidden lg:block">
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                   <SignUpButton>Sign Up</SignUpButton>
                 </NavigationMenuLink>
@@ -190,13 +156,28 @@ export default function SignedInNavBar() {
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a">
->(({ className, title, children, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<"a"> & { href?: string; title: string }
+>(({ className, title, children, href, ...props }, ref) => {
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    e.preventDefault(); // Prevent default anchor behavior
+    if (href) {
+      // Check if href is defined
+      startTransition(() => {
+        router.push(href); // Now we're sure href is a string
+      });
+    }
+  };
+
   return (
     <li>
       <NavigationMenuLink asChild>
         <a
           ref={ref}
+          href={href ?? "#"} // Use href if defined, otherwise fallback to '#' to ensure it's always a string
+          onClick={handleClick}
           className={cn(
             "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
             className,
@@ -207,6 +188,7 @@ const ListItem = React.forwardRef<
           <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
             {children}
           </p>
+          {isPending && <LoadingSpinner className="w-4 h-4" />}
         </a>
       </NavigationMenuLink>
     </li>
