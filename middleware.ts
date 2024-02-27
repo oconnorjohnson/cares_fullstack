@@ -9,6 +9,8 @@ export default authMiddleware({
     "/api/webhooks/clerk",
     "/api/uploadthing",
     "/api/resend/submitted",
+    "/sign-in",
+    "/sign-up",
   ],
 });
 
