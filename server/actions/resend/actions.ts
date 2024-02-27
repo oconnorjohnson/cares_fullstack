@@ -75,6 +75,11 @@ export async function Banned({
   firstName: string;
   email: string;
 }) {
+  if (!firstName || !email) {
+    console.error("firstName or email is missing");
+    return;
+  }
+
   console.log(firstName, email);
   try {
     const response = await fetch(

@@ -5,7 +5,10 @@ import * as React from "react";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: Request, res: Response) {
-  if (req.headers.get("Content-Length") === "0") {
+  const rawBody = await req.text();
+  console.log("Raw request body:", rawBody);
+
+  if (!rawBody) {
     console.error("Empty request body");
     return new Response(JSON.stringify({ error: "Empty request body" }), {
       status: 400,
