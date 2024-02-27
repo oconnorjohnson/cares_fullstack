@@ -1,9 +1,3 @@
-import { EmailTemplate as BannedEmailTemplate } from "@/components/emails/banned";
-import { Resend } from "resend";
-import ReactDOMServer from "react-dom/server";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function Approved({
   firstName,
   email,
