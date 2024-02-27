@@ -36,7 +36,7 @@ export default function Approve({ requestId }: { requestId: number }) {
   const handleApprove = async () => {
     setIsDataLoading(true);
     try {
-      await ApproveRequest(requestId);
+      await ApproveRequest(requestId, firstName, email);
       toast.success("Request approved.");
       try {
         await Approved({ firstName, email });

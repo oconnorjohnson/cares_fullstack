@@ -14,13 +14,21 @@ import { Button } from "@/components/ui/button";
 import { BanUser } from "@/server/actions/update/actions";
 
 // Adjust the handleBan function to directly use the userId from props
-export default function BanUserButton({ userId }: { userId: string }) {
+export default function BanUserButton({
+  userId,
+  firstName,
+  email,
+}: {
+  userId: string;
+  firstName: string;
+  email: string;
+}) {
   const [isBanning, setIsBanning] = useState(false);
 
   const handleBan = async () => {
     setIsBanning(true);
     try {
-      await BanUser(userId);
+      await BanUser(userId, firstName, email);
       toast.success("User banned successfully");
       // Handle success (e.g., show a success message, update UI)
     } catch (error) {

@@ -116,7 +116,11 @@ export const columns: ColumnDef<User>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <BanUserButton userId={request.userId} />
+            <BanUserButton
+              userId={request.userId}
+              firstName={request.first_name}
+              email={request.emailAddresses[0].email}
+            />
             <DropdownMenuSeparator />
           </DropdownMenuContent>
         </DropdownMenu>

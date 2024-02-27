@@ -7,7 +7,7 @@ import {
   markRequestPaidById,
   banUserById,
 } from "@/prisma/prismaFunctions";
-import { Denied } from "@/server/actions/resend/actions";
+import { Approved, Denied, Banned } from "@/server/actions/resend/actions";
 import { revalidatePath } from "next/cache";
 
 export interface RequestData {
@@ -28,10 +28,15 @@ export interface UserData {
   isBanned: boolean;
 }
 
-export async function BanUser(userId: string): Promise<UserData> {
+export async function BanUser(
+  userId: string,
+  firstName: string,
+  email: string,
+): Promise<UserData> {
   try {
     const updatedUser = await banUserById(userId);
     await revalidatePath(`/dashboard/page`);
+    await Banned({ firstName, email });
     return updatedUser;
   } catch (error) {
     console.error(`Failed to ban user with ID ${userId}:`, error);
@@ -39,12 +44,16 @@ export async function BanUser(userId: string): Promise<UserData> {
   }
 }
 
-export async function DenyRequest(requestId: number): Promise<RequestData> {
+export async function DenyRequest(
+  requestId: number,
+  firstName: string,
+  email: string,
+): Promise<RequestData> {
   try {
     const updatedRequest = await denyRequestById(requestId);
     await revalidatePath(`/admin/request/${requestId}/page`);
     await revalidatePath(`/dashboard/page`);
-
+    await Denied({ firstName, email });
     return updatedRequest;
   } catch (error) {
     console.error(`Failed to deny request with ID ${requestId}:`, error);
@@ -52,11 +61,16 @@ export async function DenyRequest(requestId: number): Promise<RequestData> {
   }
 }
 
-export async function ApproveRequest(requestId: number): Promise<RequestData> {
+export async function ApproveRequest(
+  requestId: number,
+  firstName: string,
+  email: string,
+): Promise<RequestData> {
   try {
     const updatedRequest = await approveRequestById(requestId);
     await revalidatePath(`/admin/request/${requestId}/page`);
     await revalidatePath(`/dashboard/page`);
+    await Approved({ firstName, email });
     return updatedRequest;
   } catch (error) {
     console.error(`Failed to approve request with ID ${requestId}:`, error);

@@ -36,7 +36,7 @@ export default function Deny({ requestId }: { requestId: number }) {
   const handleDeny = async () => {
     setIsLoading(true);
     try {
-      await DenyRequest(requestId);
+      await DenyRequest(requestId, firstName, email);
       toast.success("Request denied successfully.");
       try {
         await Denied({ firstName, email });
