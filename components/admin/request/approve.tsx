@@ -6,7 +6,6 @@ import { cn } from "@/server/utils";
 import { useState } from "react";
 import { trpc } from "@/app/_trpc/client";
 import { toast } from "sonner";
-import { useUser } from "@clerk/nextjs";
 export const LoadingSpinner = ({ className }: { className: any }) => {
   return (
     <svg

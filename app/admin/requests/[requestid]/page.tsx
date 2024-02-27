@@ -70,7 +70,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
 
   return (
     <>
-      <div>
+      <div className="w-5/6 items-center justify-start">
         <div className="pl-12">
           <Link href="/admin/requests">
             <Button size="icon">

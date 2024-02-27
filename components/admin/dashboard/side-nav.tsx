@@ -30,7 +30,7 @@ export default function SideNavBar() {
         </Link>
         <Link href="/admin/requests">
           <div
-            className={`rounded-xl hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 py-2 px-2 lg:px-6 mx-1 lg:mx-2 text-sm lg:text-md font-semibold flex flex-row justify-between items-center ${pathname === "/admin/requests" ? "bg-zinc-200 dark:bg-zinc-800" : ""}`}
+            className={`rounded-xl hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 py-2 px-2 lg:px-6 mx-1 lg:mx-2 text-sm lg:text-md font-semibold flex flex-row justify-between items-center ${pathname.startsWith("/admin/requests") ? "bg-zinc-200 dark:bg-zinc-800" : ""}`}
           >
             Requests <GitPullRequestIcon className="hidden lg:block w-5 h-5" />
           </div>

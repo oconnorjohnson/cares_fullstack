@@ -48,9 +48,9 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
             </Text>
             <Button
               className="bg-orange-500 p-4 rounded-xl text-white text-xl font-bold"
-              href="https://yolopublicdefendercares.org"
+              href="mailto:help@yolopublicdefendercares.org"
             >
-              Get Started
+              Reach out to us
             </Button>
           </Section>
         </Container>

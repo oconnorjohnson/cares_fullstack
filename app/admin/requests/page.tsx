@@ -32,13 +32,10 @@ export default async function Requests() {
   } else {
     return (
       <>
-        <div className="flex flex-row">
-          <SideNavBar />
-          <div className="flex border-t flex-col w-5/6 items-center justify-start">
-            <FreshPageAlert />
-            <div className="text-4xl font-bold py-8">All Requests</div>
-            <GetServerRequests />
-          </div>
+        <div className="flex border-t flex-col w-5/6 items-center justify-start">
+          <FreshPageAlert />
+          <div className="text-4xl font-bold py-8">All Requests</div>
+          <GetServerRequests />
         </div>
       </>
     );

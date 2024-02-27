@@ -50,9 +50,11 @@ export default function GetHelp() {
                   that, you can submit a request on their behalf.
                 </p>
               </div>
-              <SignUpButton>
-                <Button>Sign Up</Button>
-              </SignUpButton>
+              <Button className="text-xl">
+                <SignUpButton mode="modal" afterSignUpUrl="/dashboard">
+                  Sign Up
+                </SignUpButton>
+              </Button>
             </div>
           </CardContent>
         </Card>
