@@ -12,7 +12,7 @@ export default function Provider({ children }: { children: React.ReactNode }) {
     trpc.createClient({
       links: [
         httpBatchLink({
-          url: "http://cares-fullstack.vercel.app/api/trpc",
+          url: "https://cares-fullstack.vercel.app/api/trpc",
         }),
       ],
     }),
