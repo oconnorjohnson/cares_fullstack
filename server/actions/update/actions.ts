@@ -9,6 +9,8 @@ import {
 } from "@/prisma/prismaFunctions";
 import { Approved, Denied, Banned } from "@/server/actions/resend/actions";
 import { revalidatePath } from "next/cache";
+import { Resend } from "resend";
+import { EmailTemplate } from "@/components/emails/banned";
 
 export interface RequestData {
   id: number;
@@ -33,11 +35,19 @@ export async function BanUser(
   firstName: string,
   email: string,
 ): Promise<UserData> {
+  const resend = new Resend(process.env.RESEND_API_KEY);
   try {
     const updatedUser = await banUserById(userId);
+    await resend.emails.send({
+      from: "CARES <help@yolocountycares.com>",
+      to: [email],
+      subject: "You have been banned from submitting requests to CARES",
+      react: EmailTemplate({
+        firstName: firstName,
+      }) as React.ReactElement,
+    });
     await revalidatePath(`/dashboard/page`);
     console.log(firstName, email);
-    await Banned({ firstName, email });
     return updatedUser;
   } catch (error) {
     console.error(`Failed to ban user with ID ${userId}:`, error);

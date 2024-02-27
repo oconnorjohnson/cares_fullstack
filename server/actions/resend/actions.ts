@@ -85,7 +85,6 @@ export async function Banned({
 
     const requestBody = JSON.stringify({ firstName, email });
     console.log(`Request body: ${requestBody}`);
-    console.log(`Byte length: ${Buffer.byteLength(requestBody)}`);
 
     console.log("About to make fetch call"); // Log before fetch
     const response = await fetch(
