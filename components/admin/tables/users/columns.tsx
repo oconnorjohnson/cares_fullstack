@@ -86,6 +86,21 @@ export const columns: ColumnDef<User>[] = [
     },
   },
   {
+    accessorKey: "isBanned",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Is banned?
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+  },
+  {
     id: "actions",
     cell: ({ row }) => {
       const request = row.original;

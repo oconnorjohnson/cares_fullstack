@@ -9,6 +9,7 @@ import {
   DialogFooter,
   DialogHeader,
 } from "@/components/ui/dialog";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { BanUser } from "@/server/actions/update/actions";
 
@@ -20,8 +21,10 @@ export default function BanUserButton({ userId }: { userId: string }) {
     setIsBanning(true);
     try {
       await BanUser(userId);
+      toast.success("User banned successfully");
       // Handle success (e.g., show a success message, update UI)
     } catch (error) {
+      toast.error("User was not banned due to a server side error.");
       // Handle error (e.g., show an error message)
       console.error("Failed to ban user:", error);
     } finally {
