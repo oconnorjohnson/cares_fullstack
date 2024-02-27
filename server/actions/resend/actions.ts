@@ -7,16 +7,19 @@ export async function Approved({
 }) {
   console.log(firstName, email);
   try {
-    const response = await fetch("http://localhost:3000/api/resend/approved", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      "https://yolocountycares.com/api/resend/approved",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName,
+          email,
+        }),
       },
-      body: JSON.stringify({
-        firstName,
-        email,
-      }),
-    });
+    );
 
     if (!response.ok) {
       console.error("Failed to send email, status:", response.status);
@@ -39,16 +42,19 @@ export async function Awaiting({
 }) {
   console.log(firstName, email);
   try {
-    const response = await fetch("http://localhost:3000/api/resend/awaiting", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      "https://yolocountycares.com/api/resend/awaiting",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName,
+          email,
+        }),
       },
-      body: JSON.stringify({
-        firstName,
-        email,
-      }),
-    });
+    );
 
     if (!response.ok) {
       console.error("Failed to send email, status:", response.status);
@@ -71,16 +77,19 @@ export async function Banned({
 }) {
   console.log(firstName, email);
   try {
-    const response = await fetch("http://localhost:3000/api/resend/banned", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      "https://yolocountycares.com/api/resend/banned",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName,
+          email,
+        }),
       },
-      body: JSON.stringify({
-        firstName,
-        email,
-      }),
-    });
+    );
 
     if (!response.ok) {
       console.error("Failed to send email, status:", response.status);
@@ -103,16 +112,19 @@ export async function Denied({
 }) {
   console.log(firstName, email);
   try {
-    const response = await fetch("http://localhost:3000/api/resend/denied", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      "https://yolocountycares.com/api/resend/denied",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName,
+          email,
+        }),
       },
-      body: JSON.stringify({
-        firstName,
-        email,
-      }),
-    });
+    );
 
     if (!response.ok) {
       console.error("Failed to send email, status:", response.status);
@@ -135,16 +147,19 @@ export async function Late({
 }) {
   console.log(firstName, email);
   try {
-    const response = await fetch("http://localhost:3000/api/resend/late", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      "https://yolocountycares.com/api/resend/late",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName,
+          email,
+        }),
       },
-      body: JSON.stringify({
-        firstName,
-        email,
-      }),
-    });
+    );
 
     if (!response.ok) {
       console.error("Failed to send email, status:", response.status);
@@ -167,16 +182,19 @@ export async function Reminder({
 }) {
   console.log(firstName, email);
   try {
-    const response = await fetch("http://localhost:3000/api/resend/reminder", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      "https://yolocountycares.com/api/resend/reminder",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName,
+          email,
+        }),
       },
-      body: JSON.stringify({
-        firstName,
-        email,
-      }),
-    });
+    );
 
     if (!response.ok) {
       console.error("Failed to send email, status:", response.status);
@@ -199,16 +217,19 @@ export async function Submitted({
 }) {
   console.log(firstName, email);
   try {
-    const response = await fetch("http://localhost:3000/api/resend/submitted", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      "https://yolocountycares.com/api/resend/submitted",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName,
+          email,
+        }),
       },
-      body: JSON.stringify({
-        firstName,
-        email,
-      }),
-    });
+    );
 
     if (!response.ok) {
       console.error("Failed to send email, status:", response.status);
