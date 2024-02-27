@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { useTransition } from "react";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ModeToggle } from "@/components/root/mode-toggle";
@@ -146,7 +147,9 @@ export default function SignedInNavBar() {
           <div className="flex flex-row justify-center items-center">
             <ModeToggle />
             <div className="px-2" />
-            <SignInButton />
+            <Link href="/sign-in">
+              <Button>Sign In</Button>
+            </Link>
           </div>
         </div>
       </SignedOut>
