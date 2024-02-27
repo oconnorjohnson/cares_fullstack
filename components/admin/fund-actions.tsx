@@ -174,7 +174,7 @@ export default function FundDropdown({
           <DialogHeader>
             <DialogTitle>Edit Fund</DialogTitle>
             <DialogDescription>
-              Adjust the fund as necessary. Click save when you're done.
+              Adjust the fund as necessary. Click save when you&apos;re done.
             </DialogDescription>
           </DialogHeader>
           <Form {...form}>

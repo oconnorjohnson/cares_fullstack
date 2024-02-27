@@ -164,7 +164,7 @@ export default function GetClients({ userId }: { userId: string | null }) {
                       <DialogHeader>
                         <DialogTitle>Edit Client Details</DialogTitle>
                         <DialogDescription>
-                          Update your client's information as necessary.
+                          Update your client&apos;s information as necessary.
                         </DialogDescription>
                       </DialogHeader>
                       <div className="grid gap-4 py-4">

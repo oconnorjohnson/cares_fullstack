@@ -40,10 +40,10 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
             {/* <Img src="logo.png" alt="Cares Logo" width="40" height="33" /> */}
             <Text className="text-3xl font-bold">Hi {firstName},</Text>
             <Text className="text-lg">
-              Welcome to CARES' support program. When you login to the dashboard
-              via the button below, you can add a client and then submit a
-              request on their behalf. If you have any questions, please reach
-              out to us at{" "}
+              Welcome to CARES&apos;s support program. When you login to the
+              dashboard via the button below, you can add a client and then
+              submit a request on their behalf. If you have any questions,
+              please reach out to us at{" "}
               <Link href="mailto:help@yolopublicdefendercares.org">
                 help@yolopublicdefendercares.org
               </Link>

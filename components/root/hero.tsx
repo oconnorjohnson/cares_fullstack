@@ -43,8 +43,8 @@ export default function Hero() {
         </div>
         {/* <div className="py-4" /> */}
         <h2 className="font-extralight text-xl px-12 lg:px-0 lg:text-3xl lg:w-1/2 text-center pb-4">
-          CARES enables the Yolo County Public Defender's Office to address the
-          unmet social, financial, and health care needs of individuals
+          CARES enables the Yolo County Public Defender&apos;s Office to address
+          the unmet social, financial, and health care needs of individuals
           navigating the justice system.
         </h2>
       </div>

@@ -29,9 +29,9 @@ export default function About() {
                 <h3 className="font-bold ">Welcome to CARES!</h3>
                 <p className="">
                   CARES is a charitable organization with a big heart and an
-                  even bigger mission. We're here to support the Yolo County
-                  Public Defender's Office in addressing the unmet social,
-                  financial, and behavioral health needs of individuals
+                  even bigger mission. We&apos;re here to support the Yolo
+                  County Public Defender&apos;s Office in addressing the unmet
+                  social, financial, and behavioral health needs of individuals
                   navigating the justice system.
                 </p>
               </div>
@@ -58,34 +58,35 @@ export default function About() {
               <div className="prose lg:prose-xl max-w-none pb-4">
                 <h3 className="font-bold ">Our Foundation</h3>
                 <p className="">
-                  We're a nonprofit public benefit corporation, based in sunny
-                  Woodland, California. We're not in this for personal gain, but
-                  for the public good. Every move we make, every fund we raise,
-                  is for the purpose of creating a positive impact on the lives
-                  of individuals involved with the justice system.
+                  We&apos;re a nonprofit public benefit corporation, based in
+                  sunny Woodland, California. We&apos;re not in this for
+                  personal gain, but for the public good. Every move we make,
+                  every fund we raise, is for the purpose of creating a positive
+                  impact on the lives of individuals involved with the justice
+                  system.
                 </p>
               </div>
 
               <div className="prose lg:prose-xl max-w-none pb-4">
                 <h3 className="font-bold ">Compliance and Integrity</h3>
                 <p className="">
-                  We're organized under the California Nonprofit Public Benefit
-                  Corporation Law and operate exclusively within the boundaries
-                  set by the Internal Revenue Code section 501(c)(3), and we do
-                  not participate or intervene in any legislative or political
-                  campaigns.
+                  We&apos;re organized under the California Nonprofit Public
+                  Benefit Corporation Law and operate exclusively within the
+                  boundaries set by the Internal Revenue Code section 501(c)(3),
+                  and we do not participate or intervene in any legislative or
+                  political campaigns.
                 </p>
               </div>
 
               <div className="prose lg:prose-xl max-w-none pb-4">
                 <h3 className="font-bold ">Join Us!</h3>
                 <p className="">
-                  Thanks for visiting us! We hope that you'll join us in our
-                  mission. Whether you choose to donate, volunteer, or simply
-                  spread the word about our work, you're making a difference.
-                  Together we can help those involved in the justice system find
-                  their footing and build a brighter future. Welcome to Yolo
-                  Public Defender CARES!
+                  Thanks for visiting us! We hope that you&apos;ll join us in
+                  our mission. Whether you choose to donate, volunteer, or
+                  simply spread the word about our work, you&apos;re making a
+                  difference. Together we can help those involved in the justice
+                  system find their footing and build a brighter future. Welcome
+                  to Yolo Public Defender CARES!
                 </p>
               </div>
             </div>

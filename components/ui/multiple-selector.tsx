@@ -184,7 +184,7 @@ const MultipleSelector = React.forwardRef<
         setSelected(newOptions);
         onChange?.(newOptions);
       },
-      [selected],
+      [selected, onChange], // Added onChange to the dependency array
     );
 
     const handleKeyDown = React.useCallback(
@@ -202,7 +202,7 @@ const MultipleSelector = React.forwardRef<
           }
         }
       },
-      [selected],
+      [selected, handleUnselect], // Added handleUnselect to the dependency array
     );
 
     useEffect(() => {
@@ -243,7 +243,7 @@ const MultipleSelector = React.forwardRef<
       };
 
       void exec();
-    }, [debouncedSearchTerm, open]);
+    }, [debouncedSearchTerm, open, groupBy, onSearch, triggerSearchOnFocus]); // Added groupBy, onSearch, and triggerSearchOnFocus to the dependency array
 
     const CreatableItem = () => {
       if (!creatable) return undefined;

@@ -35,10 +35,11 @@ export default function GetHelp() {
                   justice system. This includes public defenders, appointed
                   counsel, and other legal representatives who are working
                   tirelessly to ensure fair and just representation for all,
-                  regardless of their client's ability to pay. By providing this
-                  crucial support, the RFF aims to level the playing field and
-                  ensure that every individual has access to the resources they
-                  need for a fair trial and the opportunity for a better future.
+                  regardless of their client&apos;s ability to pay. By providing
+                  this crucial support, the RFF aims to level the playing field
+                  and ensure that every individual has access to the resources
+                  they need for a fair trial and the opportunity for a better
+                  future.
                 </p>
               </div>
               <div className="prose lg:prose-xl max-w-none pb-4">
