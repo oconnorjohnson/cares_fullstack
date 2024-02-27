@@ -128,6 +128,7 @@ export const columns: ColumnDef<Request>[] = [
         user,
         hasPreScreen,
         hasPostScreen,
+        approved,
         pendingApproval,
         paid,
         denied,
@@ -139,14 +140,16 @@ export const columns: ColumnDef<Request>[] = [
 
       if (denied) {
         return <Badge color="red">Closed</Badge>;
+      } else if (!hasPreScreen) {
+        return <PreScreen requestId={requestId} />;
       } else if (hasPreScreen && pendingApproval) {
-        return <Badge color="yellow">Awaiting Payment</Badge>;
+        return <Badge color="yellow">Pending Approval</Badge>;
+      } else if (hasPreScreen && approved && !paid) {
+        return <Badge color="green">Awaiting Payment</Badge>;
       } else if (hasPreScreen && paid && needsReceipts && !hasReceipts) {
         return <ReceiptDialog requestId={requestId} />;
       } else if (hasPreScreen && paid && hasReceipts && !hasPostScreen) {
         return <PostScreen requestId={requestId} />;
-      } else if (!hasPreScreen) {
-        return <PreScreen requestId={requestId} />;
       } else if (hasPreScreen && hasPostScreen && paid) {
         return <Badge color="green">Request Completed and Closed</Badge>;
       } else {

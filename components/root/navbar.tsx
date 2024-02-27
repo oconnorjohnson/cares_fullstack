@@ -138,18 +138,22 @@ export default function SignedInNavBar() {
               </NavigationMenuItem>
 
               <NavigationMenuItem className="hidden lg:block">
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  <SignUpButton>Sign Up</SignUpButton>
-                </NavigationMenuLink>
+                <Button variant="ghost" className="text-xl">
+                  <SignUpButton mode="modal" afterSignUpUrl="/dashboard">
+                    Sign Up
+                  </SignUpButton>
+                </Button>
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
           <div className="flex flex-row justify-center items-center">
             <ModeToggle />
             <div className="px-2" />
-            <Link href="/sign-in">
-              <Button>Sign In</Button>
-            </Link>
+            <Button>
+              <SignInButton mode="modal" afterSignInUrl="/dashboard">
+                Sign In
+              </SignInButton>
+            </Button>
           </div>
         </div>
       </SignedOut>
