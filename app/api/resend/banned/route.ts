@@ -5,6 +5,7 @@ import * as React from "react";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: Request, res: Response) {
+  console.log("Content-Type:", req.headers.get("Content-Type")); // Debug log
   const rawBody = await req.text();
   console.log("Raw request body:", rawBody);
 

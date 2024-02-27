@@ -36,6 +36,7 @@ export async function BanUser(
   try {
     const updatedUser = await banUserById(userId);
     await revalidatePath(`/dashboard/page`);
+    console.log(firstName, email);
     await Banned({ firstName, email });
     return updatedUser;
   } catch (error) {

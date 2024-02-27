@@ -75,12 +75,16 @@ export async function Banned({
   firstName: string;
   email: string;
 }) {
+  console.log(`Banning user with email: ${email} and firstName: ${firstName}`); // Debug log
+
   if (!firstName || !email) {
     console.error("firstName or email is missing");
     return;
   }
 
-  console.log(firstName, email);
+  const requestBody = JSON.stringify({ firstName, email });
+  console.log(`Request body: ${requestBody}`); // Debug log
+
   try {
     const response = await fetch(
       "https://yolocountycares.com/api/resend/banned",
@@ -89,10 +93,7 @@ export async function Banned({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          firstName,
-          email,
-        }),
+        body: requestBody,
       },
     );
 
@@ -102,7 +103,7 @@ export async function Banned({
     }
 
     const data = await response.json();
-    console.log(data);
+    console.log(`Response data: ${JSON.stringify(data)}`); // Debug log
   } catch (error) {
     console.error("Failed to send email:", error);
   }
