@@ -81,28 +81,31 @@ export async function Banned({
   firstName: string;
   email: string;
 }) {
-  console.log(`Sending banned email to ${email}`);
+  console.log(firstName, email);
   try {
-    // Directly use the React component, Resend handles the conversion
-    const { data, error } = await resend.emails.send({
-      from: "CARES <help@yolocountycares.com>",
-      to: [email],
-      subject: "You have been banned from CARES.",
-      react: BannedEmailTemplate({
-        firstName: firstName,
-      }) as React.ReactElement,
-    });
+    const response = await fetch(
+      "https://yolocountycares.com/api/resend/banned",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName,
+          email,
+        }),
+      },
+    );
 
-    if (error) {
-      console.error("Error from Resend API:", error);
-      throw new Error(`Failed to send banned email: ${error}`);
+    if (!response.ok) {
+      console.error("Failed to send email, status:", response.status);
+      return;
     }
 
-    console.log("Success response from Resend API:", data);
-    return data;
+    const data = await response.json();
+    console.log(data);
   } catch (error) {
-    console.error("Failed to send banned email:", error);
-    throw error; // Rethrow the error for further handling
+    console.error("Failed to send email:", error);
   }
 }
 
