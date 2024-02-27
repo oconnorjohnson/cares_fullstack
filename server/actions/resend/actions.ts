@@ -75,7 +75,7 @@ export async function Banned({
   firstName: string;
   email: string;
 }) {
-  console.log(`Banning user with email: ${email} and firstName: ${firstName}`); // Debug log
+  console.log(`Banning user with email: ${email} and firstName: ${firstName}`);
 
   if (!firstName || !email) {
     console.error("firstName or email is missing");
@@ -83,7 +83,8 @@ export async function Banned({
   }
 
   const requestBody = JSON.stringify({ firstName, email });
-  console.log(`Request body: ${requestBody}`); // Debug log
+  console.log(`Request body: ${requestBody}`);
+  console.log(`Byte length: ${Buffer.byteLength(requestBody)}`);
 
   try {
     const response = await fetch(
@@ -103,7 +104,7 @@ export async function Banned({
     }
 
     const data = await response.json();
-    console.log(`Response data: ${JSON.stringify(data)}`); // Debug log
+    console.log(`Response data: ${JSON.stringify(data)}`);
   } catch (error) {
     console.error("Failed to send email:", error);
   }
