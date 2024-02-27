@@ -2,7 +2,8 @@ import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
 import { createUser, updateUser, deleteUser } from "@/prisma/prismaFunctions";
-import { sendWelcomeEmail } from "@/app/api/resend/welcome/route";
+import { EmailTemplate } from "@/components/emails/welcome";
+import { Resend } from "resend";
 
 interface EmailAddress {
   email_address: string;
@@ -14,6 +15,25 @@ interface UserData {
   email_addresses: EmailAddress[];
   first_name: string;
   last_name: string;
+}
+const resend = new Resend(process.env.RESEND_API_KEY);
+async function sendWelcomeEmail(firstName: string, email: string) {
+  const { data, error } = await resend.emails.send({
+    from: "CARES <help@yolocountycares.com>",
+    to: [email],
+    subject: "Welcome!",
+    react: EmailTemplate({
+      firstName: firstName,
+    }) as React.ReactElement,
+  });
+
+  if (error) {
+    console.error("Error from Resend API:", error);
+    throw new Error(`Error sending welcome email: ${error}`);
+  }
+
+  console.log("Success response from Resend API:", data);
+  return data;
 }
 
 export async function POST(req: Request) {
