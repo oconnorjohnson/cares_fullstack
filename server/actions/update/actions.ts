@@ -7,10 +7,11 @@ import {
   markRequestPaidById,
   banUserById,
 } from "@/prisma/prismaFunctions";
-import { Approved, Denied, Banned } from "@/server/actions/resend/actions";
 import { revalidatePath } from "next/cache";
 import { Resend } from "resend";
-import { EmailTemplate } from "@/components/emails/banned";
+import { EmailTemplate as BannedEmailTemplate } from "@/components/emails/banned";
+import { EmailTemplate as ApprovedEmailTemplate } from "@/components/emails/approved";
+import { EmailTemplate as DeniedEmailTemplate } from "@/components/emails/denied";
 
 export interface RequestData {
   id: number;
@@ -42,7 +43,7 @@ export async function BanUser(
       from: "CARES <help@yolocountycares.com>",
       to: [email],
       subject: "You have been banned from submitting requests to CARES",
-      react: EmailTemplate({
+      react: BannedEmailTemplate({
         firstName: firstName,
       }) as React.ReactElement,
     });
@@ -60,11 +61,19 @@ export async function DenyRequest(
   firstName: string,
   email: string,
 ): Promise<RequestData> {
+  const resend = new Resend(process.env.RESEND_API_KEY);
   try {
     const updatedRequest = await denyRequestById(requestId);
     await revalidatePath(`/admin/request/${requestId}/page`);
     await revalidatePath(`/dashboard/page`);
-    await Denied({ firstName, email });
+    await resend.emails.send({
+      from: "CARES <help@yolocountycares.com>",
+      to: [email],
+      subject: "Your request has been denied.",
+      react: DeniedEmailTemplate({
+        firstName: firstName,
+      }) as React.ReactElement,
+    });
     return updatedRequest;
   } catch (error) {
     console.error(`Failed to deny request with ID ${requestId}:`, error);
@@ -77,11 +86,19 @@ export async function ApproveRequest(
   firstName: string,
   email: string,
 ): Promise<RequestData> {
+  const resend = new Resend(process.env.RESEND_API_KEY);
   try {
     const updatedRequest = await approveRequestById(requestId);
     await revalidatePath(`/admin/request/${requestId}/page`);
     await revalidatePath(`/dashboard/page`);
-    await Approved({ firstName, email });
+    await resend.emails.send({
+      from: "CARES <help@yolocountycares.com>",
+      to: [email],
+      subject: "Your request has been approved.",
+      react: ApprovedEmailTemplate({
+        firstName: firstName,
+      }) as React.ReactElement,
+    });
     return updatedRequest;
   } catch (error) {
     console.error(`Failed to approve request with ID ${requestId}:`, error);
