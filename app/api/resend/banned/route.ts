@@ -5,6 +5,12 @@ import * as React from "react";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: Request, res: Response) {
+  if (req.headers.get("Content-Length") === "0") {
+    console.error("Empty request body");
+    return new Response(JSON.stringify({ error: "Empty request body" }), {
+      status: 400,
+    });
+  }
   try {
     const body = await req.json();
     const { firstName, email } = body;
@@ -13,7 +19,7 @@ export async function POST(req: Request, res: Response) {
     const { data, error } = await resend.emails.send({
       from: "CARES <help@yolocountycares.com>",
       to: [email],
-      subject: "You have been banned from submitting requests to CARES.",
+      subject: "You have been banned from submitting requests to CARES",
       react: EmailTemplate({
         firstName: firstName,
       }) as React.ReactElement,
