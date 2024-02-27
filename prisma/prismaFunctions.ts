@@ -168,10 +168,32 @@ export async function createPostScreen(
 }
 
 export async function createUser(userData: any) {
-  const user = await prisma.user.create({
-    data: userData,
+  console.log("Attempting to create user with data:", JSON.stringify(userData));
+
+  // Check if user already exists to avoid unique constraint error
+  const existingUser = await prisma.user.findUnique({
+    where: { userId: userData.userId },
   });
-  return user;
+
+  if (existingUser) {
+    console.log(
+      `User with userId ${userData.userId} already exists. Skipping creation.`,
+    );
+    return existingUser; // Return existing user to avoid error and continue flow
+  }
+
+  try {
+    const user = await prisma.user.create({
+      data: userData,
+    });
+    console.log(`User created successfully with ID: ${user.id}`);
+    return user;
+  } catch (error) {
+    console.error("Failed to create user:", error);
+    throw new Error(
+      `Failed to create user: ${error instanceof Error ? error.message : "Unknown error"}`,
+    );
+  }
 }
 
 export async function createAgency(agencyData: {
