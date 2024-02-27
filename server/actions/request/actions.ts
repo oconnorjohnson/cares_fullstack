@@ -25,7 +25,7 @@ export type FundData = {
   request: { id: number };
 };
 
-interface RequestData {
+export type RequestData = {
   id: number;
   user: {
     id: number;
@@ -95,7 +95,7 @@ interface RequestData {
   RFFs: {
     value: string;
   }[];
-}
+};
 
 export async function requestUsersRequests(
   userId: string,
