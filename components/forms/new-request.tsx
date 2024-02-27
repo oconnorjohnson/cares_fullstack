@@ -231,7 +231,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
           <Progress value={progress} className="w-full mt-4" />
           <DialogTitle>New Request</DialogTitle>
           <DialogDescription>
-            Fill in the details to add a new client.
+            Fill in the details to submit a new request.
           </DialogDescription>
           <Tabs
             value={activeTab}
