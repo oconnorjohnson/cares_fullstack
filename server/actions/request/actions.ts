@@ -14,6 +14,7 @@ import {
   getRequestsNeedingPreScreenByUserId,
   getRequestsNeedingReceiptsByUserId,
   getRequestsNeedingPostScreenByUserId,
+  getClientByClientId,
 } from "@/prisma/prismaFunctions";
 import { revalidatePath } from "next/cache";
 
@@ -107,6 +108,11 @@ export type RequestData = {
 export async function giveUserIdGetRequestsNeedingPreScreen(userId: string) {
   const requests = await getRequestsNeedingPreScreenByUserId(userId);
   return requests;
+}
+
+export async function getClientById(clientId: number) {
+  const client = await getClientByClientId(clientId);
+  return client;
 }
 
 export async function giveUserIdGetRequestsNeedingReceipts(userId: string) {

@@ -67,7 +67,7 @@ export default function ReceiptDialog({ requestId }: { requestId: number }) {
                   input={{ fundId: fund.id, requestId: requestId }}
                   onClientUploadComplete={() => handleUploadComplete(fund.id)}
                   onUploadError={(error: Error) =>
-                    toast.error(`ERROR! ${error.message}`)
+                    console.log(`ERROR! ${error.message}`)
                   }
                 />
               )}

@@ -625,6 +625,15 @@ export async function getClientsByUserId(userId: string) {
   return clients;
 }
 
+export async function getClientByClientId(clientId: number) {
+  const client = await prisma.client.findUnique({
+    where: {
+      id: clientId,
+    },
+  });
+  return client;
+}
+
 export async function getAdminRequests(filter: string, userId?: string) {
   let whereClause = {};
 
@@ -764,7 +773,22 @@ export async function getRequestById(requestId: number) {
           last_name: true,
         },
       },
-      user: true,
+      user: {
+        select: {
+          id: true,
+          userId: true,
+          first_name: true,
+          last_name: true,
+          // Include emailAddresses in the selection
+          emailAddresses: {
+            select: {
+              email: true,
+              id: true,
+            },
+          },
+          isBanned: true,
+        },
+      },
       agency: true,
       details: true,
       pendingApproval: true,
