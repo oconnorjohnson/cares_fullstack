@@ -1,6 +1,6 @@
 import "server-only";
 import { PrismaClient } from "@prisma/client";
-
+import { revalidatePath } from "next/cache";
 export const prisma = new PrismaClient();
 
 // TYPES
@@ -76,6 +76,7 @@ export async function createNewReceiptRecord(newReceiptRecord: {
         hasReceipts: true, // Update this field name if your schema uses a different name
       },
     });
+    revalidatePath("/dashboard");
     return newReceipt;
   } catch (error) {
     throw new Error(

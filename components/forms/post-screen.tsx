@@ -8,7 +8,6 @@ import { toast } from "sonner";
 import { trpc } from "@/app/_trpc/client";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { revalidatePath } from "next/cache";
 import {
   Dialog,
   DialogContent,
@@ -73,8 +72,6 @@ export default function PreScreen({ requestId }: { requestId: number }) {
       const newPostScreenRecord = await newPostScreen(data, requestId); // Correctly pass `data` and `requestId` separately
       if (newPostScreenRecord) {
         toast.success("Post-screen completed!");
-        revalidatePath(`/user/requests`);
-        revalidatePath(`/dashboard`);
         form.reset();
         trpcContext.getRequests.invalidate();
       } else {
