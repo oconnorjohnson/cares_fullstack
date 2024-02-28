@@ -880,6 +880,71 @@ export async function getRequestsByUserId(userId: string) {
   return transformedRequests;
 }
 
+export async function getRequestsNeedingPreScreenByUserId(userId: string) {
+  const requests = await prisma.request.findMany({
+    where: {
+      userId: userId,
+      hasPreScreen: false,
+    },
+    include: {
+      client: true,
+      user: true,
+      agency: true,
+    },
+  });
+  return requests;
+}
+
+export async function getRequestsNeedingReceiptsByUserId(userId: string) {
+  const requests = await prisma.request.findMany({
+    where: {
+      userId: userId,
+      hasPreScreen: true,
+      paid: true,
+      needsReceipts: true,
+      hasReceipts: false,
+    },
+    include: {
+      client: true,
+      user: true,
+      agency: true,
+    },
+  });
+  return requests;
+}
+
+export async function getRequestsNeedingPostScreenByUserId(userId: string) {
+  const requests = await prisma.request.findMany({
+    where: {
+      userId: userId,
+      hasPreScreen: true,
+      paid: true,
+      AND: [
+        {
+          OR: [
+            {
+              needsReceipts: false,
+            },
+            {
+              needsReceipts: true,
+              hasReceipts: true,
+            },
+          ],
+        },
+        {
+          hasPostScreen: false,
+        },
+      ],
+    },
+    include: {
+      client: true,
+      user: true,
+      agency: true,
+    },
+  });
+  return requests;
+}
+
 // COUNT FUNCTIONS
 export async function countPendingRequests() {
   const requestsCount = await prisma.request.count({

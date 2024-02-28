@@ -11,6 +11,9 @@ import {
   getFunds,
   getAllAgencies,
   getFundTypes,
+  getRequestsNeedingPreScreenByUserId,
+  getRequestsNeedingReceiptsByUserId,
+  getRequestsNeedingPostScreenByUserId,
 } from "@/prisma/prismaFunctions";
 import { revalidatePath } from "next/cache";
 
@@ -100,6 +103,21 @@ export type RequestData = {
     value: string;
   }[];
 };
+
+export async function giveUserIdGetRequestsNeedingPreScreen(userId: string) {
+  const requests = await getRequestsNeedingPreScreenByUserId(userId);
+  return requests;
+}
+
+export async function giveUserIdGetRequestsNeedingReceipts(userId: string) {
+  const requests = await getRequestsNeedingReceiptsByUserId(userId);
+  return requests;
+}
+
+export async function giveUserIdGetRequestsNeedingPostScreen(userId: string) {
+  const requests = await getRequestsNeedingPostScreenByUserId(userId);
+  return requests;
+}
 
 export async function requestUsersRequests(
   userId: string,
