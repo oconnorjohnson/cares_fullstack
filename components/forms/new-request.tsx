@@ -9,6 +9,7 @@ import { trpc } from "@/app/_trpc/client";
 import { newRequest } from "@/server/actions/create/actions";
 import { Submitted } from "@/server/actions/resend/actions";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { useRouter } from "next/navigation";
 import {
   Dialog,
   DialogContent,
@@ -142,6 +143,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
       setActiveTab(lastTab);
     }
   };
+  const router = useRouter();
   const TRPCContext = trpc.useUtils();
   const { user } = useUser();
   const email = user?.emailAddresses[0]?.emailAddress || "";
@@ -465,9 +467,10 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                 <TabsContent value="tab5" hidden={activeTab !== "tab5"}>
                   <FormItem>
                     <FormLabel>
-                      Your request has been submitted! You&apos;ll get an email
-                      when your request has moved to the next stage of
-                      processing.
+                      Your request has been submitted! Head to your dashboard to
+                      complete the pre-screen questionnaire with your client.
+                      Once completed, our team will review your request and
+                      contact you if necessary.
                     </FormLabel>
                     <div className="py-2" />
                   </FormItem>
@@ -477,9 +480,10 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                         onClick={() => {
                           form.reset();
                           setActiveTab("tab1");
+                          router.push("/user/requests");
                         }}
                       >
-                        Close
+                        View Requests
                       </Button>
                     </DialogClose>
                   </div>
