@@ -30,7 +30,8 @@ export default function ReceiptDialog({ requestId }: { requestId: number }) {
   if (isError || !funds) return <p>Error loading funds.</p>;
   const handleUploadComplete = (fundId: number) => {
     setCompletedUploads((prev) => [...prev, fundId]);
-    revalidatePath(`/user/requests/page`);
+    revalidatePath(`/user/requests`);
+    revalidatePath(`/dashboard`);
     toast.success("UploadCompleted");
   };
   return (

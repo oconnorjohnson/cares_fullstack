@@ -101,7 +101,11 @@ export async function createNewFundByRequestId(newFundData: {
   console.log("Creating new fund with data:", newFundData);
   try {
     const newFund = await prisma.fund.create({
-      data: newFundData,
+      data: {
+        ...newFundData,
+        // Check if the fundTypeId is NOT equal to 11, then set needsReceipt to true
+        needsReceipt: newFundData.fundTypeId !== 11,
+      },
     });
     console.log("New fund created successfully:", newFund);
     return newFund;

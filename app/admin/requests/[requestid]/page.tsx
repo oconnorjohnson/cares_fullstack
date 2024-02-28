@@ -58,13 +58,15 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
         <span>No Receipt</span>
       )}
       <div className="px-2" />
-      <FundAction
-        fundId={fund.id}
-        fundTypeId={fund.fundType.id}
-        fundTypeName={fund.fundType.typeName}
-        amount={fund.amount}
-        requestId={requestId}
-      />
+      {!request.approved && !request.denied && (
+        <FundAction
+          fundId={fund.id}
+          fundTypeId={fund.fundType.id}
+          fundTypeName={fund.fundType.typeName}
+          amount={fund.amount}
+          requestId={requestId}
+        />
+      )}
     </div>
   ));
 
@@ -313,7 +315,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                     <div className="text-xl font-extralight pt-1.5 pr-4">
                       Funds
                     </div>
-                    {request.paid ? (
+                    {request.approved || request.denied ? (
                       <div></div>
                     ) : (
                       <AddFundToRequestById requestId={requestId} />

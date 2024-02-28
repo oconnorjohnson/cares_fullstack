@@ -2,6 +2,7 @@
 import React, { useEffect } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { revalidatePath } from "next/cache";
 import { newPreScreen } from "@/server/actions/create/actions";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -71,6 +72,8 @@ export default function PreScreen({ requestId }: { requestId: number }) {
       const newPreScreenRecord = await newPreScreen(data, requestId);
       if (newPreScreenRecord) {
         toast.success("Prescreen completed!");
+        revalidatePath(`/user/requests`);
+        revalidatePath(`/dashboard`);
         form.reset();
         trpcContext.getRequests.invalidate();
       } else {

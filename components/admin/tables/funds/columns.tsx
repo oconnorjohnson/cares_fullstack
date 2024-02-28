@@ -25,14 +25,14 @@ export const columns: ColumnDef<Fund>[] = [
     cell: ({ row }) => {
       const fund = row.original;
       return (
-        <Button size="icon" variant="outline">
-          <Link
-            href="/admin/requests/[requestId]"
-            as={`/admin/requests/${fund.request.id}`}
-          >
-            {fund.request.id}
-          </Link>
-        </Button>
+        <Link
+          href="/admin/requests/[requestId]"
+          as={`/admin/requests/${fund.request.id}`}
+        >
+          <Button size="icon" variant="outline">
+            {fund.request.id}{" "}
+          </Button>
+        </Link>
       );
     },
   },
