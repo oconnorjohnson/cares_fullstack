@@ -7,15 +7,22 @@ import {
   CountOpenRequestsByUserId,
   CountApprovedRequestsByUserId,
   CountDeniedRequestsByUserId,
+  CountClientsByUserId,
 } from "@/server/actions/count/actions";
 
-import { ClockIcon, CheckCircleIcon, XCircleIcon } from "lucide-react";
+import {
+  ClockIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+  ArrowRightIcon,
+} from "lucide-react";
 
 async function fetchCounts(userId: string) {
+  const clientCount = await CountClientsByUserId(userId);
   const openRequests = await CountOpenRequestsByUserId(userId);
   const approvedRequests = await CountApprovedRequestsByUserId(userId);
   const deniedRequests = await CountDeniedRequestsByUserId(userId);
-  return { openRequests, approvedRequests, deniedRequests };
+  return { openRequests, approvedRequests, deniedRequests, clientCount };
 }
 export default async function Dashboard() {
   const { userId } = auth();
@@ -24,7 +31,7 @@ export default async function Dashboard() {
   if (!userId) {
     return <div>User not authenticated!</div>;
   } else {
-    const { openRequests, approvedRequests, deniedRequests } =
+    const { openRequests, approvedRequests, deniedRequests, clientCount } =
       await fetchCounts(userId);
     return (
       <>
@@ -35,7 +42,14 @@ export default async function Dashboard() {
             <div className="flex flex-col space-y-8 px-12 pt-6">
               <div className="flex space-x-8">
                 <div className="flex flex-col w-1/2 flex-grow">
-                  <NewRequest userId={userId} />
+                  {clientCount > 0 ? (
+                    <NewRequest userId={userId} />
+                  ) : (
+                    <div className="flex flex-row items-center justify-center space-x-4 text-xl font-bold">
+                      <div>Add a client to get started</div>
+                      <ArrowRightIcon className="h-4 w-4" />
+                    </div>
+                  )}
                 </div>
                 <div className="flex flex-col w-1/2 flex-grow">
                   <NewClient userId={userId} />

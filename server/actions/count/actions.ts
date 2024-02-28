@@ -6,12 +6,18 @@ import {
   countOpenRequestsByUserId,
   countApprovedRequestsByUserId,
   countDeniedRequestsByUserId,
+  countClientsByUserId,
 } from "@/prisma/prismaFunctions";
 import { revalidatePath } from "next/cache";
 
 export async function CountRequestsPendingApproval() {
   const pendingRequests = await countPendingRequests();
   return pendingRequests;
+}
+
+export async function CountClientsByUserId(userId: string) {
+  const clients = await countClientsByUserId(userId);
+  return clients;
 }
 
 export async function CountRequestsCompleted() {

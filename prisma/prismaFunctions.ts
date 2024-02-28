@@ -900,6 +900,15 @@ export async function countCompletedRequests() {
   return requestsCount;
 }
 
+export async function countClientsByUserId(userId: string) {
+  const clientsCount = await prisma.client.count({
+    where: {
+      userId: userId,
+    },
+  });
+  return clientsCount;
+}
+
 export async function countDeniedRequests() {
   const requestsCount = await prisma.request.count({
     where: {
