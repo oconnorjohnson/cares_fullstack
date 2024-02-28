@@ -61,15 +61,12 @@ export default function PreScreen({ requestId }: { requestId: number }) {
   });
   useEffect(() => {
     if (Object.keys(form.formState.errors).length > 0) {
-      console.log("Form errors:", form.formState.errors);
     }
   }, [form.formState.errors]);
   const trpcContext = trpc.useUtils();
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
-      console.log("Form data:", data);
-      // Assuming `data` contains all the post-screen data and `requestId` is available in the component's props
-      const newPostScreenRecord = await newPostScreen(data, requestId); // Correctly pass `data` and `requestId` separately
+      const newPostScreenRecord = await newPostScreen(data, requestId);
       if (newPostScreenRecord) {
         toast.success("Post-screen completed!");
         form.reset();
@@ -78,7 +75,6 @@ export default function PreScreen({ requestId }: { requestId: number }) {
         toast.error("Failed to submit post-screen form.");
       }
     } catch (error) {
-      console.error("Error submitting form:", error);
       toast.error("An error occurred while submitting the form.");
     }
   };

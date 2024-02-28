@@ -86,7 +86,6 @@ const formSchema = z.object({
 });
 
 export default function NewClient({ userId }: { userId: string | null }) {
-  console.log("User ID:", userId);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -104,7 +103,6 @@ export default function NewClient({ userId }: { userId: string | null }) {
   const trpcContext = trpc.useUtils();
   async function onSubmit(data: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
-    console.log("Form submitted", data);
     try {
       if (!userId) {
         throw new Error("User must be authenticated to submit this form.");

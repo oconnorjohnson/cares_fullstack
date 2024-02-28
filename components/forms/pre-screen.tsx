@@ -62,13 +62,11 @@ export default function PreScreen({ requestId }: { requestId: number }) {
   });
   useEffect(() => {
     if (Object.keys(form.formState.errors).length > 0) {
-      console.log("Form errors:", form.formState.errors);
     }
   }, [form.formState.errors]);
   const trpcContext = trpc.useUtils();
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
-      console.log("Form data:", data);
       const newPreScreenRecord = await newPreScreen(data, requestId);
       if (newPreScreenRecord) {
         toast.success("Prescreen completed!");
@@ -79,7 +77,6 @@ export default function PreScreen({ requestId }: { requestId: number }) {
         toast.error("Failed to submit prescreen form.");
       }
     } catch (error) {
-      console.error("Error submitting form:", error);
       toast.error("An error occurred while submitting the form.");
     }
   };
