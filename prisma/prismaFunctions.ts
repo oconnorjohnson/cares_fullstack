@@ -527,6 +527,18 @@ export async function getUserIdAndEmailByRequestId(requestId: number) {
   });
   return user;
 }
+
+export async function getUserIdAndEmailByUserId(userId: string) {
+  const user = await prisma.user.findUnique({
+    where: { userId: userId },
+    select: {
+      first_name: true,
+      emailAddresses: true,
+    },
+  });
+  return user;
+}
+
 export async function getFundsThatNeedReceiptsByRequestId(requestId: number) {
   const funds = await prisma.fund.findMany({
     where: {

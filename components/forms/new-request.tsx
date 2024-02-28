@@ -191,7 +191,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
       console.log("User not authenticated, submission failed");
     } else {
       try {
-        await newRequest({ ...data, userId });
+        await newRequest({ ...data, userId, email, firstName });
         try {
           await Submitted({ firstName, email });
         } catch (error) {

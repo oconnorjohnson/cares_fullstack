@@ -12,6 +12,7 @@ import {
   banUserById as banUserFromDB,
   getFundsThatNeedReceiptsByRequestId,
   getUserIdAndEmailByRequestId,
+  getUserIdAndEmailByUserId,
 } from "@/prisma/prismaFunctions";
 import { z } from "zod";
 
@@ -64,6 +65,12 @@ export const appRouter = router({
     .input(z.number())
     .query(async ({ input: requestId }) => {
       const user = await getUserIdAndEmailByRequestId(requestId);
+      return user;
+    }),
+  getUserByUserId: publicProcedure
+    .input(z.string())
+    .query(async ({ input: userId }) => {
+      const user = await getUserIdAndEmailByUserId(userId);
       return user;
     }),
   getAdminRequests: publicProcedure

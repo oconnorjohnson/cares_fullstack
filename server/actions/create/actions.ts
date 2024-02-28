@@ -9,6 +9,8 @@ import {
   createNewFundByRequestId,
 } from "@/prisma/prismaFunctions";
 import { Submitted } from "@/server/actions/resend/actions";
+import { EmailTemplate as SubmittedEmailTemplate } from "@/components/emails/submitted";
+import { Resend } from "resend";
 import { revalidatePath } from "next/cache";
 
 interface ClientData {
@@ -25,6 +27,8 @@ interface ClientData {
 interface RequestData {
   userId: string;
   clientId: number;
+  firstName: string;
+  email: string;
   agencyId: number;
   details: string;
   sdoh: string[];
@@ -170,6 +174,7 @@ export async function newClient(clientState: ClientData) {
 }
 
 export async function newRequest(requestState: RequestData) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
   if (!requestState.userId) {
     throw new Error("User not authenticated");
   }
@@ -182,6 +187,14 @@ export async function newRequest(requestState: RequestData) {
   }
   try {
     const newRequestRecord = await createRequest(requestState);
+    await resend.emails.send({
+      from: "CARES <help@yolopublicdefendercares.org>",
+      to: [requestState.email],
+      subject: "Your request has been submitted!",
+      react: SubmittedEmailTemplate({
+        firstName: requestState.firstName,
+      }) as React.ReactElement,
+    });
     await revalidatePath(`/dashboard/page`);
     console.log("Request created successfully:", newRequestRecord);
     return newRequestRecord;
