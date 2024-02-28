@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { revalidatePath } from "next/cache";
 import { useForm } from "react-hook-form";
 import {
   Popover,
@@ -116,6 +117,8 @@ export default function NewClient({ userId }: { userId: string | null }) {
       if (response && response.id) {
         toast("Client created successfully");
         reset();
+        revalidatePath(`/user/clients`);
+        revalidatePath(`/dashboard`);
         trpcContext.getClients.invalidate();
       } else {
         throw new Error("Failed to create client.");

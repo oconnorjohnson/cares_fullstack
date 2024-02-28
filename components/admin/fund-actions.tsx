@@ -42,6 +42,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { TrashIcon, EditIcon } from "lucide-react";
+import { revalidatePath } from "next/cache";
 import { trpc } from "@/app/_trpc/client";
 import { useState } from "react";
 import { UpdateFund } from "@/server/actions/update/actions";
@@ -109,6 +110,7 @@ export default function FundDropdown({
     try {
       await DeleteFund(requestId, fundId);
       toast.success("Fund successfully deleted!");
+      revalidatePath(`/admin/request/${requestId}/page`);
     } catch (error) {
       console.error("Error deleting fund:", error);
       toast.error("Error deleting fund");
@@ -135,6 +137,7 @@ export default function FundDropdown({
         data.requestId,
       );
       toast.success("Fund successfully updated!");
+      revalidatePath(`/admin/request/${requestId}/page`);
       console.log("UpdateFund successful:", result);
     } catch (error) {
       toast.error("Error updating fund");
