@@ -177,7 +177,6 @@ export default function NewRequest({ userId }: { userId: string | null }) {
   const handleFundsChange = useCallback(
     (updatedFunds: FundInput[]) => {
       console.log("Updated funds received:", updatedFunds);
-      toast.success("Funds updated successfully");
       const normalizedFunds = updatedFunds.map((fund) => ({
         ...fund,
         fundTypeId: Number(fund.fundTypeId),
