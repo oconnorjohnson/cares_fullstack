@@ -66,8 +66,6 @@ async function fetchRequestsNeedingPostScreen(userId: string) {
 }
 export default async function Dashboard() {
   const { userId } = auth();
-
-  console.log(userId);
   if (!userId) {
     return <div>User not authenticated!</div>;
   } else {

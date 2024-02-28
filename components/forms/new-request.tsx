@@ -176,29 +176,29 @@ export default function NewRequest({ userId }: { userId: string | null }) {
 
   const handleFundsChange = useCallback(
     (updatedFunds: FundInput[]) => {
-      console.log("Updated funds received:", updatedFunds);
+      // console.log("Updated funds received:", updatedFunds);
       const normalizedFunds = updatedFunds.map((fund) => ({
         ...fund,
         fundTypeId: Number(fund.fundTypeId),
       }));
-      console.log("Normalized funds:", normalizedFunds);
+      // console.log("Normalized funds:", normalizedFunds);
       setValue("funds", normalizedFunds);
     },
     [setValue],
   );
 
   const onSubmit = async (data: FormInputs) => {
-    console.log("Form submission started", data);
-    console.log(typeof data.funds[0].amount);
+    // console.log("Form submission started", data);
+    // console.log(typeof data.funds[0].amount);
     if (!userId) {
-      console.log("User not authenticated, submission failed");
+      // console.log("User not authenticated, submission failed");
     } else {
       try {
         await newRequest({ ...data, userId, email, firstName });
         try {
           await Submitted({ firstName, email });
         } catch (error) {
-          console.error("Failed to submit:", error);
+          // console.error("Failed to submit:", error);
         }
         toast.success("Request submitted successfully");
         TRPCContext.getRequests.invalidate();
@@ -206,7 +206,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
         form.reset();
       } catch (error) {
         toast.error("Failed to submit request");
-        console.log("Form submission started", data);
+        // console.log("Form submission started", data);
       }
     }
   };
