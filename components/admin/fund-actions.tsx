@@ -29,6 +29,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 import {
   Form,
   FormField,
@@ -107,8 +108,10 @@ export default function FundDropdown({
     setIsDeleting(true);
     try {
       await DeleteFund(requestId, fundId);
+      toast.success("Fund successfully deleted!");
     } catch (error) {
       console.error("Error deleting fund:", error);
+      toast.error("Error deleting fund");
     } finally {
       setIsDeleting(false);
     }
@@ -131,8 +134,10 @@ export default function FundDropdown({
         data.amount,
         data.requestId,
       );
+      toast.success("Fund successfully updated!");
       console.log("UpdateFund successful:", result);
     } catch (error) {
+      toast.error("Error updating fund");
       console.error("Error in UpdateFund:", error);
     }
   };
