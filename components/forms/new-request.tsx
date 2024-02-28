@@ -142,6 +142,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
       setActiveTab(lastTab);
     }
   };
+  const TRPCContext = trpc.useUtils();
   const { user } = useUser();
   const email = user?.emailAddresses[0]?.emailAddress || "";
   const firstName = user?.firstName || "";
@@ -174,6 +175,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
   const handleFundsChange = useCallback(
     (updatedFunds: FundInput[]) => {
       console.log("Updated funds received:", updatedFunds);
+      toast.success("Funds updated successfully");
       const normalizedFunds = updatedFunds.map((fund) => ({
         ...fund,
         fundTypeId: Number(fund.fundTypeId),
@@ -197,7 +199,8 @@ export default function NewRequest({ userId }: { userId: string | null }) {
         } catch (error) {
           console.error("Failed to submit:", error);
         }
-        toast.success("Request submitted successrfully");
+        toast.success("Request submitted successfully");
+        TRPCContext.getRequests.invalidate();
         setActiveTab("tab5");
         form.reset();
       } catch (error) {

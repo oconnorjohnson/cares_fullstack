@@ -16,6 +16,7 @@ import { UploadButton } from "@/server/uploadthing";
 import { toast } from "sonner";
 import { trpc } from "@/app/_trpc/client";
 import { useState } from "react";
+import { revalidatePath } from "next/cache";
 
 export default function ReceiptDialog({ requestId }: { requestId: number }) {
   const {
@@ -23,11 +24,13 @@ export default function ReceiptDialog({ requestId }: { requestId: number }) {
     isLoading,
     isError,
   } = trpc.getFundsThatNeedReceipts.useQuery(requestId);
+  const TRPCContext = trpc.useUtils();
   const [completedUploads, setCompletedUploads] = useState<number[]>([]);
   if (isLoading) return <p>Loading...</p>;
   if (isError || !funds) return <p>Error loading funds.</p>;
   const handleUploadComplete = (fundId: number) => {
     setCompletedUploads((prev) => [...prev, fundId]);
+    revalidatePath(`/user/requests/page`);
     toast.success("UploadCompleted");
   };
   return (

@@ -665,7 +665,21 @@ export async function getAllRequests() {
           last_name: true,
         },
       },
-      user: true,
+      user: {
+        select: {
+          id: true,
+          userId: true,
+          first_name: true,
+          last_name: true,
+          emailAddresses: {
+            select: {
+              email: true,
+              id: true,
+            },
+          },
+          isBanned: true,
+        },
+      },
       agency: true,
       details: true,
       pendingApproval: true,

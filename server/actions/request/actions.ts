@@ -30,6 +30,10 @@ export type RequestData = {
   user: {
     id: number;
     userId: string;
+    emailAddresses?: {
+      email: string;
+      id: number;
+    }[];
     first_name: string;
     last_name: string;
     isBanned: boolean;

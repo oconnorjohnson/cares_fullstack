@@ -18,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
 import {
   Form,
   FormField,
@@ -69,8 +70,10 @@ export default function AddFund({ requestId }: { requestId: number }) {
         fundTypeId: data.fundTypeId,
         amount: data.amount,
       });
+      toast.success("Fund added successfully");
       console.log("added fund successfully with data:", result);
     } catch (error) {
+      toast.error("Failed to add fund");
       console.error("Error in adding fund:", error);
     }
   };

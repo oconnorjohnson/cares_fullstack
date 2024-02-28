@@ -119,6 +119,21 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                 </div>
                 <Separator className="my-2" />
                 <div className="flex flex-cols-2 justify-between">
+                  <div className="text-xl font-extralight pr-4">Client</div>
+                  <Link href={`/admin/client/${request.client.id}`}>
+                    <div className="text-xl font-bold underline hover:text-zinc-500">
+                      {request.user.emailAddresses && (
+                        <div>
+                          {request.user.emailAddresses.map((address, index) => (
+                            <p key={index}>{address.email}</p>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+                </div>
+                <Separator className="my-2" />
+                <div className="flex flex-cols-2 justify-between">
                   <div className="text-xl font-extralight pr-4">Agency</div>
                   <div className="text-xl font-bold">{request.agency.name}</div>
                 </div>
