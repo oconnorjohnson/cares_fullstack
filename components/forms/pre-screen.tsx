@@ -72,8 +72,7 @@ export default function PreScreen({ requestId }: { requestId: number }) {
       const newPreScreenRecord = await newPreScreen(data, requestId);
       if (newPreScreenRecord) {
         toast.success("Prescreen completed!");
-        revalidatePath("/user/requests");
-        revalidatePath("/dashboard");
+
         form.reset();
         trpcContext.getRequests.invalidate();
       } else {
