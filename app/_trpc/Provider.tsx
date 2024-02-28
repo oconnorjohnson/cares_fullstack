@@ -23,7 +23,7 @@ export default function Provider({ children }: { children: React.ReactNode }) {
     trpc.createClient({
       links: [
         httpBatchLink({
-          url: "https://cares-fullstack.vercel.app/api/trpc",
+          url: "https://yolopublicdefendercares.org/api/trpc",
         }),
       ],
     }),
