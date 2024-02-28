@@ -65,9 +65,6 @@ export default function ReceiptDialog({ requestId }: { requestId: number }) {
                   endpoint="pdfUploader"
                   input={{ fundId: fund.id, requestId: requestId }}
                   onClientUploadComplete={() => handleUploadComplete(fund.id)}
-                  onUploadError={(error: Error) =>
-                    console.log(`ERROR! ${error.message}`)
-                  }
                 />
               )}
             </div>
