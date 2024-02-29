@@ -147,11 +147,10 @@ export default function SignedInNavBar() {
           <div className="flex flex-row justify-center items-center">
             <ModeToggle />
             <div className="px-2" />
-            <Button>
-              <SignInButton mode="modal" afterSignInUrl="/dashboard">
-                Sign In
-              </SignInButton>
-            </Button>
+
+            <SignInButton mode="modal" afterSignInUrl="/dashboard">
+              <Button>Sign In</Button>
+            </SignInButton>
           </div>
         </div>
       </SignedOut>
