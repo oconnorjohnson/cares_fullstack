@@ -136,11 +136,11 @@ export default function SignedInNavBar() {
               </NavigationMenuItem>
 
               <NavigationMenuItem className="hidden lg:block">
-                <Button variant="ghost" className="text-xl">
-                  <SignUpButton mode="modal" afterSignUpUrl="/dashboard">
+                <SignUpButton mode="modal" afterSignUpUrl="/dashboard">
+                  <Button variant="ghost" className="text-xl">
                     Sign Up
-                  </SignUpButton>
-                </Button>
+                  </Button>
+                </SignUpButton>
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
