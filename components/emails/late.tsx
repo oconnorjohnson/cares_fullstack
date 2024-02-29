@@ -42,8 +42,8 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
               Your post-screen is now officially late! Complete immediately to
               avoid being banned. If you have any questions, please reach out to
               us at{" "}
-              <Link href="mailto:help@yolopublicdefendercares.org">
-                help@yolopublicdefendercares.org
+              <Link href="mailto:info@yolopublicdefendercares.org">
+                info@yolopublicdefendercares.org
               </Link>
               .
             </Text>

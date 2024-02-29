@@ -43,8 +43,8 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
               profile to complete asap. Failure to do so by the deadline will
               result in a ban from future requests. If you have any questions,
               please reach out to us at{" "}
-              <Link href="mailto:help@yolopublicdefendercares.org">
-                help@yolopublicdefendercares.org
+              <Link href="mailto:info@yolopublicdefendercares.org">
+                info@yolopublicdefendercares.org
               </Link>
               .
             </Text>

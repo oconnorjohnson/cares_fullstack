@@ -43,8 +43,8 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
               Your request has been received! Once reviewed, you&apos;ll receive
               an email detailing our decision. If you have any questions, please
               reach out to us at{" "}
-              <Link href="mailto:help@yolopublicdefendercares.org">
-                help@yolopublicdefendercares.org
+              <Link href="mailto:info@yolopublicdefendercares.org">
+                info@yolopublicdefendercares.org
               </Link>
               .
             </Text>

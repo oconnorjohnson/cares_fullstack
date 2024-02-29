@@ -41,8 +41,8 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
             <Text className="text-lg">
               Unfortunately, we could not approve your request at this time. If
               you have any questions, please reach out to us at{" "}
-              <Link href="mailto:help@yolopublicdefendercares.org">
-                help@yolopublicdefendercares.org
+              <Link href="mailto:info@yolopublicdefendercares.org">
+                info@yolopublicdefendercares.org
               </Link>
               .
             </Text>

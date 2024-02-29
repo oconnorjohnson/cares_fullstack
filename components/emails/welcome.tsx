@@ -44,8 +44,8 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
               dashboard via the button below, you can add a client and then
               submit a request on their behalf. If you have any questions,
               please reach out to us at{" "}
-              <Link href="mailto:help@yolopublicdefendercares.org">
-                help@yolopublicdefendercares.org
+              <Link href="mailto:info@yolopublicdefendercares.org">
+                info@yolopublicdefendercares.org
               </Link>
               .
             </Text>

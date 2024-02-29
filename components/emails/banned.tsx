@@ -41,14 +41,14 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
             <Text className="text-lg">
               You have been banned from submitting future requests to CARES. If
               you have any questions, please reach out to us at{" "}
-              <Link href="mailto:help@yolopublicdefendercares.org">
-                help@yolopublicdefendercares.org
+              <Link href="mailto:info@yolopublicdefendercares.org">
+                info@yolopublicdefendercares.org
               </Link>
               .
             </Text>
             <Button
               className="bg-orange-500 p-4 rounded-xl text-white text-xl font-bold"
-              href="mailto:help@yolopublicdefendercares.org"
+              href="mailto:info@yolopublicdefendercares.org"
             >
               Reach out to us
             </Button>

@@ -40,7 +40,7 @@ export async function BanUser(
   try {
     const updatedUser = await banUserById(userId);
     await resend.emails.send({
-      from: "CARES <help@yolopublicdefendercares.org>",
+      from: "CARES <info@yolopublicdefendercares.org>",
       to: [email],
       subject: "You have been banned from submitting requests to CARES",
       react: BannedEmailTemplate({
@@ -67,7 +67,7 @@ export async function DenyRequest(
     await revalidatePath(`/admin/request/${requestId}/page`);
     await revalidatePath(`/dashboard/page`);
     await resend.emails.send({
-      from: "CARES <help@yolopublicdefendercares.org>",
+      from: "CARES <info@yolopublicdefendercares.org>",
       to: [email],
       subject: "Your request has been denied.",
       react: DeniedEmailTemplate({
@@ -92,7 +92,7 @@ export async function ApproveRequest(
     await revalidatePath(`/admin/request/${requestId}/page`);
     await revalidatePath(`/dashboard/page`);
     await resend.emails.send({
-      from: "CARES <help@yolopublicdefendercares.org>",
+      from: "CARES <info@yolopublicdefendercares.org>",
       to: [email],
       subject: "Your request has been approved.",
       react: ApprovedEmailTemplate({
