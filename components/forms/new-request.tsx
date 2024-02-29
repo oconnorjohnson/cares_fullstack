@@ -10,6 +10,7 @@ import { newRequest } from "@/server/actions/create/actions";
 import { Submitted } from "@/server/actions/resend/actions";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useRouter } from "next/navigation";
+import { LoadingSpinner } from "@/components/admin/request/approve";
 import {
   Dialog,
   DialogContent,
@@ -107,6 +108,7 @@ type FormInputs = z.infer<typeof formSchema>;
 export default function NewRequest({ userId }: { userId: string | null }) {
   const [activeTab, setActiveTab] = useState("tab1");
   const [progress, setProgress] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   useEffect(() => {
     switch (activeTab) {
       case "tab1":
@@ -176,37 +178,32 @@ export default function NewRequest({ userId }: { userId: string | null }) {
 
   const handleFundsChange = useCallback(
     (updatedFunds: FundInput[]) => {
-      // console.log("Updated funds received:", updatedFunds);
       const normalizedFunds = updatedFunds.map((fund) => ({
         ...fund,
         fundTypeId: Number(fund.fundTypeId),
       }));
-      // console.log("Normalized funds:", normalizedFunds);
       setValue("funds", normalizedFunds);
     },
     [setValue],
   );
 
   const onSubmit = async (data: FormInputs) => {
-    // console.log("Form submission started", data);
-    // console.log(typeof data.funds[0].amount);
+    setIsSubmitting(true);
     if (!userId) {
-      // console.log("User not authenticated, submission failed");
     } else {
       try {
         await newRequest({ ...data, userId, email, firstName });
         try {
           await Submitted({ firstName, email });
-        } catch (error) {
-          // console.error("Failed to submit:", error);
-        }
+        } catch (error) {}
         toast.success("Request submitted successfully");
         TRPCContext.getRequests.invalidate();
         setActiveTab("tab5");
         form.reset();
       } catch (error) {
         toast.error("Failed to submit request");
-        // console.log("Form submission started", data);
+      } finally {
+        setIsSubmitting(false);
       }
     }
   };
@@ -458,8 +455,16 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                   <div className="p-1" />
                   <div className="flex flex-row justify-between">
                     <Button onClick={goToLastTab}>Last</Button>
-                    <Button type="submit" onClick={handleSubmit(onSubmit)}>
-                      Submit
+                    <Button
+                      type="submit"
+                      onClick={handleSubmit(onSubmit)}
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? (
+                        <LoadingSpinner className="w-4 h-4 text-white" />
+                      ) : (
+                        "Submit"
+                      )}
                     </Button>
                   </div>
                 </TabsContent>
