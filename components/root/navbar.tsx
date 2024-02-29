@@ -89,8 +89,6 @@ export default function SignedInNavBar() {
           </NavigationMenu>
           <div className="flex flex-row justify-center items-center">
             <ModeToggle />
-            <div className="px-2" />
-            <UserButton />
           </div>
         </div>
       </SignedIn>
