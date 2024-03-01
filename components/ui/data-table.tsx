@@ -124,7 +124,7 @@ export function DataTable<TData, TValue>({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="rounded-md border">
+      <div className="rounded-md border p-3">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -144,15 +144,13 @@ export function DataTable<TData, TValue>({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
+          <TableBody className="">
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() ? "selected" : undefined}
-                  className={
-                    row.original ? "bg-zinc-300 border-2 dark:bg-zinc-700" : ""
-                  }
+                  className={row.original ? "bg-zinc-300 dark:bg-zinc-700" : ""}
                 >
                   {row.getVisibleCells().map((cell) => {
                     // Ensure cell value is treated as a string before performing operations
