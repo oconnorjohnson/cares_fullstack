@@ -151,9 +151,7 @@ export function DataTable<TData, TValue>({
                   key={row.id}
                   data-state={row.getIsSelected() ? "selected" : undefined}
                   className={
-                    row.original
-                      ? "bg-zinc-300 border-2 rounded-lg dark:bg-zinc-700"
-                      : ""
+                    row.original ? "bg-zinc-300 border-2 dark:bg-zinc-700" : ""
                   }
                 >
                   {row.getVisibleCells().map((cell) => {
