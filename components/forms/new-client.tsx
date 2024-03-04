@@ -293,11 +293,11 @@ export default function NewClient({ userId }: { userId: string | null }) {
               )}
             />
             {isSubmitting ? (
-              <LoadingSpinner className="w-4 h-4 text-white" />
-            ) : (
-              <Button disabled={isSubmitting} type="submit">
-                Add Client
+              <Button size="icon">
+                <LoadingSpinner className="w-4 h-4" />
               </Button>
+            ) : (
+              <Button type="submit">Submit Form</Button>
             )}
           </form>
         </Form>

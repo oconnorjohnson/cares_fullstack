@@ -444,7 +444,9 @@ export default function PreScreen({ requestId }: { requestId: number }) {
                   />
                   <div className="py-2" />
                   {isSubmitting ? (
-                    <LoadingSpinner className="w-4 h-4 text-white" />
+                    <Button size="icon">
+                      <LoadingSpinner className="w-4 h-4" />
+                    </Button>
                   ) : (
                     <Button type="submit">Submit Form</Button>
                   )}
