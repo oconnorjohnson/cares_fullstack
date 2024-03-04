@@ -449,8 +449,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                   <CardDescription className="text-md">
                     Mark as paid in order to prompt user to complete post-screen
                     questionnaire with their client. If you wish to backtrack on
-                    a request approval, simply click Deny here or at the top of
-                    the page.
+                    a request approval, simply click Deny.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-row justify-around">

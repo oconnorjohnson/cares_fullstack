@@ -2,6 +2,10 @@ import { currentUser } from "@clerk/nextjs";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { z } from "zod";
 import { createNewReceiptRecord } from "@/prisma/prismaFunctions";
+import {
+  revalidateDashboard,
+  revalidateUserRequests,
+} from "@/server/actions/update/actions";
 const f = createUploadthing();
 
 const auth = async () => {
@@ -34,7 +38,8 @@ export const ourFileRouter = {
     .onUploadComplete(async ({ metadata, file }) => {
       // This code RUNS ON YOUR SERVER after upload
       console.log("Upload complete for userId:", metadata.userId);
-
+      revalidateDashboard();
+      revalidateUserRequests();
       console.log("file url", file.url);
       console.log("FundID:", metadata.fundId);
 

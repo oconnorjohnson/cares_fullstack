@@ -31,6 +31,14 @@ export interface UserData {
   isBanned: boolean;
 }
 
+export async function revalidateDashboard() {
+  revalidatePath("/dashboard");
+}
+
+export async function revalidateUserRequests() {
+  revalidatePath("/user/requests");
+}
+
 export async function BanUser(
   userId: string,
   firstName: string,
