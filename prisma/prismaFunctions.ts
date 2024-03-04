@@ -437,6 +437,14 @@ export async function deleteUser(userId: string) {
     select: { id: true },
   });
   for (const request of requests) {
+    await prisma.sDOH.deleteMany({
+      where: { requestId: request.id },
+    });
+
+    // Delete related RFF records for the request
+    await prisma.rFF.deleteMany({
+      where: { requestId: request.id },
+    });
     await prisma.preScreenAnswers.deleteMany({
       where: { requestId: request.id },
     });
