@@ -431,13 +431,48 @@ export async function approveRequestById(requestId: number) {
 
 // DELETE FUNCTIONS
 export async function deleteUser(userId: string) {
+  // Delete related PreScreenAnswers and PostScreenAnswers
+  const requests = await prisma.request.findMany({
+    where: { userId: userId },
+    select: { id: true },
+  });
+  for (const request of requests) {
+    await prisma.preScreenAnswers.deleteMany({
+      where: { requestId: request.id },
+    });
+    await prisma.postScreenAnswers.deleteMany({
+      where: { requestId: request.id },
+    });
+    // Delete related Funds and their Receipts
+    const funds = await prisma.fund.findMany({
+      where: { requestId: request.id },
+      select: { id: true },
+    });
+    for (const fund of funds) {
+      await prisma.receipt.deleteMany({
+        where: { fundId: fund.id },
+      });
+      await prisma.fund.delete({
+        where: { id: fund.id },
+      });
+    }
+    // Delete the Request itself
+    await prisma.request.delete({
+      where: { id: request.id },
+    });
+  }
+  // Delete related Clients
+  await prisma.client.deleteMany({
+    where: { userId: userId },
+  });
+  // Finally, delete the User
   await prisma.emailAddress.deleteMany({
     where: { userId: userId },
   });
   const deletedUser = await prisma.user.delete({
     where: { userId: userId },
   });
-  console.log(`User ${userId} and related email addresses deleted`);
+  console.log(`User ${userId} and all related data deleted`);
   return deletedUser;
 }
 
