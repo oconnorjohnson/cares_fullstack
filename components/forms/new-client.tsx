@@ -113,16 +113,15 @@ export default function NewClient({ userId }: { userId: string | null }) {
       };
       const response = await newClient(submissionData);
       if (response && response.id) {
-        toast("Client created successfully");
+        toast.success("Client created successfully");
         reset();
         revalidatePath(`/user/clients`);
         revalidatePath(`/dashboard`);
-        trpcContext.getClients.invalidate();
       } else {
         throw new Error("Failed to create client.");
       }
     } catch (error) {
-      toast("Error submitting form: An unknown error occurred");
+      toast.error("Error submitting form: An unknown error occurred");
     } finally {
       setIsSubmitting(false);
     }
