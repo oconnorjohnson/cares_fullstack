@@ -115,10 +115,10 @@ export default function NewClient({ userId }: { userId: string | null }) {
       if (response && response.id) {
         toast.success("Client created successfully");
         reset();
-        await revalidatePath(`/dashboard`);
+        revalidatePath(`/dashboard`);
         try {
           // Attempt to revalidate paths
-          await revalidatePath(`/user/clients`);
+          revalidatePath(`/user/clients`);
         } catch (revalidateError) {
           // console.error("Error revalidating paths:", revalidateError);
         }
