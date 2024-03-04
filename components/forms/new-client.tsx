@@ -39,6 +39,7 @@ import { toast } from "sonner";
 import { cn } from "@/server/utils";
 import { newClient } from "@/server/actions/create/actions";
 import { trpc } from "@/app/_trpc/client";
+import { LoadingSpinner } from "@/components/admin/request/approve";
 
 const formSchema = z.object({
   first_name: z
@@ -291,9 +292,13 @@ export default function NewClient({ userId }: { userId: string | null }) {
                 </FormItem>
               )}
             />
-            <Button disabled={isSubmitting} type="submit">
-              Add Client
-            </Button>
+            {isSubmitting ? (
+              <LoadingSpinner className="w-4 h-4 text-white" />
+            ) : (
+              <Button disabled={isSubmitting} type="submit">
+                Add Client
+              </Button>
+            )}
           </form>
         </Form>
       </DialogContent>

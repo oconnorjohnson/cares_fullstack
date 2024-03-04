@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { newPostScreen } from "@/server/actions/create/actions";
@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { trpc } from "@/app/_trpc/client";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { LoadingSpinner } from "@/components/admin/request/approve";
 import {
   Dialog,
   DialogContent,
@@ -45,6 +46,7 @@ const formSchema = z.object({
 });
 
 export default function PreScreen({ requestId }: { requestId: number }) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -65,6 +67,7 @@ export default function PreScreen({ requestId }: { requestId: number }) {
   }, [form.formState.errors]);
   const trpcContext = trpc.useUtils();
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    setIsSubmitting(true);
     try {
       const newPostScreenRecord = await newPostScreen(data, requestId);
       if (newPostScreenRecord) {
@@ -76,6 +79,8 @@ export default function PreScreen({ requestId }: { requestId: number }) {
       }
     } catch (error) {
       toast.error("An error occurred while submitting the form.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -428,7 +433,12 @@ export default function PreScreen({ requestId }: { requestId: number }) {
                       </FormItem>
                     )}
                   />
-                  <Button type="submit">Submit Form</Button>
+                  <div className="py-2" />
+                  {isSubmitting ? (
+                    <LoadingSpinner className="w-4 h-4 text-white" />
+                  ) : (
+                    <Button type="submit">Submit Form</Button>
+                  )}
                 </form>
               </Form>
             </ScrollArea>
