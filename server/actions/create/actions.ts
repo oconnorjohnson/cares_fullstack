@@ -170,6 +170,8 @@ export async function newClient(clientState: ClientData) {
   if (!newClientRecord) {
     throw new Error("Failed to create client.");
   }
+  revalidatePath("/dashboard");
+  revalidatePath("/user/clients");
   return newClientRecord;
 }
 
