@@ -9,6 +9,8 @@ import {
 } from "@/prisma/prismaFunctions";
 import { revalidatePath } from "next/cache";
 import { Resend } from "resend";
+import { EmailTemplate as PaidEmailTemplate } from "@/components/emails/paid";
+import { EmailTemplate as ReceiptUploadedEmailTemplate } from "@/components/emails/receipt-uploaded";
 import { EmailTemplate as BannedEmailTemplate } from "@/components/emails/banned";
 import { EmailTemplate as ApprovedEmailTemplate } from "@/components/emails/approved";
 import { EmailTemplate as DeniedEmailTemplate } from "@/components/emails/denied";
@@ -38,7 +40,17 @@ export async function revalidateDashboard() {
 export async function revalidateUserRequests() {
   revalidatePath("/user/requests");
 }
-
+export async function sendReceiptEmail(firstname: string, email: string) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  await resend.emails.send({
+    from: "CARES <info@yolopublicdefendercares.org>",
+    to: [email],
+    subject: "Receipt Uploaded!",
+    react: ReceiptUploadedEmailTemplate({
+      firstName: firstname,
+    }) as React.ReactElement,
+  });
+}
 export async function BanUser(
   userId: string,
   firstName: string,
@@ -114,11 +126,24 @@ export async function ApproveRequest(
   }
 }
 
-export async function MarkPaid(requestId: number): Promise<RequestData> {
+export async function MarkPaid(
+  requestId: number,
+  firstName: string,
+  email: string,
+): Promise<RequestData> {
+  const resend = new Resend(process.env.RESEND_API_KEY);
   try {
     const updatedRequest = await markRequestPaidById(requestId);
     await revalidatePath(`/admin/request/${requestId}/page`);
     await revalidatePath(`/dashboard/page`);
+    await resend.emails.send({
+      from: "CARES <info@yolopublicdefendercares.org>",
+      to: [email],
+      subject: "Your request has been paid.",
+      react: PaidEmailTemplate({
+        firstName: firstName,
+      }) as React.ReactElement,
+    });
     return updatedRequest;
   } catch (error) {
     console.error(

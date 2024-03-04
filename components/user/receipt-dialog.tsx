@@ -16,8 +16,14 @@ import { UploadButton } from "@/server/uploadthing";
 import { toast } from "sonner";
 import { trpc } from "@/app/_trpc/client";
 import { useState } from "react";
+import { useUser } from "@clerk/nextjs";
 import { revalidatePath } from "next/cache";
+import { sendReceiptEmail } from "@/server/actions/update/actions";
 
+async function sendEmail(firstName: string, email: string) {
+  await sendReceiptEmail(firstName, email);
+  return true;
+}
 export default function ReceiptDialog({ requestId }: { requestId: number }) {
   const {
     data: funds,
@@ -25,12 +31,16 @@ export default function ReceiptDialog({ requestId }: { requestId: number }) {
     isError,
   } = trpc.getFundsThatNeedReceipts.useQuery(requestId);
   const TRPCContext = trpc.useUtils();
+  const { user } = useUser();
+  const email = user?.emailAddresses[0]?.emailAddress || "";
+  const firstName = user?.firstName || "";
   const [completedUploads, setCompletedUploads] = useState<number[]>([]);
   if (isLoading) return <p>Loading...</p>;
   if (isError || !funds) return <p>Error loading funds.</p>;
   const handleUploadComplete = (fundId: number) => {
     setCompletedUploads((prev) => [...prev, fundId]);
     toast.success("UploadCompleted");
+    sendEmail(firstName, email);
   };
   return (
     <Dialog>

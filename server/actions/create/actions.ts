@@ -8,8 +8,10 @@ import {
   createPostScreen,
   createNewFundByRequestId,
 } from "@/prisma/prismaFunctions";
+
 import { Submitted } from "@/server/actions/resend/actions";
 import { EmailTemplate as SubmittedEmailTemplate } from "@/components/emails/submitted";
+import { EmailTemplate as CompletedEmailTemplate } from "@/components/emails/completed";
 import { Resend } from "resend";
 import { revalidatePath } from "next/cache";
 
@@ -128,7 +130,10 @@ export async function newPreScreen(
 export async function newPostScreen(
   postScreenState: PostScreenData,
   requestId: number,
+  firstName: string,
+  email: string,
 ) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
   if (!requestId) {
     throw new Error(
       "Request ID is required to tie your post screen to your request",
@@ -142,6 +147,14 @@ export async function newPostScreen(
     revalidatePath("/admin/request/${requestId}");
     revalidatePath("/dashboard");
     revalidatePath("/user/requests");
+    await resend.emails.send({
+      from: "CARES <info@yolopublicdefendercares.org>",
+      to: [email],
+      subject: "Post-Screen Received!",
+      react: CompletedEmailTemplate({
+        firstName: firstName,
+      }) as React.ReactElement,
+    });
     return newPostScreenRecord;
   } catch (error) {
     console.error("Failed to create new postscreen record:", error);

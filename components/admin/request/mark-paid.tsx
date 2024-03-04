@@ -17,7 +17,7 @@ export default function MarkAsPaid({ requestId }: { requestId: number }) {
   const handleMarkPaid = async () => {
     setIsLoading(true);
     try {
-      await MarkPaid(requestId);
+      await MarkPaid(requestId, firstName, email);
       try {
         await Awaiting({ firstName, email });
       } catch (error) {

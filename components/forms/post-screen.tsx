@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { z } from "zod";
+import { useUser } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { newPostScreen } from "@/server/actions/create/actions";
 import { useForm } from "react-hook-form";
@@ -47,6 +48,9 @@ const formSchema = z.object({
 
 export default function PreScreen({ requestId }: { requestId: number }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { user } = useUser();
+  const email = user?.emailAddresses[0]?.emailAddress || "";
+  const firstName = user?.firstName || "";
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -69,7 +73,12 @@ export default function PreScreen({ requestId }: { requestId: number }) {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
     try {
-      const newPostScreenRecord = await newPostScreen(data, requestId);
+      const newPostScreenRecord = await newPostScreen(
+        data,
+        requestId,
+        firstName,
+        email,
+      );
       if (newPostScreenRecord) {
         toast.success("Post-screen completed!");
         form.reset();
