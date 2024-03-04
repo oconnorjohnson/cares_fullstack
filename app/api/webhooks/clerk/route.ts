@@ -20,7 +20,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 async function sendWelcomeEmail(firstName: string, email: string) {
   console.log(`Attempting to send welcome email to ${email}`);
   const { data, error } = await resend.emails.send({
-    from: "CARES <help@yolocountycares.com>",
+    from: "CARES <info@yolopublicdefendercares.org>",
     to: [email],
     subject: "Welcome!",
     react: EmailTemplate({

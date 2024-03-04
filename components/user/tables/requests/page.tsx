@@ -50,7 +50,7 @@ export default async function UserRequests({ userId }: { userId: string }) {
   const requests = await getRequests({ userId });
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="container mx-auto">
       <DataTable
         columns={columns}
         data={requests}
