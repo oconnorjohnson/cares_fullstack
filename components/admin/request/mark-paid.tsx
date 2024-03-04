@@ -6,14 +6,18 @@ import { useState } from "react";
 import { trpc } from "@/app/_trpc/client";
 import { LoadingSpinner } from "@/components/admin/request/deny";
 import { Awaiting } from "@/server/actions/resend/actions";
-import { useUser } from "@clerk/nextjs";
 
-export default function MarkAsPaid({ requestId }: { requestId: number }) {
+export default function MarkAsPaid({
+  requestId,
+  firstName,
+  email,
+}: {
+  requestId: number;
+  firstName: string;
+  email: string;
+}) {
   const [isLoading, setIsLoading] = useState(false);
   const trpcContext = trpc.useUtils();
-  const { user } = useUser();
-  const email = user?.emailAddresses[0]?.emailAddress || "";
-  const firstName = user?.firstName || "";
   const handleMarkPaid = async () => {
     setIsLoading(true);
     try {

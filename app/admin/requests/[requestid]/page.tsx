@@ -454,7 +454,11 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                 </CardHeader>
                 <CardContent className="flex flex-row justify-around">
                   <DenyButton requestId={request.id} />
-                  <MarkPaidButton requestId={request.id} />
+                  <MarkPaidButton
+                    requestId={request.id}
+                    firstName={request.user.first_name}
+                    email={request.user.emailAddresses?.[0]?.email || ""}
+                  />
                 </CardContent>
               </Card>
             </>

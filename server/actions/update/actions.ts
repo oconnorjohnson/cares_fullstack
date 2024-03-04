@@ -50,6 +50,8 @@ export async function sendReceiptEmail(firstname: string, email: string) {
       firstName: firstname,
     }) as React.ReactElement,
   });
+  revalidatePath("/dashboard");
+  revalidatePath("/user/requests");
 }
 export async function BanUser(
   userId: string,

@@ -109,40 +109,6 @@ export default function PreScreen({ requestId }: { requestId: number }) {
                       <FormItem>
                         <FormLabel>Housing Situation</FormLabel>
                         <FormDescription>
-                          How stressed are you about your housing situation?
-                        </FormDescription>
-                        <Select
-                          onValueChange={(value) =>
-                            field.onChange(Number(value))
-                          }
-                          defaultValue={
-                            field.value ? field.value.toString() : ""
-                          }
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select a number between 1 and 5" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value={"1"}>1 - Not at all.</SelectItem>
-                            <SelectItem value={"2"}>2 - Somewhat.</SelectItem>
-                            <SelectItem value={"3"}>3 - Neutral.</SelectItem>
-                            <SelectItem value={"4"}>4 - Very.</SelectItem>
-                            <SelectItem value={"5"}>5 - Extremely.</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </FormItem>
-                    )}
-                  />
-                  <div className="py-2" />
-                  <FormField
-                    control={form.control}
-                    name="housingSituation"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Housing Situation</FormLabel>
-                        <FormDescription>
                           Today, how stressed are you about your housing
                           situation?
                         </FormDescription>
@@ -424,8 +390,8 @@ export default function PreScreen({ requestId }: { requestId: number }) {
                       <FormItem>
                         <FormLabel>Additional Information</FormLabel>
                         <FormDescription>
-                          How difficult is it for you to pay for the very basics
-                          like housing, food, medical care, etc...?
+                          Add additional information about your client&apos;s
+                          situation.
                         </FormDescription>
                         <FormControl>
                           <Textarea {...field} />
@@ -435,7 +401,7 @@ export default function PreScreen({ requestId }: { requestId: number }) {
                   />
                   <div className="py-2" />
                   {isSubmitting ? (
-                    <Button size="icon">
+                    <Button size="icon" disabled>
                       <LoadingSpinner className="w-4 h-4" />
                     </Button>
                   ) : (
