@@ -122,6 +122,7 @@ export default function NewClient({ userId }: { userId: string | null }) {
       }
     } catch (error) {
       toast.error("Error submitting form: An unknown error occurred");
+      console.error("Error submitting form:", error);
     } finally {
       setIsSubmitting(false);
     }
