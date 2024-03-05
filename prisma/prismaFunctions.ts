@@ -716,6 +716,7 @@ export async function getAllRequests() {
           id: true,
           first_name: true,
           last_name: true,
+          userId: true,
         },
       },
       user: {
@@ -815,6 +816,7 @@ export async function getRequestById(requestId: number) {
           id: true,
           first_name: true,
           last_name: true,
+          userId: true,
         },
       },
       user: {
@@ -914,7 +916,14 @@ export async function getRequestsByUserId(userId: string) {
       userId: userId,
     },
     include: {
-      client: true,
+      client: {
+        select: {
+          id: true,
+          first_name: true,
+          last_name: true,
+          clientId: true,
+        },
+      },
       user: true,
       agency: true,
       preScreenAnswer: true,

@@ -113,11 +113,12 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                 <Separator className="my-2" />
                 <div className="flex flex-cols-2 justify-between">
                   <div className="text-xl font-extralight pr-4">Client</div>
-                  <Link href={`/admin/client/${request.client.id}`}>
+                  {/* <Link href={`/admin/client/${request.client.id}`}>
                     <div className="text-xl font-bold underline hover:text-zinc-500">
-                      {request.client.first_name} {request.client.last_name}
+                      {request.client} | {request.client.first_name}{" "}
+                      {request.client.last_name}
                     </div>
-                  </Link>
+                  </Link> */}
                 </div>
                 <Separator className="my-2" />
                 <div className="flex flex-cols-2 justify-between">
@@ -432,9 +433,9 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
               ) : (
                 <div className="text-xl font-bold text-destructive">
                   Not Started. Once {request.user.first_name} completes the
-                  Pre-Screen questionnaire with {request.client.first_name},
-                  you&apos;ll see their answers and an option to mark this
-                  request as &quot;Paid&quot;.
+                  Pre-Screen questionnaire with their client, you&apos;ll see
+                  their answers and an option to mark this request as
+                  &quot;Paid&quot;.
                 </div>
               )}
             </CardContent>
