@@ -76,6 +76,7 @@ export default function NewClient({ userId }: { userId: string | null }) {
       if (response && response.id) {
         toast.success("Client created successfully");
         reset();
+        trpcContext.getClients.invalidate();
       } else {
         throw new Error("Failed to create client.");
       }
