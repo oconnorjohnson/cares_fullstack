@@ -665,6 +665,12 @@ export async function getClientsByUserId(userId: string) {
     where: {
       userId: userId,
     },
+    select: {
+      id: true,
+      clientId: true,
+      race: true,
+      sex: true,
+    },
   });
   return clients;
 }

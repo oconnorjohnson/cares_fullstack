@@ -15,13 +15,9 @@ import {
 
 export type Client = {
   id: number;
-  first_name: string;
-  last_name: string;
+  clientId: string | null;
   race: string;
   sex: string;
-  caseNumber?: string;
-  contactInfo?: string;
-  userId: string;
 };
 
 export const columns: ColumnDef<Client>[] = [
@@ -39,48 +35,7 @@ export const columns: ColumnDef<Client>[] = [
       );
     },
   },
-  {
-    accessorKey: "dateOfBirth",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Date of Birth
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: "contactInfo",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Contact Info
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: "caseNumber",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Case Number
-        </Button>
-      );
-    },
-  },
+
   {
     accessorKey: "sex",
     header: ({ column }) => {

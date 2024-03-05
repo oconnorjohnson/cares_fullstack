@@ -7,13 +7,6 @@ async function getClients({ userId }: { userId: string }): Promise<Client[]> {
   const clients = await requestUsersClients(userId);
   const modifiedClients = clients.map((client) => ({
     ...client,
-    name:
-      client.first_name && client.last_name
-        ? `${client.first_name} ${client.last_name}`
-        : "Error",
-    dateOfBirth: format(new Date(client.dateOfBirth), "MM/dd/yyyy"),
-    contactInfo: client.contactInfo || "Error",
-    caseNumber: client.caseNumber || "Error",
     sex: client.sex || "Error",
     race: client.race || "Error",
   }));
