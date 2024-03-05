@@ -83,7 +83,7 @@ const OPTIONS: Option[] = [
   { label: "Durable Medical Equipment", value: "Durable Medical Equipment" },
   { label: "Gas", value: "Gas" },
   { label: "Rideshare", value: "Rideshare" },
-  { label: "Bus Pass", value: "Bus Pass" },
+  { label: "Bus Pas", value: "Bus Pas" },
   { label: "Specialty Medical Supplies", value: "Specialty Medical Supplies" },
   { label: "Rental Assistance", value: "Rental Assistance" },
   { label: "Utilities Assistance", value: "Utilities Assistance" },
