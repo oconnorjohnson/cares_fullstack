@@ -24,14 +24,20 @@ export default function Provider({ children }: { children: React.ReactNode }) {
       links: [
         httpBatchLink({
           url: "https://www.yolopublicdefendercares.org/api/trpc",
-          headers: {
-            requestMode: "no-cors",
+          fetch(url, options) {
+            return fetch(url, {
+              ...options,
+              credentials: "include", // Include credentials for cross-origin requests
+            });
           },
         }),
         httpBatchLink({
           url: "https://yolopublicdefendercares.org/api/trpc",
-          headers: {
-            requestMode: "no-cors",
+          fetch(url, options) {
+            return fetch(url, {
+              ...options,
+              credentials: "include", // Include credentials for cross-origin requests
+            });
           },
         }),
       ],
