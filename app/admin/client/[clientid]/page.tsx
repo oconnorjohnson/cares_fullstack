@@ -24,32 +24,12 @@ const ClientDetails = async ({ clientId }: { clientId: string }) => {
           <CardHeader>
             <CardTitle className="flex flex-cols-3 justify-between">
               <div className="text-center text-3xl pt-0.5">
-                {client?.first_name} {client?.last_name}
+                {client?.clientId} | {client?.first_name} {client?.last_name}
               </div>
             </CardTitle>
           </CardHeader>
           <CardContent className="border py-4 mx-4 rounded-lg">
             <div className="flex flex-col">
-              <div className="flex flex-cols-2 justify-between">
-                <div className="text-xl font-extralight pr-4">Contact Info</div>
-
-                <div className="text-xl font-bold">{client?.contactInfo}</div>
-              </div>
-              <Separator className="my-2" />
-              <div className="flex flex-cols-2 justify-between">
-                <div className="text-xl font-extralight pr-4">Case Number</div>
-                <div className="text-xl font-bold">{client?.caseNumber}</div>
-              </div>
-              <Separator className="my-2" />
-              <div className="flex flex-cols-2 justify-between">
-                <div className="text-xl font-extralight pr-4">
-                  Date of Birth
-                </div>
-                <div className="text-xl font-bold">
-                  {client?.dateOfBirth.toDateString()}
-                </div>
-              </div>
-              <Separator className="my-2" />
               <div className="flex flex-cols-2 justify-between">
                 <div className="text-xl font-extralight pr-4">Sex</div>
                 <div className="text-xl font-bold">{client?.sex}</div>
