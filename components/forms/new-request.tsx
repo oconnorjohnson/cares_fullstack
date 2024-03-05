@@ -44,8 +44,7 @@ import { useUser } from "@clerk/nextjs";
 
 interface Client {
   id: number;
-  first_name: string;
-  last_name: string;
+  clientId: string | null;
 }
 
 interface Agency {
@@ -84,7 +83,7 @@ const OPTIONS: Option[] = [
   { label: "Durable Medical Equipment", value: "Durable Medical Equipment" },
   { label: "Gas", value: "Gas" },
   { label: "Rideshare", value: "Rideshare" },
-  { label: "Busspass", value: "Busspass" },
+  { label: "Bus Pass", value: "Bus Pass" },
   { label: "Specialty Medical Supplies", value: "Specialty Medical Supplies" },
   { label: "Rental Assistance", value: "Rental Assistance" },
   { label: "Utilities Assistance", value: "Utilities Assistance" },
@@ -274,7 +273,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                                     key={client.id}
                                     value={client.id.toString()}
                                   >
-                                    {client.first_name} {client.last_name}
+                                    {client.clientId}
                                   </SelectItem>
                                 ))}
                               </SelectContent>

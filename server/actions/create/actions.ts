@@ -16,14 +16,10 @@ import { Resend } from "resend";
 import { revalidatePath } from "next/cache";
 
 interface ClientData {
-  first_name: string;
-  last_name: string;
-  dateOfBirth: Date;
   sex: string;
   race: string;
   userId: string;
-  contactInfo?: string;
-  caseNumber?: string;
+  clientId: string;
 }
 
 interface RequestData {
@@ -177,10 +173,7 @@ export async function newClient(clientState: ClientData) {
   if (!clientState.userId) {
     throw new Error("User not authenticated");
   }
-  // Server-side validation (example)
-  if (clientState.first_name.length < 2) {
-    throw new Error("First name must be at least 2 characters.");
-  }
+
   const newClientRecord = await createClient(clientState);
   if (!newClientRecord) {
     throw new Error("Failed to create client.");

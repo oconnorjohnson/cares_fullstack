@@ -45,11 +45,12 @@ model Agency {
 
 model Client {
   id          Int       @id @default(autoincrement())
-  first_name  String
-  last_name   String
-  contactInfo String? // Optional contact information
-  caseNumber  String? // Optional case number
-  dateOfBirth DateTime
+  clientId    String?   @unique
+  first_name  String?
+  last_name   String?
+  contactInfo String?
+  caseNumber  String?
+  dateOfBirth DateTime?
   sex         String
   race        String
   userId      String

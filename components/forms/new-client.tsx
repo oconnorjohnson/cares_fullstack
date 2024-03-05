@@ -16,6 +16,7 @@ import {
   FormField,
   FormItem,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import {
   Select,
@@ -42,48 +43,11 @@ import { trpc } from "@/app/_trpc/client";
 import { LoadingSpinner } from "@/components/admin/request/approve";
 
 const formSchema = z.object({
-  first_name: z
+  clientId: z
     .string()
-    .min(2, {
-      message: "First name must be at least 2 characters.",
-    })
-    .max(50, {
-      message: "First name must not exceed 50 characters.",
-    }),
-  last_name: z
-    .string()
-    .min(2, {
-      message: "Last name must be at least 2 characters.",
-    })
-    .max(50, {
-      message: "Last name must not exceed 50 characters.",
-    }),
-  contactInfo: z
-    .string()
-    .min(7, { message: "Contact info must be at least 7 characters" })
-    .max(50, { message: "Contact info must not exceed 50 characters" })
-    .refine(
-      (value) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const phoneRegex = /^\d{10}$/;
-        return emailRegex.test(value) || phoneRegex.test(value);
-      },
-      {
-        message:
-          "Contact info must be a valid email address or a 10-digit phone number",
-      },
-    )
-    .optional(),
-  caseNumber: z
-    .string()
-    .min(6, { message: "Case Number must be at least 6 characters" })
-    .max(50, { message: "Case Number must not exceed 50 characters" })
-    .optional(),
+    .min(1, { message: "clientId must be at least 6 character." }),
   race: z.string().min(1, { message: "Race must be selected." }),
   sex: z.string().min(1, { message: "Sex must be selected." }),
-  dateOfBirth: z.date().refine((date) => date <= new Date(), {
-    message: "Date of birth must be in the past.",
-  }),
 });
 
 export default function NewClient({ userId }: { userId: string | null }) {
@@ -91,13 +55,9 @@ export default function NewClient({ userId }: { userId: string | null }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      first_name: "",
-      last_name: "",
+      clientId: "",
       race: "",
       sex: "",
-      dateOfBirth: new Date(),
-      contactInfo: "",
-      caseNumber: "",
     },
   });
   const { reset } = form;
@@ -141,94 +101,21 @@ export default function NewClient({ userId }: { userId: string | null }) {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
             <FormField
               control={form.control}
-              name="first_name"
+              name="clientId"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input placeholder="First Name" {...field} />
+                    <Input placeholder="JD1234" {...field} />
                   </FormControl>
+                  <FormDescription>
+                    Client&apos;s first and last initial combined w/ last 4
+                    digits of case number.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="last_name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input placeholder="Last Name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="contactInfo"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      placeholder="Phone Number of Email Address"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="caseNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input placeholder="Case Number" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="dateOfBirth"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            " pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground",
-                          )}
-                        >
-                          {format(field.value, "PPP")}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={(date) => {
-                          field.onChange(date || new Date());
-                        }}
-                        disabled={(date) =>
-                          date > new Date() || date < new Date("1900-01-01")
-                        }
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <FormField
               control={form.control}
               name="race"

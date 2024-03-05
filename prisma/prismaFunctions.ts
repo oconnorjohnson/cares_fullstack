@@ -239,7 +239,11 @@ export async function createRequest(requestData: {
   );
   // process funds with conditional needsReceipt bool
   const processedFunds = requestData.funds.map((fund) => {
-    const needsReceipt = fundTypeMap[fund.fundTypeId] !== "Bus Pass";
+    const needsReceipt = !(
+      fundTypeMap[fund.fundTypeId] === "Bus Pass" ||
+      fundTypeMap[fund.fundTypeId] === "Walmart Gift Card" ||
+      fundTypeMap[fund.fundTypeId] === "Arco Gift Card"
+    );
     return {
       ...fund,
       needsReceipt,
@@ -277,25 +281,17 @@ export async function createRequest(requestData: {
 }
 
 export async function createClient(clientData: {
-  first_name: string;
-  last_name: string;
-  dateOfBirth: Date;
   sex: string;
   race: string;
   userId: string;
-  contactInfo?: string;
-  caseNumber?: string;
+  clientId: string;
 }) {
   const newClient = await prisma.client.create({
     data: {
-      first_name: clientData.first_name,
-      last_name: clientData.last_name,
-      dateOfBirth: clientData.dateOfBirth,
       sex: clientData.sex,
       race: clientData.race,
       userId: clientData.userId,
-      contactInfo: clientData.contactInfo,
-      caseNumber: clientData.caseNumber,
+      clientId: clientData.clientId,
     },
   });
   return newClient;
