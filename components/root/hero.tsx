@@ -8,10 +8,10 @@ export default function Hero() {
     <>
       <div className="flex flex-col items-center h-full space-y-8 lg:space-y-10 py-4">
         <div className="w-2/3">
-          <Alert className="bg-yellow-500 text-2xl font-bold">
+          <Alert className="bg-yellow-500 text-xl font-bold">
             <Terminal className="h-4 w-4" />
             <AlertTitle>Heads up!</AlertTitle>
-            <AlertDescription className="text-xl font-light">
+            <AlertDescription className="text-lg font-light">
               Stop by Panda Express at 2041 Bronze Star Drive in Woodland on
               March 18th to help support CARES and the Yolo County Public
               Defender&apos;s Office.
