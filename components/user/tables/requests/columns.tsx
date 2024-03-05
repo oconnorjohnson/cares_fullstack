@@ -148,7 +148,15 @@ export const columns: ColumnDef<Request>[] = [
         return <Badge color="green">Awaiting Payment</Badge>;
       } else if (hasPreScreen && paid && needsReceipts && !hasReceipts) {
         return <ReceiptDialog requestId={requestId} />;
-      } else if (hasPreScreen && paid && hasReceipts && !hasPostScreen) {
+      } else if (
+        hasPreScreen &&
+        paid &&
+        needsReceipts &&
+        hasReceipts &&
+        !hasPostScreen
+      ) {
+        return <PostScreen requestId={requestId} />;
+      } else if (hasPreScreen && paid && !needsReceipts && !hasPostScreen) {
         return <PostScreen requestId={requestId} />;
       } else if (hasPreScreen && hasPostScreen && paid) {
         return <Badge color="green">Request Completed and Closed</Badge>;
