@@ -13,6 +13,7 @@ import {
   getFundsThatNeedReceiptsByRequestId,
   getUserIdAndEmailByRequestId,
   getUserIdAndEmailByUserId,
+  getRequestsThatNeedAgreementsByUserId,
 } from "@/prisma/prismaFunctions";
 import { z } from "zod";
 
@@ -42,6 +43,12 @@ export const appRouter = router({
     .query(async ({ input: requestId }) => {
       const funds = await getFundsThatNeedReceiptsByRequestId(requestId);
       return funds;
+    }),
+  getRequestsThatNeedAgreements: publicProcedure
+    .input(z.string())
+    .query(async ({ input: userId }) => {
+      const requests = await getRequestsThatNeedAgreementsByUserId(userId);
+      return requests;
     }),
   getClients: publicProcedure
     .input(z.string())

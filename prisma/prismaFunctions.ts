@@ -327,6 +327,25 @@ export async function updateUser(userId: string, userData: any) {
   return updatedUser;
 }
 
+export async function addAgreementToRequest(
+  requestId: number,
+  agreementUrl: string,
+) {
+  const request = await prisma.request.findUnique({
+    where: { id: requestId },
+  });
+  if (!request) {
+    throw new Error(`Request with ID ${requestId} not found`);
+  }
+  const updatedRequest = await prisma.request.update({
+    where: { id: requestId },
+    data: {
+      agreementUrl: agreementUrl,
+    },
+  });
+  return updatedRequest;
+}
+
 export async function banUserById(userId: string) {
   const bannedUser = await prisma.user.update({
     where: { userId: userId },
@@ -554,6 +573,32 @@ export async function getAgencyNameById(agencyId: number) {
     },
   });
   return agency;
+}
+
+export async function getRequestsThatNeedAgreementsByUserId(userId: string) {
+  const requests = await prisma.request.findMany({
+    where: {
+      userId: userId,
+      agreementUrl: null,
+    },
+    select: {
+      id: true,
+      userId: true,
+      client: {
+        select: {
+          id: true,
+          clientId: true,
+        },
+      },
+      agency: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
+  return requests;
 }
 
 export async function getUserIdAndEmailByRequestId(requestId: number) {
@@ -841,6 +886,7 @@ export async function getRequestById(requestId: number) {
           isBanned: true,
         },
       },
+      agreementUrl: true,
       agency: true,
       details: true,
       pendingApproval: true,

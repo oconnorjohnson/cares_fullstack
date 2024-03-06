@@ -84,32 +84,32 @@ model FundType {
 }
 
 model Request {
-  id                  Int                @id @default(autoincrement())
-  clientId            Int
-  client              Client             @relation(fields: [clientId], references: [id])
-  userId              String
-  user                User               @relation(fields: [userId], references: [userId])
-  agencyId            Int
-  agency              Agency             @relation(fields: [agencyId], references: [id])
-  pendingApproval     Boolean            @default(true)
-  denied              Boolean            @default(false)
-  approved            Boolean            @default(false)
-  pendingPayout       Boolean            @default(false)
-  paid                Boolean            @default(false)
-  hasPreScreen        Boolean            @default(false)
-  needsReceipts       Boolean            @default(false)
-  hasReceipts         Boolean            @default(false)
-  hasPostScreen       Boolean            @default(false)
-  createdAt           DateTime           @default(now())
-  details             String             @db.Text
-  implementation      String             @db.Text
-  sustainability      String             @db.Text
-  preScreenAnswer     PreScreenAnswers?
-  postScreenAnswer    PostScreenAnswers?
-  requestFormAnswerId Int?
-  preScreenAnswerId   Int?
-  postScreenAnswerId  Int?
-  funds               Fund[]
+  id                 Int                @id @default(autoincrement())
+  clientId           Int
+  client             Client             @relation(fields: [clientId], references: [id])
+  userId             String
+  user               User               @relation(fields: [userId], references: [userId])
+  agencyId           Int
+  agency             Agency             @relation(fields: [agencyId], references: [id])
+  pendingApproval    Boolean            @default(true)
+  denied             Boolean            @default(false)
+  approved           Boolean            @default(false)
+  pendingPayout      Boolean            @default(false)
+  paid               Boolean            @default(false)
+  hasPreScreen       Boolean            @default(false)
+  needsReceipts      Boolean            @default(false)
+  hasReceipts        Boolean            @default(false)
+  hasPostScreen      Boolean            @default(false)
+  createdAt          DateTime           @default(now())
+  details            String             @db.Text
+  implementation     String             @db.Text
+  sustainability     String             @db.Text
+  preScreenAnswer    PreScreenAnswers?
+  postScreenAnswer   PostScreenAnswers?
+  agreementUrl       String?
+  preScreenAnswerId  Int?
+  postScreenAnswerId Int?
+  funds              Fund[]
 
   SDOHs   SDOH[]
   RFFs    RFF[]

@@ -6,6 +6,7 @@ import {
   DialogContent,
   DialogFooter,
   DialogClose,
+  DialogDescription,
   DialogOverlay,
   DialogPortal,
   DialogTitle,
@@ -16,7 +17,9 @@ import { toast } from "sonner";
 import { trpc } from "@/app/_trpc/client";
 import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
+import { revalidatePath } from "next/cache";
 import { sendReceiptEmail } from "@/server/actions/update/actions";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 async function sendEmail(firstName: string, email: string) {
   await sendReceiptEmail(firstName, email);
@@ -24,60 +27,49 @@ async function sendEmail(firstName: string, email: string) {
 }
 export default function ReceiptDialog({ requestId }: { requestId: number }) {
   const {
-    data: funds,
+    data: request,
     isLoading,
     isError,
-  } = trpc.getFundsThatNeedReceipts.useQuery(requestId);
+  } = trpc.getRequest.useQuery(requestId);
   const TRPCContext = trpc.useUtils();
   const { user } = useUser();
   const email = user?.emailAddresses[0]?.emailAddress || "";
   const firstName = user?.firstName || "";
-  const [completedUploads, setCompletedUploads] = useState<number[]>([]);
 
   if (isLoading) return <p>Loading...</p>;
-  if (isError || !funds) return <p>Error loading funds.</p>;
+  if (isError || !request) return <p>Error loading request.</p>;
   const handleUploadComplete = (fundId: number) => {
-    setCompletedUploads((prev) => [...prev, fundId]);
     toast.success("UploadCompleted");
-    sendEmail(firstName, email);
+    // sendEmail(firstName, email);
   };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Upload Receipts</Button>
+        <Button>Upload Agreement</Button>
       </DialogTrigger>
       <DialogOverlay />
       <DialogPortal>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Upload Receipts</DialogTitle>
+            <DialogTitle>Upload Agreement</DialogTitle>
             <DialogClose />
           </DialogHeader>
-          {funds.map((fund, index) => (
-            <div
-              className="flex flex-row justify-between"
-              key={index}
-              style={{ marginBottom: "10px" }}
-            >
-              <div>
-                {fund.fundType.typeName} - ${fund.amount}
-              </div>
-              {completedUploads.includes(fund.id) ? (
-                <Button
-                  disabled
-                  style={{ pointerEvents: "none", opacity: 0.5 }}
-                >
-                  Uploaded
-                </Button>
-              ) : (
-                <UploadButton
-                  endpoint="receiptUploader"
-                  input={{ fundId: fund.id, requestId: requestId }}
-                  onClientUploadComplete={() => handleUploadComplete(fund.id)}
-                />
-              )}
+          {!request.agreementUrl ? (
+            <div className="flex flex-row justify-between">
+              <div>Agreement</div>
+              <UploadButton
+                endpoint="agreementUploader"
+                input={{ requestId: request.id }}
+                onClientUploadComplete={() => handleUploadComplete(request.id)}
+              />
             </div>
-          ))}
+          ) : (
+            <div className="flex flex-row justify-between">
+              <div>Agreement</div>
+              <Button disabled>Uploaded</Button>
+            </div>
+          )}
         </DialogContent>
         <DialogFooter>
           <DialogClose>

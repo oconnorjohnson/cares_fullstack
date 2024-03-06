@@ -4,6 +4,7 @@ import NewRequest from "@/components/forms/new-request";
 import SideNavBar from "@/components/user/dashboard/side-nav";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import {
   Accordion,
@@ -21,6 +22,7 @@ import {
   giveUserIdGetRequestsNeedingPreScreen,
   giveUserIdGetRequestsNeedingReceipts,
   giveUserIdGetRequestsNeedingPostScreen,
+  giveUserIdGetRequestsNeedingAgreements,
 } from "@/server/actions/request/actions";
 import {
   Table,
@@ -37,9 +39,11 @@ import {
   CheckCircleIcon,
   XCircleIcon,
   ArrowRightIcon,
+  DownloadIcon,
 } from "lucide-react";
 import PreScreen from "@/components/forms/pre-screen";
 import PostScreen from "@/components/forms/post-screen";
+import AgreementDialog from "@/components/user/agreement-dialog";
 import ReceiptDialog from "@/components/user/receipt-dialog";
 
 async function fetchCounts(userId: string) {
@@ -64,6 +68,11 @@ async function fetchRequestsNeedingPostScreen(userId: string) {
     await giveUserIdGetRequestsNeedingPostScreen(userId);
   return RequestsNeedPostScreen;
 }
+async function fetchRequestsNeedingAgreements(userId: string) {
+  const requestsNeedAgreements =
+    await giveUserIdGetRequestsNeedingAgreements(userId);
+  return requestsNeedAgreements;
+}
 export default async function Dashboard() {
   const { userId } = auth();
   if (!userId) {
@@ -74,9 +83,12 @@ export default async function Dashboard() {
     const requestsNeedPreScreen = await fetchRequestsNeedingPreScreen(userId);
     const requestsNeedReceipts = await fetchRequestsNeedingReceipts(userId);
     const requestsNeedPostScreen = await fetchRequestsNeedingPostScreen(userId);
+    const requestsNeedAgreements = await fetchRequestsNeedingAgreements(userId);
     const countPreScreenRequests = () => requestsNeedPreScreen.length;
     const countReceiptsRequests = () => requestsNeedReceipts.length;
     const countPostScreenRequests = () => requestsNeedPostScreen.length;
+    const countAgreementRequests = () => requestsNeedAgreements.length;
+
     return (
       <>
         <div className="flex flex-row">
@@ -260,6 +272,73 @@ export default async function Dashboard() {
                               ))}
                             </TableBody>
                           </Table>
+                        </AccordionContent>
+                      </AccordionItem>
+                      <AccordionItem value="item-4">
+                        <AccordionTrigger>
+                          <div className="flex flex-row items-center">
+                            Outstanding Agreement Uploads
+                            <Badge className="ml-2">
+                              {countAgreementRequests()}
+                            </Badge>
+                          </div>
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead>Client ID</TableHead>
+                                <TableHead>Agency Name</TableHead>
+
+                                <TableHead>Action</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {requestsNeedAgreements.map((request) => (
+                                <TableRow key={request.id}>
+                                  <TableCell>
+                                    {request.client.clientId}
+                                  </TableCell>
+                                  <TableCell>{request.agency.name}</TableCell>
+
+                                  <TableCell>
+                                    <AgreementDialog requestId={request.id} />
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="flex flex-col flex-grow">
+                <Card className="mb-8">
+                  <CardHeader>
+                    <CardTitle>Resources</CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex flex-row justify-start space-x-4 items-center">
+                    <Accordion type="single" collapsible className="w-full">
+                      <AccordionItem value="item-1">
+                        <AccordionTrigger>
+                          <div className="flex flex-row items-center">
+                            Forms and Agreements
+                          </div>
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <div className="flex flex-row justify-start space-x-4 items-center">
+                            <Link
+                              className="underline"
+                              href="https://utfs.io/f/03fe23bf-077f-4df3-8923-0b985814066a-xthtld.pdf"
+                            >
+                              <Button variant="ghost">
+                                Verification of Client&apos;s Receipt of Support
+                                <DownloadIcon className="ml-2 h-4 w-4" />
+                              </Button>
+                            </Link>
+                          </div>
                         </AccordionContent>
                       </AccordionItem>
                     </Accordion>
