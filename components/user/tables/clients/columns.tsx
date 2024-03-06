@@ -22,7 +22,7 @@ export type Client = {
 
 export const columns: ColumnDef<Client>[] = [
   {
-    accessorKey: "name",
+    accessorKey: "clientId",
     header: ({ column }) => {
       return (
         <Button
@@ -30,7 +30,7 @@ export const columns: ColumnDef<Client>[] = [
           size="sm"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Client
+          Client ID
         </Button>
       );
     },
