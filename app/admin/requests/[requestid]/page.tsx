@@ -450,8 +450,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="border py-4 mx-4 rounded-lg">
-                  {/* <Link href={request.agreementUrl}> */}
-                  <Link href="/">
+                  <Link href={request.agreementUrl}>
                     <Button className="">
                       Download <ArrowDownIcon className="pl-2" />
                     </Button>
