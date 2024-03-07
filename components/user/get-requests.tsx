@@ -86,9 +86,7 @@ export default function GetRequests({ userId }: { userId: string | null }) {
           <TableBody>
             {requests.map((request) => (
               <TableRow key={request.id}>
-                <TableCell>
-                  {request.client?.first_name} {request.client?.last_name}
-                </TableCell>
+                <TableCell>{request.client?.clientId}</TableCell>
                 <TableCell>{request.agency?.name}</TableCell>
                 <TableCell>
                   {format(parseISO(request.createdAt), "MM/dd/yyyy")}
