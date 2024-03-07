@@ -170,8 +170,8 @@ export default async function Dashboard() {
                           <Table>
                             <TableHeader>
                               <TableRow>
-                                <TableHead>Client Name</TableHead>
-                                <TableHead>Agency Name</TableHead>
+                                <TableHead>Client</TableHead>
+                                <TableHead>Agency</TableHead>
                                 <TableHead>Submission Date</TableHead>
                                 <TableHead>Action</TableHead>
                               </TableRow>
@@ -180,8 +180,9 @@ export default async function Dashboard() {
                               {requestsNeedPreScreen.map((request) => (
                                 <TableRow key={request.id}>
                                   <TableCell>
-                                    {request.client.first_name &&
-                                      request.client.last_name}
+                                    {request.client.clientId
+                                      ? `${request.client.clientId}`
+                                      : "'ClientID' not found."}
                                   </TableCell>
                                   <TableCell>{request.agency.name}</TableCell>
                                   <TableCell>
@@ -209,8 +210,8 @@ export default async function Dashboard() {
                           <Table>
                             <TableHeader>
                               <TableRow>
-                                <TableHead>Client Name</TableHead>
-                                <TableHead>Agency Name</TableHead>
+                                <TableHead>Client</TableHead>
+                                <TableHead>Agency</TableHead>
                                 <TableHead>Submission Date</TableHead>
                                 <TableHead>Action</TableHead>
                               </TableRow>
@@ -219,8 +220,9 @@ export default async function Dashboard() {
                               {requestsNeedReceipts.map((request) => (
                                 <TableRow key={request.id}>
                                   <TableCell>
-                                    {request.client.first_name &&
-                                      request.client.last_name}
+                                    {request.client.clientId
+                                      ? `${request.client.clientId}`
+                                      : "'ClientID' not found."}
                                   </TableCell>
                                   <TableCell>{request.agency.name}</TableCell>
                                   <TableCell>
@@ -248,8 +250,8 @@ export default async function Dashboard() {
                           <Table>
                             <TableHeader>
                               <TableRow>
-                                <TableHead>Client Name</TableHead>
-                                <TableHead>Agency Name</TableHead>
+                                <TableHead>Client</TableHead>
+                                <TableHead>Agency</TableHead>
                                 <TableHead>Submission Date</TableHead>
                                 <TableHead>Action</TableHead>
                               </TableRow>
@@ -258,13 +260,15 @@ export default async function Dashboard() {
                               {requestsNeedPostScreen.map((request) => (
                                 <TableRow key={request.id}>
                                   <TableCell>
-                                    {request.client.first_name &&
-                                      request.client.last_name}
+                                    {request.client.clientId
+                                      ? `${request.client.clientId}`
+                                      : "'ClientID' not found."}
                                   </TableCell>
                                   <TableCell>{request.agency.name}</TableCell>
                                   <TableCell>
                                     {request.createdAt.toDateString()}
                                   </TableCell>
+
                                   <TableCell>
                                     <PostScreen requestId={request.id} />
                                   </TableCell>
@@ -289,7 +293,7 @@ export default async function Dashboard() {
                               <TableRow>
                                 <TableHead>Client ID</TableHead>
                                 <TableHead>Agency Name</TableHead>
-
+                                <TableHead>Submission Date</TableHead>
                                 <TableHead>Action</TableHead>
                               </TableRow>
                             </TableHeader>
@@ -297,9 +301,14 @@ export default async function Dashboard() {
                               {requestsNeedAgreements.map((request) => (
                                 <TableRow key={request.id}>
                                   <TableCell>
-                                    {request.client.clientId}
+                                    {request.client.clientId
+                                      ? `${request.client.clientId}`
+                                      : "'ClientID' not found."}
                                   </TableCell>
                                   <TableCell>{request.agency.name}</TableCell>
+                                  <TableCell>
+                                    {request.createdAt.toDateString()}
+                                  </TableCell>
 
                                   <TableCell>
                                     <AgreementDialog requestId={request.id} />

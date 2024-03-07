@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import ReceiptDialog from "@/components/user/receipt-dialog";
+import AgreementDialog from "@/components/user/agreement-dialog";
 
 export type Request = {
   id: number;
@@ -24,8 +25,9 @@ export type Request = {
   };
   client: {
     id: number;
-    first_name: string;
-    last_name: string;
+    clientId: string | null;
+    race: string;
+    sex: string;
   };
   user: {
     id: number;
@@ -45,6 +47,7 @@ export type Request = {
   denied: boolean;
   pendingPayout: boolean;
   paid: boolean;
+  agreementUrl: string | null;
   hasPreScreen: boolean;
   hasPostScreen: boolean;
   needsReceipts: boolean;
@@ -134,34 +137,58 @@ export const columns: ColumnDef<Request>[] = [
         denied,
         needsReceipts,
         hasReceipts,
+        agreementUrl,
         id: requestId,
       } = row.original;
       let content;
 
       if (denied) {
-        return <Badge color="red">Closed</Badge>;
+        return <Badge color="red">Denied</Badge>;
       } else if (!hasPreScreen) {
         return <PreScreen requestId={requestId} />;
       } else if (hasPreScreen && pendingApproval) {
         return <Badge color="yellow">Pending Approval</Badge>;
       } else if (hasPreScreen && approved && !paid) {
         return <Badge color="green">Awaiting Payment</Badge>;
-      } else if (hasPreScreen && paid && needsReceipts && !hasReceipts) {
+      } else if (hasPreScreen && approved && paid && !agreementUrl) {
+        return <AgreementDialog requestId={requestId} />;
+      } else if (
+        hasPreScreen &&
+        approved &&
+        paid &&
+        agreementUrl &&
+        !needsReceipts
+      ) {
+        return <PostScreen requestId={requestId} />;
+      } else if (
+        hasPreScreen &&
+        paid &&
+        agreementUrl &&
+        needsReceipts &&
+        !hasReceipts
+      ) {
         return <ReceiptDialog requestId={requestId} />;
       } else if (
         hasPreScreen &&
         paid &&
+        agreementUrl &&
         needsReceipts &&
         hasReceipts &&
         !hasPostScreen
       ) {
         return <PostScreen requestId={requestId} />;
-      } else if (hasPreScreen && paid && !needsReceipts && !hasPostScreen) {
-        return <PostScreen requestId={requestId} />;
-      } else if (hasPreScreen && hasPostScreen && paid) {
+      } else if (
+        approved &&
+        hasPreScreen &&
+        paid &&
+        agreementUrl &&
+        hasPostScreen
+      ) {
         return <Badge color="green">Request Completed and Closed</Badge>;
       } else {
-        return <Badge color="red">Check request details</Badge>;
+        return (
+          <Badge color="red">Email info@yolopublicdefendercares.org</Badge>
+        );
       }
     },
   },

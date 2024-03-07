@@ -12,9 +12,7 @@ async function getRequests({ userId }: { userId: string }): Promise<Request[]> {
     ...request,
     id: request.id,
     agency: request.agency ? request.agency.name : "N/A",
-    client: request.client
-      ? `${request.client.first_name} ${request.client.last_name}`
-      : "N/A",
+    client: request.client ? `${request.client.clientId}` : "N/A",
     createdAt: format(new Date(request.createdAt), "PPpp"), // Adjust the format string as needed
     // Convert boolean fields to readable strings (if necessary)
     combinedStatus: request.pendingApproval

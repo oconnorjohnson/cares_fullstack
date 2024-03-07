@@ -47,8 +47,9 @@ export type RequestData = {
   agency: { id: number; name: string; userId: string };
   client: {
     id: number;
-    first_name: string | null;
-    last_name: string | null;
+    clientId: string | null;
+    race: string;
+    sex: string;
     // clientId: string | null;
   };
   pendingApproval: boolean;

@@ -580,6 +580,8 @@ export async function getRequestsThatNeedAgreementsByUserId(userId: string) {
     where: {
       userId: userId,
       agreementUrl: null,
+      hasPreScreen: true,
+      paid: true,
     },
     select: {
       id: true,
@@ -596,6 +598,7 @@ export async function getRequestsThatNeedAgreementsByUserId(userId: string) {
           name: true,
         },
       },
+      createdAt: true,
     },
   });
   return requests;
@@ -765,9 +768,9 @@ export async function getAllRequests() {
       client: {
         select: {
           id: true,
-          first_name: true,
-          last_name: true,
-          userId: true,
+          race: true,
+          sex: true,
+          clientId: true,
         },
       },
       user: {
@@ -971,8 +974,8 @@ export async function getRequestsByUserId(userId: string) {
       client: {
         select: {
           id: true,
-          first_name: true,
-          last_name: true,
+          race: true,
+          sex: true,
           clientId: true,
         },
       },
