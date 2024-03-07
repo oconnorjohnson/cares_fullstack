@@ -85,8 +85,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
             <CardHeader>
               <CardTitle className="flex flex-cols-3 justify-between">
                 <div className="text-center text-3xl pt-0.5">
-                  {request.user.first_name}&apos;s request for{" "}
-                  {request.client.first_name} from{" "}
+                  {request.user.first_name}&apos;s request from{" "}
                   {formatDateWithSuffix(request.createdAt)}.
                 </div>
                 <div className="flex flex-row justify-between px-6">
