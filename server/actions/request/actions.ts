@@ -53,6 +53,7 @@ export type RequestData = {
     // clientId: string | null;
   };
   pendingApproval: boolean;
+  agreementUrl: string | null;
   implementation: string;
   sustainability: string | null;
   approved: boolean;

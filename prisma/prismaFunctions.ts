@@ -791,6 +791,7 @@ export async function getAllRequests() {
       agency: true,
       details: true,
       pendingApproval: true,
+      agreementUrl: true,
       approved: true,
       denied: true,
       pendingPayout: true,

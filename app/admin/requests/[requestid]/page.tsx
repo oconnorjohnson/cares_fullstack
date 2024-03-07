@@ -440,6 +440,24 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
             </CardContent>
             <CardFooter></CardFooter>
           </Card>
+          {request.agreementUrl ? (
+            <>
+              <div className="py-4" />
+              <Card className="w-2/3">
+                <CardHeader>
+                  <CardTitle className="flex flex-col text-2xl font-bold">
+                    Signed Agreement
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="border py-4 mx-4 rounded-lg">
+                  <Link href={request.agreementUrl}>Download</Link>
+                </CardContent>
+                <CardFooter></CardFooter>
+              </Card>
+            </>
+          ) : (
+            <div />
+          )}
           {request.preScreenAnswer && request.approved && !request.paid ? (
             <>
               <div className="py-4" />
