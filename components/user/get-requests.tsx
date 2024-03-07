@@ -146,8 +146,8 @@ export default function GetRequests({ userId }: { userId: string | null }) {
                       <DialogHeader>
                         <DialogTitle>Request Details</DialogTitle>
                         <DialogDescription>
-                          A summary of {request.client?.first_name}&apos;s
-                          request from{" "}
+                          A summary of {request.client?.clientId}&apos;s request
+                          from{" "}
                           {formatDateWithSuffix(parseISO(request.createdAt))}.
                         </DialogDescription>
                       </DialogHeader>
@@ -157,10 +157,7 @@ export default function GetRequests({ userId }: { userId: string | null }) {
                             <Label htmlFor="first_name" className="text-right">
                               Name
                             </Label>
-                            <div>
-                              {request.client?.first_name}{" "}
-                              {request.client?.last_name}
-                            </div>
+                            <div>{request.client?.clientId}</div>
                           </div>
                           <div className="grid grid-cols-2 items-center gap-4">
                             <Label htmlFor="last_name" className="text-right">
