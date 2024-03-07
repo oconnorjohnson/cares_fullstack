@@ -1,6 +1,7 @@
 import "server-only";
 import { PrismaClient } from "@prisma/client";
 import { revalidatePath } from "next/cache";
+import { sendReceiptEmail } from "@/server/actions/update/actions";
 export const prisma = new PrismaClient();
 
 // TYPES
@@ -343,6 +344,8 @@ export async function addAgreementToRequest(
       agreementUrl: agreementUrl,
     },
   });
+  revalidatePath(`/dashboard`);
+  revalidatePath(`/user/requests`);
   return updatedRequest;
 }
 

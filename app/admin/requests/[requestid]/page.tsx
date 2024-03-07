@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { requestRequestByRequestId } from "@/server/actions/request/actions";
 import { formatDateWithSuffix } from "@/server/utils";
-import { XIcon, CheckIcon, ArrowLeftIcon } from "lucide-react";
+import { XIcon, CheckIcon, ArrowLeftIcon, ArrowDownIcon } from "lucide-react";
 import FundAction from "@/components/admin/fund-actions";
 import Link from "next/link";
 import DenyButton from "@/components/admin/request/deny";
@@ -450,7 +450,12 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="border py-4 mx-4 rounded-lg">
-                  <Link href={request.agreementUrl}>Download</Link>
+                  {/* <Link href={request.agreementUrl}> */}
+                  <Link href="/">
+                    <Button className="">
+                      Download <ArrowDownIcon className="pl-2" />
+                    </Button>
+                  </Link>
                 </CardContent>
                 <CardFooter></CardFooter>
               </Card>
