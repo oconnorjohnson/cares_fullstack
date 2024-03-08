@@ -338,7 +338,7 @@ export type Database = {
       Request: {
         Row: {
           agencyId: number;
-          agreementUrl: string;
+          agreementUrl: string | null;
           approved: boolean;
           clientId: number;
           created_at: string;
@@ -361,7 +361,7 @@ export type Database = {
         };
         Insert: {
           agencyId: number;
-          agreementUrl: string;
+          agreementUrl?: string | null;
           approved?: boolean;
           clientId: number;
           created_at?: string;
@@ -384,7 +384,7 @@ export type Database = {
         };
         Update: {
           agencyId?: number;
-          agreementUrl?: string;
+          agreementUrl?: string | null;
           approved?: boolean;
           clientId?: number;
           created_at?: string;
