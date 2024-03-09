@@ -4,11 +4,12 @@ import { TablesInsert } from "@/types_db";
 export async function countPendingRequests() {
   const supabase = createSupabaseClient();
   try {
-    const pendingRequests = await supabase
+    const { count, error } = await supabase
       .from("Request")
-      .select("*")
+      .select("*", { count: "exact" })
       .eq("pendingApproval", true);
-    return pendingRequests;
+    if (error) throw error;
+    return count;
   } catch (error) {
     throw error;
   }
@@ -17,12 +18,13 @@ export async function countPendingRequests() {
 export async function countCompletedRequests() {
   const supabase = createSupabaseClient();
   try {
-    const completedRequests = await supabase
+    const { count, error } = await supabase
       .from("Request")
-      .select("*")
+      .select("*", { count: "exact" })
       .eq("approved", true)
       .eq("paid", true);
-    return completedRequests;
+    if (error) throw error;
+    return count;
   } catch (error) {
     throw error;
   }
@@ -31,11 +33,12 @@ export async function countCompletedRequests() {
 export async function countClientsByUserId(userId: string) {
   const supabase = createSupabaseClient();
   try {
-    const clients = await supabase
+    const { count, error } = await supabase
       .from("Client")
-      .select("*")
+      .select("*", { count: "exact" })
       .eq("userId", userId);
-    return clients;
+    if (error) throw error;
+    return count;
   } catch (error) {
     throw error;
   }
@@ -44,11 +47,12 @@ export async function countClientsByUserId(userId: string) {
 export async function countDeniedRequests() {
   const supabase = createSupabaseClient();
   try {
-    const deniedRequests = await supabase
+    const { count, error } = await supabase
       .from("Request")
-      .select("*")
+      .select("*", { count: "exact" })
       .eq("denied", true);
-    return deniedRequests;
+    if (error) throw error;
+    return count;
   } catch (error) {
     throw error;
   }

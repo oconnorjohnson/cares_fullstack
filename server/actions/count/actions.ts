@@ -12,21 +12,33 @@ import { getAllAgencyIds } from "@/server/supabase/functions/read";
 
 export async function CountRequestsPendingApproval() {
   const pendingRequests = await countPendingRequests();
+  if (!pendingRequests) {
+    throw new Error("Failed to count pending requests.");
+  }
   return pendingRequests;
 }
 
 export async function CountClientsByUserId(userId: string) {
   const clients = await countClientsByUserId(userId);
+  if (!clients) {
+    throw new Error("Failed to count clients by user ID.");
+  }
   return clients;
 }
 
 export async function CountRequestsCompleted() {
   const completedRequests = await countCompletedRequests();
+  if (!completedRequests) {
+    throw new Error("Failed to count completed requests.");
+  }
   return completedRequests;
 }
 
 export async function CountRequestsDenied() {
   const deniedRequests = await countDeniedRequests();
+  if (!deniedRequests) {
+    throw new Error("Failed to count denied requests.");
+  }
   return deniedRequests;
 }
 
