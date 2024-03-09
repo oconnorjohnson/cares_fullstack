@@ -80,7 +80,7 @@ export function DeniedCard({ deniedRequests }: { deniedRequests: number }) {
 export function RequestsTimeGraph({
   AgencyData,
 }: {
-  AgencyData: { agencyName: string | null; requestCount: number }[];
+  AgencyData: { agencyName: string; count: number | null }[];
 }) {
   return (
     <>

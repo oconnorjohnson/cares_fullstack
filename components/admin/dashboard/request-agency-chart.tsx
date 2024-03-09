@@ -12,7 +12,7 @@ import {
 export default function RequestAgencyChart({
   AgencyData,
 }: {
-  AgencyData: { agencyName: string | null; requestCount: number }[];
+  AgencyData: { agencyName: string; count: number | null }[];
 }) {
   console.log(AgencyData);
   const TooltipWrapperStyle = {

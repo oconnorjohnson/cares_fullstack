@@ -7,7 +7,7 @@ import {
   createPreScreen,
   createPostScreen,
   createNewFundByRequestId,
-} from "@/prisma/prismaFunctions";
+} from "@/server/supabase/functions/create";
 
 import { Submitted } from "@/server/actions/resend/actions";
 import { EmailTemplate as SubmittedEmailTemplate } from "@/components/emails/submitted";
@@ -19,7 +19,7 @@ interface ClientData {
   sex: string;
   race: string;
   userId: string;
-  clientId: string;
+  clientID: string;
 }
 
 interface RequestData {
@@ -53,6 +53,7 @@ interface AgencyData {
 }
 
 interface PreScreenData {
+  requestId: number;
   housingSituation: number;
   housingQuality: number;
   utilityStress: number;
@@ -65,6 +66,7 @@ interface PreScreenData {
 }
 
 interface PostScreenData {
+  requestId: number;
   housingSituation: number;
   housingQuality: number;
   utilityStress: number;
@@ -112,7 +114,7 @@ export async function newPreScreen(
     );
   }
   try {
-    const newPreScreenRecord = await createPreScreen(preScreenState, requestId);
+    const newPreScreenRecord = await createPreScreen(preScreenState);
     revalidatePath("/admin/request/${requestId}");
     revalidatePath("/dashboard");
     revalidatePath("/user/requests");
@@ -136,10 +138,7 @@ export async function newPostScreen(
     );
   }
   try {
-    const newPostScreenRecord = await createPostScreen(
-      postScreenState,
-      requestId,
-    );
+    const newPostScreenRecord = await createPostScreen(postScreenState);
     revalidatePath("/admin/request/${requestId}");
     revalidatePath("/dashboard");
     revalidatePath("/user/requests");
@@ -205,7 +204,7 @@ export async function newRequest(requestState: RequestData) {
         firstName: requestState.firstName,
       }) as React.ReactElement,
     });
-    await revalidatePath(`/dashboard/page`);
+    revalidatePath(`/dashboard/page`);
     console.log("Request created successfully:", newRequestRecord);
     return newRequestRecord;
   } catch (error) {

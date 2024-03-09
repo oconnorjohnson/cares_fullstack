@@ -1,9 +1,12 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
-import { createUser, updateUser, deleteUser } from "@/prisma/prismaFunctions";
+import { createUser } from "@/server/supabase/functions/create";
+import { updateUser } from "@/server/supabase/functions/update";
+import { deleteUser } from "@/server/supabase/functions/delete";
 import { EmailTemplate } from "@/components/emails/welcome";
 import { Resend } from "resend";
+import { Tables } from "@/types_db";
 
 interface EmailAddress {
   email_address: string;
@@ -106,7 +109,7 @@ export async function POST(req: Request) {
       };
       console.log("Creating user in database");
       const user = await createUser(userData);
-      console.log(`User ${user.id} created successfully`);
+      console.log(`User ${user} created successfully`);
 
       if (email_addresses.length > 0) {
         const primaryEmail = email_addresses[0].email_address;
@@ -121,6 +124,7 @@ export async function POST(req: Request) {
         evt.data as UserData;
       console.log(`Updating user: ID=${id}`);
       const userData = {
+        userId: id,
         first_name,
         last_name,
         emailAddresses: email_addresses.map((emailAddress) => ({
@@ -130,7 +134,7 @@ export async function POST(req: Request) {
       };
       console.log("Updating user in database with new details");
       const user = await updateUser(id, userData);
-      console.log(`User ${user.id} updated`);
+      console.log(`User ${user} updated`);
       break;
     }
     case "user.deleted": {

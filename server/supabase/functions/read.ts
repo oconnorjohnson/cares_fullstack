@@ -1,5 +1,5 @@
 import { createClient as createSupabaseClient } from "@/server/supabase/server";
-import { TablesInsert } from "@/types_db";
+import { Tables } from "@/types_db";
 
 export async function getAgencyNameById(agencyId: number) {
   const supabase = createSupabaseClient();
@@ -109,6 +109,17 @@ export async function getAllAgencies() {
   }
 }
 
+export async function getAllAgencyIds() {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase.from("Agency").select("id, name");
+    if (error) throw error;
+    return { data, error };
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function getFundTypes() {
   const supabase = createSupabaseClient();
   try {
@@ -119,21 +130,105 @@ export async function getFundTypes() {
   }
 }
 
-// getAgencyNameById
-// getRequestsThatNeedAgreementsByUserId
-// getUserIdAndEmailByRequestId
-// getUserIdAndEmailByUserId
-// getFundsThatNeedReceiptsByRequestId
-// getUsers
-// getFunds
-// getAllAgencies
-// getFundTypes
-// getClientsByUserId
-// getClientByClientId
-// getAdminRequests
-// getAllRequests
-// getRequestById
-// getRequestsByUserId
-// getRequestsNeedingPreScreenByUserId
-// getRequestsNeedingReceiptsByUserId
-// getRequestsNeedingPostScreenByUserId
+export async function getUserIdByRequestId(requestId: number) {
+  const supabase = createSupabaseClient();
+  try {
+    const user = await supabase
+      .from("Request")
+      .select("*")
+      .eq("id", requestId)
+      .eq("userId", requestId);
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getEmailByUserId(userId: string) {
+  const supabase = createSupabaseClient();
+  try {
+    const email = await supabase
+      .from("EmailAddress")
+      .select("*")
+      .eq("userId", userId);
+    return email;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getClientsByUserId(userId: string) {
+  const supabase = createSupabaseClient();
+  try {
+    const clients = await supabase
+      .from("Client")
+      .select("*")
+      .eq("userId", userId);
+    return clients;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getClientByClientId(clientId: number) {
+  const supabase = createSupabaseClient();
+  try {
+    const client = await supabase.from("Client").select("*").eq("id", clientId);
+    return client;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getAdminRequests() {
+  const supabase = createSupabaseClient();
+  try {
+    const requests = await supabase.from("Request").select("*");
+    return requests;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getRequestById(requestId: number) {
+  const supabase = createSupabaseClient();
+  try {
+    const request = await supabase
+      .from("Request")
+      .select("*")
+      .eq("id", requestId);
+    return request;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getRequestsNeedingReceiptsByUserId(userId: string) {
+  const supabase = createSupabaseClient();
+  try {
+    const requests = await supabase
+      .from("Request")
+      .select("*")
+      .eq("userId", userId)
+      .eq("needsReceipts", true)
+      .eq("hasReceipts", false);
+    return requests;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getRequestsNeedingPostScreenByUserId(userId: string) {
+  const supabase = createSupabaseClient();
+  try {
+    const requests = await supabase
+      .from("Request")
+      .select("*")
+      .eq("userId", userId)
+      .eq("hasPreScreen", false)
+      .eq("hasPostScreen", false);
+    return requests;
+  } catch (error) {
+    throw error;
+  }
+}

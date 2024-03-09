@@ -7,7 +7,8 @@ import {
   countApprovedRequestsByUserId,
   countDeniedRequestsByUserId,
   countClientsByUserId,
-} from "@/prisma/prismaFunctions";
+} from "@/server/supabase/functions/count";
+import { getAllAgencyIds } from "@/server/supabase/functions/read";
 import { revalidatePath } from "next/cache";
 
 export async function CountRequestsPendingApproval() {
@@ -31,8 +32,22 @@ export async function CountRequestsDenied() {
 }
 
 export async function CountRequestsByAgency() {
-  const requestsByAgency = await countRequestsByAgency();
-  return requestsByAgency;
+  const { data: agencyData, error: agencyError } = await getAllAgencyIds();
+  if (agencyError) {
+    throw new Error(`Failed to get agency IDs: ${agencyError}`);
+  }
+  if (!agencyData) {
+    throw new Error("No agency data found.");
+  }
+
+  const results = [];
+
+  for (const agency of agencyData) {
+    const { count } = await countRequestsByAgency(agency.id);
+    results.push({ agencyId: agency.id, agencyName: agency.name, count });
+  }
+
+  return results;
 }
 
 export async function CountOpenRequestsByUserId(userId: string) {

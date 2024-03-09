@@ -15,9 +15,9 @@ import { AgencyById } from "@/server/actions/request/actions";
 async function getAgencyDataWithNames() {
   const agencyData = await CountRequestsByAgency();
   const agencyDataWithNames = await Promise.all(
-    agencyData.map(async ({ agencyId, requestCount }) => {
+    agencyData.map(async ({ agencyId, agencyName, count }) => {
       const agency = await AgencyById(agencyId);
-      return { agencyName: agency ? agency.name : null, requestCount };
+      return { agencyName, count };
     }),
   );
   return agencyDataWithNames;

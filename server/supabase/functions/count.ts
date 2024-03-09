@@ -57,11 +57,14 @@ export async function countDeniedRequests() {
 export async function countRequestsByAgency(agencyId: number) {
   const supabase = createSupabaseClient();
   try {
-    const requestsByAgency = await supabase
+    const { count, error } = await supabase
       .from("Request")
-      .select("*")
+      .select("*", { count: "exact" })
       .eq("agencyId", agencyId);
-    return requestsByAgency;
+
+    if (error) throw error;
+
+    return { count };
   } catch (error) {
     throw error;
   }
