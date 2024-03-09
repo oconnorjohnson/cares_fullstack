@@ -28,6 +28,16 @@ export async function getRequestsThatNeedAgreementsByUserId(userId: string) {
   }
 }
 
+export async function getAllRequests() {
+  const supabase = createSupabaseClient();
+  try {
+    const requests = await supabase.from("Request").select("*");
+    return requests;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function getRequestsNeedingPreScreenByUserId(userId: string) {
   const supabase = createSupabaseClient();
   try {

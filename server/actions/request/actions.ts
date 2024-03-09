@@ -16,7 +16,8 @@ import {
   getRequestsNeedingPostScreenByUserId,
   getClientByClientId,
   getRequestsThatNeedAgreementsByUserId,
-} from "@/prisma/prismaFunctions";
+} from "@/server/supabase/functions/read";
+import { Tables } from "@/types_db";
 import { revalidatePath } from "next/cache";
 
 export type FundTypeData = {
@@ -136,16 +137,16 @@ export async function giveUserIdGetRequestsNeedingPostScreen(userId: string) {
 
 export async function requestUsersRequests(
   userId: string,
-): Promise<RequestData[]> {
+): Promise<Tables<"Request">[]> {
   try {
-    const allUserRequestRecords: RequestData[] =
-      await getRequestsByUserId(userId);
-    return allUserRequestRecords;
+    const response = await getRequestsByUserId(userId);
+    const requests = response.data;
+    if (!requests) {
+      throw new Error("Failed to fetch requests for user.");
+    }
+    return requests;
   } catch (error) {
-    console.error(
-      "Failed to get call getRequestsByUserId from prismaFunctions:",
-      error,
-    );
+    console.error(`Failed to fetch requests for user ${userId}:`, error);
     throw error;
   }
 }
@@ -163,27 +164,40 @@ export async function requestUsersClients(userId: string) {
   }
 }
 
-export async function requestAllFundTypes() {
+export async function requestAllFundTypes(): Promise<Tables<"FundType">[]> {
   try {
-    const allFundTypeRecords: FundTypeData[] = await getFundTypes();
-    return allFundTypeRecords;
+    const response = await getFundTypes();
+    const fundTypes = response.data;
+    if (!fundTypes) {
+      throw new Error("Failed to fetch fund types.");
+    }
+    return fundTypes;
   } catch (error) {
     console.error("Failed to call get Fund Types from prismaFunctions:", error);
     throw error;
   }
 }
-export async function requestAllRequests(): Promise<RequestData[]> {
+export async function requestAllRequests(): Promise<Tables<"Request">[]> {
   try {
-    const allRequestRecords: RequestData[] = await getAllRequests();
-    return allRequestRecords;
+    const response = await getAllRequests();
+    const requests = response.data;
+    if (!requests) {
+      throw new Error("Failed to fetch requests.");
+    }
+    return requests;
   } catch (error) {
-    console.error("Failed to call getAllRequests from prismaFunctions:", error);
+    console.error(`Failed to fetch requests:`, error);
     throw error;
   }
 }
-export async function getPaidFunds(): Promise<FundData[]> {
+
+export async function getPaidFunds(): Promise<Tables<"Fund">[]> {
   try {
-    const paidFunds = await getFunds();
+    const response = await getFunds();
+    const paidFunds = response.data;
+    if (!paidFunds) {
+      throw new Error("Failed to fetch paid funds.");
+    }
     return paidFunds;
   } catch (error) {
     console.error("Failed to get paid funds:", error);
