@@ -51,7 +51,6 @@ export type RequestData = {
     clientId: string | null;
     race: string;
     sex: string;
-    // clientId: string | null;
   };
   pendingApproval: boolean;
   agreementUrl: string | null;
@@ -177,6 +176,7 @@ export async function requestAllFundTypes(): Promise<Tables<"FundType">[]> {
     throw error;
   }
 }
+
 export async function requestAllRequests(): Promise<Tables<"Request">[]> {
   try {
     const response = await getAllRequests();

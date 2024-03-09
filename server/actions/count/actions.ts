@@ -9,7 +9,6 @@ import {
   countClientsByUserId,
 } from "@/server/supabase/functions/count";
 import { getAllAgencyIds } from "@/server/supabase/functions/read";
-import { revalidatePath } from "next/cache";
 
 export async function CountRequestsPendingApproval() {
   const pendingRequests = await countPendingRequests();
