@@ -63,15 +63,24 @@ export async function CountRequestsByAgency() {
 
 export async function CountOpenRequestsByUserId(userId: string) {
   const openRequests = await countOpenRequestsByUserId(userId);
+  if (!openRequests) {
+    throw new Error("Failed to count open requests");
+  }
   return openRequests;
 }
 
 export async function CountApprovedRequestsByUserId(userId: string) {
   const approvedRequests = await countApprovedRequestsByUserId(userId);
+  if (!approvedRequests) {
+    throw new Error("Failed to count approved requests");
+  }
   return approvedRequests;
 }
 
 export async function CountDeniedRequestsByUserId(userId: string) {
   const deniedRequests = await countDeniedRequestsByUserId(userId);
+  if (!deniedRequests) {
+    throw new Error("Failed to count denied requests");
+  }
   return deniedRequests;
 }
