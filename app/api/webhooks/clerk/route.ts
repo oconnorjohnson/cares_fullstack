@@ -112,10 +112,9 @@ export async function POST(req: Request) {
       console.log("Creating user in database");
       const user = await createUser(userData);
       console.log(`User ${user} created successfully`);
-      const createdUser = await createUser(userData);
-      if (createdUser) {
-        await createEmailAddresses(emailData);
-      }
+
+      const emails = await createEmailAddresses(emailData);
+      console.log(`Emails ${emails} created successfully`);
       if (email_addresses.length > 0) {
         const primaryEmail = email_addresses[0].email_address;
         await sendWelcomeEmail(first_name, primaryEmail);

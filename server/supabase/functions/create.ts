@@ -178,18 +178,33 @@ export async function createEmailAddresses(
   emailData: TablesInsert<"EmailAddress">[],
 ) {
   const supabase = createSupabaseClient();
+  console.log("Starting createEmailAddresses function");
+
+  // Log the input data to ensure it's being received correctly
+  console.log("Received email data:", emailData);
+
   const inserts = emailData.map((emailAddress) => ({
     userId: emailAddress.userId,
     email: emailAddress.email,
-    // Add other necessary fields
+    // Log each mapped object to verify the structure
   }));
+  console.log("Prepared inserts:", inserts);
+
   try {
     const { data, error } = await supabase.from("EmailAddress").insert(inserts);
-    if (error) throw error;
+    console.log("Insert operation response data:", data);
+    if (error) {
+      console.error("Error during insert operation:", error);
+      throw error;
+    }
+    console.log("Successfully inserted email addresses:", data);
     return data;
   } catch (error) {
+    console.error("Failed to create email addresses:", error);
     throw new Error(
-      `Failed to create email addresses: ${error instanceof Error ? error.message : "Unknown error"}`,
+      `Failed to create email addresses: ${
+        error instanceof Error ? error.message : "Unknown error"
+      }`,
     );
   }
 }
