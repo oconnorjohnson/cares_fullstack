@@ -98,5 +98,3 @@ export async function approveRequestById(requestId: number) {
     throw error;
   }
 }
-
-export const runtime = "edge";

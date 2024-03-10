@@ -210,4 +210,3 @@ export async function newRequest(requestState: RequestData) {
     throw error;
   }
 }
-export const runtime = "edge";

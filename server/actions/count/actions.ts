@@ -61,5 +61,3 @@ export async function CountDeniedRequestsByUserId(userId: string) {
   console.log(Error);
   return deniedRequests;
 }
-
-export const runtime = "edge";

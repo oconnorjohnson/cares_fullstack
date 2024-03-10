@@ -241,5 +241,3 @@ export async function getRequestsNeedingPostScreenByUserId(userId: string) {
     throw error;
   }
 }
-
-export const runtime = "edge";
