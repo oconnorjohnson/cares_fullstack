@@ -330,6 +330,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                       )}
                     />
                   )}
+                  <div className="py-2" />
                   <FormField
                     control={control}
                     name="details"
