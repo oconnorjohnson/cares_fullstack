@@ -242,7 +242,10 @@ export async function createFunds(fundsData: TablesInsert<"Fund">[]) {
   const supabase = createSupabaseClient();
 
   try {
-    const { data, error } = await supabase.from("Fund").insert(fundsData);
+    const { data, error } = await supabase
+      .from("Fund")
+      .insert(fundsData)
+      .select("*");
     if (error) throw error;
     return data;
   } catch (error) {
@@ -254,14 +257,32 @@ export async function createFunds(fundsData: TablesInsert<"Fund">[]) {
 
 export async function createClient(clientData: TablesInsert<"Client">) {
   const supabase = createSupabaseClient();
+  console.log("Starting createClient function");
+
+  // Log the input data to ensure it's being received correctly
+  console.log("Received client data for insertion:", clientData);
+
   if (!clientData.clientID || !clientData.race || !clientData.sex) {
-    throw new Error("ClientId, First Name, and Last Name are required.");
+    console.error(
+      "Missing required client data fields: clientID, race, or sex",
+    );
+    throw new Error("ClientId, Race, and Sex are required.");
   }
+
   try {
-    const { data, error } = await supabase.from("Client").insert([clientData]);
-    if (error) throw error;
+    const { data, error } = await supabase
+      .from("Client")
+      .insert([clientData])
+      .select("*");
+    console.log("Insert operation response data:", data);
+    if (error) {
+      console.error("Error during insert operation in Client table:", error);
+      throw error;
+    }
+    console.log("Successfully inserted client into Client table:", data);
     return data;
   } catch (error) {
+    console.error("Failed to create client in Client table:", error);
     throw new Error(
       `Failed to create client: ${error instanceof Error ? error.message : "Unknown error"}`,
     );

@@ -175,9 +175,6 @@ export async function newClient(clientState: TablesInsert<"Client">) {
   }
 
   const newClientRecord = await createClient(clientState);
-  if (!newClientRecord) {
-    throw new Error("Failed to create client.");
-  }
   revalidatePath("/dashboard");
   revalidatePath("/user/clients");
   return newClientRecord;
