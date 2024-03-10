@@ -108,32 +108,12 @@ export async function getFunds() {
   }
 }
 
-export async function getAllAgencies() {
-  const supabase = createSupabaseClient();
-  try {
-    const agencies = await supabase.from("Agency").select("*");
-    return agencies;
-  } catch (error) {
-    throw error;
-  }
-}
-
 export async function getAllAgencyIds() {
   const supabase = createSupabaseClient();
   try {
     const { data, error } = await supabase.from("Agency").select("id, name");
     if (error) throw error;
     return { data, error };
-  } catch (error) {
-    throw error;
-  }
-}
-
-export async function getFundTypes() {
-  const supabase = createSupabaseClient();
-  try {
-    const fundTypes = await supabase.from("FundType").select("*");
-    return fundTypes;
   } catch (error) {
     throw error;
   }
@@ -185,6 +165,36 @@ export async function getClientsByUserId(userId: string) {
   } catch (error) {
     console.error("Unexpected error fetching clients by user ID:", error);
     // Return an empty array to handle unexpected errors gracefully
+    return [];
+  }
+}
+
+export async function getAllAgencies() {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase.from("Agency").select("*");
+    if (error) {
+      console.error("error fetching agencies:", error.message);
+      return [];
+    }
+    return data;
+  } catch (error) {
+    console.error("Unexpected error fetching agencies:", error);
+    return [];
+  }
+}
+
+export async function getFundTypes() {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase.from("FundType").select("*");
+    if (error) {
+      console.error("error fetching fund types:", error.message);
+      return [];
+    }
+    return data;
+  } catch (error) {
+    console.error("Unexpected error fetching fund types:", error);
     return [];
   }
 }

@@ -1,6 +1,5 @@
 import { publicProcedure, router } from "./trpc";
 import { TRPCError } from "@trpc/server";
-import { prisma, banUserById as banUserFromDB } from "@/prisma/prismaFunctions";
 import {
   deleteClientById as deleteClientFromDB,
   deleteFundTypeById as deleteFundTypeFromDB,
@@ -11,6 +10,8 @@ import {
   getRequestsByUserId,
   getAdminRequests,
   getRequestById,
+  getFundTypes,
+  getAllAgencies,
   getFundsThatNeedReceiptsByRequestId,
   getUserIdByRequestId,
   getEmailByUserId,
@@ -32,11 +33,11 @@ export const appRouter = router({
       return user;
     }),
   getFundTypes: publicProcedure.query(async () => {
-    const fundTypes = await prisma.fundType.findMany();
+    const fundTypes = await getFundTypes();
     return fundTypes;
   }),
   getAgencies: publicProcedure.query(async () => {
-    const getAgencies = await prisma.agency.findMany();
+    const getAgencies = await getAllAgencies();
     return getAgencies;
   }),
   getFundsThatNeedReceipts: publicProcedure
