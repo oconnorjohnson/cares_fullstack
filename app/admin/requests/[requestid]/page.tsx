@@ -22,6 +22,8 @@ import AddFundToRequestById from "@/components/admin/request/add-fund";
 import MarkPaidButton from "@/components/admin/request/mark-paid";
 import { format } from "date-fns";
 
+export const runtime = "edge";
+
 const RequestPage = async ({ requestid }: { requestid: string }) => {
   const requestId = Number(requestid);
   const request = await requestRequestByRequestId(requestId);

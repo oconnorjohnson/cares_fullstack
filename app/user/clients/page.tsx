@@ -2,7 +2,7 @@ import SideNavBar from "@/components/user/dashboard/side-nav";
 import { Button } from "@/components/ui/button";
 import { currentUser } from "@clerk/nextjs";
 import ClientsTable from "@/components/user/tables/clients/page";
-
+export const runtime = "edge";
 export default async function ClientsPage() {
   const user = await currentUser();
   const firstName = user?.firstName;

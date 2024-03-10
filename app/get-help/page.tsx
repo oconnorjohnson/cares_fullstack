@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SignUpButton } from "@clerk/nextjs";
-
+export const runtime = "edge";
 export default function GetHelp() {
   return (
     <>

@@ -17,3 +17,4 @@ export default function Home() {
     </>
   );
 }
+export const runtime = "edge";
