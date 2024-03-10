@@ -98,17 +98,17 @@ export type Database = {
       EmailAddress: {
         Row: {
           email: string | null;
-          id: string;
+          id: number;
           userId: string;
         };
         Insert: {
-          email: string | null;
-          id?: string;
+          email?: string | null;
+          id?: number;
           userId: string;
         };
         Update: {
           email?: string | null;
-          id?: string;
+          id?: number;
           userId?: string;
         };
         Relationships: [

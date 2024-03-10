@@ -158,7 +158,6 @@ export async function createUser(userData: TablesInsert<"User">) {
         userId: userData.userId,
         first_name: userData.first_name,
         last_name: userData.last_name,
-        // Add other user fields as necessary
       },
     ]);
     if (error) {
@@ -180,13 +179,11 @@ export async function createEmailAddresses(
   const supabase = createSupabaseClient();
   console.log("Starting createEmailAddresses function");
 
-  // Log the input data to ensure it's being received correctly
   console.log("Received email data:", emailData);
 
   const inserts = emailData.map((emailAddress) => ({
     userId: emailAddress.userId,
     email: emailAddress.email,
-    // Log each mapped object to verify the structure
   }));
   console.log("Prepared inserts:", inserts);
 
@@ -259,14 +256,18 @@ export async function createClient(clientData: TablesInsert<"Client">) {
   const supabase = createSupabaseClient();
   console.log("Starting createClient function");
 
-  // Log the input data to ensure it's being received correctly
   console.log("Received client data for insertion:", clientData);
 
-  if (!clientData.clientID || !clientData.race || !clientData.sex) {
+  if (
+    !clientData.clientID ||
+    !clientData.race ||
+    !clientData.sex ||
+    !clientData.userId
+  ) {
     console.error(
-      "Missing required client data fields: clientID, race, or sex",
+      "Missing at least one of the required client data fields: userId, clientID, race, and sex",
     );
-    throw new Error("ClientId, Race, and Sex are required.");
+    throw new Error("lientID, Race, and Sex are required.");
   }
 
   try {
