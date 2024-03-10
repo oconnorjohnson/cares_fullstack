@@ -27,7 +27,7 @@ const ClientDetails = async ({ clientId }: { clientId: string }) => {
           <CardHeader>
             <CardTitle className="flex flex-cols-3 justify-between">
               <div className="text-center text-3xl pt-0.5">
-                {client?.clientId} | {client?.first_name} {client?.last_name}
+                {client?.clientID} | {client?.sex} {client?.race}
               </div>
             </CardTitle>
           </CardHeader>

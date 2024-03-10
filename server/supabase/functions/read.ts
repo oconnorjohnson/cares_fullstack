@@ -169,23 +169,41 @@ export async function getEmailByUserId(userId: string) {
 export async function getClientsByUserId(userId: string) {
   const supabase = createSupabaseClient();
   try {
-    const clients = await supabase
+    const { data, error } = await supabase
       .from("Client")
       .select("*")
       .eq("userId", userId);
-    return clients;
+
+    if (error) {
+      console.error("Error fetching clients by user ID:", error.message);
+
+      return [];
+    }
+
+    // Return the data if no error occurred
+    return data;
   } catch (error) {
-    throw error;
+    console.error("Unexpected error fetching clients by user ID:", error);
+    // Return an empty array to handle unexpected errors gracefully
+    return [];
   }
 }
 
 export async function getClientByClientId(clientId: number) {
   const supabase = createSupabaseClient();
   try {
-    const client = await supabase.from("Client").select("*").eq("id", clientId);
-    return client;
+    const { data, error } = await supabase
+      .from("Client")
+      .select("*")
+      .eq("id", clientId)
+      .single();
+    if (error) {
+      console.error("Error fetching client by client ID:", error.message);
+    }
+    return data;
   } catch (error) {
-    throw error;
+    console.error("Unexpected error fetching client by client ID:", error);
+    return null;
   }
 }
 
