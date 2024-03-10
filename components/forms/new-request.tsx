@@ -44,7 +44,9 @@ import { useUser } from "@clerk/nextjs";
 
 interface Client {
   id: number;
-  clientId: string | null;
+  clientID: string | null;
+  sex: string;
+  race: string;
 }
 
 interface Agency {
@@ -273,7 +275,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                                     key={client.id}
                                     value={client.id.toString()}
                                   >
-                                    {client.clientId}
+                                    {client.clientID}
                                   </SelectItem>
                                 ))}
                               </SelectContent>

@@ -1,20 +1,21 @@
 import { publicProcedure, router } from "./trpc";
 import { TRPCError } from "@trpc/server";
+import { prisma, banUserById as banUserFromDB } from "@/prisma/prismaFunctions";
 import {
-  prisma,
+  deleteClientById as deleteClientFromDB,
+  deleteFundTypeById as deleteFundTypeFromDB,
+  deleteAgencyById as deleteAgencyFromDB,
+} from "@/server/supabase/functions/delete";
+import {
   getClientsByUserId,
   getRequestsByUserId,
   getAdminRequests,
   getRequestById,
-  deleteClient as deleteClientFromDB,
-  deleteFundType as deleteFundTypeFromDB,
-  deleteAgency as deleteAgencyFromDB,
-  banUserById as banUserFromDB,
   getFundsThatNeedReceiptsByRequestId,
-  getUserIdAndEmailByRequestId,
-  getUserIdAndEmailByUserId,
+  getUserIdByRequestId,
+  getEmailByUserId,
   getRequestsThatNeedAgreementsByUserId,
-} from "@/prisma/prismaFunctions";
+} from "@/server/supabase/functions/read";
 import { z } from "zod";
 
 export const appRouter = router({
