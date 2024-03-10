@@ -289,3 +289,5 @@ export async function createClient(clientData: TablesInsert<"Client">) {
     );
   }
 }
+
+export const runtime = "edge";

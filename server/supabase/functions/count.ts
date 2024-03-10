@@ -127,3 +127,5 @@ export async function countDeniedRequestsByUserId(userId: string) {
     throw error;
   }
 }
+
+export const runtime = "edge";

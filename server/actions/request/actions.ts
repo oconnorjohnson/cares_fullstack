@@ -18,7 +18,6 @@ import {
   getRequestsThatNeedAgreementsByUserId,
 } from "@/server/supabase/functions/read";
 import { Tables } from "@/types_db";
-import { revalidatePath } from "next/cache";
 
 export type FundTypeData = {
   id: number;

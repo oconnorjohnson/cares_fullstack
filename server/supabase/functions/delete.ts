@@ -75,3 +75,5 @@ export async function deleteRequestById(requestId: number) {
     throw error;
   }
 }
+
+export const runtime = "edge";
