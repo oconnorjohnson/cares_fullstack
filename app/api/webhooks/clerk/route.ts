@@ -1,7 +1,10 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
-import { createUser } from "@/server/supabase/functions/create";
+import {
+  createUser,
+  createEmailAddresses,
+} from "@/server/supabase/functions/create";
 import { updateUser } from "@/server/supabase/functions/update";
 import { deleteUser } from "@/server/supabase/functions/delete";
 import { EmailTemplate } from "@/components/emails/welcome";
@@ -101,16 +104,18 @@ export async function POST(req: Request) {
         userId: id,
         first_name,
         last_name,
-        emailAddresses: {
-          create: email_addresses.map((emailAddress) => ({
-            email: emailAddress.email_address,
-          })),
-        },
       };
+      const emailData = email_addresses.map((emailAddress) => ({
+        userId: id,
+        email: emailAddress.email_address,
+      }));
       console.log("Creating user in database");
       const user = await createUser(userData);
       console.log(`User ${user} created successfully`);
-
+      const createdUser = await createUser(userData);
+      if (createdUser) {
+        await createEmailAddresses(emailData);
+      }
       if (email_addresses.length > 0) {
         const primaryEmail = email_addresses[0].email_address;
         await sendWelcomeEmail(first_name, primaryEmail);

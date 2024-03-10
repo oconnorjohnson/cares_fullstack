@@ -14,6 +14,7 @@ import { EmailTemplate as SubmittedEmailTemplate } from "@/components/emails/sub
 import { EmailTemplate as CompletedEmailTemplate } from "@/components/emails/completed";
 import { Resend } from "resend";
 import { revalidatePath } from "next/cache";
+import { TablesInsert } from "@/types_db";
 
 interface ClientData {
   sex: string;
@@ -168,7 +169,7 @@ export async function newFundType(fundState: FundTypeData) {
   return newFundTypeRecord;
 }
 
-export async function newClient(clientState: ClientData) {
+export async function newClient(clientState: TablesInsert<"Client">) {
   if (!clientState.userId) {
     throw new Error("User not authenticated");
   }

@@ -9,6 +9,8 @@ export async function countPendingRequests() {
       .select("*", { count: "exact" })
       .eq("pendingApproval", true);
     if (error) throw error;
+    console.log(error);
+    console.log(count);
     return count;
   } catch (error) {
     throw error;
@@ -24,6 +26,8 @@ export async function countCompletedRequests() {
       .eq("approved", true)
       .eq("paid", true);
     if (error) throw error;
+    console.log(error);
+    console.log(count);
     return count;
   } catch (error) {
     throw error;
@@ -38,6 +42,8 @@ export async function countClientsByUserId(userId: string) {
       .select("*", { count: "exact" })
       .eq("userId", userId);
     if (error) throw error;
+    console.log(error);
+    console.log(count);
     return count;
   } catch (error) {
     throw error;
@@ -52,6 +58,8 @@ export async function countDeniedRequests() {
       .select("*", { count: "exact" })
       .eq("denied", true);
     if (error) throw error;
+    console.log(error);
+    console.log(count);
     return count;
   } catch (error) {
     throw error;
@@ -77,14 +85,14 @@ export async function countRequestsByAgency(agencyId: number) {
 export async function countOpenRequestsByUserId(userId: string) {
   const supabase = createSupabaseClient();
   try {
-    const openRequests = await supabase
+    const { count, error } = await supabase
       .from("Request")
-      .select("*")
+      .select("*", { count: "exact" })
       .eq("userId", userId)
       .eq("pendingApproval", true)
       .eq("approved", false)
       .eq("denied", false);
-    return openRequests;
+    return count;
   } catch (error) {
     throw error;
   }
@@ -93,14 +101,14 @@ export async function countOpenRequestsByUserId(userId: string) {
 export async function countApprovedRequestsByUserId(userId: string) {
   const supabase = createSupabaseClient();
   try {
-    const approvedRequests = await supabase
+    const { count, error } = await supabase
       .from("Request")
-      .select("*")
+      .select("*", { count: "exact" })
       .eq("userId", userId)
       .eq("approved", true)
       .eq("pendingApproval", false)
       .eq("denied", false);
-    return approvedRequests;
+    return count;
   } catch (error) {
     throw error;
   }
@@ -109,12 +117,12 @@ export async function countApprovedRequestsByUserId(userId: string) {
 export async function countDeniedRequestsByUserId(userId: string) {
   const supabase = createSupabaseClient();
   try {
-    const deniedRequests = await supabase
+    const { count, error } = await supabase
       .from("Request")
-      .select("*")
+      .select("*", { count: "exact" })
       .eq("userId", userId)
       .eq("denied", true);
-    return deniedRequests;
+    return count;
   } catch (error) {
     throw error;
   }

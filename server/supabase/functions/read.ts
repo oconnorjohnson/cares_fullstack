@@ -1,5 +1,4 @@
 import { createClient as createSupabaseClient } from "@/server/supabase/server";
-import { Tables } from "@/types_db";
 
 export async function getAgencyNameById(agencyId: number) {
   const supabase = createSupabaseClient();

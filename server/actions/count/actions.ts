@@ -12,44 +12,34 @@ import { getAllAgencyIds } from "@/server/supabase/functions/read";
 
 export async function CountRequestsPendingApproval() {
   const pendingRequests = await countPendingRequests();
-  if (!pendingRequests) {
-    throw new Error("Failed to count pending requests.");
-  }
+
+  console.log(Error);
   return pendingRequests;
 }
 
 export async function CountClientsByUserId(userId: string) {
   const clients = await countClientsByUserId(userId);
-  if (!clients) {
-    throw new Error("Failed to count clients by user ID.");
-  }
+
+  console.log(Error);
   return clients;
 }
 
 export async function CountRequestsCompleted() {
   const completedRequests = await countCompletedRequests();
-  if (!completedRequests) {
-    throw new Error("Failed to count completed requests.");
-  }
+
+  console.log(Error);
   return completedRequests;
 }
 
 export async function CountRequestsDenied() {
   const deniedRequests = await countDeniedRequests();
-  if (!deniedRequests) {
-    throw new Error("Failed to count denied requests.");
-  }
+
+  console.log(Error);
   return deniedRequests;
 }
 
 export async function CountRequestsByAgency() {
   const { data: agencyData, error: agencyError } = await getAllAgencyIds();
-  if (agencyError) {
-    throw new Error(`Failed to get agency IDs: ${agencyError}`);
-  }
-  if (!agencyData) {
-    throw new Error("No agency data found.");
-  }
 
   const results = [];
 
@@ -63,24 +53,21 @@ export async function CountRequestsByAgency() {
 
 export async function CountOpenRequestsByUserId(userId: string) {
   const openRequests = await countOpenRequestsByUserId(userId);
-  if (!openRequests) {
-    throw new Error("Failed to count open requests");
-  }
+
+  console.log(Error);
   return openRequests;
 }
 
 export async function CountApprovedRequestsByUserId(userId: string) {
   const approvedRequests = await countApprovedRequestsByUserId(userId);
-  if (!approvedRequests) {
-    throw new Error("Failed to count approved requests");
-  }
+
+  console.log(Error);
   return approvedRequests;
 }
 
 export async function CountDeniedRequestsByUserId(userId: string) {
   const deniedRequests = await countDeniedRequestsByUserId(userId);
-  if (!deniedRequests) {
-    throw new Error("Failed to count denied requests");
-  }
+
+  console.log(Error);
   return deniedRequests;
 }

@@ -152,20 +152,44 @@ export async function createUser(userData: TablesInsert<"User">) {
   if (!userData.userId || !userData.first_name || !userData.last_name) {
     throw new Error("UserId, First Name, and Last Name are required.");
   }
-  const existingUser = await supabase
-    .from("User")
-    .select("*")
-    .eq("userId", userData.userId);
-  if (existingUser) {
-    throw new Error("User with userId ${userData.userId} already exists.");
-  }
   try {
-    const { data, error } = await supabase.from("User").insert([userData]);
+    const { data, error } = await supabase.from("User").insert([
+      {
+        userId: userData.userId,
+        first_name: userData.first_name,
+        last_name: userData.last_name,
+        // Add other user fields as necessary
+      },
+    ]);
+    if (error) {
+      console.error("Supabase error:", error);
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.error("Failed to create user:", error);
+    throw new Error(
+      `Failed to create user: ${error instanceof Error ? error.message : "Unknown error"}`,
+    );
+  }
+}
+
+export async function createEmailAddresses(
+  emailData: TablesInsert<"EmailAddress">[],
+) {
+  const supabase = createSupabaseClient();
+  const inserts = emailData.map((emailAddress) => ({
+    userId: emailAddress.userId,
+    email: emailAddress.email,
+    // Add other necessary fields
+  }));
+  try {
+    const { data, error } = await supabase.from("EmailAddress").insert(inserts);
     if (error) throw error;
     return data;
   } catch (error) {
     throw new Error(
-      `Failed to create user: ${error instanceof Error ? error.message : "Unknown error"}`,
+      `Failed to create email addresses: ${error instanceof Error ? error.message : "Unknown error"}`,
     );
   }
 }

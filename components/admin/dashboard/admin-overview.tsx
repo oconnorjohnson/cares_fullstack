@@ -12,10 +12,10 @@ import {
 } from "@/server/actions/count/actions";
 
 export default async function AdminOverview() {
-  const pendingRequests = await CountRequestsPendingApproval();
-  const completedRequests = await CountRequestsCompleted();
-  const deniedRequests = await CountRequestsDenied();
-  const agencyDataWithNames = await CountRequestsByAgency();
+  const pendingRequests = (await CountRequestsPendingApproval()) ?? 0;
+  const completedRequests = (await CountRequestsCompleted()) ?? 0;
+  const deniedRequests = (await CountRequestsDenied()) ?? 0;
+  const agencyDataWithNames = (await CountRequestsByAgency()) ?? 0;
 
   return (
     <>
