@@ -234,3 +234,4 @@ export async function GetAllUsers() {
   const users = await getUsers();
   return users;
 }
+export const runtime = "edge";

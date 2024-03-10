@@ -215,3 +215,4 @@ export async function UpdateFund(
     throw error;
   }
 }
+export const runtime = "edge";

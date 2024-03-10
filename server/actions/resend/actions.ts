@@ -137,3 +137,4 @@ export async function Submitted({
     console.error("Failed to send email:", error);
   }
 }
+export const runtime = "edge";

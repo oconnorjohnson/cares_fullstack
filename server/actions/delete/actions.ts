@@ -35,3 +35,4 @@ export async function DeleteFundType(fundTypeId: number) {
     throw error;
   }
 }
+export const runtime = "edge";
