@@ -133,9 +133,12 @@ export async function giveUserIdGetRequestsNeedingPostScreen(userId: string) {
   return requests;
 }
 
-export async function requestUsersRequests(
-  userId: string,
-): Promise<Tables<"Request">[]> {
+export async function requestUsersRequests(userId: string): Promise<
+  (Tables<"Request"> & {
+    Agency: { name: string };
+    Client: { clientID: string };
+  })[]
+> {
   try {
     const response = await getRequestsByUserId(userId);
     const requests = response.data;

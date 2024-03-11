@@ -66,7 +66,7 @@ export async function getRequestsByUserId(userId: string) {
   try {
     const requests = await supabase
       .from("Request")
-      .select("*")
+      .select(`*, Client ( clientID, sex, race ), Agency ( name )`)
       .eq("userId", userId);
     return requests;
   } catch (error) {
