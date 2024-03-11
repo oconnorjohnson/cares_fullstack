@@ -80,7 +80,7 @@ export async function getFundsThatNeedReceiptsByRequestId(requestId: number) {
   try {
     const funds = await supabase
       .from("Fund")
-      .select("*")
+      .select(`* , FundType ( typeName )`)
       .eq("requestId", requestId)
       .eq("needsReceipt", true);
     return funds;
