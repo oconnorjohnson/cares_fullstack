@@ -206,46 +206,51 @@ export async function createEmailAddresses(
   }
 }
 
-export async function createRequest(requestData: TablesInsert<"Request">) {
+export async function createRequest(
+  requestData: TablesInsert<"Request">,
+): Promise<TablesInsert<"Request">> {
   const supabase = createSupabaseClient();
-  if (
-    !requestData.clientId ||
-    !requestData.userId ||
-    !requestData.agencyId ||
-    !requestData.details ||
-    !requestData.implementation ||
-    !requestData.sustainability ||
-    !requestData.SDOH ||
-    !requestData.RFF
-  ) {
-    throw new Error("Request data is required.");
-  }
+  console.log("Attempting to create request with data:", requestData);
+
   try {
+    // Insert the request data and return only the newly created request
     const { data, error } = await supabase
       .from("Request")
-      .insert([requestData]);
-    if (error) throw error;
-    return data;
+      .insert([requestData])
+      .select()
+      .single(); // Ensures that only the newly inserted record is returned
+
+    if (error) {
+      console.error("Error during insert operation in Request table:", error);
+      throw new Error(error.message);
+    }
+
+    console.log("Request created successfully:", data);
+    return data; // Return the newly created request
   } catch (error) {
+    console.error("Failed to create request:", error);
     throw new Error(
-      `Failed to create request: ${
-        error instanceof Error ? error.message : "Unknown error"
-      }`,
+      `Failed to create request: ${error instanceof Error ? error.message : "Unknown error"}`,
     );
   }
 }
 
 export async function createFunds(fundsData: TablesInsert<"Fund">[]) {
   const supabase = createSupabaseClient();
-
+  console.log("Attempting to create funds with data:", fundsData);
   try {
     const { data, error } = await supabase
       .from("Fund")
       .insert(fundsData)
       .select("*");
-    if (error) throw error;
+    if (error) {
+      console.error("Error during insert operation in Fund table:", error);
+      throw error;
+    }
+    console.log("Funds insert response data:", data);
     return data;
   } catch (error) {
+    console.error("Failed to create funds:", error);
     throw new Error(
       `Failed to create funds: ${error instanceof Error ? error.message : "Unknown error"}`,
     );

@@ -184,6 +184,24 @@ export async function getAllAgencies() {
   }
 }
 
+export async function getUserByUserId(userId: string) {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("User")
+      .select("*")
+      .eq("userId", userId);
+    if (error) {
+      console.error("Error fetching user by user ID:", error.message);
+      return {};
+    }
+    return data;
+  } catch (error) {
+    console.log("Unexpected error fetching user by user ID:", error);
+    return {};
+  }
+}
+
 export async function getFundTypes() {
   const supabase = createSupabaseClient();
   try {
@@ -196,6 +214,24 @@ export async function getFundTypes() {
   } catch (error) {
     console.error("Unexpected error fetching fund types:", error);
     return [];
+  }
+}
+
+export async function getFundTypeNeedsReceiptById(fundTypeId: number) {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("FundType")
+      .select("needsReceipt")
+      .eq("id", fundTypeId)
+      .eq("needsReceipt", true)
+      .single();
+
+    if (error) throw error;
+    return data ? data.needsReceipt : null;
+  } catch (error) {
+    console.error("Failed to fetch FundType needsReceipt value:", error);
+    throw error;
   }
 }
 

@@ -6,6 +6,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import { TrashIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -64,12 +65,19 @@ export default function FundSelect({
 
   return (
     <>
-      <div className="flex flex-col">
-        <div className="flex flex-row pb-2">
-          <Button type="button" onClick={handleAddFund}>
+      <div className="flex flex-col pb-1">
+        <div className="py-1" />
+        <div className="flex flex-row">
+          <Button
+            type="button"
+            size="sm"
+            className="text-xs"
+            onClick={handleAddFund}
+          >
             Add Fund
           </Button>
         </div>
+        <div className="py-2" />
         <div className="space-y-2">
           {value.map((fund, index) => (
             <div key={index} className="flex flex-row items-center gap-2">
@@ -98,7 +106,14 @@ export default function FundSelect({
                 value={fund.amount.toString()}
                 onChange={(e) => handleAmountChange(index, e.target.value)}
               />
-              <Button onClick={() => handleRemoveFund(index)}>Remove</Button>
+              <Button
+                variant="destructive"
+                className="text-black"
+                size="sm"
+                onClick={() => handleRemoveFund(index)}
+              >
+                <TrashIcon className="" />
+              </Button>
             </div>
           ))}
         </div>

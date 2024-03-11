@@ -149,7 +149,9 @@ export async function requestUsersRequests(
   }
 }
 
-export async function requestUsersClients(userId: string) {
+export async function requestUsersClients(
+  userId: string,
+): Promise<Tables<"Client">[]> {
   try {
     const allUserClients = await getClientsByUserId(userId);
     return allUserClients;
@@ -165,11 +167,8 @@ export async function requestUsersClients(userId: string) {
 export async function requestAllFundTypes(): Promise<Tables<"FundType">[]> {
   try {
     const response = await getFundTypes();
-    const fundTypes = response.data;
-    if (!fundTypes) {
-      throw new Error("Failed to fetch fund types.");
-    }
-    return fundTypes;
+
+    return response;
   } catch (error) {
     console.error("Failed to call get Fund Types from prismaFunctions:", error);
     throw error;
@@ -219,7 +218,7 @@ export async function requestRequestByRequestId(
   }
 }
 
-export async function requestAllAgencies() {
+export async function requestAllAgencies(): Promise<Tables<"Agency">[]> {
   const agencies = await getAllAgencies();
   return agencies;
 }

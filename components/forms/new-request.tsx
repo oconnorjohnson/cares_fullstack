@@ -44,7 +44,7 @@ import { useUser } from "@clerk/nextjs";
 
 interface Client {
   id: number;
-  clientID: string | null;
+  clientID: string;
   sex: string;
   race: string;
 }
@@ -52,7 +52,7 @@ interface Client {
 interface Agency {
   id: number;
   name: string;
-  userId: string;
+  userId: string | null;
 }
 
 interface FundInput {
@@ -61,11 +61,12 @@ interface FundInput {
 }
 
 const formSchema = z.object({
+  userId: z.string().min(1),
   clientId: z.number().min(1, "clientId is required"),
   agencyId: z.number().min(1, "agencyId is required"),
   details: z.string().min(1, "details are required"),
-  sdoh: z.array(z.string().min(1, "SDOH category selection is required")),
-  rff: z.array(z.string().min(1, "RFF category selection is required")),
+  SDOH: z.array(z.string().min(1, "SDOH category selection is required")),
+  RFF: z.array(z.string().min(1, "RFF category selection is required")),
   implementation: z.string().min(1, "implementation plan is required"),
   sustainability: z.string().min(1, "sustainability plan is required"),
   funds: z.array(
@@ -106,7 +107,7 @@ const optionsToStrings = (options: Option[]): string[] => {
 
 type FormInputs = z.infer<typeof formSchema>;
 
-export default function NewRequest({ userId }: { userId: string | null }) {
+export default function NewRequest({ userId }: { userId: string }) {
   const [activeTab, setActiveTab] = useState("tab1");
   const [progress, setProgress] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -119,10 +120,10 @@ export default function NewRequest({ userId }: { userId: string | null }) {
         setProgress(25);
         break;
       case "tab3":
-        setProgress(50);
+        setProgress(60);
         break;
       case "tab4":
-        setProgress(75);
+        setProgress(95);
         break;
       case "tab5":
         setProgress(100);
@@ -154,11 +155,12 @@ export default function NewRequest({ userId }: { userId: string | null }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      userId: userId,
       clientId: undefined,
       agencyId: undefined,
       details: "",
-      sdoh: [],
-      rff: [],
+      SDOH: [],
+      RFF: [],
       sustainability: "",
       implementation: "",
       funds: [{ fundTypeId: undefined, amount: 0 }],
@@ -193,7 +195,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
     if (!userId) {
     } else {
       try {
-        await newRequest({ ...data, userId, email, firstName });
+        await newRequest({ ...data, email, firstName });
         try {
           await Submitted({ firstName, email });
         } catch (error) {}
@@ -286,6 +288,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                       )}
                     />
                   )}
+                  <div className="py-2" />
                   {!isLoadingAgencies && agencies && (
                     <FormField
                       control={control}
@@ -344,7 +347,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                       </FormItem>
                     )}
                   />
-                  <div className="p-1" />
+                  <div className="p-2" />
                   <div className="flex flex-row justify-end">
                     <Button onClick={goToNextTab}>Next</Button>
                   </div>
@@ -352,7 +355,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                 <TabsContent value="tab2" hidden={activeTab !== "tab2"}>
                   <FormField
                     control={control}
-                    name="sdoh"
+                    name="SDOH"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>SDOH Categories</FormLabel>
@@ -368,9 +371,10 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                       </FormItem>
                     )}
                   />
+                  <div className="py-2" />
                   <FormField
                     control={control}
-                    name="rff"
+                    name="RFF"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>How can RFF assist?</FormLabel>
@@ -386,8 +390,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                       </FormItem>
                     )}
                   />
-
-                  <div className="p-1" />
+                  <div className="p-2" />
                   <div className="flex flex-row justify-between">
                     <Button onClick={goToLastTab}>Last</Button>
                     <Button onClick={goToNextTab}>Next</Button>
@@ -410,6 +413,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                       </FormItem>
                     )}
                   />
+                  <div className="py-2" />
                   <FormField
                     control={control}
                     name="sustainability"
@@ -428,7 +432,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                       </FormItem>
                     )}
                   />
-                  <div className="p-1" />
+                  <div className="p-2" />
                   <div className="flex flex-row justify-between">
                     <Button onClick={goToLastTab}>Last</Button>
                     <Button onClick={goToNextTab}>Next</Button>
@@ -454,7 +458,7 @@ export default function NewRequest({ userId }: { userId: string | null }) {
                       </FormItem>
                     )}
                   />
-                  <div className="p-1" />
+                  <div className="p-2" />
                   <div className="flex flex-row justify-between">
                     <Button onClick={goToLastTab}>Last</Button>
                     <Button

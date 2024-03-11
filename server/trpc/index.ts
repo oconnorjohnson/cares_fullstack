@@ -5,6 +5,7 @@ import {
   deleteFundTypeById as deleteFundTypeFromDB,
   deleteAgencyById as deleteAgencyFromDB,
 } from "@/server/supabase/functions/delete";
+import { banUserById } from "@/server/supabase/functions/update";
 import {
   getClientsByUserId,
   getRequestsByUserId,
@@ -13,6 +14,7 @@ import {
   getFundTypes,
   getAllAgencies,
   getFundsThatNeedReceiptsByRequestId,
+  getUserByUserId,
   getUserIdByRequestId,
   getEmailByUserId,
   getRequestsThatNeedAgreementsByUserId,
@@ -23,13 +25,13 @@ export const appRouter = router({
   banUser: publicProcedure
     .input(z.string())
     .mutation(async ({ input: userId }) => {
-      const bannedUser = await banUserFromDB(userId);
+      const bannedUser = await banUserById(userId);
       return bannedUser;
     }),
   getUser: publicProcedure
     .input(z.string())
     .query(async ({ input: userId }) => {
-      const user = await prisma.user.findUnique({ where: { userId } });
+      const user = await getUserByUserId(userId);
       return user;
     }),
   getFundTypes: publicProcedure.query(async () => {
@@ -73,13 +75,13 @@ export const appRouter = router({
   getUserByRequestId: publicProcedure
     .input(z.number())
     .query(async ({ input: requestId }) => {
-      const user = await getUserIdAndEmailByRequestId(requestId);
+      const user = await getUserIdByRequestId(requestId);
       return user;
     }),
-  getUserByUserId: publicProcedure
+  getEmailByUserId: publicProcedure
     .input(z.string())
     .query(async ({ input: userId }) => {
-      const user = await getUserIdAndEmailByUserId(userId);
+      const user = await getEmailByUserId(userId);
       return user;
     }),
   getAdminRequests: publicProcedure
@@ -91,7 +93,7 @@ export const appRouter = router({
     )
     .query(async ({ input }) => {
       const { filter, userId } = input;
-      return await getAdminRequests(filter, userId);
+      return await getAdminRequests();
     }),
   deleteAgency: publicProcedure
     .input(z.number())

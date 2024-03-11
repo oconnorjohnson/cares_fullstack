@@ -7,8 +7,9 @@ import {
   createPreScreen,
   createPostScreen,
   createNewFundByRequestId,
+  createFunds,
 } from "@/server/supabase/functions/create";
-
+import { getFundTypeNeedsReceiptById } from "@/server/supabase/functions/read";
 import { Submitted } from "@/server/actions/resend/actions";
 import { EmailTemplate as SubmittedEmailTemplate } from "@/components/emails/submitted";
 import { EmailTemplate as CompletedEmailTemplate } from "@/components/emails/completed";
@@ -23,6 +24,32 @@ interface ClientData {
   clientID: string;
 }
 
+// Extracted from your types_db.ts for brevity and clarity
+interface RequestInsert {
+  agencyId: number;
+  agreementUrl?: string | null;
+  approved?: boolean;
+  clientId: number;
+  created_at?: string;
+  denied?: boolean;
+  details: string;
+  hasPostScreen?: boolean;
+  hasPreScreen?: boolean;
+  hasReceipts?: boolean;
+  id?: number;
+  implementation: string;
+  needsReceipts?: boolean;
+  paid?: boolean;
+  pendingApproval?: boolean;
+  pendingPayout?: boolean;
+  postScreenAnswerId?: number | null;
+  preScreenAnswerId?: number | null;
+  RFF?: string[] | null;
+  SDOH?: string[] | null;
+  sustainability: string;
+  userId: string;
+}
+
 interface RequestData {
   userId: string;
   clientId: number;
@@ -30,8 +57,8 @@ interface RequestData {
   email: string;
   agencyId: number;
   details: string;
-  sdoh: string[];
-  rff: string[];
+  SDOH: string[];
+  RFF: string[];
   implementation: string;
   sustainability: string;
   funds: { amount: number; fundTypeId: number }[];
@@ -180,20 +207,76 @@ export async function newClient(clientState: TablesInsert<"Client">) {
   return newClientRecord;
 }
 
+// export async function newRequest(requestState: RequestData) {
+//   const resend = new Resend(process.env.RESEND_API_KEY);
+//   if (!requestState.userId) {
+//     throw new Error("User not authenticated");
+//   }
+//   console.log("newRequest server action called with:", requestState);
+//   const hasInvalidFunds = requestState.funds.some(
+//     (fund) => !fund.fundTypeId || fund.fundTypeId <= 0,
+//   );
+//   if (hasInvalidFunds) {
+//     throw new Error("Each fund must have a valid fund type.");
+//   }
+//   try {
+//     const newRequestRecord = await createRequest(requestState);
+//     await resend.emails.send({
+//       from: "CARES <help@yolopublicdefendercares.org>",
+//       to: [requestState.email],
+//       subject: "Your request has been submitted!",
+//       react: SubmittedEmailTemplate({
+//         firstName: requestState.firstName,
+//       }) as React.ReactElement,
+//     });
+//     revalidatePath(`/dashboard/page`);
+//     console.log("Request created successfully:", newRequestRecord);
+//     return newRequestRecord;
+//   } catch (error) {
+//     console.error("Failed to create request:", error);
+//     throw error;
+//   }
+// }
 export async function newRequest(requestState: RequestData) {
   const resend = new Resend(process.env.RESEND_API_KEY);
   if (!requestState.userId) {
     throw new Error("User not authenticated");
   }
   console.log("newRequest server action called with:", requestState);
-  const hasInvalidFunds = requestState.funds.some(
-    (fund) => !fund.fundTypeId || fund.fundTypeId <= 0,
-  );
-  if (hasInvalidFunds) {
-    throw new Error("Each fund must have a valid fund type.");
-  }
+
+  // Prepare the data for insertion based on the RequestInsert type
+  const requestData: RequestInsert = {
+    agencyId: requestState.agencyId,
+    clientId: requestState.clientId,
+    details: requestState.details,
+    implementation: requestState.implementation,
+    sustainability: requestState.sustainability,
+    RFF: requestState.RFF,
+    SDOH: requestState.SDOH,
+    userId: requestState.userId,
+  };
+
   try {
-    const newRequestRecord = await createRequest(requestState);
+    const newRequestRecord = await createRequest(requestData);
+    console.log("Request created successfully with ID:", newRequestRecord.id);
+
+    if (typeof newRequestRecord.id !== "number") {
+      throw new Error("Request ID is undefined or not a number");
+    }
+
+    const fundsData = requestState.funds.map((fund) => ({
+      ...fund,
+      requestId: newRequestRecord.id as number,
+    }));
+    const requestId = newRequestRecord.id as number;
+    console.log("Preparing to insert funds with data:", fundsData);
+
+    const fundsRecords = await createFunds(fundsData);
+    console.log("Funds created successfully:", fundsRecords);
+
+    console.log("Funds created successfully:", fundsRecords);
+
+    // Send the email notification
     await resend.emails.send({
       from: "CARES <help@yolopublicdefendercares.org>",
       to: [requestState.email],
@@ -202,11 +285,11 @@ export async function newRequest(requestState: RequestData) {
         firstName: requestState.firstName,
       }) as React.ReactElement,
     });
+
     revalidatePath(`/dashboard/page`);
-    console.log("Request created successfully:", newRequestRecord);
-    return newRequestRecord;
+    return { requestId, fundsRecords };
   } catch (error) {
-    console.error("Failed to create request:", error);
+    console.error("Failed to create request or funds:", error);
     throw error;
   }
 }
