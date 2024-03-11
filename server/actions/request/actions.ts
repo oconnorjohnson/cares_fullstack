@@ -47,7 +47,7 @@ export type RequestData = {
   agency: { id: number; name: string; userId: string };
   client: {
     id: number;
-    clientId: string | null;
+    clientId: string;
     race: string;
     sex: string;
   };
@@ -135,8 +135,8 @@ export async function giveUserIdGetRequestsNeedingPostScreen(userId: string) {
 
 export async function requestUsersRequests(userId: string): Promise<
   (Tables<"Request"> & {
-    Agency: { name: string };
-    Client: { clientID: string };
+    Agency: { name: string } | null;
+    Client: { clientID: string; sex: string; race: string } | null;
   })[]
 > {
   try {

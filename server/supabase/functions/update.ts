@@ -1,5 +1,6 @@
 import { createClient as createSupabaseClient } from "@/server/supabase/server";
-import { TablesInsert } from "@/types_db";
+import { TablesInsert, TablesUpdate } from "@/types_db";
+import { join } from "path";
 
 export async function updateUser(
   userId: string,
@@ -95,6 +96,20 @@ export async function approveRequestById(requestId: number) {
       .eq("id", requestId);
     return approvedRequest;
   } catch (error) {
+    throw error;
+  }
+}
+
+export async function requestNeedsReceipt(requestId: number) {
+  const supabase = createSupabaseClient();
+  try {
+    const requestNeedsReceipt = await supabase
+      .from("Request")
+      .update({ needsReceipts: true })
+      .eq("id", requestId);
+    return requestNeedsReceipt;
+  } catch (error) {
+    console.error("Error requesting needs receipt:", error);
     throw error;
   }
 }

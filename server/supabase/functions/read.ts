@@ -20,6 +20,7 @@ export async function getRequestsThatNeedAgreementsByUserId(userId: string) {
       .from("Request")
       .select("*")
       .eq("userId", userId)
+      .eq("paid", true)
       .is("agreementUrl", null);
     return requests;
   } catch (error) {
@@ -283,6 +284,7 @@ export async function getRequestsNeedingReceiptsByUserId(userId: string) {
       .from("Request")
       .select("*")
       .eq("userId", userId)
+      .eq("paid", true)
       .eq("needsReceipts", true)
       .eq("hasReceipts", false);
     return requests;
@@ -298,7 +300,7 @@ export async function getRequestsNeedingPostScreenByUserId(userId: string) {
       .from("Request")
       .select("*")
       .eq("userId", userId)
-      .eq("hasPreScreen", false)
+      .eq("hasPreScreen", true)
       .eq("hasPostScreen", false);
     return requests;
   } catch (error) {
