@@ -104,6 +104,17 @@ export async function createPreScreen(
       .from("PreScreenAnswers")
       .insert([preScreenData]);
     if (error) throw error;
+    // Check if the pre-screen data was successfully inserted
+
+    // Update the related Request to set hasPreScreen to TRUE
+    const updateError = await supabase
+      .from("Request")
+      .update({ hasPreScreen: true })
+      .eq("id", preScreenData.requestId) // Assuming 'requestId' is the column name in the Request table that relates to the pre-screen data
+      .then(({ error }) => error);
+
+    if (updateError) throw updateError;
+
     return data;
   } catch (error) {
     throw new Error(

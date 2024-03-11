@@ -301,6 +301,7 @@ export async function getRequestsNeedingPostScreenByUserId(userId: string) {
       .select("*")
       .eq("userId", userId)
       .eq("hasPreScreen", true)
+      .eq("paid", true)
       .eq("hasPostScreen", false);
     return requests;
   } catch (error) {

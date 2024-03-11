@@ -137,11 +137,11 @@ export async function newPreScreen(
     );
   }
   try {
-    const newPreScreenRecord = await createPreScreen(preScreenState);
+    await createPreScreen(preScreenState);
     revalidatePath("/admin/request/${requestId}");
     revalidatePath("/dashboard");
     revalidatePath("/user/requests");
-    return newPreScreenRecord;
+    return true;
   } catch (error) {
     console.error("Failed to create new prescreen record:", error);
     throw error;
