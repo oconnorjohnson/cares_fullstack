@@ -91,7 +91,9 @@ export default function NewClient({ userId }: { userId: string | null }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="default">Add New Client</Button>
+        <Button className="py-10 text-2xl " variant="default">
+          Add New Client
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogTitle>Add New Client</DialogTitle>

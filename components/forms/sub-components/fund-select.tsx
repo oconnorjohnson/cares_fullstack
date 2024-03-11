@@ -9,6 +9,7 @@ import {
 import { TrashIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface FundType {
   id: number;
@@ -34,17 +35,25 @@ export default function FundSelect({
   fundTypesData,
 }: FundSelectProps) {
   const handleAddFund = () => {
-    const newFunds = [
-      ...value,
-      { fundTypeId: 0, amount: 0, needsReceipt: false },
-    ];
-    onChange(newFunds);
+    // Check if the current number of funds is less than 4
+    if (value.length < 4) {
+      const newFunds = [
+        ...value,
+        { fundTypeId: 0, amount: 0, needsReceipt: false },
+      ];
+      onChange(newFunds);
+    } else {
+      // Optionally, provide feedback to the user that they cannot add more than 4 funds
+      toast.error("You cannot add more than 4 funds.");
+    }
   };
 
   const handleRemoveFund = (index: number) => {
     if (value.length > 1) {
       const newFunds = value.filter((_, i) => i !== index);
       onChange(newFunds);
+    } else {
+      toast.error("Minimum of 1 fund required.");
     }
   };
 

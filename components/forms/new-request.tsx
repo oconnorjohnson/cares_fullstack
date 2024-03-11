@@ -231,9 +231,11 @@ export default function NewRequest({ userId }: { userId: string }) {
     <>
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="default">Submit New Request</Button>
+          <Button className="py-10 text-2xl" variant="default">
+            Submit New Request
+          </Button>
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent className="h-2/3">
           <Progress value={progress} className="w-full mt-4" />
           <DialogTitle>New Request</DialogTitle>
           <DialogDescription>
@@ -246,7 +248,11 @@ export default function NewRequest({ userId }: { userId: string }) {
           >
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="">
-                <TabsContent value="tab1" hidden={activeTab !== "tab1"}>
+                <TabsContent
+                  className="flex flex-col justify-between"
+                  value="tab1"
+                  hidden={activeTab !== "tab1"}
+                >
                   {!isLoading && clients && (
                     <FormField
                       control={control}
@@ -354,7 +360,11 @@ export default function NewRequest({ userId }: { userId: string }) {
                     <Button onClick={goToNextTab}>Next</Button>
                   </div>
                 </TabsContent>
-                <TabsContent value="tab2" hidden={activeTab !== "tab2"}>
+                <TabsContent
+                  className="flex flex-col justify-between"
+                  value="tab2"
+                  hidden={activeTab !== "tab2"}
+                >
                   <FormField
                     control={control}
                     name="SDOH"
@@ -398,49 +408,59 @@ export default function NewRequest({ userId }: { userId: string }) {
                     <Button onClick={goToNextTab}>Next</Button>
                   </div>
                 </TabsContent>
-                <TabsContent value="tab3" hidden={activeTab !== "tab3"}>
-                  <FormField
-                    control={control}
-                    name="implementation"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          Plan for implementation of RFF supports:
-                        </FormLabel>
-                        <FormControl>
-                          <Textarea {...field} className="resize-none" />
-                        </FormControl>
+                <TabsContent
+                  className="flex flex-col justify-between"
+                  value="tab3"
+                  hidden={activeTab !== "tab3"}
+                >
+                  <div className="flex flex-col justify-between">
+                    <FormField
+                      control={control}
+                      name="implementation"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>
+                            Plan for implementation of RFF supports:
+                          </FormLabel>
+                          <FormControl>
+                            <Textarea {...field} className="resize-none" />
+                          </FormControl>
 
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <div className="py-2" />
-                  <FormField
-                    control={control}
-                    name="sustainability"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          Plan for sustainability if RFF is supporting a problem
-                          that has an ongoing cost. Write N/A if problem is NOT
-                          ongoing.
-                        </FormLabel>
-                        <FormControl>
-                          <Textarea {...field} className="resize-none" />
-                        </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <div className="py-2" />
+                    <FormField
+                      control={control}
+                      name="sustainability"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>
+                            Plan for sustainability if RFF is supporting a
+                            problem that has an ongoing cost. Write N/A if
+                            problem is NOT ongoing.
+                          </FormLabel>
+                          <FormControl>
+                            <Textarea {...field} className="resize-none" />
+                          </FormControl>
 
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <div className="p-2" />
-                  <div className="flex flex-row justify-between">
-                    <Button onClick={goToLastTab}>Last</Button>
-                    <Button onClick={goToNextTab}>Next</Button>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <div className="p-2" />
+                    <div className="flex flex-row justify-between">
+                      <Button onClick={goToLastTab}>Last</Button>
+                      <Button onClick={goToNextTab}>Next</Button>
+                    </div>
                   </div>
                 </TabsContent>
-                <TabsContent value="tab4" hidden={activeTab !== "tab4"}>
+                <TabsContent
+                  className="flex flex-col justify-between"
+                  value="tab4"
+                  hidden={activeTab !== "tab4"}
+                >
                   <FormField
                     control={control}
                     name="funds"
@@ -461,7 +481,7 @@ export default function NewRequest({ userId }: { userId: string }) {
                     )}
                   />
                   <div className="p-2" />
-                  <div className="flex flex-row justify-between">
+                  <div className="flex flex-row justify-between items-end">
                     <Button onClick={goToLastTab}>Last</Button>
                     <Button
                       type="submit"
@@ -476,7 +496,11 @@ export default function NewRequest({ userId }: { userId: string }) {
                     </Button>
                   </div>
                 </TabsContent>
-                <TabsContent value="tab5" hidden={activeTab !== "tab5"}>
+                <TabsContent
+                  className="flex flex-col justify-between"
+                  value="tab5"
+                  hidden={activeTab !== "tab5"}
+                >
                   <FormItem>
                     <FormLabel>
                       Your request has been submitted! Head to your dashboard to
