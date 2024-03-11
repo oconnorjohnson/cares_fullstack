@@ -40,30 +40,33 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
+  children?: React.ReactNode; // Ensure children is typed as ReactNode
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, forwardedRef) => {
-    // Separate motion-specific props
+  (
+    { className, variant, size, asChild = false, children, ...props },
+    forwardedRef,
+  ) => {
     const motionProps: MotionProps = {
-      whileHover: { scale: 1.02, transition: { duration: 0.2 } },
-      whileTap: { scale: 0.75, transition: { duration: 0.2 } },
+      whileHover: { scale: 1.05, transition: { duration: 0.2 } },
+      whileTap: { scale: 0.95, transition: { duration: 0.2 } },
     };
 
-    // Determine the component to use
     const Comp = asChild ? Slot : motion.button;
 
-    // Apply motionProps only if Comp is motion.button
-    const compProps =
-      Comp === motion.button ? { ...props, ...motionProps } : props;
+    // Prepare props for the component, ensuring motion props are only included for motion components
+    const componentProps = {
+      ...props,
+      ...(Comp === motion.button ? motionProps : {}),
+      className: cn(buttonVariants({ variant, size, className })),
+      ref: forwardedRef,
+    };
 
-    return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
-        ref={forwardedRef}
-        {...compProps} // Spread the appropriate props based on the component
-      />
-    );
+    // Render children directly within the component to ensure compatibility
+
+    // @ts-expect-error
+    return <Comp {...componentProps}>{children}</Comp>;
   },
 );
 Button.displayName = "Button";
