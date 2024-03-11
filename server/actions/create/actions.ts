@@ -263,17 +263,16 @@ export async function newRequest(requestState: RequestData) {
     if (typeof newRequestRecord.id !== "number") {
       throw new Error("Request ID is undefined or not a number");
     }
+    const requestId = newRequestRecord.id; // Now requestId is of type number
 
+    // Directly use the funds array from requestState, which includes needsReceipt for each fund
     const fundsData = requestState.funds.map((fund) => ({
       ...fund,
-      requestId: newRequestRecord.id as number,
+      requestId: requestId, // Assign the newly created request ID to each fund
     }));
-    const requestId = newRequestRecord.id as number;
-    console.log("Preparing to insert funds with data:", fundsData);
 
+    // Proceed with creating funds using the fundsData array
     const fundsRecords = await createFunds(fundsData);
-    console.log("Funds created successfully:", fundsRecords);
-
     console.log("Funds created successfully:", fundsRecords);
 
     // Send the email notification

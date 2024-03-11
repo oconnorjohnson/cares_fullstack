@@ -13,11 +13,13 @@ import { Button } from "@/components/ui/button";
 interface FundType {
   id: number;
   typeName: string;
+  needsReceipt: boolean;
 }
 
 interface FundInput {
   fundTypeId: number;
   amount: number;
+  needsReceipt: boolean;
 }
 
 interface FundSelectProps {
@@ -32,7 +34,10 @@ export default function FundSelect({
   fundTypesData,
 }: FundSelectProps) {
   const handleAddFund = () => {
-    const newFunds = [...value, { fundTypeId: 0, amount: 0 }];
+    const newFunds = [
+      ...value,
+      { fundTypeId: 0, amount: 0, needsReceipt: false },
+    ];
     onChange(newFunds);
   };
 
@@ -44,9 +49,16 @@ export default function FundSelect({
   };
 
   const handleFundTypeChange = (index: number, selectedValue: string) => {
+    const selectedFundType = fundTypesData.find(
+      (fundType) => fundType.id === parseInt(selectedValue, 10),
+    );
     const newFunds = value.map((fund, idx) => {
       if (idx === index) {
-        return { ...fund, fundTypeId: parseInt(selectedValue, 10) };
+        return {
+          ...fund,
+          fundTypeId: parseInt(selectedValue, 10),
+          needsReceipt: selectedFundType?.needsReceipt ?? false,
+        };
       }
       return fund;
     });

@@ -58,6 +58,7 @@ interface Agency {
 interface FundInput {
   fundTypeId: number;
   amount: number;
+  needsReceipt: boolean;
 }
 
 const formSchema = z.object({
@@ -73,6 +74,7 @@ const formSchema = z.object({
     z.object({
       fundTypeId: z.number().min(1, "fundTypeId is required"),
       amount: z.number().min(1, "amount is required"),
+      needsReceipt: z.boolean(),
     }),
   ),
 });
@@ -163,7 +165,7 @@ export default function NewRequest({ userId }: { userId: string }) {
       RFF: [],
       sustainability: "",
       implementation: "",
-      funds: [{ fundTypeId: undefined, amount: 0 }],
+      funds: [{ fundTypeId: undefined, amount: 0, needsReceipt: false }],
     },
   });
 
