@@ -131,10 +131,10 @@ export default async function Dashboard() {
     const requestsNeedReceipts = await fetchRequestsNeedingReceipts(userId);
     const requestsNeedPostScreen = await fetchRequestsNeedingPostScreen(userId);
     const requestsNeedAgreements = await fetchRequestsNeedingAgreements(userId);
-    // const countPreScreenRequests = () => requestsNeedPreScreen.length;
-    // const countReceiptsRequests = () => requestsNeedReceipts.length;
-    // const countPostScreenRequests = () => requestsNeedPostScreen.length;
-    // const countAgreementRequests = () => requestsNeedAgreements.length;
+    const countPreScreenRequests = () => requestsNeedPreScreen.length;
+    const countReceiptsRequests = () => requestsNeedReceipts.length;
+    const countPostScreenRequests = () => requestsNeedPostScreen.length;
+    const countAgreementRequests = () => requestsNeedAgreements.length;
 
     return (
       <>
@@ -209,7 +209,7 @@ export default async function Dashboard() {
                           <div className="flex flex-row items-center">
                             Outstanding Pre-Screens
                             <Badge className="ml-2">
-                              {/* {countPreScreenRequests()} */}
+                              {countPreScreenRequests()}
                             </Badge>
                           </div>
                         </AccordionTrigger>
@@ -247,7 +247,7 @@ export default async function Dashboard() {
                           <div className="flex flex-row items-center">
                             Outstanding Receipt Uploads
                             <Badge className="ml-2">
-                              {/* {countReceiptsRequests()} */}
+                              {countReceiptsRequests()}
                             </Badge>
                           </div>
                         </AccordionTrigger>
@@ -285,7 +285,7 @@ export default async function Dashboard() {
                           <div className="flex flex-row items-center">
                             Outstanding Post-Screens
                             <Badge className="ml-2">
-                              {/* {countPostScreenRequests()} */}
+                              {countPostScreenRequests()}
                             </Badge>
                           </div>
                         </AccordionTrigger>
@@ -324,7 +324,7 @@ export default async function Dashboard() {
                           <div className="flex flex-row items-center">
                             Outstanding Agreement Uploads
                             <Badge className="ml-2">
-                              {/* {countAgreementRequests()} */}
+                              {countAgreementRequests()}
                             </Badge>
                           </div>
                         </AccordionTrigger>
