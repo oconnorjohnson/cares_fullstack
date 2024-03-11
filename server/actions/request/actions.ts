@@ -29,7 +29,32 @@ export type FundData = {
   fundType: { typeName: string };
   request: { id: number };
 };
-
+export type Request = {
+  id: number;
+  userId: string;
+  Client: {
+    sex: string;
+    race: string;
+    clientID: string;
+  } | null;
+  User: {
+    first_name: string | null;
+    last_name: string | null;
+  } | null;
+  Agency: {
+    name: string;
+  } | null;
+  details: string;
+  pendingApproval: boolean;
+  approved: boolean;
+  denied: boolean;
+  pendingPayout: boolean;
+  paid: boolean;
+  hasPreScreen: boolean;
+  hasPostScreen: boolean;
+  created_at: string;
+  isHighlighted?: boolean;
+};
 export type RequestData = {
   id: number;
   user: {
@@ -178,7 +203,7 @@ export async function requestAllFundTypes(): Promise<Tables<"FundType">[]> {
   }
 }
 
-export async function requestAllRequests(): Promise<Tables<"Request">[]> {
+export async function requestAllRequests(): Promise<Request[]> {
   try {
     const response = await getAllRequests();
     const requests = response.data;
@@ -232,6 +257,15 @@ export async function AgencyById(agencyId: number) {
 }
 
 export async function GetAllUsers() {
-  const users = await getUsers();
-  return users;
+  try {
+    const response = await getUsers();
+    const users = response.data;
+    if (!users) {
+      throw new Error("Failed to fetch users.");
+    }
+    return users;
+  } catch (error) {
+    console.error(`Failed to fetch users:`, error);
+    throw error;
+  }
 }

@@ -11,10 +11,8 @@ async function getUsers(): Promise<User[]> {
     ...user,
     id: user.id,
     users: user.first_name + " " + user.last_name,
-    emails: user.emailAddresses.map((email) => email.email),
-    clients: user.clients
-      .map((client) => `${client.first_name} ${client.last_name}`)
-      .join(" | "),
+    emails: user.EmailAddress.map((email) => email.email),
+    clients: user.Client.map((client) => `${client.clientID}`).join(" | "),
   }));
   console.log(JSON.stringify(users, null, 2));
   return modifiedUsers as unknown as User[];

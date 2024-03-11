@@ -88,7 +88,7 @@ const OPTIONS: Option[] = [
   { label: "Durable Medical Equipment", value: "Durable Medical Equipment" },
   { label: "Gas", value: "Gas" },
   { label: "Rideshare", value: "Rideshare" },
-  { label: "Bus Pas", value: "Bus Pas" },
+  { label: "Bus Pass", value: "Bus Pass" },
   { label: "Specialty Medical Supplies", value: "Specialty Medical Supplies" },
   { label: "Rental Assistance", value: "Rental Assistance" },
   { label: "Utilities Assistance", value: "Utilities Assistance" },
@@ -238,9 +238,6 @@ export default function NewRequest({ userId }: { userId: string }) {
         <DialogContent className="h-2/3">
           <Progress value={progress} className="w-full mt-4" />
           <DialogTitle>New Request</DialogTitle>
-          <DialogDescription>
-            Fill in the details to submit a new request.
-          </DialogDescription>
           <Tabs
             value={activeTab}
             onValueChange={setActiveTab}

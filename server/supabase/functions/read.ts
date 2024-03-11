@@ -31,7 +31,11 @@ export async function getRequestsThatNeedAgreementsByUserId(userId: string) {
 export async function getAllRequests() {
   const supabase = createSupabaseClient();
   try {
-    const requests = await supabase.from("Request").select("*");
+    const requests = await supabase
+      .from("Request")
+      .select(
+        `*, User ( first_name, last_name ), Client ( clientID, sex, race ), Agency ( name )`,
+      );
     return requests;
   } catch (error) {
     throw error;
@@ -92,7 +96,9 @@ export async function getFundsThatNeedReceiptsByRequestId(requestId: number) {
 export async function getUsers() {
   const supabase = createSupabaseClient();
   try {
-    const users = await supabase.from("User").select("*");
+    const users = await supabase
+      .from("User")
+      .select(`*, EmailAddress ( email ), Client ( clientID, sex, race )`);
     return users;
   } catch (error) {
     throw error;

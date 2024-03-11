@@ -21,20 +21,18 @@ export type Request = {
   userId: string;
   client: {
     id: number;
-    first_name: string;
-    last_name: string;
+    clientID: string;
   };
-  user: {
+  User: {
     id: number;
     userId: string;
     first_name: string;
     last_name: string;
     isBanned: boolean;
   };
-  agency: {
+  Agency: {
     id: number;
     name: string;
-    userId: string;
   };
   details: string;
   pendingApproval: boolean;

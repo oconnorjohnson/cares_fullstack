@@ -144,7 +144,7 @@ export default async function Dashboard() {
             <div className="text-3xl font-bold pl-12 pt-12">My Dashboard</div>
             <div className="flex flex-col space-y-8 px-12 pt-6">
               <div className="flex space-x-8">
-                <div className="flex flex-col w-1/2 flex-grow">
+                <div className="flex flex-col justify-center w-1/2 flex-grow">
                   {clientCount! > 0 ? (
                     <NewRequest userId={userId} />
                   ) : (

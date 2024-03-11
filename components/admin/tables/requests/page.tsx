@@ -10,12 +10,12 @@ async function getRequests(): Promise<Request[]> {
   const modifiedRequests = requests.map((request) => ({
     ...request,
     id: request.id,
-    user: request.user
-      ? `${request.user.first_name} ${request.user.last_name}`
+    user: request.User
+      ? `${request.User.first_name} ${request.User.last_name}`
       : "N/A",
-    agency: request.agency ? request.agency.name : "N/A",
-    client: request.client ? `${request.client.clientId}` : "N/A",
-    createdAt: format(new Date(request.createdAt), "PPpp"), // Adjust the format string as needed
+    agency: request.Agency ? request.Agency.name : "N/A",
+    client: request.Client ? `${request.Client.clientID}` : "N/A",
+    createdAt: format(new Date(request.created_at), "MMddyyyy"), // Adjust the format string as needed
     // Convert boolean fields to readable strings (if necessary)
     combinedStatus: request.pendingApproval
       ? "Pending"
