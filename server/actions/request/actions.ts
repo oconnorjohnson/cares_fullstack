@@ -18,6 +18,7 @@ import {
   getRequestsThatNeedAgreementsByUserId,
 } from "@/server/supabase/functions/read";
 import { Tables } from "@/types_db";
+import { PostgrestError } from "@supabase/supabase-js";
 
 export type FundTypeData = {
   id: number;
@@ -231,18 +232,53 @@ export async function getPaidFunds(): Promise<Tables<"Fund">[]> {
   }
 }
 
-export async function requestRequestByRequestId(
-  requestId: number,
-): Promise<RequestData> {
+export async function requestRequestByRequestId(requestId: number): Promise<
+  Tables<"Request"> & {
+    User: Tables<"User"> & {
+      EmailAddress: Tables<"EmailAddress">;
+    };
+    Client: Tables<"Client">;
+    Agency: Tables<"Agency">;
+    Fund: Tables<"Fund"> &
+      {
+        id: number;
+        amount: number;
+        FundType: Tables<"FundType">;
+        Receipt: Tables<"Receipt">;
+      }[];
+    preScreenAnswer: Tables<"PreScreenAnswers">;
+    postScreenAnswer: Tables<"PostScreenAnswers">;
+  }
+> {
+  console.log(requestId);
+  if (!requestId) {
+    throw new Error("Request ID is required.");
+  }
   try {
     const request = await getRequestById(requestId);
     if (!request) {
+      console.error(`Request with ID ${requestId} not found.`);
       throw new Error(`Request with ID ${requestId} not found.`);
     }
-    return request as unknown as RequestData;
+    return request as unknown as Tables<"Request"> & {
+      User: Tables<"User"> & {
+        EmailAddress: Tables<"EmailAddress">;
+      };
+      Client: Tables<"Client">;
+      Agency: Tables<"Agency">;
+      Fund: Tables<"Fund"> &
+        {
+          id: number;
+          amount: number;
+          FundType: Tables<"FundType">;
+          Receipt: Tables<"Receipt">;
+        }[];
+      preScreenAnswer: Tables<"PreScreenAnswers">;
+      postScreenAnswer: Tables<"PostScreenAnswers">;
+    };
   } catch (error) {
     console.error("Failed to retrieve request by ID:", error);
-    throw error;
+    throw new Error();
   }
 }
 

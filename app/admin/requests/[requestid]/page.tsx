@@ -21,29 +21,31 @@ import ApproveButton from "@/components/admin/request/approve";
 import AddFundToRequestById from "@/components/admin/request/add-fund";
 import MarkPaidButton from "@/components/admin/request/mark-paid";
 import { format } from "date-fns";
-
+import type { RequestData } from "@/server/actions/request/actions";
 export const runtime = "edge";
 
 const RequestPage = async ({ requestid }: { requestid: string }) => {
+  console.log(requestid);
   const requestId = Number(requestid);
-  const request = await requestRequestByRequestId(requestId);
-  const SDOHBadges = request.SDOHs.map((sdoh, index) => (
+  const [request] = await requestRequestByRequestId(requestId);
+
+  const SDOHBadges = request.SDOH?.map((sdoh, index) => (
     <Badge key={index} className="mr-2 mb-2 text-sm">
-      {sdoh.value}
+      {sdoh}
     </Badge>
   ));
-  const RFFBadges = request.RFFs.map((rff, index) => (
+  const RFFBadges = request.RFF?.map((rff, index) => (
     <Badge key={index} className="mr-2 mb-2 text-sm">
-      {rff.value}
+      {rff}
     </Badge>
   ));
-  console.log(request.funds);
-  const FundsBadges = request.funds.map((fund, index) => (
+  console.log(request.Fund);
+  const FundsBadges = request.Fund?.map((fund, index) => (
     <div
       key={index}
       className="flex items-center text-sm justify-end space-x-2 mb-2"
     >
-      <Badge className="text-sm">{fund.fundType.typeName}</Badge>
+      <Badge className="text-sm">{fund.FundType.typeName}</Badge>
       <div className="px-2" />
       <span className="text-lg font-semibold">${fund.amount}</span>
       <div className="px-2" />
@@ -63,8 +65,8 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
       {!request.approved && !request.denied && (
         <FundAction
           fundId={fund.id}
-          fundTypeId={fund.fundType.id}
-          fundTypeName={fund.fundType.typeName}
+          fundTypeId={fund.FundType.id}
+          fundTypeName={fund.FundType.typeName}
           amount={fund.amount}
           requestId={requestId}
         />
@@ -87,8 +89,8 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
             <CardHeader>
               <CardTitle className="flex flex-cols-3 justify-between">
                 <div className="text-center text-3xl pt-0.5">
-                  {request.user.first_name}&apos;s request from{" "}
-                  {formatDateWithSuffix(request.createdAt)}.
+                  {request?.User.first_name}&apos;s request from{" "}
+                  {request.created_at}
                 </div>
                 <div className="flex flex-row justify-between px-6">
                   {request.pendingApproval && (
@@ -108,7 +110,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                   <div className="text-xl font-extralight pr-4">User</div>
 
                   <div className="text-xl font-bold">
-                    {request.user.first_name} {request.user.last_name}
+                    {request.User.first_name} {request.User.last_name}
                   </div>
                 </div>
                 <Separator className="my-2" />
@@ -124,19 +126,17 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                 <Separator className="my-2" />
                 <div className="flex flex-cols-2 justify-between">
                   <div className="text-xl font-extralight pr-4">Email</div>
-                  <Link
-                    href={`mailto:${request.user.emailAddresses?.[0]?.email}`}
-                  >
-                    <div className="text-xl font-bold underline hover:text-zinc-500">
-                      {request.user.emailAddresses?.[0]?.email ??
+                  <Link href={`mailto:${request.User.EmailAddress.email}`}>
+                    {/* <div className="text-xl font-bold underline hover:text-zinc-500">
+                      {.fir?.emailAddresses?.[0]?.email ??
                         "Error rendering email"}
-                    </div>
+                    </div> */}
                   </Link>
                 </div>
                 <Separator className="my-2" />
                 <div className="flex flex-cols-2 justify-between">
                   <div className="text-xl font-extralight pr-4">Agency</div>
-                  <div className="text-xl font-bold">{request.agency.name}</div>
+                  <div className="text-xl font-bold">{request.Agency.name}</div>
                 </div>
                 <Separator className="my-2" />
                 <div className="flex flex-cols-2 justify-between">
@@ -144,13 +144,13 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                     Request Status
                   </div>
                   <div className="text-xl font-bold">
-                    {request.pendingApproval ? (
+                    {request?.pendingApproval ? (
                       <Badge className="bg-yellow-300 text-black text-sm">
                         Pending Approval
                       </Badge>
-                    ) : request.approved ? (
+                    ) : request?.approved ? (
                       <Badge className="bg-green-600 text-sm">Approved</Badge>
-                    ) : request.denied ? (
+                    ) : request?.denied ? (
                       <Badge className="bg-red-600 text-sm">Denied</Badge>
                     ) : (
                       <Badge className="bg-pink-500">
@@ -164,7 +164,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                 <div className="flex flex-cols-2 justify-between">
                   <div className="text-xl font-extralight pr-4">Pre-Screen</div>
                   <div className="text-xl font-bold">
-                    {request.hasPreScreen ? (
+                    {request?.hasPreScreen ? (
                       <Badge className="bg-green-600 text-sm">Completed</Badge>
                     ) : (
                       <Badge className="bg-red-500 text-sm">Not Started</Badge>
@@ -177,7 +177,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                     Post-Screen
                   </div>
                   <div className="text-xl font-bold">
-                    {request.hasPostScreen ? (
+                    {request?.hasPostScreen ? (
                       <Badge className="bg-green-600 text-sm">Completed</Badge>
                     ) : (
                       <Badge className="bg-red-500 text-sm">Not Started</Badge>
@@ -190,7 +190,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                     Paid Status
                   </div>
                   <div className="text-xl font-bold">
-                    {request.paid ? (
+                    {request?.paid ? (
                       <Badge className="bg-green-600 text-white text-sm">
                         Paid
                       </Badge>
@@ -206,9 +206,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                   <div className="text-xl font-extralight pr-4">
                     Submitted On
                   </div>
-                  <div className="text-xl font-bold">
-                    {format(new Date(request.createdAt), "MM/dd/yyyy")}
-                  </div>
+                  <div className="text-xl font-bold">{request.created_at}</div>
                 </div>
               </div>
             </CardContent>
@@ -222,7 +220,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
               </CardTitle>
             </CardHeader>
             <CardContent className="border py-4 mx-4 rounded-lg">
-              <div className="flex flex-col">{request.details}</div>
+              <div className="flex flex-col">{request?.details}</div>
             </CardContent>
             <CardFooter></CardFooter>
           </Card>
@@ -426,14 +424,14 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Submitted On:
                       </div>
                       <div className="text-xl font-bold">
-                        {request.preScreenAnswer?.createdAt.toDateString()}
+                        {request.preScreenAnswer?.created_at}
                       </div>
                     </div>
                   </div>
                 </>
               ) : (
                 <div className="text-xl font-bold text-destructive">
-                  Not Started. Once {request.user.first_name} completes the
+                  Not Started. Once {request.User.first_name} completes the
                   Pre-Screen questionnaire with their client, you&apos;ll see
                   their answers and an option to mark this request as
                   &quot;Paid&quot;.
@@ -480,8 +478,8 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                   <DenyButton requestId={request.id} />
                   <MarkPaidButton
                     requestId={request.id}
-                    firstName={request.user.first_name}
-                    email={request.user.emailAddresses?.[0]?.email || ""}
+                    firstName={request.User.first_name as string}
+                    email={request.User.EmailAddress.email || ""}
                   />
                 </CardContent>
               </Card>
@@ -586,7 +584,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Submitted On:
                       </div>
                       <div className="text-xl font-bold">
-                        {request.postScreenAnswer?.createdAt.toDateString()}
+                        {request.postScreenAnswer?.created_at}
                       </div>
                     </div>
                   </div>
@@ -612,6 +610,7 @@ export default function RequestDetails({
 }) {
   const { sessionClaims } = auth();
   const isAdmin = (sessionClaims?.publicMetadata as any)?.admin;
+  console.log(params.requestid);
   return (
     <>
       {isAdmin ? (

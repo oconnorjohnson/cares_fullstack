@@ -1,4 +1,5 @@
 import { createClient as createSupabaseClient } from "@/server/supabase/server";
+import { PostgrestError } from "@supabase/supabase-js";
 
 export async function getAgencyNameById(agencyId: number) {
   const supabase = createSupabaseClient();
@@ -131,9 +132,8 @@ export async function getUserIdByRequestId(requestId: number) {
   try {
     const user = await supabase
       .from("Request")
-      .select("*")
-      .eq("id", requestId)
-      .eq("userId", requestId);
+      .select("userId")
+      .eq("id", requestId);
     return user;
   } catch (error) {
     throw error;
@@ -196,16 +196,17 @@ export async function getUserByUserId(userId: string) {
   try {
     const { data, error } = await supabase
       .from("User")
-      .select("*")
-      .eq("userId", userId);
+      .select(`*, EmailAddress ( email )`)
+      .eq("userId", userId)
+      .single();
     if (error) {
       console.error("Error fetching user by user ID:", error.message);
-      return {};
+      throw error;
     }
     return data;
   } catch (error) {
     console.log("Unexpected error fetching user by user ID:", error);
-    return {};
+    throw error;
   }
 }
 
@@ -272,12 +273,19 @@ export async function getAdminRequests() {
 
 export async function getRequestById(requestId: number) {
   const supabase = createSupabaseClient();
+  console.log("starting getRequestById supabase read function");
   try {
-    const request = await supabase
+    const { data, error } = await supabase
       .from("Request")
-      .select("*")
+      .select(
+        `*, User ( first_name, last_name, EmailAddress ( email ) ), Client ( clientID, sex, race ), Agency ( name ), Fund ( id, amount, FundType ( typeName ), Receipt!public_Receipt_fundId_fkey ( id, url ) ), PreScreenAnswers ( * ), PostScreenAnswers ( * )`,
+      )
       .eq("id", requestId);
-    return request;
+    if (error) {
+      console.log(error);
+      throw error;
+    }
+    return data;
   } catch (error) {
     throw error;
   }

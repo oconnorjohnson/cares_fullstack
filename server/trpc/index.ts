@@ -72,11 +72,40 @@ export const appRouter = router({
       const request = await getRequestById(requestId);
       return request;
     }),
-  getUserByRequestId: publicProcedure
+  getUserDetailsByRequestId: publicProcedure
     .input(z.number())
     .query(async ({ input: requestId }) => {
-      const user = await getUserIdByRequestId(requestId);
-      return user;
+      try {
+        // First, get the userId associated with the requestId
+        const userIdResult = await getUserIdByRequestId(requestId);
+        if (!userIdResult.data || userIdResult.data.length === 0) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: `User ID not found for request ID: ${requestId}`,
+          });
+        }
+        const userId = userIdResult.data[0].userId;
+
+        // Then, use the userId to get the user's details
+        const userDetails = await getUserByUserId(userId);
+        if (!userDetails) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: `User details not found for user ID: ${userId}`,
+          });
+        }
+
+        return userDetails;
+      } catch (error) {
+        console.error(
+          `Error fetching user details by request ID ${requestId}: `,
+          error,
+        );
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `Failed to fetch user details for request ID: ${requestId}`,
+        });
+      }
     }),
   getEmailByUserId: publicProcedure
     .input(z.string())
