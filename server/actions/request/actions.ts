@@ -218,14 +218,22 @@ export async function requestAllRequests(): Promise<Request[]> {
   }
 }
 
-export async function getPaidFunds(): Promise<Tables<"Fund">[]> {
+export async function getPaidFunds(): Promise<
+  Tables<"Fund"> &
+    {
+      FundType: Tables<"FundType">;
+    }[]
+> {
   try {
     const response = await getFunds();
     const paidFunds = response.data;
     if (!paidFunds) {
       throw new Error("Failed to fetch paid funds.");
     }
-    return paidFunds;
+    return paidFunds as unknown as Tables<"Fund"> &
+      {
+        FundType: Tables<"FundType">;
+      }[];
   } catch (error) {
     console.error("Failed to get paid funds:", error);
     throw error;

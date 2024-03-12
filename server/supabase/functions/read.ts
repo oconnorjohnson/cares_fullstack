@@ -85,7 +85,7 @@ export async function getFundsThatNeedReceiptsByRequestId(requestId: number) {
   try {
     const funds = await supabase
       .from("Fund")
-      .select(`* , FundType ( typeName )`)
+      .select(`*, FundType ( typeName )`)
       .eq("requestId", requestId)
       .eq("needsReceipt", true);
     return funds;
@@ -109,7 +109,7 @@ export async function getUsers() {
 export async function getFunds() {
   const supabase = createSupabaseClient();
   try {
-    const funds = await supabase.from("Fund").select("*");
+    const funds = await supabase.from("Fund").select(`*, FundType ( typeName)`);
     return funds;
   } catch (error) {
     throw error;

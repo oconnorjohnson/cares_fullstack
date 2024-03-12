@@ -6,15 +6,15 @@ import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 
 async function getFunds(): Promise<Fund[]> {
-  const funds = await getPaidFunds();
+  const funds: Fund[] = await getPaidFunds(); // Ensure getPaidFunds returns Fund[]
   console.log(funds);
   const modifiedFunds = funds.map((fund) => ({
     ...fund,
-    requestId: fund.request.id,
-    typeName: fund.fundType.typeName,
+    requestId: fund.requestId, // TypeScript should recognize this property now
+    typeName: fund.FundType.typeName, // And this one
     amount: fund.amount,
   }));
-  return modifiedFunds as unknown as Fund[];
+  return modifiedFunds;
 }
 
 export default async function FundsTable() {
