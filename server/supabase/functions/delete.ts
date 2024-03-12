@@ -17,8 +17,15 @@ export async function deleteUser(userId: string) {
 export async function deleteFundById(fundId: number) {
   const supabase = createSupabaseClient();
   try {
-    const deletedFund = await supabase.from("Fund").delete().eq("id", fundId);
-    return deletedFund;
+    const { data, error } = await supabase
+      .from("Fund")
+      .delete()
+      .eq("id", fundId);
+    if (error) {
+      console.log("Error in deleteFundById:", error);
+      throw error;
+    }
+    return data;
   } catch (error) {
     throw error;
   }

@@ -15,6 +15,7 @@ import { EmailTemplate as ReceiptUploadedEmailTemplate } from "@/components/emai
 import { EmailTemplate as BannedEmailTemplate } from "@/components/emails/banned";
 import { EmailTemplate as ApprovedEmailTemplate } from "@/components/emails/approved";
 import { EmailTemplate as DeniedEmailTemplate } from "@/components/emails/denied";
+import { Tables, TablesUpdate } from "@/types_db";
 
 export interface RequestData {
   id: number;
@@ -167,11 +168,11 @@ export async function MarkPaid(
   requestId: number,
   firstName: string,
   email: string,
-): Promise<RequestData> {
+): Promise<TablesUpdate<"Request">> {
   const resend = new Resend(process.env.RESEND_API_KEY);
   try {
     const response = await markRequestPaidById(requestId);
-    const updatedRequest = response.data;
+    const updatedRequest = response;
     if (!updatedRequest) {
       throw new Error("Failed to update request data.");
     }
@@ -185,7 +186,7 @@ export async function MarkPaid(
         firstName: firstName,
       }) as React.ReactElement,
     });
-    return updatedRequest;
+    return updatedRequest as unknown as TablesUpdate<"Request">;
   } catch (error) {
     console.error(
       `Failed to mark request with ID ${requestId} as paid:`,
@@ -200,7 +201,7 @@ export async function UpdateFund(
   fundTypeId: number,
   amount: number,
   requestId: number,
-) {
+): Promise<TablesUpdate<"Fund">> {
   const fundData = {
     id: fundId,
     amount: amount,
@@ -215,13 +216,13 @@ export async function UpdateFund(
       `Before updateFundById - Fund ID: ${fundId}, Fund Type ID: ${fundTypeId}, Amount: ${amount}`,
     );
     const response = await updateFundById(fundData);
-    const updatedFund = response.data;
+    const updatedFund = response;
     if (!updatedFund) {
       throw new Error("Failed to update fund data.");
     }
     console.log(`Successfully updated fund with ID: ${fundId}`);
     revalidatePath(`/admin/request/${requestId}/page`);
-    return updatedFund;
+    return updatedFund as unknown as TablesUpdate<"Fund">;
   } catch (error) {
     console.error(`Failed to update fund with ID ${fundId}:`, error);
     throw error;

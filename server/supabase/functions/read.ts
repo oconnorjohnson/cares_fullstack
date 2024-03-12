@@ -111,8 +111,9 @@ export async function getFunds() {
   try {
     const funds = await supabase
       .from("Fund")
-      .select(`*, FundType ( typeName)`)
+      .select(`*, FundType ( typeName, userId)`)
       .eq("paid", true);
+
     return funds;
   } catch (error) {
     throw error;

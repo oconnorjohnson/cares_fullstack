@@ -144,7 +144,7 @@ export default function FundDropdown({
       console.error("Error in UpdateFund:", error);
     }
   };
-
+  const FundTypeId = fundTypeId ? fundTypeId.toString() : undefined;
   return (
     <>
       <AlertDialog>
@@ -233,7 +233,7 @@ export default function FundDropdown({
                         </Label>
                         <Select
                           {...register("fundTypeId")}
-                          defaultValue={fundTypeId.toString()}
+                          defaultValue={FundTypeId}
                           onValueChange={(value) => {
                             console.log(
                               `Selected fundTypeId before parsing: ${value}`,

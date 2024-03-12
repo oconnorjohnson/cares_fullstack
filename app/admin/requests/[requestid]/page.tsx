@@ -40,6 +40,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
     </Badge>
   ));
   console.log(request.Fund);
+  console.log(request.PreScreenAnswerss);
   const FundsBadges = request.Fund?.map((fund, index) => (
     <div
       key={index}
@@ -335,7 +336,8 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
               </CardTitle>
             </CardHeader>
             <CardContent className="border py-4 mx-4 rounded-lg">
-              {request.preScreenAnswer ? (
+              {request.PreScreenAnswers &&
+              request.PreScreenAnswers.length > 0 ? (
                 <>
                   <div className="flex flex-col">
                     <div className="flex flex-cols-2 justify-between">
@@ -343,7 +345,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Housing Situation
                       </div>
                       <div className="text-xl font-bold">
-                        {request.preScreenAnswer?.housingSituation}
+                        {request.PreScreenAnswers[0].housingSituation}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -352,7 +354,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Housing Quality
                       </div>
                       <div className="text-xl font-bold">
-                        {request.preScreenAnswer?.housingQuality}
+                        {request.PreScreenAnswers[0].housingQuality}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -361,7 +363,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Utility Stress
                       </div>
                       <div className="text-xl font-bold">
-                        {request.preScreenAnswer?.utilityStress}
+                        {request.PreScreenAnswers[0].utilityStress}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -370,7 +372,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Food Insecurity Stress
                       </div>
                       <div className="text-xl font-bold">
-                        {request.preScreenAnswer?.foodInsecurityStress}
+                        {request.PreScreenAnswers[0].foodInsecurityStress}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -379,7 +381,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Food Money Stress
                       </div>
                       <div className="text-xl font-bold">
-                        {request.preScreenAnswer?.foodMoneyStress}
+                        {request.PreScreenAnswers[0].foodMoneyStress}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -388,7 +390,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Transportation Confidence
                       </div>
                       <div className="text-xl font-bold">
-                        {request.preScreenAnswer?.transpoConfidence}
+                        {request.PreScreenAnswers[0].transpoConfidence}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -397,7 +399,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Transportation Stress
                       </div>
                       <div className="text-xl font-bold">
-                        {request.preScreenAnswer?.transpoStress}
+                        {request.PreScreenAnswers[0].transpoStress}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -406,7 +408,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Financial Difficulties
                       </div>
                       <div className="text-xl font-bold">
-                        {request.preScreenAnswer?.financialDifficulties}
+                        {request.PreScreenAnswers[0].financialDifficulties}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -415,7 +417,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Additional Information
                       </div>
                       <div className="text-xl font-bold">
-                        {request.preScreenAnswer?.additionalInformation}
+                        {request.PreScreenAnswers[0].additionalInformation}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -424,7 +426,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Submitted On:
                       </div>
                       <div className="text-xl font-bold">
-                        {request.preScreenAnswer?.created_at}
+                        {request.PreScreenAnswers[0].created_at}
                       </div>
                     </div>
                   </div>
@@ -495,7 +497,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
               </CardTitle>
             </CardHeader>
             <CardContent className="border py-4 mx-4 rounded-lg">
-              {request.postScreenAnswer ? (
+              {request.PostScreenAnswer ? (
                 <>
                   <div className="flex flex-col">
                     <div className="flex flex-cols-2 justify-between">
@@ -503,7 +505,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Housing Situation
                       </div>
                       <div className="text-xl font-bold">
-                        {request.postScreenAnswer?.housingSituation}
+                        {request.PostScreenAnswer?.housingSituation}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -512,7 +514,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Housing Quality
                       </div>
                       <div className="text-xl font-bold">
-                        {request.postScreenAnswer?.housingQuality}
+                        {request.PostScreenAnswer?.housingQuality}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -521,7 +523,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Utility Stress
                       </div>
                       <div className="text-xl font-bold">
-                        {request.postScreenAnswer?.utilityStress}
+                        {request.PostScreenAnswer?.utilityStress}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -530,7 +532,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Food Insecurity Stress
                       </div>
                       <div className="text-xl font-bold">
-                        {request.postScreenAnswer?.foodInsecurityStress}
+                        {request.PostScreenAnswer?.foodInsecurityStress}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -539,7 +541,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Food Money Stress
                       </div>
                       <div className="text-xl font-bold">
-                        {request.postScreenAnswer?.foodMoneyStress}
+                        {request.PostScreenAnswer?.foodMoneyStress}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -548,7 +550,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Transportation Confidence
                       </div>
                       <div className="text-xl font-bold">
-                        {request.postScreenAnswer?.transpoConfidence}
+                        {request.PostScreenAnswer?.transpoConfidence}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -557,7 +559,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Transportation Stress
                       </div>
                       <div className="text-xl font-bold">
-                        {request.postScreenAnswer?.transpoStress}
+                        {request.PostScreenAnswer?.transpoStress}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -566,7 +568,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Financial Difficulties
                       </div>
                       <div className="text-xl font-bold">
-                        {request.postScreenAnswer?.financialDifficulties}
+                        {request.PostScreenAnswer?.financialDifficulties}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -575,7 +577,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Additional Information
                       </div>
                       <div className="text-xl font-bold">
-                        {request.postScreenAnswer?.additionalInformation}
+                        {request.PostScreenAnswer?.additionalInformation}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -584,7 +586,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Submitted On:
                       </div>
                       <div className="text-xl font-bold">
-                        {request.postScreenAnswer?.created_at}
+                        {request.PostScreenAnswer?.created_at}
                       </div>
                     </div>
                   </div>

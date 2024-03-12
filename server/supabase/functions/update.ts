@@ -46,16 +46,24 @@ export async function banUserById(userId: string) {
 }
 
 export async function updateFundById(fundData: TablesInsert<"Fund">) {
+  console.log(fundData.id);
   const supabase = createSupabaseClient();
   if (!fundData.id) {
     throw new Error("Fund ID is required.");
   }
   try {
-    const updatedFund = await supabase
+    const { data, error } = await supabase
       .from("Fund")
-      .update(fundData)
+      .update({
+        amount: fundData.amount,
+        fundTypeId: fundData.fundTypeId,
+      })
       .eq("id", fundData.id);
-    return updatedFund;
+    if (error) {
+      console.log("Error in updateFundById:", error);
+      throw error;
+    }
+    return data;
   } catch (error) {
     throw error;
   }

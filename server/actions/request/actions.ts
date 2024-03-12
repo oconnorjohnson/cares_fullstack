@@ -21,13 +21,12 @@ import { Tables } from "@/types_db";
 import { PostgrestError } from "@supabase/supabase-js";
 
 export type FundTypeData = {
-  id: number;
   typeName: string;
   userId: string;
 };
 export type FundData = {
   amount: number;
-  fundType: { typeName: string };
+  fundType: { typeName: string; userId: string } | null;
   request: { id: number };
 };
 export type Request = {
@@ -227,7 +226,9 @@ export async function getPaidFunds(): Promise<
       throw new Error("Failed to fetch paid funds.");
     }
     // Directly return the response data if it matches the expected structure
-    return response.data;
+    return response.data as unknown as (Tables<"Fund"> & {
+      FundType: Tables<"FundType">;
+    })[];
   } catch (error) {
     console.error("Failed to get paid funds:", error);
     throw error;
