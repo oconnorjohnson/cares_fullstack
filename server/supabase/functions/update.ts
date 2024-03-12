@@ -60,16 +60,22 @@ export async function updateFundById(fundData: TablesInsert<"Fund">) {
     throw error;
   }
 }
-
 export async function markRequestPaidById(requestId: number) {
   const supabase = createSupabaseClient();
   try {
-    const paidRequest = await supabase
+    const { data: paidRequestData, error: paidRequestError } = await supabase
       .from("Request")
       .update({ paid: true })
       .eq("id", requestId);
-    return paidRequest;
+    if (paidRequestError) throw paidRequestError;
+    const { data: updatedFundData, error: updatedFundError } = await supabase
+      .from("Fund")
+      .update({ paid: true })
+      .eq("requestId", requestId);
+    if (updatedFundError) throw updatedFundError;
+    return { paidRequestData, updatedFundData };
   } catch (error) {
+    console.error("Error in markRequestPaidById:", error);
     throw error;
   }
 }

@@ -128,6 +128,7 @@ export type Database = {
           fundTypeId: number;
           id: number;
           needsReceipt: boolean;
+          paid: boolean;
           receiptId: number | null;
           requestId: number;
           RFFType: string | null;
@@ -138,6 +139,7 @@ export type Database = {
           fundTypeId: number;
           id?: number;
           needsReceipt?: boolean;
+          paid?: boolean;
           receiptId?: number | null;
           requestId: number;
           RFFType?: string | null;
@@ -148,6 +150,7 @@ export type Database = {
           fundTypeId?: number;
           id?: number;
           needsReceipt?: boolean;
+          paid?: boolean;
           receiptId?: number | null;
           requestId?: number;
           RFFType?: string | null;

@@ -109,7 +109,10 @@ export async function getUsers() {
 export async function getFunds() {
   const supabase = createSupabaseClient();
   try {
-    const funds = await supabase.from("Fund").select(`*, FundType ( typeName)`);
+    const funds = await supabase
+      .from("Fund")
+      .select(`*, FundType ( typeName)`)
+      .eq("paid", true);
     return funds;
   } catch (error) {
     throw error;

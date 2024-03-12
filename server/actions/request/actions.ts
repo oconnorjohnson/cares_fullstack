@@ -219,21 +219,15 @@ export async function requestAllRequests(): Promise<Request[]> {
 }
 
 export async function getPaidFunds(): Promise<
-  Tables<"Fund"> &
-    {
-      FundType: Tables<"FundType">;
-    }[]
+  (Tables<"Fund"> & { FundType: Tables<"FundType"> })[]
 > {
   try {
-    const response = await getFunds();
-    const paidFunds = response.data;
-    if (!paidFunds) {
+    const response = await getFunds(); // Assuming this calls the getFunds function from @read.ts
+    if (!response.data) {
       throw new Error("Failed to fetch paid funds.");
     }
-    return paidFunds as unknown as Tables<"Fund"> &
-      {
-        FundType: Tables<"FundType">;
-      }[];
+    // Directly return the response data if it matches the expected structure
+    return response.data;
   } catch (error) {
     console.error("Failed to get paid funds:", error);
     throw error;
