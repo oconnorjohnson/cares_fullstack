@@ -60,7 +60,6 @@ export default function AddFund({ requestId }: { requestId: number }) {
       requestId: requestId,
       fundTypeId: undefined,
       amount: undefined,
-      needsReceipt: false,
     },
   });
   const { data: fundTypes, isLoading, isError } = trpc.getFundTypes.useQuery();
@@ -73,7 +72,6 @@ export default function AddFund({ requestId }: { requestId: number }) {
         requestId: data.requestId,
         fundTypeId: data.fundTypeId,
         amount: data.amount,
-        needsReceipt: data.needsReceipt,
       });
       toast.success("Fund added successfully");
       console.log("added fund successfully with data:", result);

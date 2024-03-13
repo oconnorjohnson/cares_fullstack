@@ -1,6 +1,5 @@
 import { createClient as createSupabaseClient } from "@/server/supabase/server";
 import { TablesInsert, TablesUpdate } from "@/types_db";
-import { join } from "path";
 
 export async function updateUser(
   userId: string,
@@ -105,14 +104,20 @@ export async function denyRequestById(requestId: number) {
 }
 
 export async function approveRequestById(requestId: number) {
+  console.log("Attempting to approve request with ID:", requestId);
   const supabase = createSupabaseClient();
   try {
-    const approvedRequest = await supabase
+    const { data, error } = await supabase
       .from("Request")
-      .update({ approved: true })
+      .update({ approved: true, pendingApproval: false })
       .eq("id", requestId);
-    return approvedRequest;
+    if (error) {
+      console.log("Error in approveRequestById:", error);
+      throw error;
+    }
+    return data;
   } catch (error) {
+    console.error("Error in approveRequestById:", error);
     throw error;
   }
 }

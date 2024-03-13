@@ -35,7 +35,6 @@ export default function FundSelect({
   fundTypesData,
 }: FundSelectProps) {
   const handleAddFund = () => {
-    // Check if the current number of funds is less than 4
     if (value.length < 4) {
       const newFunds = [
         ...value,
@@ -43,7 +42,6 @@ export default function FundSelect({
       ];
       onChange(newFunds);
     } else {
-      // Optionally, provide feedback to the user that they cannot add more than 4 funds
       toast.error("You cannot add more than 4 funds.");
     }
   };

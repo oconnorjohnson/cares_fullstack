@@ -67,7 +67,6 @@ type NewFundData = {
   requestId: number;
   fundTypeId: number;
   amount: number;
-  needsReceipt: boolean;
 };
 
 interface AgencyData {

@@ -85,36 +85,18 @@ export async function createPreScreen(
   preScreenData: TablesInsert<"PreScreenAnswers">,
 ) {
   const supabase = createSupabaseClient();
-  if (
-    !preScreenData.housingSituation ||
-    !preScreenData.housingQuality ||
-    !preScreenData.utilityStress ||
-    !preScreenData.foodInsecurityStress ||
-    !preScreenData.foodMoneyStress ||
-    !preScreenData.transpoConfidence ||
-    !preScreenData.transpoStress ||
-    !preScreenData.financialDifficulties ||
-    !preScreenData.requestId
-  ) {
-    throw new Error("Request ID, and all pre-screen data are required.");
-  }
   console.log("Creating new pre-screen record with data:", preScreenData);
   try {
     const { data, error } = await supabase
       .from("PreScreenAnswers")
       .insert([preScreenData]);
-    if (error) throw error;
-    // Check if the pre-screen data was successfully inserted
-
-    // Update the related Request to set hasPreScreen to TRUE
-    const updateError = await supabase
-      .from("Request")
-      .update({ hasPreScreen: true })
-      .eq("id", preScreenData.requestId) // Assuming 'requestId' is the column name in the Request table that relates to the pre-screen data
-      .then(({ error }) => error);
-
-    if (updateError) throw updateError;
-
+    if (error) {
+      console.error(
+        "Error during insert operation in PreScreenAnswers table:",
+        error,
+      );
+      throw new Error(error.message);
+    }
     return data;
   } catch (error) {
     throw new Error(
@@ -129,19 +111,6 @@ export async function createPostScreen(
   postScreenData: TablesInsert<"PostScreenAnswers">,
 ) {
   const supabase = createSupabaseClient();
-  if (
-    !postScreenData.housingSituation ||
-    !postScreenData.housingQuality ||
-    !postScreenData.utilityStress ||
-    !postScreenData.foodInsecurityStress ||
-    !postScreenData.foodMoneyStress ||
-    !postScreenData.transpoConfidence ||
-    !postScreenData.transpoStress ||
-    !postScreenData.financialDifficulties ||
-    !postScreenData.requestId
-  ) {
-    throw new Error("Request ID, and all post-screen data are required.");
-  }
   console.log("Creating new post-screen record with data:", postScreenData);
   try {
     const { data, error } = await supabase
@@ -189,15 +158,12 @@ export async function createEmailAddresses(
 ) {
   const supabase = createSupabaseClient();
   console.log("Starting createEmailAddresses function");
-
   console.log("Received email data:", emailData);
-
   const inserts = emailData.map((emailAddress) => ({
     userId: emailAddress.userId,
     email: emailAddress.email,
   }));
   console.log("Prepared inserts:", inserts);
-
   try {
     const { data, error } = await supabase.from("EmailAddress").insert(inserts);
     console.log("Insert operation response data:", data);
@@ -222,20 +188,16 @@ export async function createRequest(
 ): Promise<TablesInsert<"Request">> {
   const supabase = createSupabaseClient();
   console.log("Attempting to create request with data:", requestData);
-
   try {
-    // Insert the request data and return only the newly created request
     const { data, error } = await supabase
       .from("Request")
       .insert([requestData])
       .select()
-      .single(); // Ensures that only the newly inserted record is returned
-
+      .single();
     if (error) {
       console.error("Error during insert operation in Request table:", error);
       throw new Error(error.message);
     }
-
     console.log("Request created successfully:", data);
     return data; // Return the newly created request
   } catch (error) {

@@ -15,7 +15,7 @@ import { EmailTemplate as ReceiptUploadedEmailTemplate } from "@/components/emai
 import { EmailTemplate as BannedEmailTemplate } from "@/components/emails/banned";
 import { EmailTemplate as ApprovedEmailTemplate } from "@/components/emails/approved";
 import { EmailTemplate as DeniedEmailTemplate } from "@/components/emails/denied";
-import { Tables, TablesUpdate } from "@/types_db";
+import { TablesUpdate } from "@/types_db";
 
 export interface RequestData {
   id: number;
@@ -109,9 +109,7 @@ export async function DenyRequest(
     if (response.error) {
       throw new Error(response.error.message);
     }
-    const updatedRequest = response.data; // Extract the data from the response
-
-    // Ensure updatedRequest is not null and matches RequestData interface
+    const updatedRequest = response.data;
     if (!updatedRequest) {
       throw new Error("Failed to update request data.");
     }
@@ -140,13 +138,8 @@ export async function ApproveRequest(
   const resend = new Resend(process.env.RESEND_API_KEY);
   try {
     const response = await approveRequestById(requestId);
-    if (response.error) {
-      throw new Error(response.error.message);
-    }
-    const updatedRequest = response.data;
-    if (!updatedRequest) {
-      throw new Error("Failed to update request data.");
-    }
+    const updatedRequest = response;
+
     revalidatePath(`/admin/request/${requestId}/page`);
     revalidatePath(`/dashboard/page`);
     await resend.emails.send({
@@ -157,7 +150,7 @@ export async function ApproveRequest(
         firstName: firstName,
       }) as React.ReactElement,
     });
-    return updatedRequest;
+    return updatedRequest as unknown as RequestData;
   } catch (error) {
     console.error(`Failed to approve request with ID ${requestId}:`, error);
     throw error;
