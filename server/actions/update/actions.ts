@@ -8,6 +8,7 @@ import {
   banUserById,
   requestNeedsReceipt,
 } from "@/server/supabase/functions/update";
+import { getFundsByRequestId } from "@/server/supabase/functions/read";
 import { revalidatePath } from "next/cache";
 import { Resend } from "resend";
 import { EmailTemplate as PaidEmailTemplate } from "@/components/emails/paid";
@@ -139,7 +140,10 @@ export async function ApproveRequest(
   try {
     const response = await approveRequestById(requestId);
     const updatedRequest = response;
-
+    const funds = await getFundsByRequestId(requestId);
+    if (funds.some((fund) => fund.needsReceipt === true)) {
+      await markRequestAsNeedingReceipt(requestId);
+    }
     revalidatePath(`/admin/request/${requestId}/page`);
     revalidatePath(`/dashboard/page`);
     await resend.emails.send({

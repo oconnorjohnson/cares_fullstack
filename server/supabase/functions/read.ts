@@ -1,5 +1,6 @@
 import { createClient as createSupabaseClient } from "@/server/supabase/server";
 import { PostgrestError } from "@supabase/supabase-js";
+import { Tables } from "@/types_db";
 
 export async function getAgencyNameById(agencyId: number) {
   const supabase = createSupabaseClient();
@@ -76,6 +77,26 @@ export async function getRequestsByUserId(userId: string) {
       .eq("userId", userId);
     return requests;
   } catch (error) {
+    throw error;
+  }
+}
+
+export async function getFundsByRequestId(
+  requestId: number,
+): Promise<Tables<"Fund">[]> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Fund")
+      .select("")
+      .eq("requestId", requestId);
+    if (error) {
+      console.error("Error in getFundsByRequestId:", error);
+      throw error;
+    }
+    return data as unknown as Tables<"Fund">[];
+  } catch (error) {
+    console.error("Unexpected error in getFundsByRequestId:", error);
     throw error;
   }
 }
