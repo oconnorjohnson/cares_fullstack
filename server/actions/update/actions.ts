@@ -107,13 +107,7 @@ export async function DenyRequest(
   const resend = new Resend(process.env.RESEND_API_KEY);
   try {
     const response = await denyRequestById(requestId);
-    if (response.error) {
-      throw new Error(response.error.message);
-    }
     const updatedRequest = response.data;
-    if (!updatedRequest) {
-      throw new Error("Failed to update request data.");
-    }
     revalidatePath(`/admin/request/${requestId}/page`);
     revalidatePath(`/dashboard/page`);
     await resend.emails.send({
@@ -124,7 +118,7 @@ export async function DenyRequest(
         firstName: firstName,
       }) as React.ReactElement,
     });
-    return updatedRequest;
+    return updatedRequest as unknown as RequestData;
   } catch (error) {
     console.error(`Failed to deny request with ID ${requestId}:`, error);
     throw error;

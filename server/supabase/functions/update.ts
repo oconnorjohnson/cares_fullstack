@@ -96,7 +96,7 @@ export async function denyRequestById(requestId: number) {
   try {
     const deniedRequest = await supabase
       .from("Request")
-      .update({ denied: true })
+      .update({ denied: true, approved: false, pendingApproval: false })
       .eq("id", requestId);
     return deniedRequest;
   } catch (error) {
