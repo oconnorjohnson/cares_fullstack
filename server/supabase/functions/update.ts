@@ -45,10 +45,11 @@ export async function banUserById(userId: string) {
   }
 }
 
-export async function updateFundById(fundData: TablesInsert<"Fund">) {
+export async function updateFundById(fundData: TablesUpdate<"Fund">) {
   console.log(fundData.id);
   const supabase = createSupabaseClient();
   if (!fundData.id) {
+    console.log("fundData.id is undefined");
     throw new Error("Fund ID is required.");
   }
   try {
@@ -63,8 +64,10 @@ export async function updateFundById(fundData: TablesInsert<"Fund">) {
       console.log("Error in updateFundById:", error);
       throw error;
     }
+    console.log("Fund updated successfully");
     return data;
   } catch (error) {
+    console.log("Error in updateFundById:", error);
     throw error;
   }
 }

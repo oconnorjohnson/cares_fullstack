@@ -26,22 +26,29 @@ export const runtime = "edge";
 
 const RequestPage = async ({ requestid }: { requestid: string }) => {
   console.log(requestid);
+  // convert page param string to number
   const requestId = Number(requestid);
-  const [request] = await requestRequestByRequestId(requestId);
-
-  const SDOHBadges = request.SDOH?.map((sdoh, index) => (
+  // fetch request data from server
+  const result = await requestRequestByRequestId(requestId);
+  // destructure supabase's array of results into a single object
+  if (!Array.isArray(result)) {
+    throw new Error("Expected an array");
+  }
+  // set the request data to the first element of the array
+  const [request] = result;
+  const SDOHBadges = request.SDOH?.map((SDOH: any, index: number) => (
     <Badge key={index} className="mr-2 mb-2 text-sm">
-      {sdoh}
+      {SDOH}
     </Badge>
   ));
-  const RFFBadges = request.RFF?.map((rff, index) => (
+  const RFFBadges = request.RFF?.map((RFF: any, index: number) => (
     <Badge key={index} className="mr-2 mb-2 text-sm">
-      {rff}
+      {RFF}
     </Badge>
   ));
   console.log(request.Fund);
   console.log(request.PreScreenAnswerss);
-  const FundsBadges = request.Fund?.map((fund, index) => (
+  const FundsBadges = request.Fund?.map((fund: any, index: number) => (
     <div
       key={index}
       className="flex items-center text-sm justify-end space-x-2 mb-2"

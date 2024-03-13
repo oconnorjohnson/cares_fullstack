@@ -217,9 +217,6 @@ export async function UpdateFund(
     );
     const response = await updateFundById(fundData);
     const updatedFund = response;
-    if (!updatedFund) {
-      throw new Error("Failed to update fund data.");
-    }
     console.log(`Successfully updated fund with ID: ${fundId}`);
     revalidatePath(`/admin/request/${requestId}/page`);
     return updatedFund as unknown as TablesUpdate<"Fund">;

@@ -104,13 +104,10 @@ export default function FundDropdown({
   const { register, handleSubmit, setValue, watch } = form;
   const selectedFundTypeId = watch("fundTypeId");
   const handleDelete = async (requestId: number, fundId: number) => {
-    console.log("handleDelete clicked with requestId:", requestId);
-    console.log("handleDelete also clicked with fundId:", fundId);
     setIsDeleting(true);
     try {
       await DeleteFund(requestId, fundId);
       toast.success("Fund successfully deleted!");
-      revalidatePath(`/admin/request/${requestId}/page`);
     } catch (error) {
       console.error("Error deleting fund:", error);
       toast.error("Error deleting fund");
@@ -136,12 +133,11 @@ export default function FundDropdown({
         data.amount,
         data.requestId,
       );
-      toast.success("Fund successfully updated!");
-      revalidatePath(`/admin/request/${requestId}/page`);
       console.log("UpdateFund successful:", result);
+      toast.success("Fund successfully updated!");
     } catch (error) {
-      toast.error("Error updating fund");
       console.error("Error in UpdateFund:", error);
+      toast.error("Error updating fund");
     }
   };
   const FundTypeId = fundTypeId ? fundTypeId.toString() : undefined;
