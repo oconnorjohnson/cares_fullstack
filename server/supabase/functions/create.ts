@@ -87,17 +87,32 @@ export async function createPreScreen(
   const supabase = createSupabaseClient();
   console.log("Creating new pre-screen record with data:", preScreenData);
   try {
-    const { data, error } = await supabase
+    // Insert the pre-screen answers
+    const { data: preScreenDataResult, error: preScreenError } = await supabase
       .from("PreScreenAnswers")
       .insert([preScreenData]);
-    if (error) {
+    if (preScreenError) {
       console.error(
         "Error during insert operation in PreScreenAnswers table:",
-        error,
+        preScreenError,
       );
-      throw new Error(error.message);
+      throw new Error(preScreenError.message);
     }
-    return data;
+
+    const { error: requestUpdateError } = await supabase
+      .from("Request")
+      .update({ hasPreScreen: true })
+      .match({ id: preScreenData.requestId }); // Use the correct column name for requestId
+
+    if (requestUpdateError) {
+      console.error(
+        "Error during update operation in Request table:",
+        requestUpdateError,
+      );
+      throw new Error(requestUpdateError.message);
+    }
+
+    return preScreenDataResult; // Return the newly created pre-screen record
   } catch (error) {
     throw new Error(
       `Failed to create new pre-screen record: ${

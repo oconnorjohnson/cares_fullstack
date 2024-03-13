@@ -57,6 +57,7 @@ export async function updateFundById(fundData: TablesUpdate<"Fund">) {
       .update({
         amount: fundData.amount,
         fundTypeId: fundData.fundTypeId,
+        needsReceipt: fundData.needsReceipt,
       })
       .eq("id", fundData.id);
     if (error) {

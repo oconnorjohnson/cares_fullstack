@@ -248,6 +248,7 @@ export async function requestRequestByRequestId(requestId: number): Promise<
         amount: number;
         FundType: Tables<"FundType">;
         Receipt: Tables<"Receipt">;
+        needsReceipt: boolean;
       }[];
     preScreenAnswer: Tables<"PreScreenAnswers">;
     postScreenAnswer: Tables<"PostScreenAnswers">;
@@ -275,6 +276,7 @@ export async function requestRequestByRequestId(requestId: number): Promise<
           amount: number;
           FundType: Tables<"FundType">;
           Receipt: Tables<"Receipt">;
+          needsReceipt: boolean;
         }[];
       preScreenAnswer: Tables<"PreScreenAnswers">;
       postScreenAnswer: Tables<"PostScreenAnswers">;

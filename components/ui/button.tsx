@@ -49,7 +49,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     forwardedRef,
   ) => {
     const motionProps: MotionProps = {
-      whileHover: { scale: 1.05, transition: { duration: 0.2 } },
+      whileHover: { scale: 1.02, rotate: 2, transition: { duration: 0.2 } },
       whileTap: { scale: 0.95, transition: { duration: 0.2 } },
     };
 

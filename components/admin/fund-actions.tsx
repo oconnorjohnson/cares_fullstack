@@ -58,6 +58,7 @@ type FundActionProps = {
   fundTypeName: string;
   amount: number;
   requestId: number;
+  needsReceipt: boolean;
 };
 
 type UpdateFundProps = {
@@ -65,6 +66,7 @@ type UpdateFundProps = {
   amount: number;
   fundTypeId: number;
   fundId: number;
+  needsReceipt: boolean;
 };
 
 type DeleteFundProps = {
@@ -80,6 +82,7 @@ const formSchema = z.object({
     .number()
     .min(1, { message: "fundTypeId must be at least 1 number." }),
   amount: z.number().min(1, { message: "Amount must be at least 1 number." }),
+  needsReceipt: z.boolean(),
 });
 
 export default function FundDropdown({
@@ -88,6 +91,7 @@ export default function FundDropdown({
   fundTypeName,
   amount,
   requestId,
+  needsReceipt,
 }: FundActionProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -98,6 +102,7 @@ export default function FundDropdown({
       fundId: fundId,
       fundTypeId: fundTypeId,
       amount: amount,
+      needsReceipt: needsReceipt,
     },
   });
   const { data: fundTypes, isLoading, isError } = trpc.getFundTypes.useQuery();
@@ -133,6 +138,7 @@ export default function FundDropdown({
         data.fundTypeId,
         data.amount,
         data.requestId,
+        data.needsReceipt,
       );
       console.log("UpdateFund successful:", result);
       toast.success("Fund successfully updated!");
@@ -238,14 +244,22 @@ export default function FundDropdown({
                           {...register("fundTypeId")}
                           defaultValue={FundTypeId}
                           onValueChange={(value) => {
-                            console.log(
-                              `Selected fundTypeId before parsing: ${value}`,
-                            );
                             const parsedValue = parseInt(value, 10);
-                            console.log(
-                              `Selected fundTypeId after parsing: ${parsedValue}`,
-                            );
                             setValue("fundTypeId", parsedValue);
+
+                            // Find the selected FundType and its needsReceipt value
+                            const selectedFundType = fundTypes?.find(
+                              (fundType) => fundType.id === parsedValue,
+                            );
+                            if (selectedFundType) {
+                              // Set the needsReceipt value in the form state
+                              setValue(
+                                "needsReceipt",
+                                selectedFundType.needsReceipt,
+                              );
+                            } else {
+                              setValue("needsReceipt", false);
+                            }
                           }}
                         >
                           <FormControl>

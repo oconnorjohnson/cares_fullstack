@@ -49,7 +49,7 @@ const formSchema = z.object({
   requestId: z.number().min(1, { message: "requestId must be included." }),
   fundTypeId: z.number().min(1, { message: "fundId must be included." }),
   amount: z.number().min(1, { message: "Amount must be included." }),
-  needsReceipt: z.boolean().default(false),
+  needsReceipt: z.boolean(),
 });
 
 export default function AddFund({ requestId }: { requestId: number }) {
@@ -72,6 +72,7 @@ export default function AddFund({ requestId }: { requestId: number }) {
         requestId: data.requestId,
         fundTypeId: data.fundTypeId,
         amount: data.amount,
+        needsReceipt: data.needsReceipt,
       });
       toast.success("Fund added successfully");
       console.log("added fund successfully with data:", result);
@@ -132,14 +133,22 @@ export default function AddFund({ requestId }: { requestId: number }) {
                           {...register("fundTypeId")}
                           defaultValue=""
                           onValueChange={(value) => {
-                            console.log(
-                              `Selected fundTypeId before parsing: ${value}`,
-                            );
                             const parsedValue = parseInt(value, 10);
-                            console.log(
-                              `Selected fundTypeId after parsing: ${parsedValue}`,
-                            );
                             setValue("fundTypeId", parsedValue);
+
+                            // Directly find and set the needsReceipt value based on the selected fundTypeId
+                            const selectedFundType = fundTypes?.find(
+                              (fundType) => fundType.id === parsedValue,
+                            );
+                            if (selectedFundType) {
+                              setValue(
+                                "needsReceipt",
+                                selectedFundType.needsReceipt,
+                              );
+                            } else {
+                              // Optionally handle the case where no fundType is found, e.g., reset to default
+                              setValue("needsReceipt", false); // or true, based on your application's needs
+                            }
                           }}
                         >
                           <FormControl>

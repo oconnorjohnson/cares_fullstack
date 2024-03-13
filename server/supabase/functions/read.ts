@@ -282,7 +282,7 @@ export async function getRequestById(requestId: number) {
     const { data, error } = await supabase
       .from("Request")
       .select(
-        `*, User ( first_name, last_name, EmailAddress ( email ) ), Client ( clientID, sex, race ), Agency ( name ), Fund ( id, amount, FundType ( typeName ), Receipt!public_Receipt_fundId_fkey ( id, url ) ), PreScreenAnswers ( * ), PostScreenAnswers ( * )`,
+        `*, User ( first_name, last_name, EmailAddress ( email ) ), Client ( clientID, sex, race ), Agency ( name ), Fund ( id, amount, needsReceipt, FundType ( typeName ), Receipt!public_Receipt_fundId_fkey ( id, url ) ), PreScreenAnswers ( * ), PostScreenAnswers ( * )`,
       )
       .eq("id", requestId);
     if (error) {

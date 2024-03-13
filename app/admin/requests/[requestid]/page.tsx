@@ -83,6 +83,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
           fundTypeName={fund.FundType.typeName}
           amount={fund.amount}
           requestId={requestId}
+          needsReceipt={fund.needsReceipt}
         />
       )}
     </div>

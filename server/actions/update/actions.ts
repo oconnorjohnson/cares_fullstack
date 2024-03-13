@@ -194,15 +194,17 @@ export async function UpdateFund(
   fundTypeId: number,
   amount: number,
   requestId: number,
+  needsReceipt: boolean,
 ): Promise<TablesUpdate<"Fund">> {
   const fundData = {
     id: fundId,
     amount: amount,
     fundTypeId: fundTypeId,
     requestId: requestId,
+    needsReceipt: needsReceipt,
   };
   console.log(
-    `Calling UpdateFund with Fund ID: ${fundId}, Request ID: ${requestId}, Amount: ${amount}, Fund Type ID: ${fundTypeId}`,
+    `Calling UpdateFund with Fund ID: ${fundId}, Request ID: ${requestId}, Amount: ${amount}, Fund Type ID: ${fundTypeId}, needsReceipt: ${needsReceipt}`,
   );
   try {
     console.log(

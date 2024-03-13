@@ -61,12 +61,14 @@ interface RequestData {
 interface FundTypeData {
   userId: string;
   typeName: string;
+  needsReceipt: boolean;
 }
 
 type NewFundData = {
   requestId: number;
   fundTypeId: number;
   amount: number;
+  needsReceipt: boolean;
 };
 
 interface AgencyData {

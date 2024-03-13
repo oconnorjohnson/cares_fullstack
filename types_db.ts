@@ -127,7 +127,7 @@ export type Database = {
           created_at: string;
           fundTypeId: number;
           id: number;
-          needsReceipt: boolean;
+          needsReceipt: boolean | null;
           paid: boolean;
           receiptId: number | null;
           requestId: number;
@@ -138,7 +138,7 @@ export type Database = {
           created_at?: string;
           fundTypeId: number;
           id?: number;
-          needsReceipt?: boolean;
+          needsReceipt?: boolean | null;
           paid?: boolean;
           receiptId?: number | null;
           requestId: number;
@@ -149,7 +149,7 @@ export type Database = {
           created_at?: string;
           fundTypeId?: number;
           id?: number;
-          needsReceipt?: boolean;
+          needsReceipt?: boolean | null;
           paid?: boolean;
           receiptId?: number | null;
           requestId?: number;
@@ -380,7 +380,7 @@ export type Database = {
           hasReceipts: boolean;
           id: number;
           implementation: string;
-          needsReceipts: boolean;
+          needsReceipts: boolean | null;
           paid: boolean;
           pendingApproval: boolean;
           pendingPayout: boolean;
@@ -404,7 +404,7 @@ export type Database = {
           hasReceipts?: boolean;
           id?: number;
           implementation: string;
-          needsReceipts?: boolean;
+          needsReceipts?: boolean | null;
           paid?: boolean;
           pendingApproval?: boolean;
           pendingPayout?: boolean;
@@ -428,7 +428,7 @@ export type Database = {
           hasReceipts?: boolean;
           id?: number;
           implementation?: string;
-          needsReceipts?: boolean;
+          needsReceipts?: boolean | null;
           paid?: boolean;
           pendingApproval?: boolean;
           pendingPayout?: boolean;
