@@ -126,13 +126,35 @@ export async function approveRequestById(requestId: number) {
 export async function requestNeedsReceipt(requestId: number) {
   const supabase = createSupabaseClient();
   try {
-    const requestNeedsReceipt = await supabase
+    const { data, error } = await supabase
       .from("Request")
       .update({ needsReceipts: true })
       .eq("id", requestId);
-    return requestNeedsReceipt;
+    if (error) {
+      console.log("Error in requestNeedsReceipt:", error);
+      throw error;
+    }
+    return data;
   } catch (error) {
     console.error("Error requesting needs receipt:", error);
+    throw error;
+  }
+}
+
+export async function requestDoesNotNeedReceipt(requestId: number) {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Request")
+      .update({ needsReceipts: false })
+      .eq("id", requestId);
+    if (error) {
+      console.log("Error in requestDoesNotNeedReceipt:", error);
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.error("Error requesting does not need receipt:", error);
     throw error;
   }
 }

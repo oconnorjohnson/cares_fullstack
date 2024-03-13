@@ -26,6 +26,7 @@ async function sendEmail(firstName: string, email: string) {
   return true;
 }
 export default function ReceiptDialog({ requestId }: { requestId: number }) {
+  console.log("requestId:", requestId);
   const {
     data: request,
     isLoading,
@@ -38,7 +39,7 @@ export default function ReceiptDialog({ requestId }: { requestId: number }) {
 
   if (isLoading) return <p>Loading...</p>;
   if (isError || !request) return <p>Error loading request.</p>;
-  const handleUploadComplete = (fundId: number) => {
+  const handleUploadComplete = (requestId: number) => {
     toast.success("UploadCompleted");
     // sendEmail(firstName, email);
   };
@@ -55,13 +56,13 @@ export default function ReceiptDialog({ requestId }: { requestId: number }) {
             <DialogTitle>Upload Agreement</DialogTitle>
             <DialogClose />
           </DialogHeader>
-          {!request.agreementUrl ? (
+          {!request[0].agreementUrl ? (
             <div className="flex flex-row justify-between">
               <div>Agreement</div>
               <UploadButton
                 endpoint="agreementUploader"
-                input={{ requestId: request.id }}
-                onClientUploadComplete={() => handleUploadComplete(request.id)}
+                input={{ requestId: requestId }}
+                onClientUploadComplete={() => handleUploadComplete(requestId)}
               />
             </div>
           ) : (

@@ -6,4 +6,4 @@ import { ourFileRouter } from "./core";
 export const { GET, POST } = createRouteHandler({
   router: ourFileRouter,
 });
-export const runtime = "edge";
+export const runtime = "nodejs";

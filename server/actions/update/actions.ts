@@ -7,6 +7,7 @@ import {
   markRequestPaidById,
   banUserById,
   requestNeedsReceipt,
+  requestDoesNotNeedReceipt,
 } from "@/server/supabase/functions/update";
 import { getFundsByRequestId } from "@/server/supabase/functions/read";
 import { revalidatePath } from "next/cache";
@@ -64,6 +65,17 @@ export async function markRequestAsNeedingReceipt(requestId: number) {
     return true;
   } catch (error) {
     console.error("Error marking request as needing receipt:", error);
+    throw error;
+  }
+}
+export async function markRequestAsNotNeedingReceipt(requestId: number) {
+  try {
+    await requestDoesNotNeedReceipt(requestId);
+    revalidatePath("/dashboard");
+    revalidatePath("/user/requests");
+    return true;
+  } catch (error) {
+    console.error("Error marking request as not needing receipt:", error);
     throw error;
   }
 }

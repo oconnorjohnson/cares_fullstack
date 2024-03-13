@@ -42,11 +42,25 @@ export async function createNewReceiptRecord(
   }
   console.log("Creating new receipt record with data:", newReceiptRecord);
   try {
-    const { data, error } = await supabase
+    const { data: newReceiptData, error: newReceiptError } = await supabase
       .from("Receipt")
       .insert([newReceiptRecord]);
-    if (error) throw error;
-    return data;
+    if (newReceiptError) {
+      console.log("Error creating new receipt record:", newReceiptError);
+      throw newReceiptError;
+    }
+    const { error: updateRequestError } = await supabase
+      .from("Request")
+      .update({ hasReceipts: true })
+      .match({ id: newReceiptRecord.requestId });
+    if (updateRequestError) {
+      console.log(
+        "Error updating request to have receipts:",
+        updateRequestError,
+      );
+      throw updateRequestError;
+    }
+    return newReceiptData;
   } catch (error) {
     throw new Error(
       `Failed to create new receipt record: ${

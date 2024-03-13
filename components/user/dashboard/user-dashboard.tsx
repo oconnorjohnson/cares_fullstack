@@ -350,7 +350,8 @@ export default async function Dashboard() {
                                   <TableCell>{request.created_at}</TableCell>
 
                                   <TableCell>
-                                    <AgreementDialog requestId={request.id} />
+                                    <AgreementDialog requestId={request.id} />{" "}
+                                    {request.id}
                                   </TableCell>
                                 </TableRow>
                               ))}

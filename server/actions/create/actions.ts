@@ -11,7 +11,10 @@ import {
 } from "@/server/supabase/functions/create";
 import { getFundTypeNeedsReceiptById } from "@/server/supabase/functions/read";
 import { Submitted } from "@/server/actions/resend/actions";
-import { markRequestAsNeedingReceipt } from "@/server/actions/update/actions";
+import {
+  markRequestAsNeedingReceipt,
+  markRequestAsNotNeedingReceipt,
+} from "@/server/actions/update/actions";
 import { EmailTemplate as SubmittedEmailTemplate } from "@/components/emails/submitted";
 import { EmailTemplate as CompletedEmailTemplate } from "@/components/emails/completed";
 import { Resend } from "resend";
@@ -233,6 +236,8 @@ export async function newRequest(requestState: RequestData) {
     );
     if (anyFundsNeedReceipt) {
       await markRequestAsNeedingReceipt(requestId);
+    } else {
+      await markRequestAsNotNeedingReceipt(requestId);
     }
     await resend.emails.send({
       from: "CARES <help@yolopublicdefendercares.org>",
