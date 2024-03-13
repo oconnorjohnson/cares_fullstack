@@ -46,6 +46,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
       {RFF}
     </Badge>
   ));
+  const createdAt = format(new Date(request.created_at), "MM/dd/yyyy");
   console.log(request.Fund);
   console.log(request.PreScreenAnswerss);
   const FundsBadges = request.Fund?.map((fund: any, index: number) => (
@@ -97,8 +98,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
             <CardHeader>
               <CardTitle className="flex flex-cols-3 justify-between">
                 <div className="text-center text-3xl pt-0.5">
-                  {request?.User.first_name}&apos;s request from{" "}
-                  {request.created_at}
+                  {request?.User.first_name}&apos;s request from {createdAt}
                 </div>
                 <div className="flex flex-row justify-between px-6">
                   {request.pendingApproval && (
@@ -124,21 +124,18 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                 <Separator className="my-2" />
                 <div className="flex flex-cols-2 justify-between">
                   <div className="text-xl font-extralight pr-4">Client</div>
-                  {/* <Link href={`/admin/client/${request.client.id}`}>
-                    <div className="text-xl font-bold underline hover:text-zinc-500">
-                      {request.client} | {request.client.first_name}{" "}
-                      {request.client.last_name}
-                    </div>
-                  </Link> */}
+
+                  <div className="text-xl font-bold underline hover:text-zinc-500">
+                    {request.Client.clientID}
+                  </div>
                 </div>
                 <Separator className="my-2" />
                 <div className="flex flex-cols-2 justify-between">
                   <div className="text-xl font-extralight pr-4">Email</div>
                   <Link href={`mailto:${request.User.EmailAddress.email}`}>
-                    {/* <div className="text-xl font-bold underline hover:text-zinc-500">
-                      {.fir?.emailAddresses?.[0]?.email ??
-                        "Error rendering email"}
-                    </div> */}
+                    <div className="text-xl font-bold underline hover:text-zinc-500">
+                      {request.User.EmailAddress[0].email}
+                    </div>
                   </Link>
                 </div>
                 <Separator className="my-2" />
