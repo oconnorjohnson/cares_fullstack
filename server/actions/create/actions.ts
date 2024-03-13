@@ -107,9 +107,7 @@ export async function newAgency(agencyState: AgencyData) {
   }
   const newAgencyRecord = await createAgency(agencyState);
   revalidatePath(`/admin/settings/page`);
-  if (!newAgencyRecord) {
-    throw new Error("Failed to create new agency.");
-  }
+
   return newAgencyRecord;
 }
 
@@ -119,9 +117,7 @@ export async function newFund(fundState: NewFundData) {
     throw new Error("Data incomplete");
   }
   const newFundRecord = await createNewFundByRequestId(fundState);
-  if (!newFundRecord) {
-    throw new Error("Failed to create a new fund.");
-  }
+
   const requestId = fundState.requestId;
   revalidatePath(`/admin/request/${requestId}/page`);
   return newFundRecord;
