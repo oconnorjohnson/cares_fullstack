@@ -14,6 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import LearnMore from "@/components/admin/finances/learn-more";
 
 export const runtime = "edge";
 
@@ -53,8 +54,9 @@ export default async function Requests() {
               </div>
               <div className=" w-2/3 mx-4">
                 <Card className="flex flex-col h-full">
-                  <CardHeader>
+                  <CardHeader className="flex flex-row justify-between space-x-4">
                     <CardTitle>Transactions</CardTitle>
+                    <LearnMore />
                   </CardHeader>
                   <CardFooter>
                     <FundsTable />
