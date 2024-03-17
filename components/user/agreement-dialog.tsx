@@ -6,7 +6,6 @@ import {
   DialogContent,
   DialogFooter,
   DialogClose,
-  DialogDescription,
   DialogOverlay,
   DialogPortal,
   DialogTitle,
@@ -15,11 +14,8 @@ import { Button } from "@/components/ui/button";
 import { UploadButton } from "@/server/uploadthing";
 import { toast } from "sonner";
 import { trpc } from "@/app/_trpc/client";
-import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
-import { revalidatePath } from "next/cache";
 import { sendReceiptEmail } from "@/server/actions/update/actions";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 async function sendEmail(firstName: string, email: string) {
   await sendReceiptEmail(firstName, email);
