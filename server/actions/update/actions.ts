@@ -41,7 +41,6 @@ export interface UserData {
 
 export interface BalanceUpdateData {
   availableBalance: number;
-  id: number;
   last_updated: string;
   reservedBalance: number;
   totalBalance: number;

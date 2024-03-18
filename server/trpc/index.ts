@@ -19,9 +19,21 @@ import {
   getEmailByUserId,
   getRequestsThatNeedAgreementsByUserId,
 } from "@/server/supabase/functions/read";
+import {
+  getOperatingBalance,
+  getRFFBalance,
+} from "@/server/supabase/functions/read";
 import { z } from "zod";
 
 export const appRouter = router({
+  getOperatingBalance: publicProcedure.query(async () => {
+    const operatingBalance = await getOperatingBalance();
+    return operatingBalance;
+  }),
+  getRFFBalance: publicProcedure.query(async () => {
+    const rffBalance = await getRFFBalance();
+    return rffBalance;
+  }),
   banUser: publicProcedure
     .input(z.string())
     .mutation(async ({ input: userId }) => {

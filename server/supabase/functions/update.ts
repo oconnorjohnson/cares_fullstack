@@ -54,45 +54,67 @@ export async function updateOperatingBalance(
   operatingBalanceData: TablesUpdate<"OperatingBalance">,
 ): Promise<TablesUpdate<"OperatingBalance">> {
   const supabase = createSupabaseClient();
-  if (!operatingBalanceData.id) {
-    throw new Error("OperatingBalance id is required.");
-  }
 
   try {
-    // First, fetch the current version of the OperatingBalance from the database
+    console.log("Updating operating balance with data:", operatingBalanceData);
+    // First, fetch the current version and balances of the OperatingBalance from the database
     const { data: currentOperatingBalance, error: fetchError } = await supabase
       .from("OperatingBalance")
-      .select("version")
-      .eq("id", operatingBalanceData.id)
-      .single();
+      .select("version, availableBalance, totalBalance")
+      .eq("id", 2)
+      .single(); // Assuming there's only one operating balance record
 
-    if (fetchError) throw fetchError;
+    if (fetchError) {
+      console.error("Error fetching current operating balance:", fetchError);
+      throw fetchError;
+    }
 
+    if (!currentOperatingBalance) {
+      throw new Error("Operating balance record not found.");
+    }
+    console.log(currentOperatingBalance.version, lastVersion);
     // Check if the current version matches the lastVersion provided
     if (currentOperatingBalance.version !== lastVersion) {
+      console.error(
+        "Version mismatch. The balance has been updated by another transaction.",
+      );
       throw new Error(
         "Version mismatch. The balance has been updated by another transaction.",
       );
     }
 
+    // Calculate new balances by adding the submitted values to the existing ones
+    const newAvailableBalance =
+      currentOperatingBalance.availableBalance +
+      operatingBalanceData.availableBalance!;
+    const newTotalBalance =
+      currentOperatingBalance.totalBalance + operatingBalanceData.totalBalance!;
+
     // Proceed with the update if the versions match
     const { data: updatedOperatingBalance, error: updateError } = await supabase
       .from("OperatingBalance")
       .update({
-        availableBalance: operatingBalanceData.availableBalance,
+        availableBalance: newAvailableBalance,
+        totalBalance: newTotalBalance,
         // Increment the version number upon update
         version: lastVersion + 1,
       })
-      .match({ id: operatingBalanceData.id });
+      .match({ id: 2 }) // Assuming you're matching by id
+      .select("*");
 
-    if (updateError) throw updateError;
+    if (updateError) {
+      console.error("Error updating operating balance:", updateError);
+      throw updateError;
+    }
 
     console.log("Updated OperatingBalance:", updatedOperatingBalance);
     if (!updatedOperatingBalance) {
+      console.error("No record was updated.");
       throw new Error("No record was updated.");
     }
-    return updatedOperatingBalance;
+    return updatedOperatingBalance as unknown as TablesUpdate<"OperatingBalance">;
   } catch (error) {
+    console.error("Error updating operating balance:", error);
     throw error;
   }
 }

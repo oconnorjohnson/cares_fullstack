@@ -26,9 +26,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { trpc } from "@/app/_trpc/client";
 import { Input } from "@/components/ui/input";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 import { PlusCircleIcon } from "lucide-react";
 
 const formSchema = z.object({
@@ -62,6 +63,7 @@ export function RFFDepositDialog({
       details: "",
     },
   });
+  const trpcContext = trpc.useUtils();
   async function onSubmit(data: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
     console.log(data);
@@ -72,6 +74,7 @@ export function RFFDepositDialog({
       lastVersion: data.lastVersion,
       userId: data.userId,
     });
+    trpcContext.invalidate();
     setIsSubmitting(false);
   }
   return (
@@ -175,17 +178,34 @@ export function CARESDepositDialog({
       details: "",
     },
   });
+  const trpcContext = trpc.useUtils();
   async function onSubmit(data: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
     console.log(data);
-    const newOperatingDepositRecord = await createOperatingDeposit({
-      amount: data.totalValue,
-      totalValue: data.totalValue,
-      details: data.details,
-      lastVersion: data.lastVersion,
-      userId: data.userId,
-    });
-    setIsSubmitting(false);
+    try {
+      const newOperatingDepositRecord = await createOperatingDeposit({
+        amount: data.totalValue,
+        totalValue: data.totalValue,
+        details: data.details,
+        lastVersion: data.lastVersion,
+        userId: data.userId,
+      });
+      console.log(
+        "Operating deposit created successfully:",
+        newOperatingDepositRecord,
+      );
+      toast.success("Operating deposit created successfully");
+      return newOperatingDepositRecord;
+    } catch (error) {
+      console.error("Error creating operating deposit:", error);
+      toast.error(
+        "Error creating operating deposit. Refresh the page and try again.",
+      );
+      throw error;
+    } finally {
+      trpcContext.invalidate();
+      setIsSubmitting(false);
+    }
   }
   return (
     <Dialog>
@@ -196,7 +216,7 @@ export function CARESDepositDialog({
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Deposit Money to RFF Grant </DialogTitle>
+          <DialogTitle>Deposit Money to Cares Fund </DialogTitle>
           <DialogDescription>
             Note the total amount deposited and details of the transaction.
           </DialogDescription>

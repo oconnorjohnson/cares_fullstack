@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,25 +12,39 @@ import {
   RFFDepositDialog as RFFDepositButton,
   CARESDepositDialog as CARESDepositButton,
 } from "@/components/admin/finances/deposit-dialogs";
+import { trpc } from "@/app/_trpc/client";
 import { PlusCircleIcon } from "lucide-react";
-import { auth } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 type BalanceData = {
   TotalBalance: number;
   AvailableBalance: number;
   Version: number;
+  ReservedBalance: number;
 };
 
 export function CaresBalanceCard(CaresBalanceData: BalanceData) {
-  const { userId } = auth();
+  const user = useAuth();
+  const userId = user?.userId;
+  const trpcContext = trpc.useUtils();
+  const { data: OperatingBalance, isLoading: isLoadingOperatingBalance } =
+    trpc.getOperatingBalance.useQuery();
+  const { data: RFFBalance, isLoading: isLoadingRFFBalance } =
+    trpc.getRFFBalance.useQuery();
+  if (isLoadingOperatingBalance || isLoadingRFFBalance) {
+    return <div>Loading...</div>;
+  }
+  if (!OperatingBalance) {
+    return <div>No data found</div>;
+  }
   if (!userId) {
     return <div>Not authenticated</div>;
   } else {
     return (
       <Card className="w-[400px]">
         <CardHeader className="flex flex-row justify-between space-x-4">
-          <CardTitle>Cares Balances</CardTitle>
+          <CardTitle>CARES Fund</CardTitle>
           <CARESDepositButton
-            version={CaresBalanceData.Version}
+            version={OperatingBalance[0].version}
             userId={userId}
           />
         </CardHeader>
@@ -37,13 +52,19 @@ export function CaresBalanceCard(CaresBalanceData: BalanceData) {
           <div className="flex flex-row items-center justify-between border border-1 my-2 px-4 py-2 rounded-xl">
             <div>Total Balance:</div>
             <div className="text-lg font-bold">
-              ${CaresBalanceData.TotalBalance}
+              ${OperatingBalance[0].totalBalance}
+            </div>
+          </div>
+          <div className="flex flex-row items-center justify-between border border-1 my-2 px-4 py-2 rounded-xl">
+            <div>Reserved Balance:</div>
+            <div className="text-lg font-bold ">
+              ${OperatingBalance[0].reservedBalance}
             </div>
           </div>
           <div className="flex flex-row items-center justify-between border border-1 my-2 px-4 py-2 rounded-xl">
             <div>Available Balance:</div>
             <div className="text-lg font-bold ">
-              ${CaresBalanceData.AvailableBalance}
+              ${OperatingBalance[0].availableBalance}
             </div>
           </div>
         </CardContent>
@@ -56,14 +77,15 @@ export function CaresBalanceCard(CaresBalanceData: BalanceData) {
 }
 
 export function RFFBalanceCard(RFFBalanceData: BalanceData) {
-  const { userId } = auth();
+  const user = useAuth();
+  const userId = user?.userId;
   if (!userId) {
     return <div>Not authenticated</div>;
   } else {
     return (
       <Card className="w-[400px]">
         <CardHeader className="flex flex-row justify-between space-x-4">
-          <CardTitle>RFF Balances</CardTitle>
+          <CardTitle>RFF Fund</CardTitle>
           <RFFDepositButton version={RFFBalanceData.Version} userId={userId} />
         </CardHeader>
         <CardContent>
@@ -71,6 +93,12 @@ export function RFFBalanceCard(RFFBalanceData: BalanceData) {
             <div>Total Balance:</div>
             <div className="text-lg font-bold ">
               ${RFFBalanceData.TotalBalance}
+            </div>
+          </div>
+          <div className="flex flex-row items-center justify-between border border-1 my-2 px-4 py-2 rounded-xl">
+            <div>Reserved Balance:</div>
+            <div className="text-lg font-bold ">
+              ${RFFBalanceData.ReservedBalance}
             </div>
           </div>
           <div className="flex flex-row items-center justify-between border border-1 my-2 px-4 py-2 rounded-xl">

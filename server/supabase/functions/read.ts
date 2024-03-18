@@ -5,7 +5,10 @@ import { Tables } from "@/types_db";
 export async function getOperatingBalance() {
   const supabase = createSupabaseClient();
   try {
-    const { data, error } = await supabase.from("OperatingBalance").select("*");
+    const { data, error } = await supabase
+      .from("OperatingBalance")
+      .select("*")
+      .eq("id", 2);
     if (error) {
       console.error("Error in getOperatingBalance:", error);
       throw error;

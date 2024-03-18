@@ -17,7 +17,8 @@ export async function createTransaction(
 
   const { data, error } = await supabase
     .from("Transaction")
-    .insert([transactionData]);
+    .insert([transactionData])
+    .select("*");
   if (error) {
     console.error("Error in createTransaction:", error);
     throw error;
@@ -26,7 +27,7 @@ export async function createTransaction(
     console.error("No data returned from supabase");
     throw new Error("No data returned from supabase");
   }
-  return data as TablesInsert<"Transaction">;
+  return data as unknown as TablesInsert<"Transaction">;
 }
 
 export async function creatAsset(

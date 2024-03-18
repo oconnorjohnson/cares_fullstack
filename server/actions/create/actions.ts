@@ -123,12 +123,44 @@ type DepositData = {
 export async function createOperatingDeposit(
   OperatingDepositData: DepositData,
 ) {
-  // we take deposit amount and details from the request form
-  // we create a new transaction with the details
-  // in that transaction, we set isDeposit to true, and isCARES to true
-  // we update the operating balance with the new amounts and transactionId,after checking for version conflicts
-  // if update balance succeeds (no version conflicts), we return success
-  // if update balance fails, we return error and then delete the created transaction, telling the user to refresh the page and to try again
+  // Assuming DepositData is properly typed according to your form data
+  const { userId, details, totalValue, lastVersion } = OperatingDepositData;
+
+  // Create a new transaction with the details
+  const transactionData: TablesInsert<"Transaction"> = {
+    UserId: userId,
+    details,
+    totalValue,
+    isDeposit: true,
+    isCARES: true,
+    // Add any other necessary fields
+  };
+
+  try {
+    // Create the transaction
+    await createTransaction(transactionData);
+
+    // Update the operating balance
+    const updatedBalance = await updateOperatingBalance(lastVersion, {
+      availableBalance: totalValue,
+      totalBalance: totalValue,
+      // Assuming you want to add totalValue to the available balance
+      // Include other necessary fields for updating the balance
+    });
+
+    // Check if the balance update was successful
+    if (!updatedBalance) {
+      // If the balance update fails, consider rolling back the transaction if necessary
+      throw new Error("Failed to update operating balance. Please try again.");
+    }
+    revalidatePath("/admin/finances");
+    // Return success or the updated balance/transaction details as needed
+    return updatedBalance;
+  } catch (error) {
+    console.error("Error creating operating deposit:", error);
+    // Handle error (e.g., rollback transaction, notify the user, etc.)
+    throw error;
+  }
 }
 
 export async function createRFFDeposit(RFFDepositData: DepositData) {

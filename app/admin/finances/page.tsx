@@ -41,6 +41,7 @@ export default async function Requests() {
                 <CaresBalanceCard
                   AvailableBalance={OperatingBalance[0].availableBalance}
                   TotalBalance={OperatingBalance[0].totalBalance}
+                  ReservedBalance={OperatingBalance[0].reservedBalance}
                   Version={OperatingBalance[0].version}
                 />
                 <div className="py-2" />
@@ -48,6 +49,7 @@ export default async function Requests() {
                   AvailableBalance={RFFBalance[0].availableBalance}
                   TotalBalance={RFFBalance[0].totalBalance}
                   Version={RFFBalance[0].version}
+                  ReservedBalance={RFFBalance[0].reservedBalance}
                 />
               </div>
               <div className=" w-2/3 mx-4 pt-8">
