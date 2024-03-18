@@ -15,15 +15,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import LearnMore from "@/components/admin/finances/learn-more";
-import {
-  readOperatingBalance,
-  readRFFBalance,
-} from "@/server/actions/request/actions";
 
 export const runtime = "edge";
-
-const OperatingBalance = await readOperatingBalance();
-const RFFBalance = await readRFFBalance();
 
 export default async function Requests() {
   const { sessionClaims } = auth();
@@ -38,19 +31,9 @@ export default async function Requests() {
           <div className="flex border-t flex-col w-5/6 items-center justify-start">
             <div className="flex flex-row w-full">
               <div className="w-1/3 ml-4 pt-8">
-                <CaresBalanceCard
-                  AvailableBalance={OperatingBalance[0].availableBalance}
-                  TotalBalance={OperatingBalance[0].totalBalance}
-                  ReservedBalance={OperatingBalance[0].reservedBalance}
-                  Version={OperatingBalance[0].version}
-                />
+                <CaresBalanceCard />
                 <div className="py-2" />
-                <RFFBalanceCard
-                  AvailableBalance={RFFBalance[0].availableBalance}
-                  TotalBalance={RFFBalance[0].totalBalance}
-                  Version={RFFBalance[0].version}
-                  ReservedBalance={RFFBalance[0].reservedBalance}
-                />
+                <RFFBalanceCard />
               </div>
               <div className=" w-2/3 mx-4 pt-8">
                 <Card className="flex flex-col h-full">

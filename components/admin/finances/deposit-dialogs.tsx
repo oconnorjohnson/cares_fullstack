@@ -67,15 +67,30 @@ export function RFFDepositDialog({
   async function onSubmit(data: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
     console.log(data);
-    const newRFFDepositRecord = await createRFFDeposit({
-      amount: data.totalValue,
-      totalValue: data.totalValue,
-      details: data.details,
-      lastVersion: data.lastVersion,
-      userId: data.userId,
-    });
-    trpcContext.invalidate();
-    setIsSubmitting(false);
+    try {
+      const newRFFDepositRecord = await createRFFDeposit({
+        amount: data.totalValue,
+        totalValue: data.totalValue,
+        details: data.details,
+        lastVersion: data.lastVersion,
+        userId: data.userId,
+      });
+      console.log(
+        "Operating deposit created successfully:",
+        newRFFDepositRecord,
+      );
+      toast.success("Operating deposit created successfully");
+      return newRFFDepositRecord;
+    } catch (error) {
+      console.error("Error creating operating deposit:", error);
+      toast.error(
+        "Error creating operating deposit. Refresh the page and try again.",
+      );
+      throw error;
+    } finally {
+      trpcContext.invalidate();
+      setIsSubmitting(false);
+    }
   }
   return (
     <Dialog>
@@ -86,7 +101,7 @@ export function RFFDepositDialog({
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Deposit Money to RFF Grant </DialogTitle>
+          <DialogTitle>Deposit Money to Cares Fund </DialogTitle>
           <DialogDescription>
             Note the total amount deposited and details of the transaction.
           </DialogDescription>

@@ -6,45 +6,66 @@ export async function updateRFFBalance(
   rffBalanceData: TablesUpdate<"RFFBalance">,
 ): Promise<TablesUpdate<"RFFBalance">> {
   const supabase = createSupabaseClient();
-  if (!rffBalanceData.id) {
-    throw new Error("RFFBalance id is required.");
-  }
 
   try {
-    // First, fetch the current version of the RFFBalance from the database
+    console.log("Updating RFF balance with data:", rffBalanceData);
+    // First, fetch the current version and balances of the OperatingBalance from the database
     const { data: currentRFFBalance, error: fetchError } = await supabase
       .from("RFFBalance")
-      .select("version")
-      .eq("id", rffBalanceData.id)
-      .single();
+      .select("version, availableBalance, totalBalance")
+      .eq("id", 2)
+      .single(); // Assuming there's only one RFF balance record
 
-    if (fetchError) throw fetchError;
+    if (fetchError) {
+      console.error("Error fetching current RFF balance:", fetchError);
+      throw fetchError;
+    }
 
+    if (!currentRFFBalance) {
+      throw new Error("Operating balance record not found.");
+    }
+    console.log(currentRFFBalance.version, lastVersion);
     // Check if the current version matches the lastVersion provided
     if (currentRFFBalance.version !== lastVersion) {
+      console.error(
+        "Version mismatch. The balance has been updated by another transaction.",
+      );
       throw new Error(
         "Version mismatch. The balance has been updated by another transaction.",
       );
     }
 
+    // Calculate new balances by adding the submitted values to the existing ones
+    const newAvailableBalance =
+      currentRFFBalance.availableBalance + rffBalanceData.availableBalance!;
+    const newTotalBalance =
+      currentRFFBalance.totalBalance + rffBalanceData.totalBalance!;
+
     // Proceed with the update if the versions match
     const { data: updatedRFFBalance, error: updateError } = await supabase
       .from("RFFBalance")
       .update({
-        availableBalance: rffBalanceData.availableBalance,
+        availableBalance: newAvailableBalance,
+        totalBalance: newTotalBalance,
         // Increment the version number upon update
         version: lastVersion + 1,
       })
-      .match({ id: rffBalanceData.id });
+      .match({ id: 2 }) // Assuming you're matching by id
+      .select("*");
 
-    if (updateError) throw updateError;
+    if (updateError) {
+      console.error("Error updating RFF balance:", updateError);
+      throw updateError;
+    }
 
     console.log("Updated RFFBalance:", updatedRFFBalance);
     if (!updatedRFFBalance) {
+      console.error("No record was updated.");
       throw new Error("No record was updated.");
     }
-    return updatedRFFBalance as TablesUpdate<"RFFBalance">;
+    return updatedRFFBalance as unknown as TablesUpdate<"RFFBalance">;
   } catch (error) {
+    console.error("Error updating RFF balance:", error);
     throw error;
   }
 }
