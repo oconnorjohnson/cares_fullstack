@@ -20,6 +20,21 @@ export async function getOperatingBalance() {
   }
 }
 
+export async function getTransactions() {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase.from("Transaction").select("*");
+    if (error) {
+      console.error("Error in getTransactions:", error);
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.error("Unexpected error in getTransactions:", error);
+    throw error;
+  }
+}
+
 export async function getRFFBalance() {
   const supabase = createSupabaseClient();
   try {

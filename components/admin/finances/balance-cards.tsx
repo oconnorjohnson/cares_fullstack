@@ -15,12 +15,35 @@ import {
 import { trpc } from "@/app/_trpc/client";
 import { PlusCircleIcon } from "lucide-react";
 import { useAuth } from "@clerk/nextjs";
+import LearnMore from "@/components/admin/finances/learn-more";
 type BalanceData = {
   TotalBalance: number;
   AvailableBalance: number;
   Version: number;
   ReservedBalance: number;
 };
+
+export function LearnMoreCard() {
+  return (
+    <Card className="w-full h-full">
+      <CardHeader className="flex flex-row justify-between space-x-4">
+        <CardTitle>Learn More</CardTitle>
+        <LearnMore />
+      </CardHeader>
+      <CardContent>
+        <div>
+          Transactions are any movement of money in or out of either the CARES
+          General Fund or the RFF Grant. Total Balances are the sum of all
+          transactions in a given period. Available Balances are the sum of all
+          transactions that have not yet been paid out.
+        </div>
+      </CardContent>
+      <CardFooter>
+        {/* <Button variant="default">Withdraw</Button> */}
+      </CardFooter>
+    </Card>
+  );
+}
 
 export function CaresBalanceCard() {
   const user = useAuth();
@@ -31,7 +54,7 @@ export function CaresBalanceCard() {
 
   if (isLoadingOperatingBalance) {
     return (
-      <Card className="w-[400px]">
+      <Card className="w-full h-full">
         <CardHeader className="flex flex-row justify-between space-x-4">
           <CardTitle>CARES Fund</CardTitle>
           <Button variant="outline" disabled>
@@ -65,7 +88,7 @@ export function CaresBalanceCard() {
     return <div>Not authenticated</div>;
   } else {
     return (
-      <Card className="w-[400px]">
+      <Card className="w-full h-full">
         <CardHeader className="flex flex-row justify-between space-x-4">
           <CardTitle>CARES Fund</CardTitle>
           <CARESDepositButton
@@ -109,9 +132,9 @@ export function RFFBalanceCard() {
     trpc.getRFFBalance.useQuery();
   if (isLoadingRFFBalance) {
     return (
-      <Card className="w-[400px]">
+      <Card className="w-full h-full">
         <CardHeader className="flex flex-row justify-between space-x-4">
-          <CardTitle>CARES Fund</CardTitle>
+          <CardTitle>RFF Fund</CardTitle>
           <Button variant="outline" disabled>
             Deposit
           </Button>
@@ -143,7 +166,7 @@ export function RFFBalanceCard() {
     return <div>Not authenticated</div>;
   } else {
     return (
-      <Card className="w-[400px]">
+      <Card className="w-full h-full">
         <CardHeader className="flex flex-row justify-between space-x-4">
           <CardTitle>RFF Fund</CardTitle>
           <RFFDepositButton version={RFFBalance[0].version} userId={userId} />

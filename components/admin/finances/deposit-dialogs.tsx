@@ -101,7 +101,7 @@ export function RFFDepositDialog({
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Deposit Money to Cares Fund </DialogTitle>
+          <DialogTitle>Deposit Money to RFF Fund </DialogTitle>
           <DialogDescription>
             Note the total amount deposited and details of the transaction.
           </DialogDescription>
@@ -231,7 +231,7 @@ export function CARESDepositDialog({
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Deposit Money to Cares Fund </DialogTitle>
+          <DialogTitle>Deposit Money to Cares General Fund </DialogTitle>
           <DialogDescription>
             Note the total amount deposited and details of the transaction.
           </DialogDescription>

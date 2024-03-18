@@ -609,7 +609,6 @@ export type Database = {
       };
       Transaction: {
         Row: {
-          AssetId: number | null;
           created_at: string;
           details: string | null;
           FundTypeId: number | null;
@@ -628,7 +627,6 @@ export type Database = {
           UserId: string;
         };
         Insert: {
-          AssetId?: number | null;
           created_at?: string;
           details?: string | null;
           FundTypeId?: number | null;
@@ -647,7 +645,6 @@ export type Database = {
           UserId: string;
         };
         Update: {
-          AssetId?: number | null;
           created_at?: string;
           details?: string | null;
           FundTypeId?: number | null;
@@ -666,13 +663,6 @@ export type Database = {
           UserId?: string;
         };
         Relationships: [
-          {
-            foreignKeyName: "public_Transaction_AssetId_fkey";
-            columns: ["AssetId"];
-            isOneToOne: false;
-            referencedRelation: "Asset";
-            referencedColumns: ["id"];
-          },
           {
             foreignKeyName: "public_Transaction_FundTypeId_fkey";
             columns: ["FundTypeId"];

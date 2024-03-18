@@ -18,6 +18,7 @@ import {
   getRequestsThatNeedAgreementsByUserId,
   getOperatingBalance,
   getRFFBalance,
+  getTransactions,
 } from "@/server/supabase/functions/read";
 import { Tables } from "@/types_db";
 import { PostgrestError } from "@supabase/supabase-js";
@@ -134,6 +135,11 @@ export type RequestData = {
     value: string;
   }[];
 };
+
+export async function requestAllTransactions() {
+  const requests = await getTransactions();
+  return requests;
+}
 
 export async function readOperatingBalance() {
   const operatingBalance = await getOperatingBalance();
