@@ -142,7 +142,7 @@ export function RFFBalanceCard() {
         <CardContent>
           <div className="flex flex-row items-center justify-between border border-1 my-2 px-4 py-2 rounded-xl">
             <div>Total Balance:</div>
-            <div className="text-lg font-bold">Loading...</div>
+            <div className="text-md font-bold">Loading...</div>
           </div>
           <div className="flex flex-row items-center justify-between border border-1 my-2 px-4 py-2 rounded-xl">
             <div>Reserved Balance:</div>

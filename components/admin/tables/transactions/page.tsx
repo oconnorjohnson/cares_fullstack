@@ -4,6 +4,7 @@ import {
 } from "@/components/admin/tables/transactions/columns";
 import { DataTable } from "@/components/ui/data-table";
 import { requestAllTransactions } from "@/server/actions/request/actions";
+import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 
 async function getTransactions(): Promise<Transaction[]> {
@@ -12,6 +13,7 @@ async function getTransactions(): Promise<Transaction[]> {
   const modifiedTransactions = transactions.map((transaction) => ({
     ...transaction,
     id: transaction.id,
+    created_at: format(new Date(transaction.created_at), "MM/dd/yyyy hh:mm a"), // Adjust the format string as needed
     UserId: transaction.UserId,
     FundTypeId: transaction.FundTypeId,
     quantity: transaction.quantity,
@@ -39,7 +41,7 @@ export default async function TransactionsTable() {
         data={transactions}
         defaultSorting={[
           {
-            id: "created_at", // Make sure this id matches one of the column accessorKeys
+            id: "created_at",
             desc: true,
           },
         ]}
