@@ -173,7 +173,7 @@ export async function createRFFDeposit(RFFDepositData: DepositData) {
     details,
     totalValue,
     isDeposit: true,
-    isCARES: true,
+    isRFF: true,
     // Add any other necessary fields
   };
 

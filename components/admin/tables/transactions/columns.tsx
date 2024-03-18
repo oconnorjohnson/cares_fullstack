@@ -67,94 +67,16 @@ export const columns: ColumnDef<Transaction>[] = [
     },
   },
   {
-    accessorKey: "isPurchase",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          isPurchase
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    accessorFn: (row) => getTransactionType(row),
+    id: "transactionType",
+    cell: ({ getValue }) => <Badge>{getValue() as string}</Badge>,
+    header: () => <span>Transaction Type</span>,
   },
   {
-    accessorKey: "isDisbursement",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          isDisbursement
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: "isReversal",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          isReversal
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: "isDeposit",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          isDeposit
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: "isCARES",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          isCARES
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: "isRFF",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          isRFF
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    accessorFn: (row) => getBalanceType(row),
+    id: "balanceType",
+    cell: ({ getValue }) => <Badge>{getValue() as string}</Badge>,
+    header: () => <span>Balance Type</span>,
   },
   {
     accessorKey: "details",
@@ -172,3 +94,16 @@ export const columns: ColumnDef<Transaction>[] = [
     },
   },
 ];
+function getTransactionType(transaction: Transaction): string {
+  if (transaction.isPurchase) return "Purchase";
+  if (transaction.isDisbursement) return "Disbursement";
+  if (transaction.isReversal) return "Reversal";
+  if (transaction.isDeposit) return "Deposit";
+  return "Unknown";
+}
+
+function getBalanceType(transaction: Transaction): string {
+  if (transaction.isCARES) return "CARES";
+  if (transaction.isRFF) return "RFF";
+  return "Unknown";
+}
