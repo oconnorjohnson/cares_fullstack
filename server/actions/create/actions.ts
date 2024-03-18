@@ -26,6 +26,7 @@ import { EmailTemplate as CompletedEmailTemplate } from "@/components/emails/com
 import { Resend } from "resend";
 import { revalidatePath } from "next/cache";
 import { TablesInsert } from "@/types_db";
+import { StringValidation } from "zod";
 
 // Extracted from types_db.ts for brevity and clarity
 interface RequestInsert {
@@ -113,11 +114,15 @@ interface PostScreenData {
 
 type DepositData = {
   amount: number;
+  totalValue: number;
   details: string;
   lastVersion: number;
+  userId: string;
 };
 
-export async function createOperatingDeposit() {
+export async function createOperatingDeposit(
+  OperatingDepositData: DepositData,
+) {
   // we take deposit amount and details from the request form
   // we create a new transaction with the details
   // in that transaction, we set isDeposit to true, and isCARES to true
@@ -126,7 +131,7 @@ export async function createOperatingDeposit() {
   // if update balance fails, we return error and then delete the created transaction, telling the user to refresh the page and to try again
 }
 
-export async function createRFFDeposit() {
+export async function createRFFDeposit(RFFDepositData: DepositData) {
   // we take deposit amount and details from the request form
   // we create a new transaction with the details
   // in that transaction, we set isDeposit to true, and isRFF to true

@@ -611,6 +611,7 @@ export type Database = {
         Row: {
           AssetId: number | null;
           created_at: string;
+          details: string | null;
           FundTypeId: number | null;
           id: number;
           isCARES: boolean;
@@ -629,6 +630,7 @@ export type Database = {
         Insert: {
           AssetId?: number | null;
           created_at?: string;
+          details?: string | null;
           FundTypeId?: number | null;
           id?: number;
           isCARES?: boolean;
@@ -647,6 +649,7 @@ export type Database = {
         Update: {
           AssetId?: number | null;
           created_at?: string;
+          details?: string | null;
           FundTypeId?: number | null;
           id?: number;
           isCARES?: boolean;
