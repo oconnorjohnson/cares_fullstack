@@ -2,6 +2,36 @@ import { createClient as createSupabaseClient } from "@/server/supabase/server";
 import { PostgrestError } from "@supabase/supabase-js";
 import { Tables } from "@/types_db";
 
+export async function getOperatingBalance() {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase.from("OperatingBalance").select("*");
+    if (error) {
+      console.error("Error in getOperatingBalance:", error);
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.error("Unexpected error in getOperatingBalance:", error);
+    throw error;
+  }
+}
+
+export async function getRFFBalance() {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase.from("RFFBalance").select("*");
+    if (error) {
+      console.error("Error in getRFFBalance:", error);
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.error("Unexpected error in getRFFBalance:", error);
+    throw error;
+  }
+}
+
 export async function getAgencyNameById(agencyId: number) {
   const supabase = createSupabaseClient();
   try {

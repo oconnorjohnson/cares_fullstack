@@ -8,8 +8,14 @@ import {
   createPostScreen,
   createNewFundByRequestId,
   createFunds,
+  createTransaction as createNewTransaction,
+  creatAsset as createNewAsset,
 } from "@/server/supabase/functions/create";
 import { getFundTypeNeedsReceiptById } from "@/server/supabase/functions/read";
+import {
+  updateOperatingBalance,
+  updateRFFBalance,
+} from "@/server/supabase/functions/update";
 import { Submitted } from "@/server/actions/resend/actions";
 import {
   markRequestAsNeedingReceipt,
@@ -103,6 +109,42 @@ interface PostScreenData {
   transpoStress: number;
   financialDifficulties: number;
   additionalInformation: string;
+}
+
+type DepositData = {
+  amount: number;
+  details: string;
+  lastVersion: number;
+};
+
+export async function createOperatingDeposit() {
+  // we take deposit amount and details from the request form
+  // we create a new transaction with the details
+  // in that transaction, we set isDeposit to true, and isCARES to true
+  // we update the operating balance with the new amounts and transactionId,after checking for version conflicts
+  // if update balance succeeds (no version conflicts), we return success
+  // if update balance fails, we return error and then delete the created transaction, telling the user to refresh the page and to try again
+}
+
+export async function createRFFDeposit() {
+  // we take deposit amount and details from the request form
+  // we create a new transaction with the details
+  // in that transaction, we set isDeposit to true, and isRFF to true
+  // we update the RFF balance with the transactionId, after checking for version conflicts
+  // if update balance succeeds (no version conflicts), we return success
+  // if update balance fails, we return error and then delete the created transaction, telling the user to refresh the page and to try again
+}
+
+export async function createTransaction(
+  transactionData: TablesInsert<"Transaction">,
+) {
+  const transaction = await createNewTransaction(transactionData);
+  return transaction;
+}
+
+export async function creatAsset(assetData: TablesInsert<"Asset">) {
+  const asset = await createNewAsset(assetData);
+  return asset;
 }
 
 export async function newAgency(agencyState: AgencyData) {

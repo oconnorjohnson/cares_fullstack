@@ -8,6 +8,8 @@ import {
   banUserById,
   requestNeedsReceipt,
   requestDoesNotNeedReceipt,
+  updateOperatingBalance as updateTheOperatingBalance,
+  updateRFFBalance as updateTheRFFBalance,
 } from "@/server/supabase/functions/update";
 import { getFundsByRequestId } from "@/server/supabase/functions/read";
 import { revalidatePath } from "next/cache";
@@ -37,6 +39,17 @@ export interface UserData {
   isBanned: boolean;
 }
 
+export interface BalanceUpdateData {
+  availableBalance: number;
+  id: number;
+  last_updated: string;
+  reservedBalance: number;
+  totalBalance: number;
+  TransactionId: number | null;
+  version: number;
+  lastVersion: number;
+}
+
 export async function revalidateDashboard() {
   revalidatePath("/dashboard");
 }
@@ -44,6 +57,26 @@ export async function revalidateDashboard() {
 export async function revalidateUserRequests() {
   revalidatePath("/user/requests");
 }
+
+export async function updateOperatingBalance(
+  lastVersion: number,
+  operatingBalanceData: TablesUpdate<"OperatingBalance">,
+): Promise<TablesUpdate<"OperatingBalance">> {
+  const operatingBalance = await updateTheOperatingBalance(
+    lastVersion,
+    operatingBalanceData,
+  );
+  return operatingBalance;
+}
+
+export async function updateRFFBalance(
+  lastVersion: number,
+  rffBalanceData: TablesUpdate<"RFFBalance">,
+) {
+  const rffBalance = await updateTheRFFBalance(lastVersion, rffBalanceData);
+  return rffBalance;
+}
+
 export async function sendReceiptEmail(firstname: string, email: string) {
   const resend = new Resend(process.env.RESEND_API_KEY);
   await resend.emails.send({

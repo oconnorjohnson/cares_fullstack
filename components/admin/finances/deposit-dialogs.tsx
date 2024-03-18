@@ -3,16 +3,20 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PlusCircleIcon } from "lucide-react";
+import {
+  createOperatingDeposit,
+  createRFFDeposit,
+} from "@/server/actions/create/actions";
 
-export function RFFDepositDialog() {
+export function RFFDepositDialog({ version }: { version: number }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -22,34 +26,49 @@ export function RFFDepositDialog() {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Deposit Money to RFF Grant Balance</DialogTitle>
+          <DialogTitle>Deposit Money to RFF Grant </DialogTitle>
           <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
+            Note the total amount deposited and details of the transaction.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
-            </Label>
-            <Input id="name" value="Pedro Duarte" className="col-span-3" />
+        <form action={createRFFDeposit} method="POST">
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="amount" className="text-left">
+                Amount
+              </Label>
+              <Input
+                type="number"
+                name="amount"
+                id="amount"
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="details" className="text-left">
+                Details
+              </Label>
+              <Input
+                type="text"
+                name="details"
+                id="details"
+                className="col-span-3"
+              />
+            </div>
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Username
-            </Label>
-            <Input id="username" value="@peduarte" className="col-span-3" />
+          <div className="w-full flex flex-row justify-between">
+            <DialogClose asChild>
+              <Button>Cancel</Button>
+            </DialogClose>
+            <Button type="submit">Deposit</Button>
           </div>
-        </div>
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
-        </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );
 }
 
-export function CARESDepositDialog() {
+export function CARESDepositDialog({ version }: { version: number }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -59,28 +78,43 @@ export function CARESDepositDialog() {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Deposit Money to CARES General Fund Balance</DialogTitle>
+          <DialogTitle>Deposit Money to CARES General Fund </DialogTitle>
           <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
+            Note the total amount deposited and details of the transaction.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
-            </Label>
-            <Input id="name" value="Pedro Duarte" className="col-span-3" />
+        <form action={createOperatingDeposit} method="POST">
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="amount" className="text-left">
+                Amount
+              </Label>
+              <Input
+                type="number"
+                name="amount"
+                id="amount"
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="details" className="text-left">
+                Details
+              </Label>
+              <Input
+                type="text"
+                name="details"
+                id="details"
+                className="col-span-3"
+              />
+            </div>
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Username
-            </Label>
-            <Input id="username" value="@peduarte" className="col-span-3" />
+          <div className="w-full flex flex-row justify-between">
+            <DialogClose asChild>
+              <Button>Cancel</Button>
+            </DialogClose>
+            <Button type="submit">Deposit</Button>
           </div>
-        </div>
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
-        </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );

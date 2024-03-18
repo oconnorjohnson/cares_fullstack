@@ -1,9 +1,105 @@
 import { createClient as createSupabaseClient } from "@/server/supabase/server";
-import { TablesInsert, TablesUpdate } from "@/types_db";
+import { TablesUpdate } from "@/types_db";
+
+export async function updateRFFBalance(
+  lastVersion: number,
+  rffBalanceData: TablesUpdate<"RFFBalance">,
+): Promise<TablesUpdate<"RFFBalance">> {
+  const supabase = createSupabaseClient();
+  if (!rffBalanceData.id) {
+    throw new Error("RFFBalance id is required.");
+  }
+
+  try {
+    // First, fetch the current version of the RFFBalance from the database
+    const { data: currentRFFBalance, error: fetchError } = await supabase
+      .from("RFFBalance")
+      .select("version")
+      .eq("id", rffBalanceData.id)
+      .single();
+
+    if (fetchError) throw fetchError;
+
+    // Check if the current version matches the lastVersion provided
+    if (currentRFFBalance.version !== lastVersion) {
+      throw new Error(
+        "Version mismatch. The balance has been updated by another transaction.",
+      );
+    }
+
+    // Proceed with the update if the versions match
+    const { data: updatedRFFBalance, error: updateError } = await supabase
+      .from("RFFBalance")
+      .update({
+        availableBalance: rffBalanceData.availableBalance,
+        // Increment the version number upon update
+        version: lastVersion + 1,
+      })
+      .match({ id: rffBalanceData.id });
+
+    if (updateError) throw updateError;
+
+    console.log("Updated RFFBalance:", updatedRFFBalance);
+    if (!updatedRFFBalance) {
+      throw new Error("No record was updated.");
+    }
+    return updatedRFFBalance as TablesUpdate<"RFFBalance">;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function updateOperatingBalance(
+  lastVersion: number,
+  operatingBalanceData: TablesUpdate<"OperatingBalance">,
+): Promise<TablesUpdate<"OperatingBalance">> {
+  const supabase = createSupabaseClient();
+  if (!operatingBalanceData.id) {
+    throw new Error("OperatingBalance id is required.");
+  }
+
+  try {
+    // First, fetch the current version of the OperatingBalance from the database
+    const { data: currentOperatingBalance, error: fetchError } = await supabase
+      .from("OperatingBalance")
+      .select("version")
+      .eq("id", operatingBalanceData.id)
+      .single();
+
+    if (fetchError) throw fetchError;
+
+    // Check if the current version matches the lastVersion provided
+    if (currentOperatingBalance.version !== lastVersion) {
+      throw new Error(
+        "Version mismatch. The balance has been updated by another transaction.",
+      );
+    }
+
+    // Proceed with the update if the versions match
+    const { data: updatedOperatingBalance, error: updateError } = await supabase
+      .from("OperatingBalance")
+      .update({
+        availableBalance: operatingBalanceData.availableBalance,
+        // Increment the version number upon update
+        version: lastVersion + 1,
+      })
+      .match({ id: operatingBalanceData.id });
+
+    if (updateError) throw updateError;
+
+    console.log("Updated OperatingBalance:", updatedOperatingBalance);
+    if (!updatedOperatingBalance) {
+      throw new Error("No record was updated.");
+    }
+    return updatedOperatingBalance;
+  } catch (error) {
+    throw error;
+  }
+}
 
 export async function updateUser(
   userId: string,
-  userData: TablesInsert<"User">,
+  userData: TablesUpdate<"User">,
 ) {
   const supabase = createSupabaseClient();
 

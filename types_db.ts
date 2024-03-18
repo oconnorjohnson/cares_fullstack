@@ -60,6 +60,64 @@ export type Database = {
           },
         ];
       };
+      Asset: {
+        Row: {
+          created_at: string;
+          FundId: number | null;
+          FundTypeId: number;
+          id: number;
+          isAvailable: boolean;
+          isExpended: boolean;
+          isReserved: boolean;
+          totalValue: number;
+          UserId: string;
+        };
+        Insert: {
+          created_at?: string;
+          FundId?: number | null;
+          FundTypeId: number;
+          id?: number;
+          isAvailable?: boolean;
+          isExpended?: boolean;
+          isReserved?: boolean;
+          totalValue: number;
+          UserId: string;
+        };
+        Update: {
+          created_at?: string;
+          FundId?: number | null;
+          FundTypeId?: number;
+          id?: number;
+          isAvailable?: boolean;
+          isExpended?: boolean;
+          isReserved?: boolean;
+          totalValue?: number;
+          UserId?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "public_Asset_FundId_fkey";
+            columns: ["FundId"];
+            isOneToOne: false;
+            referencedRelation: "Fund";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "public_Asset_FundTypeId_fkey";
+            columns: ["FundTypeId"];
+            isOneToOne: false;
+            referencedRelation: "FundType";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "public_Asset_UserId_fkey";
+            columns: ["UserId"];
+            isOneToOne: false;
+            referencedRelation: "User";
+            referencedColumns: ["userId"];
+          },
+        ];
+      };
       Client: {
         Row: {
           clientID: string;
@@ -132,6 +190,7 @@ export type Database = {
           receiptId: number | null;
           requestId: number;
           RFFType: string | null;
+          TransactionId: number | null;
         };
         Insert: {
           amount: number;
@@ -143,6 +202,7 @@ export type Database = {
           receiptId?: number | null;
           requestId: number;
           RFFType?: string | null;
+          TransactionId?: number | null;
         };
         Update: {
           amount?: number;
@@ -154,6 +214,7 @@ export type Database = {
           receiptId?: number | null;
           requestId?: number;
           RFFType?: string | null;
+          TransactionId?: number | null;
         };
         Relationships: [
           {
@@ -175,6 +236,13 @@ export type Database = {
             columns: ["requestId"];
             isOneToOne: false;
             referencedRelation: "Request";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "public_Fund_TransactionId_fkey";
+            columns: ["TransactionId"];
+            isOneToOne: false;
+            referencedRelation: "Transaction";
             referencedColumns: ["id"];
           },
         ];
@@ -208,6 +276,44 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "User";
             referencedColumns: ["userId"];
+          },
+        ];
+      };
+      OperatingBalance: {
+        Row: {
+          availableBalance: number;
+          id: number;
+          last_updated: string;
+          reservedBalance: number;
+          totalBalance: number;
+          TransactionId: number | null;
+          version: number;
+        };
+        Insert: {
+          availableBalance: number;
+          id?: number;
+          last_updated?: string;
+          reservedBalance: number;
+          totalBalance: number;
+          TransactionId?: number | null;
+          version?: number;
+        };
+        Update: {
+          availableBalance?: number;
+          id?: number;
+          last_updated?: string;
+          reservedBalance?: number;
+          totalBalance?: number;
+          TransactionId?: number | null;
+          version?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "public_OperatingBalance_TransactionId_fkey";
+            columns: ["TransactionId"];
+            isOneToOne: false;
+            referencedRelation: "Transaction";
+            referencedColumns: ["id"];
           },
         ];
       };
@@ -457,6 +563,137 @@ export type Database = {
           {
             foreignKeyName: "public_Request_userId_fkey";
             columns: ["userId"];
+            isOneToOne: false;
+            referencedRelation: "User";
+            referencedColumns: ["userId"];
+          },
+        ];
+      };
+      RFFBalance: {
+        Row: {
+          availableBalance: number;
+          id: number;
+          last_updated: string;
+          reservedBalance: number;
+          totalBalance: number;
+          TransactionId: number | null;
+          version: number;
+        };
+        Insert: {
+          availableBalance: number;
+          id?: number;
+          last_updated?: string;
+          reservedBalance: number;
+          totalBalance: number;
+          TransactionId?: number | null;
+          version?: number;
+        };
+        Update: {
+          availableBalance?: number;
+          id?: number;
+          last_updated?: string;
+          reservedBalance?: number;
+          totalBalance?: number;
+          TransactionId?: number | null;
+          version?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "public_RFFBalance_TransactionId_fkey";
+            columns: ["TransactionId"];
+            isOneToOne: false;
+            referencedRelation: "Transaction";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      Transaction: {
+        Row: {
+          AssetId: number | null;
+          created_at: string;
+          FundTypeId: number | null;
+          id: number;
+          isCARES: boolean;
+          isDeposit: boolean;
+          isDisbursement: boolean;
+          isPurchase: boolean;
+          isReversal: boolean;
+          isRFF: boolean;
+          quantity: number | null;
+          RequestId: number | null;
+          totalValue: number;
+          TransactionId: number | null;
+          unitValue: number | null;
+          UserId: string;
+        };
+        Insert: {
+          AssetId?: number | null;
+          created_at?: string;
+          FundTypeId?: number | null;
+          id?: number;
+          isCARES?: boolean;
+          isDeposit?: boolean;
+          isDisbursement?: boolean;
+          isPurchase?: boolean;
+          isReversal?: boolean;
+          isRFF?: boolean;
+          quantity?: number | null;
+          RequestId?: number | null;
+          totalValue: number;
+          TransactionId?: number | null;
+          unitValue?: number | null;
+          UserId: string;
+        };
+        Update: {
+          AssetId?: number | null;
+          created_at?: string;
+          FundTypeId?: number | null;
+          id?: number;
+          isCARES?: boolean;
+          isDeposit?: boolean;
+          isDisbursement?: boolean;
+          isPurchase?: boolean;
+          isReversal?: boolean;
+          isRFF?: boolean;
+          quantity?: number | null;
+          RequestId?: number | null;
+          totalValue?: number;
+          TransactionId?: number | null;
+          unitValue?: number | null;
+          UserId?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "public_Transaction_AssetId_fkey";
+            columns: ["AssetId"];
+            isOneToOne: false;
+            referencedRelation: "Asset";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "public_Transaction_FundTypeId_fkey";
+            columns: ["FundTypeId"];
+            isOneToOne: false;
+            referencedRelation: "FundType";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "public_Transaction_RequestId_fkey";
+            columns: ["RequestId"];
+            isOneToOne: false;
+            referencedRelation: "Request";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "public_Transaction_TransactionId_fkey";
+            columns: ["TransactionId"];
+            isOneToOne: false;
+            referencedRelation: "Transaction";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "public_Transaction_UserId_fkey";
+            columns: ["UserId"];
             isOneToOne: false;
             referencedRelation: "User";
             referencedColumns: ["userId"];

@@ -16,6 +16,8 @@ import {
   getRequestsNeedingPostScreenByUserId,
   getClientByClientId,
   getRequestsThatNeedAgreementsByUserId,
+  getOperatingBalance,
+  getRFFBalance,
 } from "@/server/supabase/functions/read";
 import { Tables } from "@/types_db";
 import { PostgrestError } from "@supabase/supabase-js";
@@ -132,6 +134,16 @@ export type RequestData = {
     value: string;
   }[];
 };
+
+export async function readOperatingBalance() {
+  const operatingBalance = await getOperatingBalance();
+  return operatingBalance;
+}
+
+export async function readRFFBalance() {
+  const rffBalance = await getRFFBalance();
+  return rffBalance;
+}
 
 export async function giveUserIdGetRequestsNeedingPreScreen(userId: string) {
   const requests = await getRequestsNeedingPreScreenByUserId(userId);

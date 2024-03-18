@@ -10,6 +10,41 @@ export async function createAgency(agencyData: TablesInsert<"Agency">) {
   return data;
 }
 
+export async function createTransaction(
+  transactionData: TablesInsert<"Transaction">,
+): Promise<TablesInsert<"Transaction">> {
+  const supabase = createSupabaseClient();
+
+  const { data, error } = await supabase
+    .from("Transaction")
+    .insert([transactionData]);
+  if (error) {
+    console.error("Error in createTransaction:", error);
+    throw error;
+  }
+  if (!data) {
+    console.error("No data returned from supabase");
+    throw new Error("No data returned from supabase");
+  }
+  return data as TablesInsert<"Transaction">;
+}
+
+export async function creatAsset(
+  assetData: TablesInsert<"Asset">,
+): Promise<TablesInsert<"Asset">> {
+  const supabase = createSupabaseClient();
+  const { data, error } = await supabase.from("Asset").insert([assetData]);
+  if (error) {
+    console.error("Error in createAsset:", error);
+    throw error;
+  }
+  if (!data) {
+    console.error("No data returned from supabase");
+    throw new Error("No data returned from supabase");
+  }
+  return data as TablesInsert<"Asset">;
+}
+
 export async function createFundType(fundTypeData: TablesInsert<"FundType">) {
   const supabase = createSupabaseClient();
   if (!fundTypeData.userId || !fundTypeData.typeName) {
@@ -19,9 +54,13 @@ export async function createFundType(fundTypeData: TablesInsert<"FundType">) {
     const { data, error } = await supabase
       .from("FundType")
       .insert([fundTypeData]);
-    if (error) throw error;
+    if (error) {
+      console.error("Error in createFundType:", error);
+      throw error;
+    }
     return data;
   } catch (error) {
+    console.error("Unexpected error in createFundType:", error);
     throw new Error(
       `Failed to create fund type: ${error instanceof Error ? error.message : "Unknown error"}`,
     );

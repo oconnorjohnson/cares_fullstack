@@ -16,6 +16,7 @@ import { PlusCircleIcon } from "lucide-react";
 type BalanceData = {
   TotalBalance: number;
   AvailableBalance: number;
+  Version: number;
 };
 
 export function CaresBalanceCard(CaresBalanceData: BalanceData) {
@@ -23,12 +24,12 @@ export function CaresBalanceCard(CaresBalanceData: BalanceData) {
     <Card className="w-[400px]">
       <CardHeader className="flex flex-row justify-between space-x-4">
         <CardTitle>Cares Balances</CardTitle>
-        <CARESDepositButton />
+        <CARESDepositButton version={CaresBalanceData.Version} />
       </CardHeader>
       <CardContent>
-        <div className="flex flex-row items-center justify-between border border-1 my-2 px-4 py-2 rounded-xl ">
+        <div className="flex flex-row items-center justify-between border border-1 my-2 px-4 py-2 rounded-xl">
           <div>Total Balance:</div>
-          <div className="text-lg font-bold ">
+          <div className="text-lg font-bold">
             ${CaresBalanceData.TotalBalance}
           </div>
         </div>
@@ -51,7 +52,7 @@ export function RFFBalanceCard(RFFBalanceData: BalanceData) {
     <Card className="w-[400px]">
       <CardHeader className="flex flex-row justify-between space-x-4">
         <CardTitle>RFF Balances</CardTitle>
-        <RFFDepositButton />
+        <RFFDepositButton version={RFFBalanceData.Version} />
       </CardHeader>
       <CardContent>
         <div className="flex flex-row items-center justify-between border border-1 my-2 px-4 py-2 rounded-xl">
