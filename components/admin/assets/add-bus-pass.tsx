@@ -31,7 +31,10 @@ import {
 } from "@/components/ui/select";
 import { PlusCircleIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { createBusPassAssets } from "@/server/actions/create/actions";
+import {
+  createBusPassAssets,
+  addBusPasses,
+} from "@/server/actions/create/actions";
 import { toast } from "sonner";
 import { trpc } from "@/app/_trpc/client";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
@@ -69,6 +72,17 @@ export default function AddBusPasses() {
     setIsSubmitting(true);
     // values.totalValue = values.amount * 2.5;
     console.log(values);
+    try {
+      await addBusPasses({
+        amount: values.amount,
+        UserId: values.UserId,
+        balanceSource: values.balanceSource,
+      });
+      toast.success("Bus Passes added successfully");
+    } catch (error) {
+      console.error("Error adding bus passes:", error);
+      toast.error("Error adding bus passes");
+    }
     setIsSubmitting(false);
   }
 

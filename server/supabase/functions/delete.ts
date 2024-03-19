@@ -1,6 +1,19 @@
 import { createClient as createSupabaseClient } from "@/server/supabase/server";
 import { TablesInsert } from "@/types_db";
 
+export async function deleteTransaction(transactionId: number) {
+  const supabase = createSupabaseClient();
+  try {
+    const deletedTransaction = await supabase
+      .from("Transaction")
+      .delete()
+      .eq("id", transactionId);
+    return deletedTransaction;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function deleteUser(userId: string) {
   const supabase = createSupabaseClient();
   try {
