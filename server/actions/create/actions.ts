@@ -9,7 +9,7 @@ import {
   createNewFundByRequestId,
   createFunds,
   createTransaction as createNewTransaction,
-  creatAsset as createNewAsset,
+  createAsset as createNewAsset,
 } from "@/server/supabase/functions/create";
 import { getFundTypeNeedsReceiptById } from "@/server/supabase/functions/read";
 import {
@@ -211,9 +211,28 @@ export async function createTransaction(
   return transaction;
 }
 
-export async function creatAsset(assetData: TablesInsert<"Asset">) {
-  const asset = await createNewAsset(assetData);
-  return asset;
+export async function createAsset(
+  assetData: TablesInsert<"Asset"> & { amount: number },
+) {
+  // Extract the amount and remove it from the assetData object
+  const { amount, ...dataWithoutAmount } = assetData;
+
+  // Create an array to hold all promises for the insert operations
+  const insertPromises = [];
+
+  // Loop for the amount times to insert the asset records
+  for (let i = 0; i < amount; i++) {
+    insertPromises.push(createNewAsset(dataWithoutAmount));
+  }
+
+  // Use Promise.all to execute all insert operations concurrently
+  try {
+    const results = await Promise.all(insertPromises);
+    return results; // This will be an array of all inserted asset records
+  } catch (error) {
+    console.error("Error creating assets:", error);
+    throw error;
+  }
 }
 
 export async function newAgency(agencyState: AgencyData) {

@@ -30,7 +30,7 @@ export async function createTransaction(
   return data as unknown as TablesInsert<"Transaction">;
 }
 
-export async function creatAsset(
+export async function createAsset(
   assetData: TablesInsert<"Asset">,
 ): Promise<TablesInsert<"Asset">> {
   const supabase = createSupabaseClient();

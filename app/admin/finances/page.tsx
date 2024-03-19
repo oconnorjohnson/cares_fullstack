@@ -38,12 +38,10 @@ export default async function Requests() {
               <LearnMoreCard />
             </div>
 
-            <div className=" w-full mx-4 pt-8 px-8">
+            <div className=" w-full mx-4 py-8 px-8">
               <Card className="flex flex-col h-full">
-                <CardHeader className="flex flex-row justify-between space-x-4">
-                  <CardTitle>Transactions</CardTitle>
-                </CardHeader>
                 <CardContent>
+                  <CardTitle className="pt-8">Transactions</CardTitle>
                   <TransactionsTable />
                 </CardContent>
               </Card>

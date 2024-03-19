@@ -21,7 +21,11 @@ import {
 } from "lucide-react";
 import { SignOutButton } from "@clerk/nextjs";
 import FundsTable from "@/components/admin/tables/funds/page";
+
 import SideNavBar from "@/components/admin/dashboard/side-nav";
+import AddBussPass from "@/components/admin/assets/add-bus-pass";
+import AddArco from "@/components/admin/assets/add-arco";
+import AddWalmart from "@/components/admin/assets/add-walmart";
 
 export const runtime = "edge";
 
@@ -36,9 +40,12 @@ export default async function Requests() {
         <div className="flex flex-row">
           <SideNavBar />
           <div className="flex border-t flex-col w-5/6 items-center justify-start">
-            <FreshPageAlert />
-            <div className="text-4xl font-bold py-8">Assets</div>
-            {/* <FundsTable /> */}
+            <div className="text-4xl font-bold py-8 ">Assets</div>
+            <div className="flex flex-row w-full items-center justify-center space-x-8">
+              <AddBussPass />
+              <AddArco />
+              <AddWalmart />
+            </div>
           </div>
         </div>
       </>
