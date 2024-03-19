@@ -12,38 +12,43 @@ export async function createAgency(agencyData: TablesInsert<"Agency">) {
 
 export async function createTransaction(
   transactionData: TablesInsert<"Transaction">,
-): Promise<TablesInsert<"Transaction">> {
+): Promise<number> {
+  // Assuming the ID is of type number
   const supabase = createSupabaseClient();
 
   const { data, error } = await supabase
     .from("Transaction")
     .insert([transactionData])
-    .select("*");
+    .select("id"); // Only select the id field
+
   if (error) {
     console.error("Error in createTransaction:", error);
     throw error;
   }
-  if (!data) {
+  if (!data || data.length === 0) {
     console.error("No data returned from supabase");
     throw new Error("No data returned from supabase");
   }
-  return data as unknown as TablesInsert<"Transaction">;
+
+  // Assuming the first item in the array has the id property
+  const transactionId = data[0].id;
+  if (typeof transactionId !== "number") {
+    throw new Error("Transaction ID is not a number");
+  }
+  return transactionId;
 }
 
 export async function createAsset(
   assetData: TablesInsert<"Asset">,
-): Promise<TablesInsert<"Asset">> {
+): Promise<boolean> {
   const supabase = createSupabaseClient();
   const { data, error } = await supabase.from("Asset").insert([assetData]);
   if (error) {
     console.error("Error in createAsset:", error);
     throw error;
   }
-  if (!data) {
-    console.error("No data returned from supabase");
-    throw new Error("No data returned from supabase");
-  }
-  return data as TablesInsert<"Asset">;
+
+  return true;
 }
 
 export async function createFundType(fundTypeData: TablesInsert<"FundType">) {

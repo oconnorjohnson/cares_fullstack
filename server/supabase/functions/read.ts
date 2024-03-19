@@ -2,6 +2,20 @@ import { createClient as createSupabaseClient } from "@/server/supabase/server";
 import { PostgrestError } from "@supabase/supabase-js";
 import { Tables } from "@/types_db";
 
+export async function getTransactions() {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase.from("Transaction").select("*");
+    if (error) {
+      console.error("Error in getTransactions:", error);
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.error("Unexpected error in getTransactions:", error);
+    throw error;
+  }
+}
 export async function getOperatingBalance() {
   const supabase = createSupabaseClient();
   try {
@@ -19,22 +33,6 @@ export async function getOperatingBalance() {
     throw error;
   }
 }
-
-export async function getTransactions() {
-  const supabase = createSupabaseClient();
-  try {
-    const { data, error } = await supabase.from("Transaction").select("*");
-    if (error) {
-      console.error("Error in getTransactions:", error);
-      throw error;
-    }
-    return data;
-  } catch (error) {
-    console.error("Unexpected error in getTransactions:", error);
-    throw error;
-  }
-}
-
 export async function getRFFBalance() {
   const supabase = createSupabaseClient();
   try {

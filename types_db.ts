@@ -67,8 +67,10 @@ export type Database = {
           FundTypeId: number;
           id: number;
           isAvailable: boolean;
+          isCARES: boolean;
           isExpended: boolean;
           isReserved: boolean;
+          isRFF: boolean;
           totalValue: number;
           TransactionId: number;
           UserId: string;
@@ -79,8 +81,10 @@ export type Database = {
           FundTypeId: number;
           id?: number;
           isAvailable?: boolean;
+          isCARES?: boolean;
           isExpended?: boolean;
           isReserved?: boolean;
+          isRFF?: boolean;
           totalValue: number;
           TransactionId: number;
           UserId: string;
@@ -91,8 +95,10 @@ export type Database = {
           FundTypeId?: number;
           id?: number;
           isAvailable?: boolean;
+          isCARES?: boolean;
           isExpended?: boolean;
           isReserved?: boolean;
+          isRFF?: boolean;
           totalValue?: number;
           TransactionId?: number;
           UserId?: string;

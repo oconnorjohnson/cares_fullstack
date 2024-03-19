@@ -230,6 +230,7 @@ export async function addBusPasses({
   let transactionId: number | undefined;
   let currentBalance;
   let lastVersion;
+  let balanceUpdated: boolean = false;
 
   try {
     // Step 1: Get the current balance and version number
@@ -265,22 +266,32 @@ export async function addBusPasses({
     if (!createdTransaction) {
       throw new Error("Failed to create transaction.");
     }
-    const transactionId = createdTransaction.id;
-
+    const transactionId = createdTransaction;
+    console.log("Created transaction with ID:", transactionId);
     // Step 3: Update balance with the lastVersion
-    const balanceUpdateData = {
-      availableBalance: -totalValue, // Pass as negative to subtract
-      totalBalance: -totalValue, // Pass as negative to subtract
-      reservedBalance: 0,
-    };
-    if (balanceSource === "CARES") {
-      await updateOperatingBalance(lastVersion, balanceUpdateData);
-    } else if (balanceSource === "RFF") {
-      await updateRFFBalance(lastVersion, balanceUpdateData);
+    try {
+      const balanceUpdateData = {
+        availableBalance: -totalValue, // Pass as negative to subtract
+        totalBalance: -totalValue, // Pass as negative to subtract
+        reservedBalance: 0,
+      };
+
+      if (balanceSource === "CARES") {
+        await updateOperatingBalance(lastVersion, balanceUpdateData);
+      } else if (balanceSource === "RFF") {
+        await updateRFFBalance(lastVersion, balanceUpdateData);
+      }
+      balanceUpdated = true;
+    } catch (error) {
+      if (balanceUpdated === false) {
+        throw new Error("Failed to update balance.");
+      }
+      console.error("Error in addBusPasses:", error);
+      throw error; // Rethrow the error to be handled by the caller
     }
 
     if (!transactionId) {
-      throw new Error("Failed to update balance.");
+      throw new Error("No transaction ID, failed to create asset records.");
     }
     // Step 3: Create asset records
     const assetPromises = [];
@@ -288,39 +299,52 @@ export async function addBusPasses({
       assetPromises.push(
         createNewAsset({
           UserId: UserId,
-          FundTypeId: 3, // Assuming this is a constant value
+          FundTypeId: 3, // Integer for Bus Pass fund type id
           isAvailable: true,
           TransactionId: transactionId,
           totalValue: unitValue,
+          isRFF: balanceSource === "RFF",
+          isCARES: balanceSource === "CARES",
         }),
       );
     }
 
-    await Promise.all(assetPromises);
+    try {
+      await Promise.all(assetPromises);
+      // Since createAsset now only throws on error, no need to check return values
+    } catch (error) {
+      console.error("Error in addBusPasses:", error);
+      // Handle error, such as rolling back transactions if necessary
+      throw error;
+    }
   } catch (error) {
     console.error("Error in addBusPasses:", error);
 
-    // Attempt to rollback if necessary
-    if (transactionId) {
-      // Delete the transaction
-      await deleteTransaction(transactionId); // Assuming you have a function to delete a transaction
-    }
+    // // Attempt to rollback if necessary
+    // if (transactionId) {
+    //   // Delete the transaction
+    //   await deleteTransaction(transactionId); // Assuming you have a function to delete a transaction
+    // }
 
-    // If balance was updated, revert the balance update
-    if (currentBalance && lastVersion !== undefined) {
-      const revertBalanceUpdate =
-        balanceSource === "CARES" ? updateOperatingBalance : updateRFFBalance;
-      try {
-        await revertBalanceUpdate(lastVersion, {
-          availableBalance: currentBalance[0].availableBalance,
-          totalBalance: currentBalance[0].totalBalance,
-          // Include other necessary fields for reverting the balance
-        });
-      } catch (revertError) {
-        console.error("Failed to revert balance update:", revertError);
-        // Handle the error of reverting the balance (e.g., log it, notify someone, etc.)
-      }
-    }
+    // // If balance was updated, revert the balance update
+    // if (
+    //   balanceUpdated === true &&
+    //   currentBalance &&
+    //   lastVersion !== undefined
+    // ) {
+    //   const revertBalanceUpdate =
+    //     balanceSource === "CARES" ? updateOperatingBalance : updateRFFBalance;
+    //   try {
+    //     await revertBalanceUpdate(lastVersion, {
+    //       availableBalance: currentBalance[0].availableBalance,
+    //       totalBalance: currentBalance[0].totalBalance,
+    //       // Include other necessary fields for reverting the balance
+    //     });
+    //   } catch (revertError) {
+    //     console.error("Failed to revert balance update:", revertError);
+    //     // Handle the error of reverting the balance (e.g., log it, notify someone, etc.)
+    //   }
+    // }
 
     throw error; // Rethrow the error to be handled by the caller
   }

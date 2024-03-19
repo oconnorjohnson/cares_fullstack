@@ -1,10 +1,10 @@
 import { createClient as createSupabaseClient } from "@/server/supabase/server";
-import { TablesUpdate } from "@/types_db";
+import { TablesUpdate, Tables } from "@/types_db";
 
 export async function updateRFFBalance(
   lastVersion: number,
   rffBalanceData: TablesUpdate<"RFFBalance">,
-): Promise<TablesUpdate<"RFFBalance">> {
+): Promise<boolean> {
   const supabase = createSupabaseClient();
 
   try {
@@ -63,7 +63,8 @@ export async function updateRFFBalance(
       console.error("No record was updated.");
       throw new Error("No record was updated.");
     }
-    return updatedRFFBalance as unknown as TablesUpdate<"RFFBalance">;
+    return true;
+    // return updatedRFFBalance as unknown as Tables<"RFFBalance">;
   } catch (error) {
     console.error("Error updating RFF balance:", error);
     throw error;
