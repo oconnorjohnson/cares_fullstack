@@ -123,7 +123,7 @@ export default function AddBusPasses() {
                       <SelectItem value="RFF">RFF</SelectItem>
                     </SelectContent>
                   </Select>
-                  <FormDescription>(e.g., CARES vs. RFF)</FormDescription>
+                  <FormDescription>(e.g. CARES vs. RFF)</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -143,7 +143,13 @@ export default function AddBusPasses() {
               )}
             />
 
-            <Button type="submit">Submit</Button>
+            {isSubmitting ? (
+              <Button disabled>
+                <LoadingSpinner className="w-4 h-4 text-white" />
+              </Button>
+            ) : (
+              <Button type="submit">Submit</Button>
+            )}
           </form>
         </Form>
       </DialogContent>

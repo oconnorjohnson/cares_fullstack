@@ -74,7 +74,7 @@ export async function updateRFFBalance(
 export async function updateOperatingBalance(
   lastVersion: number,
   operatingBalanceData: TablesUpdate<"OperatingBalance">,
-): Promise<TablesUpdate<"OperatingBalance">> {
+): Promise<boolean> {
   const supabase = createSupabaseClient();
 
   try {
@@ -134,7 +134,7 @@ export async function updateOperatingBalance(
       console.error("No record was updated.");
       throw new Error("No record was updated.");
     }
-    return updatedOperatingBalance as unknown as TablesUpdate<"OperatingBalance">;
+    return true;
   } catch (error) {
     console.error("Error updating operating balance:", error);
     throw error;
