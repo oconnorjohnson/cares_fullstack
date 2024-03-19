@@ -1,8 +1,9 @@
 "use client";
 import { useState } from "react";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -12,80 +13,63 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { PlusCircleIcon } from "lucide-react";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import {
   Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
+  SelectContent,
+  SelectItem,
 } from "@/components/ui/select";
-import { useAuth } from "@clerk/nextjs";
+import { PlusCircleIcon } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { createBusPassAssets } from "@/server/actions/create/actions";
+import { toast } from "sonner";
+import { trpc } from "@/app/_trpc/client";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { useAuth } from "@clerk/nextjs";
 
 const formSchema = z.object({
   UserId: z.string().min(1),
-  isAvailable: z.boolean(),
-  isReserved: z.boolean(),
-  isExpended: z.boolean(),
-  FundTypeId: z.number().min(1),
   amount: z
     .string()
-    .transform((input) => parseFloat(input))
-    .refine((val) => !isNaN(val) && val > 0, {
-      message: "A valid positive number is required.",
+    .transform((value) => parseInt(value, 10))
+    .refine((value) => !isNaN(value) && value > 0, {
+      message: "amount must be at least 1 number.",
     }),
-  totalValue: z.number().min(1),
+  balanceSource: z.string().min(1),
 });
 
-export default function AddAssets() {
+export default function AddBusPasses() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { userId } = useAuth();
   if (!userId) {
     return <div>Not authenticated</div>;
   }
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      UserId: userId,
-      isAvailable: true,
-      isReserved: false,
-      isExpended: false,
-      FundTypeId: 3,
       amount: 0,
-      totalValue: 0,
+      UserId: userId,
+      balanceSource: "",
     },
   });
 
-  async function onSubmit(data: z.infer<typeof formSchema>) {
+  // 2. Define a submit handler.
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
-    console.log(data);
-    try {
-      data.totalValue = data.amount * 2.5;
-      const newAssetRecord = await createBusPassAssets(data);
-      console.log("Asset created successfully:", newAssetRecord);
-      setIsSubmitting(false);
-    } catch (error) {
-      console.error("Error creating asset:", error);
-    } finally {
-      setIsSubmitting(false);
-    }
+    // values.totalValue = values.amount * 2.5;
+    console.log(values);
+    setIsSubmitting(false);
   }
 
   return (
@@ -99,43 +83,53 @@ export default function AddAssets() {
         <DialogHeader>
           <DialogTitle>Add Bus Passes</DialogTitle>
           <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
+            Note the total number of bus passes acquired.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="">
-            <div>
-              <FormField
-                control={form.control}
-                name="amount"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Amount</FormLabel>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name="balanceSource"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Balance Source</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <FormControl>
-                      <Input
-                        {...field}
-                        name="amount"
-                        id="amount"
-                        className="col-span-3"
-                      />
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select the balance source" />
+                      </SelectTrigger>
                     </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="w-full flex flex-row justify-between pt-4">
-              <DialogClose asChild>
-                <Button>Cancel</Button>
-              </DialogClose>
-              {isSubmitting ? (
-                <Button disabled>
-                  <LoadingSpinner className="w-4 h-4 text-white" />
-                </Button>
-              ) : (
-                <Button type="submit">Submit Deposit</Button>
+                    <SelectContent>
+                      <SelectItem value="CARES">CARES</SelectItem>
+
+                      <SelectItem value="RFF">RFF</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>(e.g., CARES vs. RFF)</FormDescription>
+                  <FormMessage />
+                </FormItem>
               )}
-            </div>
+            />
+            <FormField
+              control={form.control}
+              name="amount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Number of Bus Passes</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder="amount" {...field} />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button type="submit">Submit</Button>
           </form>
         </Form>
       </DialogContent>

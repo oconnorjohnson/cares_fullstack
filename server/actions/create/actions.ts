@@ -217,12 +217,17 @@ export async function createBusPassAssets(
   // Extract the amount and remove it from the assetData object
   const { amount, ...dataWithoutAmount } = assetData;
 
+  // Define the totalValue for each asset
+  const totalValue = 2.5;
+
   // Create an array to hold all promises for the insert operations
   const insertPromises = [];
 
   // Loop for the amount times to insert the asset records
   for (let i = 0; i < amount; i++) {
-    insertPromises.push(createNewAsset(dataWithoutAmount));
+    // Add the totalValue to each asset record
+    const assetRecord = { ...dataWithoutAmount, totalValue };
+    insertPromises.push(createNewAsset(assetRecord));
   }
 
   // Use Promise.all to execute all insert operations concurrently
