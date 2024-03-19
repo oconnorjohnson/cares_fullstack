@@ -82,7 +82,7 @@ export default function AddAssets() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">
+        <Button variant="outline" className="w-full">
           Bus Passes <div className="px-1" /> <PlusCircleIcon />
         </Button>
       </DialogTrigger>
