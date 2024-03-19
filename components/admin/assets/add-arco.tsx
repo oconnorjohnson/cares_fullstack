@@ -35,7 +35,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAuth } from "@clerk/nextjs";
-import { createAsset } from "@/server/actions/create/actions";
+import { createBusPassAssets } from "@/server/actions/create/actions";
 
 const formSchema = z.object({
   FundTypeId: z.number().min(1),
@@ -69,7 +69,7 @@ export default function AddAssets() {
     setIsSubmitting(true);
     console.log(data);
     try {
-      const newAssetRecord = await createAsset(data);
+      const newAssetRecord = await createBusPassAssets(data);
       console.log("Asset created successfully:", newAssetRecord);
       setIsSubmitting(false);
     } catch (error) {

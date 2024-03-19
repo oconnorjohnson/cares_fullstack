@@ -62,6 +62,7 @@ export type Database = {
       };
       Asset: {
         Row: {
+          amount: number | null;
           created_at: string;
           FundId: number | null;
           FundTypeId: number;
@@ -73,6 +74,7 @@ export type Database = {
           UserId: string;
         };
         Insert: {
+          amount?: number | null;
           created_at?: string;
           FundId?: number | null;
           FundTypeId: number;
@@ -84,6 +86,7 @@ export type Database = {
           UserId: string;
         };
         Update: {
+          amount?: number | null;
           created_at?: string;
           FundId?: number | null;
           FundTypeId?: number;

@@ -211,7 +211,7 @@ export async function createTransaction(
   return transaction;
 }
 
-export async function createAsset(
+export async function createBusPassAssets(
   assetData: TablesInsert<"Asset"> & { amount: number },
 ) {
   // Extract the amount and remove it from the assetData object

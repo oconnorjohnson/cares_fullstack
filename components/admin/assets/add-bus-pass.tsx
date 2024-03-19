@@ -21,10 +21,12 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PlusCircleIcon } from "lucide-react";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import {
   Select,
   SelectContent,
@@ -35,16 +37,21 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAuth } from "@clerk/nextjs";
-import { createAsset } from "@/server/actions/create/actions";
+import { createBusPassAssets } from "@/server/actions/create/actions";
 
 const formSchema = z.object({
-  FundTypeId: z.number().min(1),
-  totalValue: z.number().min(1),
   UserId: z.string().min(1),
   isAvailable: z.boolean(),
   isReserved: z.boolean(),
   isExpended: z.boolean(),
-  amount: z.number().min(1),
+  FundTypeId: z.number().min(1),
+  amount: z
+    .string()
+    .transform((input) => parseFloat(input))
+    .refine((val) => !isNaN(val) && val > 0, {
+      message: "A valid positive number is required.",
+    }),
+  totalValue: z.number().min(1),
 });
 
 export default function AddAssets() {
@@ -57,19 +64,21 @@ export default function AddAssets() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       UserId: userId,
-      FundTypeId: undefined,
-      totalValue: 0,
       isAvailable: true,
       isReserved: false,
       isExpended: false,
+      FundTypeId: 3,
       amount: 0,
+      totalValue: 0,
     },
   });
+
   async function onSubmit(data: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
     console.log(data);
     try {
-      const newAssetRecord = await createAsset(data);
+      data.totalValue = data.amount * 2.5;
+      const newAssetRecord = await createBusPassAssets(data);
       console.log("Asset created successfully:", newAssetRecord);
       setIsSubmitting(false);
     } catch (error) {
@@ -93,13 +102,42 @@ export default function AddAssets() {
             Make changes to your profile here. Click save when you're done.
           </DialogDescription>
         </DialogHeader>
-        <div className="">
-          <div className="flex flex-row items-center gap-4"></div>
-          <div className="grid grid-cols-4 items-center gap-4"></div>
-        </div>
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
-        </DialogFooter>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="">
+            <div>
+              <FormField
+                control={form.control}
+                name="amount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Amount</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        name="amount"
+                        id="amount"
+                        className="col-span-3"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="w-full flex flex-row justify-between pt-4">
+              <DialogClose asChild>
+                <Button>Cancel</Button>
+              </DialogClose>
+              {isSubmitting ? (
+                <Button disabled>
+                  <LoadingSpinner className="w-4 h-4 text-white" />
+                </Button>
+              ) : (
+                <Button type="submit">Submit Deposit</Button>
+              )}
+            </div>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
