@@ -60,7 +60,7 @@ export async function revalidateUserRequests() {
 export async function updateOperatingBalance(
   lastVersion: number,
   operatingBalanceData: TablesUpdate<"OperatingBalance">,
-): Promise<TablesUpdate<"OperatingBalance">> {
+) {
   const operatingBalance = await updateTheOperatingBalance(
     lastVersion,
     operatingBalanceData,

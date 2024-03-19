@@ -50,7 +50,7 @@ export default function AddBusPasses() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" className="w-full">
+        <Button className="w-full py-8 text-xl font-bold">
           Arco Gift Cards <div className="px-1" /> <PlusCircleIcon />
         </Button>
       </DialogTrigger>

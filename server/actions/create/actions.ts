@@ -320,31 +320,32 @@ export async function addBusPasses({
   } catch (error) {
     console.error("Error in addBusPasses:", error);
 
-    // // Attempt to rollback if necessary
-    // if (transactionId) {
-    //   // Delete the transaction
-    //   await deleteTransaction(transactionId); // Assuming you have a function to delete a transaction
-    // }
+    // Attempt to rollback if necessary
+    if (transactionId) {
+      // Delete the transaction
+      await deleteTransaction(transactionId); // Assuming you have a function to delete a transaction
+    }
 
-    // // If balance was updated, revert the balance update
-    // if (
-    //   balanceUpdated === true &&
-    //   currentBalance &&
-    //   lastVersion !== undefined
-    // ) {
-    //   const revertBalanceUpdate =
-    //     balanceSource === "CARES" ? updateOperatingBalance : updateRFFBalance;
-    //   try {
-    //     await revertBalanceUpdate(lastVersion, {
-    //       availableBalance: currentBalance[0].availableBalance,
-    //       totalBalance: currentBalance[0].totalBalance,
-    //       // Include other necessary fields for reverting the balance
-    //     });
-    //   } catch (revertError) {
-    //     console.error("Failed to revert balance update:", revertError);
-    //     // Handle the error of reverting the balance (e.g., log it, notify someone, etc.)
-    //   }
-    // }
+    // If balance was updated, revert the balance update
+    if (
+      balanceUpdated === true &&
+      currentBalance &&
+      lastVersion !== undefined
+    ) {
+      const revertBalanceUpdate =
+        balanceSource === "CARES" ? updateOperatingBalance : updateRFFBalance;
+
+      try {
+        await revertBalanceUpdate(lastVersion + 1, {
+          availableBalance: currentBalance[0].availableBalance,
+          totalBalance: currentBalance[0].totalBalance,
+          // Include other necessary fields for reverting the balance
+        });
+      } catch (revertError) {
+        console.error("Failed to revert balance update:", revertError);
+        // Handle the error of reverting the balance (e.g., log it, notify someone, etc.)
+      }
+    }
 
     throw error; // Rethrow the error to be handled by the caller
   }

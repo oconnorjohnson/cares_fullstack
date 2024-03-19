@@ -40,43 +40,12 @@ export default async function Requests() {
         <div className="flex flex-row">
           <SideNavBar />
           <div className="flex border-t flex-col w-5/6 items-center">
-            <div className="flex flex-row justify-between w-full px-8 py-8 space-x-8">
-              <div className="flex w-2/5 flex-col items-center justify-start align-center border border-1 rounded-xl p-4 space-y-4">
-                <div className="w-full text-start text-2xl font-bold">
-                  Add Assets
-                </div>
+            <div className="flex flex-col justify-center items-center w-full px-8 py-8">
+              <div className="text-start text-3xl font-bold pb-4">Assets</div>
+              <div className="flex w-full flex-row align-center border border-1 rounded-xl p-4 space-x-4">
                 <AddBussPass />
                 <AddArco />
                 <AddWalmart />
-              </div>
-              <div className="flex w-1/5 flex-col items-center justify-start align-center border border-1 rounded-xl p-4">
-                <div className="w-full text-start text-2xl font-bold">
-                  Bus Passes
-                </div>
-                <div className="flex items-center h-full text-3xl font-bold ">
-                  <div className="border border-1 rounded-xl p-4">123</div>
-                </div>
-              </div>
-              <div className="flex w-2/5 flex-col items-start justify-start align-center border border-1 rounded-xl p-4 space-y-4">
-                <div className="w-full text-start text-2xl font-bold">
-                  Gift Cards
-                </div>
-                <div className="flex flex-row space-x-4">
-                  <div className="border border-1 rounded-2xl text-semibold p-4">
-                    Arco Gift Cards Total Value
-                  </div>
-                  <div className="border border-1 rounded-2xl text-semibold p-4">
-                    $1500
-                  </div>
-                </div>
-                <div className="flex flex-row space-x-4">
-                  <div className="border border-1 rounded-2xl text-semibold p-4">
-                    Walmart Gift Cards Total Value
-                  </div>
-                  <div className="border border-1 rounded-2xl text-semibold p-4">
-                    $856
-                  </div>
-                </div>
               </div>
             </div>
           </div>

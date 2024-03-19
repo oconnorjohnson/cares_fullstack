@@ -83,13 +83,14 @@ export default function AddBusPasses() {
       console.error("Error adding bus passes:", error);
       toast.error("Error adding bus passes");
     }
+    form.reset();
     setIsSubmitting(false);
   }
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" className="w-full">
+        <Button className="w-full py-8 text-xl font-bold">
           Bus Passes <div className="px-1" /> <PlusCircleIcon />
         </Button>
       </DialogTrigger>
