@@ -13,11 +13,14 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CountAvailableCARESBusPasses } from "@/server/actions/count/actions";
 import { CountReservedCARESBusPasses } from "@/server/actions/count/actions";
+import { CountCARESWalmartCards } from "@/server/actions/count/actions";
+import { CountCARESArcoCards } from "@/server/actions/count/actions";
 
 export default async function CaresAssetCard() {
   const availableBusPasses = await CountAvailableCARESBusPasses();
   const reservedBusPasses = await CountReservedCARESBusPasses();
-
+  const walmartCards = await CountCARESWalmartCards();
+  const arcoCards = await CountCARESArcoCards();
   return (
     <>
       <Card className="flex w-full flex-col items-center align-center  p-10 space-y-4 ">
@@ -64,11 +67,13 @@ export default async function CaresAssetCard() {
               </CardHeader>
               <CardContent>
                 <div className="grid w-full items-center gap-4">
-                  <div className="flex flex-col space-y-1.5">
-                    {/*insert data display here*/}
+                  <div className="flex flex-row space-x-4 space-y-1.5">
+                    Total Cash Value of Walmart Cards:{" "}
+                    <Badge className="text-sm">{walmartCards.totalSum}</Badge>
                   </div>
-                  <div className="flex flex-col space-y-1.5">
-                    {/*insert more data display here*/}
+                  <div className="flex flex-row space-x-4 space-y-1.5">
+                    Total Number of Walmart Cards:{" "}
+                    <Badge className="text-sm">{walmartCards.count}</Badge>
                   </div>
                 </div>
               </CardContent>
@@ -86,11 +91,13 @@ export default async function CaresAssetCard() {
               </CardHeader>
               <CardContent>
                 <div className="grid w-full items-center gap-4">
-                  <div className="flex flex-col space-y-1.5">
-                    {/*insert data display here*/}
+                  <div className="flex flex-row space-x-4 space-y-1.5">
+                    Total Cash Value of Walmart Cards:{" "}
+                    <Badge className="text-sm">{arcoCards.totalSum}</Badge>
                   </div>
-                  <div className="flex flex-col space-y-1.5">
-                    {/*insert more data display here*/}
+                  <div className="flex flex-row space-x-4 space-y-1.5">
+                    Total Number of Walmart Cards:{" "}
+                    <Badge className="text-sm">{arcoCards.count}</Badge>
                   </div>
                 </div>
               </CardContent>

@@ -11,8 +11,36 @@ import {
   countReservedRFFBusPasses,
   countAvailableCARESBusPasses,
   countReservedCARESBusPasses,
+  countRFFWalmartCards,
+  countRFFArcoCards,
+  countCARESWalmartCards,
+  countCARESArcoCards,
 } from "@/server/supabase/functions/count";
 import { getAllAgencyIds } from "@/server/supabase/functions/read";
+
+export async function CountRFFWalmartCards() {
+  const walmartCards = await countRFFWalmartCards();
+  console.log(walmartCards);
+  return walmartCards;
+}
+
+export async function CountRFFArcoCards() {
+  const arcoCards = await countRFFArcoCards();
+  console.log(arcoCards);
+  return arcoCards;
+}
+
+export async function CountCARESWalmartCards() {
+  const walmartCards = await countCARESWalmartCards();
+  console.log(walmartCards);
+  return walmartCards;
+}
+
+export async function CountCARESArcoCards() {
+  const arcoCards = await countCARESArcoCards();
+  console.log(arcoCards);
+  return arcoCards;
+}
 
 export async function CountAvailableRFFBusPasses() {
   const availableBusPasses = await countAvailableRFFBusPasses();

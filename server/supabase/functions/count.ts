@@ -1,5 +1,103 @@
 import { createClient as createSupabaseClient } from "@/server/supabase/server";
-import { TablesInsert } from "@/types_db";
+
+export async function countRFFWalmartCards(): Promise<{
+  count: number | null;
+  totalSum: number | null;
+}> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error, count } = await supabase
+      .from("Asset")
+      .select("totalValue", { count: "exact" })
+      .eq("isRFF", true)
+      .eq("isCARES", false)
+      .eq("FundTypeId", 1);
+
+    if (error) throw error;
+
+    const totalSum = data.reduce(
+      (acc, { totalValue }) => acc + Number(totalValue),
+      0,
+    );
+
+    return { count, totalSum };
+  } catch (error) {
+    console.error("Error in countRFFWalmartCards:", error);
+    throw error;
+  }
+}
+
+export async function countRFFArcoCards(): Promise<{
+  count: number | null;
+  totalSum: number | null;
+}> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, count, error } = await supabase
+      .from("Asset")
+      .select("*", { count: "exact" })
+      .eq("isRFF", true)
+      .eq("isCARES", false)
+      .eq("FundTypeId", 2);
+    if (error) throw error;
+    const totalSum = data.reduce(
+      (acc, { totalValue }) => acc + Number(totalValue),
+      0,
+    );
+
+    return { count, totalSum };
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function countCARESWalmartCards(): Promise<{
+  count: number | null;
+  totalSum: number | null;
+}> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, count, error } = await supabase
+      .from("Asset")
+      .select("*", { count: "exact" })
+      .eq("isRFF", false)
+      .eq("isCARES", true)
+      .eq("FundTypeId", 1);
+    if (error) throw error;
+    const totalSum = data.reduce(
+      (acc, { totalValue }) => acc + Number(totalValue),
+      0,
+    );
+
+    return { count, totalSum };
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function countCARESArcoCards(): Promise<{
+  count: number | null;
+  totalSum: number | null;
+}> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, count, error } = await supabase
+      .from("Asset")
+      .select("*", { count: "exact" })
+      .eq("isRFF", false)
+      .eq("isCARES", true)
+      .eq("FundTypeId", 2);
+    if (error) throw error;
+    const totalSum = data.reduce(
+      (acc, { totalValue }) => acc + Number(totalValue),
+      0,
+    );
+
+    return { count, totalSum };
+  } catch (error) {
+    throw error;
+  }
+}
 
 export async function countAvailableRFFBusPasses(): Promise<number | null> {
   const supabase = createSupabaseClient();
