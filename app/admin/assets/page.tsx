@@ -29,6 +29,8 @@ import { HelpCircleIcon } from "lucide-react";
 import SideNavBar from "@/components/admin/dashboard/side-nav";
 import AddBussPass from "@/components/admin/assets/add-bus-pass";
 import AddGiftCards from "@/components/admin/assets/add-gift-card";
+import { Card } from "@/components/ui/card";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const runtime = "edge";
@@ -45,15 +47,18 @@ export default async function Requests() {
           <SideNavBar />
           <div className="flex border-t flex-col w-5/6 items-center">
             <div className="flex flex-col justify-center items-center w-full px-8 py-8">
-              <div className="flex w-full flex-row align-center border border-1 rounded-xl p-4 space-x-4">
+              <Card className="flex w-full flex-row align-center  p-4 space-x-4">
                 <AddBussPass />
                 <AddGiftCards />
-                <Button className="px-5 py-8">
-                  <HelpCircleIcon />
+                <Button
+                  variant="outline"
+                  className="text-xl font-bold px-5 py-8"
+                >
+                  Learn More <div className="px-1" /> <HelpCircleIcon />
                 </Button>
-              </div>
+              </Card>
               <div className="py-4" />
-              <div className="flex w-full flex-row justify-between align-center border border-1 rounded-xl p-8 bg-muted">
+              <div className="flex w-full flex-row justify-between align-center ">
                 <RFFAssetCard />
                 <div className="px-4" />
                 <CaresAssetCard />

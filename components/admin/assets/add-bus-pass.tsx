@@ -90,7 +90,7 @@ export default function AddBusPasses() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="w-full py-8 text-xl font-bold">
+        <Button variant="outline" className="w-full py-8 text-xl font-bold">
           Bus Passes <div className="px-1" /> <PlusCircleIcon />
         </Button>
       </DialogTrigger>

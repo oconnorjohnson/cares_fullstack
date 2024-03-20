@@ -10,10 +10,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-export default function CaresAssetCard() {
+import { CountAvailableRFFBusPasses } from "@/server/actions/count/actions";
+import { CountReservedRFFBusPasses } from "@/server/actions/count/actions";
+import { Badge } from "@/components/ui/badge";
+export default async function CaresAssetCard() {
+  const availableBusPasses = await CountAvailableRFFBusPasses();
+  const reservedBusPasses = await CountReservedRFFBusPasses();
   return (
     <>
-      <div className="flex w-full flex-col items-center align-center border border-1 rounded-xl p-10 space-y-4 bg-background">
+      <Card className="flex w-full flex-col items-center align-center  p-10 space-y-4 ">
         <div className=" font-bold text-3xl text-center">RFF Assets</div>
         <Tabs defaultValue="walmart" className="w-full">
           <TabsList className="flex flex-row w-[330px] items-center justify-center mx-auto">
@@ -21,89 +26,76 @@ export default function CaresAssetCard() {
             <TabsTrigger value="walmart">Walmart Cards</TabsTrigger>
             <TabsTrigger value="arco">Arco Cards</TabsTrigger>
           </TabsList>
+          {/* Bus Passes Tab */}
           <TabsContent value="buspass">
             <Card className="h-full">
               <CardHeader>
-                <CardTitle>Create project</CardTitle>
+                <CardTitle>Bus Passes</CardTitle>
                 <CardDescription>
-                  Deploy your new project in one-click.
+                  A summary of the available and reserved bus passes purchased
+                  by the RFF Grant.
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <form>
-                  <div className="grid w-full items-center gap-4">
-                    <div className="flex flex-col space-y-1.5">
-                      <Label htmlFor="name">Name</Label>
-                      <Input id="name" placeholder="Name of your project" />
-                    </div>
-                    <div className="flex flex-col space-y-1.5">
-                      <Label htmlFor="framework">Framework</Label>
-                    </div>
+                <div className="grid w-full items-center gap-4">
+                  <div className="flex flex-row space-x-4 space-y-1.5">
+                    Available Bus Passes:{" "}
+                    <Badge className="text-sm">{availableBusPasses}</Badge>
                   </div>
-                </form>
+                  <div className="flex flex-row space-x-4 space-y-1.5">
+                    Reserved Bus Passes:{" "}
+                    <Badge className="text-sm">{reservedBusPasses}</Badge>
+                  </div>
+                </div>
               </CardContent>
-              <CardFooter className="flex justify-between">
-                <Button variant="outline">Cancel</Button>
-                <Button>Deploy</Button>
-              </CardFooter>
             </Card>
           </TabsContent>
+          {/* Walmart Cards Tab */}
           <TabsContent value="walmart">
             <Card className="h-full">
               <CardHeader>
-                <CardTitle>Create project</CardTitle>
+                <CardTitle>Walmart Cards</CardTitle>
                 <CardDescription>
-                  Deploy your new project in one-click.
+                  A summary of the total cash value and number of Walmart gift
+                  cards purchased by the RFF Grant.
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <form>
-                  <div className="grid w-full items-center gap-4">
-                    <div className="flex flex-col space-y-1.5">
-                      <Label htmlFor="name">Name</Label>
-                      <Input id="name" placeholder="Name of your project" />
-                    </div>
-                    <div className="flex flex-col space-y-1.5">
-                      <Label htmlFor="framework">Framework</Label>
-                    </div>
+                <div className="grid w-full items-center gap-4">
+                  <div className="flex flex-col space-y-1.5">
+                    {/*insert data display here*/}
                   </div>
-                </form>
+                  <div className="flex flex-col space-y-1.5">
+                    {/*insert more data display here*/}
+                  </div>
+                </div>
               </CardContent>
-              <CardFooter className="flex justify-between">
-                <Button variant="outline">Cancel</Button>
-                <Button>Deploy</Button>
-              </CardFooter>
             </Card>
           </TabsContent>
+          {/* Arco Cards Tab */}
           <TabsContent value="arco">
             <Card className="h-full">
               <CardHeader>
-                <CardTitle>Create project</CardTitle>
+                <CardTitle>Arco Cards</CardTitle>
                 <CardDescription>
-                  Deploy your new project in one-click.
+                  A summary of the total cash value and number of Arco gift
+                  cards purchased by the RFF Grant.
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <form>
-                  <div className="grid w-full items-center gap-4">
-                    <div className="flex flex-col space-y-1.5">
-                      <Label htmlFor="name">Name</Label>
-                      <Input id="name" placeholder="Name of your project" />
-                    </div>
-                    <div className="flex flex-col space-y-1.5">
-                      <Label htmlFor="framework">Framework</Label>
-                    </div>
+                <div className="grid w-full items-center gap-4">
+                  <div className="flex flex-col space-y-1.5">
+                    {/*insert data display here*/}
                   </div>
-                </form>
+                  <div className="flex flex-col space-y-1.5">
+                    {/*insert more data display here*/}
+                  </div>
+                </div>
               </CardContent>
-              <CardFooter className="flex justify-between">
-                <Button variant="outline">Cancel</Button>
-                <Button>Deploy</Button>
-              </CardFooter>
             </Card>
           </TabsContent>
         </Tabs>
-      </div>
+      </Card>
     </>
   );
 }

@@ -7,8 +7,36 @@ import {
   countApprovedRequestsByUserId,
   countDeniedRequestsByUserId,
   countClientsByUserId,
+  countAvailableRFFBusPasses,
+  countReservedRFFBusPasses,
+  countAvailableCARESBusPasses,
+  countReservedCARESBusPasses,
 } from "@/server/supabase/functions/count";
 import { getAllAgencyIds } from "@/server/supabase/functions/read";
+
+export async function CountAvailableRFFBusPasses() {
+  const availableBusPasses = await countAvailableRFFBusPasses();
+  console.log(availableBusPasses);
+  return availableBusPasses;
+}
+
+export async function CountReservedRFFBusPasses() {
+  const reservedBusPasses = await countReservedRFFBusPasses();
+  console.log(reservedBusPasses);
+  return reservedBusPasses;
+}
+
+export async function CountAvailableCARESBusPasses() {
+  const availableBusPasses = await countAvailableCARESBusPasses();
+  console.log(availableBusPasses);
+  return availableBusPasses;
+}
+
+export async function CountReservedCARESBusPasses() {
+  const reservedBusPasses = await countReservedCARESBusPasses();
+  console.log(reservedBusPasses);
+  return reservedBusPasses;
+}
 
 export async function CountRequestsPendingApproval() {
   const pendingRequests = await countPendingRequests();
