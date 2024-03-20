@@ -641,6 +641,7 @@ export type Database = {
           isPurchase: boolean;
           isReversal: boolean;
           isRFF: boolean;
+          previousBalance: number | null;
           quantity: number | null;
           RequestId: number | null;
           totalValue: number;
@@ -659,6 +660,7 @@ export type Database = {
           isPurchase?: boolean;
           isReversal?: boolean;
           isRFF?: boolean;
+          previousBalance?: number | null;
           quantity?: number | null;
           RequestId?: number | null;
           totalValue: number;
@@ -677,6 +679,7 @@ export type Database = {
           isPurchase?: boolean;
           isReversal?: boolean;
           isRFF?: boolean;
+          previousBalance?: number | null;
           quantity?: number | null;
           RequestId?: number | null;
           totalValue?: number;

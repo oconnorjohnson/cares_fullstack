@@ -231,7 +231,7 @@ export async function addBusPasses({
   let currentBalance;
   let lastVersion;
   let balanceUpdated: boolean = false;
-
+  let previousBalance: number | null = null;
   try {
     // Step 1: Get the current balance and version number
     if (balanceSource === "CARES") {
@@ -250,7 +250,7 @@ export async function addBusPasses({
     }
 
     lastVersion = currentBalance[0].version;
-
+    previousBalance = currentBalance[0].availableBalance;
     // Step 2: Create the transaction
     const transactionData = {
       quantity: amount,
@@ -260,6 +260,7 @@ export async function addBusPasses({
       isCARES: balanceSource === "CARES",
       isRFF: balanceSource === "RFF",
       UserId: UserId,
+      previousBalance: previousBalance,
     };
 
     const createdTransaction = await createTransaction(transactionData);
@@ -373,15 +374,7 @@ export async function addGiftCard({
   const last4 = parseInt(lastFour, 10);
   let fundTypeId: number = parseInt(fundType, 10);
   let giftCardType: string = fundType;
-  const transactionData = {
-    quantity: amount,
-    unitValue: unitValue,
-    totalValue: totalValue,
-    isPurchase: true,
-    isCARES: balanceSource === "CARES",
-    isRFF: balanceSource === "RFF",
-    UserId: UserId,
-  };
+  let previousBalance: number | null = null;
   if (giftCardType === "1") {
     giftCardType = "Walmart";
   } else if (giftCardType === "2") {
@@ -402,11 +395,21 @@ export async function addGiftCard({
         throw new Error("Insufficient funds to complete this transaction.");
       }
       lastVersion = currentBalance[0].version;
+      previousBalance = currentBalance[0].availableBalance;
     } catch (error) {
       console.error("Error in addGiftCard at step 1:", error);
       throw error;
     }
-
+    const transactionData = {
+      quantity: amount,
+      unitValue: unitValue,
+      totalValue: totalValue,
+      isPurchase: true,
+      isCARES: balanceSource === "CARES",
+      isRFF: balanceSource === "RFF",
+      UserId: UserId,
+      previousBalance: previousBalance,
+    };
     // TRY 2: Create the transaction
     try {
       const createdTransaction = await createTransaction(transactionData);
