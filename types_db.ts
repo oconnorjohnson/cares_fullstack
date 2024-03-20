@@ -62,6 +62,7 @@ export type Database = {
       };
       Asset: {
         Row: {
+          cardType: string | null;
           created_at: string;
           FundId: number | null;
           FundTypeId: number;
@@ -71,11 +72,13 @@ export type Database = {
           isExpended: boolean;
           isReserved: boolean;
           isRFF: boolean;
+          lastFour: number | null;
           totalValue: number;
           TransactionId: number;
           UserId: string;
         };
         Insert: {
+          cardType?: string | null;
           created_at?: string;
           FundId?: number | null;
           FundTypeId: number;
@@ -85,11 +88,13 @@ export type Database = {
           isExpended?: boolean;
           isReserved?: boolean;
           isRFF?: boolean;
+          lastFour?: number | null;
           totalValue: number;
           TransactionId: number;
           UserId: string;
         };
         Update: {
+          cardType?: string | null;
           created_at?: string;
           FundId?: number | null;
           FundTypeId?: number;
@@ -99,6 +104,7 @@ export type Database = {
           isExpended?: boolean;
           isReserved?: boolean;
           isRFF?: boolean;
+          lastFour?: number | null;
           totalValue?: number;
           TransactionId?: number;
           UserId?: string;

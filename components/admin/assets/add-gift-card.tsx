@@ -31,10 +31,7 @@ import {
 } from "@/components/ui/select";
 import { PlusCircleIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import {
-  createBusPassAssets,
-  addBusPasses,
-} from "@/server/actions/create/actions";
+import { addGiftCard } from "@/server/actions/create/actions";
 import { toast } from "sonner";
 import { trpc } from "@/app/_trpc/client";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
@@ -49,6 +46,12 @@ const formSchema = z.object({
       message: "amount must be at least 1 number.",
     }),
   balanceSource: z.string().min(1),
+  lastFour: z.string().min(1, {
+    message: "Last 4 digits must be exactly 4 digits.",
+  }),
+  fundType: z.string().refine((value) => /^\d{1}$/.test(value), {
+    message: "Last 4 digits must be exactly 4 digits.",
+  }),
 });
 
 export default function AddBusPasses() {
@@ -64,6 +67,8 @@ export default function AddBusPasses() {
       amount: 0,
       UserId: userId,
       balanceSource: "",
+      fundType: "",
+      lastFour: "1234",
     },
   });
 
@@ -73,12 +78,14 @@ export default function AddBusPasses() {
     // values.totalValue = values.amount * 2.5;
     console.log(values);
     try {
-      await addBusPasses({
+      await addGiftCard({
         amount: values.amount,
         UserId: values.UserId,
         balanceSource: values.balanceSource,
+        lastFour: values.lastFour,
+        fundType: values.fundType,
       });
-      toast.success("Arco Gift Cards added successfully");
+      toast.success("Walmart Gift Cards added successfully");
     } catch (error) {
       console.error("Error adding bus passes:", error);
       toast.error("Error adding bus passes");
@@ -91,14 +98,14 @@ export default function AddBusPasses() {
     <Dialog>
       <DialogTrigger asChild>
         <Button className="w-full py-8 text-xl font-bold">
-          Arco Gift Cards <div className="px-1" /> <PlusCircleIcon />
+          Gift Cards <div className="px-1" /> <PlusCircleIcon />
         </Button>
       </DialogTrigger>
       <DialogContent className="">
         <DialogHeader>
-          <DialogTitle>Add Arco Gift Cards</DialogTitle>
+          <DialogTitle>Add Gift Card</DialogTitle>
           <DialogDescription>
-            Note the total number of bus passes acquired.
+            Fill in the details to add a new gift card.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -120,11 +127,36 @@ export default function AddBusPasses() {
                     </FormControl>
                     <SelectContent>
                       <SelectItem value="CARES">CARES</SelectItem>
-
                       <SelectItem value="RFF">RFF</SelectItem>
                     </SelectContent>
                   </Select>
-                  <FormDescription>(e.g. CARES vs. RFF)</FormDescription>
+                  <FormDescription>(CARES vs. RFF)</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="fundType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Card Type</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select the card type" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="1">Walmart</SelectItem>
+
+                      <SelectItem value="2">Arco</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>(Walmart vs. Arco)</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -134,11 +166,25 @@ export default function AddBusPasses() {
               name="amount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Number of Arco Gift Cards</FormLabel>
+                  <FormLabel>Total Cash Value of Card</FormLabel>
                   <FormControl>
                     <Input type="number" placeholder="amount" {...field} />
                   </FormControl>
-
+                  <FormDescription>(e.g. $100)</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="lastFour"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last 4 digits of Card</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder="" {...field} />
+                  </FormControl>
+                  <FormDescription>(e.g. 1234)</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

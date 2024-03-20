@@ -293,7 +293,7 @@ export async function addBusPasses({
     if (!transactionId) {
       throw new Error("No transaction ID, failed to create asset records.");
     }
-    // Step 3: Create asset records
+    // Step 4: Create asset records
     const assetPromises = [];
     for (let i = 0; i < amount; i++) {
       assetPromises.push(
@@ -348,6 +348,120 @@ export async function addBusPasses({
     }
 
     throw error; // Rethrow the error to be handled by the caller
+  }
+}
+
+export async function addGiftCard({
+  amount,
+  UserId,
+  balanceSource,
+  lastFour,
+  fundType,
+}: {
+  amount: number;
+  UserId: string;
+  balanceSource: string;
+  lastFour: string;
+  fundType: string;
+}) {
+  const unitValue = amount;
+  const totalValue = amount;
+  let transactionId: number | undefined;
+  let currentBalance;
+  let lastVersion;
+  let balanceUpdated: boolean;
+  const last4 = parseInt(lastFour, 10);
+  let fundTypeId: number = parseInt(fundType, 10);
+  let giftCardType: string = fundType;
+  const transactionData = {
+    quantity: amount,
+    unitValue: unitValue,
+    totalValue: totalValue,
+    isPurchase: true,
+    isCARES: balanceSource === "CARES",
+    isRFF: balanceSource === "RFF",
+    UserId: UserId,
+  };
+  if (giftCardType === "1") {
+    giftCardType = "Walmart";
+  } else if (giftCardType === "2") {
+    giftCardType = "Arco";
+  }
+  try {
+    // TRY 1: Check if the user has enough funds to buy the gift card
+    try {
+      if (balanceSource === "CARES") {
+        currentBalance = await getOperatingBalance();
+      } else if (balanceSource === "RFF") {
+        currentBalance = await getRFFBalance();
+      }
+      if (!currentBalance) {
+        throw new Error("Failed to retrieve current balance.");
+      }
+      if (currentBalance[0].availableBalance < totalValue) {
+        throw new Error("Insufficient funds to complete this transaction.");
+      }
+      lastVersion = currentBalance[0].version;
+    } catch (error) {
+      console.error("Error in addGiftCard at step 1:", error);
+      throw error;
+    }
+
+    // TRY 2: Create the transaction
+    try {
+      const createdTransaction = await createTransaction(transactionData);
+      if (!createdTransaction) {
+        throw new Error("Failed to create transaction.");
+      }
+      transactionId = createdTransaction;
+      console.log("Transaction created successfully with ID:", transactionId);
+    } catch (error) {
+      console.error("Error in addGiftCard at step 2:", error);
+      throw error;
+    }
+
+    // TRY 3: Update the balance
+    try {
+      const balanceUpdateData = {
+        availableBalance: -totalValue, // Pass as negative to subtract
+        totalBalance: -totalValue, // Pass as negative to subtract
+        reservedBalance: 0,
+      };
+
+      if (balanceSource === "CARES") {
+        await updateOperatingBalance(lastVersion, balanceUpdateData);
+      } else if (balanceSource === "RFF") {
+        await updateRFFBalance(lastVersion, balanceUpdateData);
+      }
+      balanceUpdated = true;
+    } catch (error) {
+      if ((balanceUpdated = false)) {
+        throw new Error("Failed to update balance.");
+      }
+      console.error("Error in addBusPasses:", error);
+      throw error; // Rethrow the error to be handled by the caller
+    }
+    // TRY 4: Create the asset record
+    try {
+      const createdAsset = await createNewAsset({
+        UserId: UserId,
+        FundTypeId: fundTypeId,
+        isAvailable: true,
+        TransactionId: transactionId!,
+        totalValue: totalValue,
+        isRFF: balanceSource === "RFF",
+        isCARES: balanceSource === "CARES",
+        lastFour: last4,
+        cardType: giftCardType,
+      });
+      console.log("Asset created successfully with ID:", createdAsset);
+    } catch (error) {
+      console.error("Error in addGiftCard at step 4:", error);
+      throw error;
+    }
+  } catch (error) {
+    console.error("Error in addGiftCard:", error);
+    // Handle error (e.g., rollback transaction, notify the user, etc.)
   }
 }
 

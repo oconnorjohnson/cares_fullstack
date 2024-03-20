@@ -21,11 +21,12 @@ import {
 } from "lucide-react";
 import { SignOutButton } from "@clerk/nextjs";
 import FundsTable from "@/components/admin/tables/funds/page";
-
+import { Button } from "@/components/ui/button";
+import { HelpCircleIcon } from "lucide-react";
 import SideNavBar from "@/components/admin/dashboard/side-nav";
 import AddBussPass from "@/components/admin/assets/add-bus-pass";
 import AddArco from "@/components/admin/assets/add-arco";
-import AddWalmart from "@/components/admin/assets/add-walmart";
+import AddGiftCards from "@/components/admin/assets/add-gift-card";
 
 export const runtime = "edge";
 
@@ -44,8 +45,13 @@ export default async function Requests() {
               <div className="text-start text-3xl font-bold pb-4">Assets</div>
               <div className="flex w-full flex-row align-center border border-1 rounded-xl p-4 space-x-4">
                 <AddBussPass />
-                <AddArco />
-                <AddWalmart />
+                <AddGiftCards />
+                <Button className="px-5 py-8">
+                  <HelpCircleIcon />
+                </Button>
+              </div>
+              <div className="text-start text-3xl font-bold pt-8 pb-4">
+                Inventory
               </div>
             </div>
           </div>
