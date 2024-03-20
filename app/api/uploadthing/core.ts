@@ -1,10 +1,9 @@
 import { currentUser } from "@clerk/nextjs";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { z } from "zod";
-import {
-  createNewReceiptRecord,
-  addAgreementToRequest,
-} from "@/prisma/prismaFunctions";
+
+import { createNewReceiptRecord } from "@/server/supabase/functions/create";
+import { addAgreementToRequest } from "@/server/supabase/functions/update";
 import {
   revalidateDashboard,
   revalidateUserRequests,
@@ -103,3 +102,4 @@ export const ourFileRouter = {
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;
+export const runtime = "nodejs";

@@ -29,7 +29,7 @@ export type User = {
   userId: string;
   first_name: string;
   last_name: string;
-  emailAddresses: {
+  EmailAddress: {
     id: number;
     email: string;
   }[];
@@ -94,7 +94,7 @@ export const columns: ColumnDef<User>[] = [
           size="sm"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Is banned?
+          Banned?
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -119,7 +119,7 @@ export const columns: ColumnDef<User>[] = [
             <BanUserButton
               userId={request.userId}
               firstName={request.first_name}
-              email={request.emailAddresses[0].email}
+              email={request.EmailAddress[0].email}
             />
             <DropdownMenuSeparator />
           </DropdownMenuContent>

@@ -44,6 +44,7 @@ const formSchema = z.object({
   transpoStress: z.number().min(1).max(5),
   financialDifficulties: z.number().min(1).max(5),
   additionalInformation: z.string().min(1).max(500),
+  requestId: z.number().min(1),
 });
 
 export default function PreScreen({ requestId }: { requestId: number }) {
@@ -63,6 +64,7 @@ export default function PreScreen({ requestId }: { requestId: number }) {
       transpoStress: undefined,
       financialDifficulties: undefined,
       additionalInformation: "",
+      requestId: requestId,
     },
   });
   useEffect(() => {

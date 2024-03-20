@@ -16,20 +16,48 @@ import {
   getRequestsNeedingPostScreenByUserId,
   getClientByClientId,
   getRequestsThatNeedAgreementsByUserId,
-} from "@/prisma/prismaFunctions";
-import { revalidatePath } from "next/cache";
+  getOperatingBalance,
+  getRFFBalance,
+  getTransactions,
+} from "@/server/supabase/functions/read";
+import { Tables } from "@/types_db";
+import { PostgrestError } from "@supabase/supabase-js";
 
 export type FundTypeData = {
-  id: number;
   typeName: string;
   userId: string;
 };
 export type FundData = {
   amount: number;
-  fundType: { typeName: string };
+  fundType: { typeName: string; userId: string } | null;
   request: { id: number };
 };
-
+export type Request = {
+  id: number;
+  userId: string;
+  Client: {
+    sex: string;
+    race: string;
+    clientID: string;
+  } | null;
+  User: {
+    first_name: string | null;
+    last_name: string | null;
+  } | null;
+  Agency: {
+    name: string;
+  } | null;
+  details: string;
+  pendingApproval: boolean;
+  approved: boolean;
+  denied: boolean;
+  pendingPayout: boolean;
+  paid: boolean;
+  hasPreScreen: boolean;
+  hasPostScreen: boolean;
+  created_at: string;
+  isHighlighted?: boolean;
+};
 export type RequestData = {
   id: number;
   user: {
@@ -47,10 +75,9 @@ export type RequestData = {
   agency: { id: number; name: string; userId: string };
   client: {
     id: number;
-    clientId: string | null;
+    clientId: string;
     race: string;
     sex: string;
-    // clientId: string | null;
   };
   pendingApproval: boolean;
   agreementUrl: string | null;
@@ -109,6 +136,21 @@ export type RequestData = {
   }[];
 };
 
+export async function requestAllTransactions() {
+  const requests = await getTransactions();
+  return requests;
+}
+
+export async function readOperatingBalance() {
+  const operatingBalance = await getOperatingBalance();
+  return operatingBalance;
+}
+
+export async function readRFFBalance() {
+  const rffBalance = await getRFFBalance();
+  return rffBalance;
+}
+
 export async function giveUserIdGetRequestsNeedingPreScreen(userId: string) {
   const requests = await getRequestsNeedingPreScreenByUserId(userId);
   return requests;
@@ -134,23 +176,28 @@ export async function giveUserIdGetRequestsNeedingPostScreen(userId: string) {
   return requests;
 }
 
-export async function requestUsersRequests(
-  userId: string,
-): Promise<RequestData[]> {
+export async function requestUsersRequests(userId: string): Promise<
+  (Tables<"Request"> & {
+    Agency: { name: string } | null;
+    Client: { clientID: string; sex: string; race: string } | null;
+  })[]
+> {
   try {
-    const allUserRequestRecords: RequestData[] =
-      await getRequestsByUserId(userId);
-    return allUserRequestRecords;
+    const response = await getRequestsByUserId(userId);
+    const requests = response.data;
+    if (!requests) {
+      throw new Error("Failed to fetch requests for user.");
+    }
+    return requests;
   } catch (error) {
-    console.error(
-      "Failed to get call getRequestsByUserId from prismaFunctions:",
-      error,
-    );
+    console.error(`Failed to fetch requests for user ${userId}:`, error);
     throw error;
   }
 }
 
-export async function requestUsersClients(userId: string) {
+export async function requestUsersClients(
+  userId: string,
+): Promise<Tables<"Client">[]> {
   try {
     const allUserClients = await getClientsByUserId(userId);
     return allUserClients;
@@ -163,50 +210,102 @@ export async function requestUsersClients(userId: string) {
   }
 }
 
-export async function requestAllFundTypes() {
+export async function requestAllFundTypes(): Promise<Tables<"FundType">[]> {
   try {
-    const allFundTypeRecords: FundTypeData[] = await getFundTypes();
-    return allFundTypeRecords;
+    const response = await getFundTypes();
+
+    return response;
   } catch (error) {
     console.error("Failed to call get Fund Types from prismaFunctions:", error);
     throw error;
   }
 }
-export async function requestAllRequests(): Promise<RequestData[]> {
+
+export async function requestAllRequests(): Promise<Request[]> {
   try {
-    const allRequestRecords: RequestData[] = await getAllRequests();
-    return allRequestRecords;
+    const response = await getAllRequests();
+    const requests = response.data;
+    if (!requests) {
+      throw new Error("Failed to fetch requests.");
+    }
+    return requests;
   } catch (error) {
-    console.error("Failed to call getAllRequests from prismaFunctions:", error);
+    console.error(`Failed to fetch requests:`, error);
     throw error;
   }
 }
-export async function getPaidFunds(): Promise<FundData[]> {
+
+export async function getPaidFunds(): Promise<
+  (Tables<"Fund"> & { FundType: Tables<"FundType"> })[]
+> {
   try {
-    const paidFunds = await getFunds();
-    return paidFunds;
+    const response = await getFunds(); // Assuming this calls the getFunds function from @read.ts
+    if (!response.data) {
+      throw new Error("Failed to fetch paid funds.");
+    }
+    // Directly return the response data if it matches the expected structure
+    return response.data as unknown as (Tables<"Fund"> & {
+      FundType: Tables<"FundType">;
+    })[];
   } catch (error) {
     console.error("Failed to get paid funds:", error);
     throw error;
   }
 }
 
-export async function requestRequestByRequestId(
-  requestId: number,
-): Promise<RequestData> {
+export async function requestRequestByRequestId(requestId: number): Promise<
+  Tables<"Request"> & {
+    User: Tables<"User"> & {
+      EmailAddress: Tables<"EmailAddress">;
+    };
+    Client: Tables<"Client">;
+    Agency: Tables<"Agency">;
+    Fund: Tables<"Fund"> &
+      {
+        id: number;
+        amount: number;
+        FundType: Tables<"FundType">;
+        Receipt: Tables<"Receipt">;
+        needsReceipt: boolean;
+      }[];
+    preScreenAnswer: Tables<"PreScreenAnswers">;
+    postScreenAnswer: Tables<"PostScreenAnswers">;
+  }
+> {
+  console.log(requestId);
+  if (!requestId) {
+    throw new Error("Request ID is required.");
+  }
   try {
     const request = await getRequestById(requestId);
     if (!request) {
+      console.error(`Request with ID ${requestId} not found.`);
       throw new Error(`Request with ID ${requestId} not found.`);
     }
-    return request as unknown as RequestData;
+    return request as unknown as Tables<"Request"> & {
+      User: Tables<"User"> & {
+        EmailAddress: Tables<"EmailAddress">;
+      };
+      Client: Tables<"Client">;
+      Agency: Tables<"Agency">;
+      Fund: Tables<"Fund"> &
+        {
+          id: number;
+          amount: number;
+          FundType: Tables<"FundType">;
+          Receipt: Tables<"Receipt">;
+          needsReceipt: boolean;
+        }[];
+      preScreenAnswer: Tables<"PreScreenAnswers">;
+      postScreenAnswer: Tables<"PostScreenAnswers">;
+    };
   } catch (error) {
     console.error("Failed to retrieve request by ID:", error);
-    throw error;
+    throw new Error();
   }
 }
 
-export async function requestAllAgencies() {
+export async function requestAllAgencies(): Promise<Tables<"Agency">[]> {
   const agencies = await getAllAgencies();
   return agencies;
 }
@@ -217,6 +316,15 @@ export async function AgencyById(agencyId: number) {
 }
 
 export async function GetAllUsers() {
-  const users = await getUsers();
-  return users;
+  try {
+    const response = await getUsers();
+    const users = response.data;
+    if (!users) {
+      throw new Error("Failed to fetch users.");
+    }
+    return users;
+  } catch (error) {
+    console.error(`Failed to fetch users:`, error);
+    throw error;
+  }
 }

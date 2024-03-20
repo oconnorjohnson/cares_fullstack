@@ -9,6 +9,7 @@ async function getClients({ userId }: { userId: string }): Promise<Client[]> {
     ...client,
     sex: client.sex || "Error",
     race: client.race || "Error",
+    clientId: client.clientID || "Error",
   }));
   return modifiedClients;
 }

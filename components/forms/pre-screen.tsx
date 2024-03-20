@@ -34,6 +34,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 const formSchema = z.object({
+  requestId: z.number().min(1),
   housingSituation: z.number().min(1).max(5),
   housingQuality: z.number().min(1).max(5),
   utilityStress: z.number().min(1).max(5),
@@ -50,6 +51,7 @@ export default function PreScreen({ requestId }: { requestId: number }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      requestId: requestId,
       housingSituation: undefined,
       housingQuality: undefined,
       utilityStress: undefined,

@@ -43,9 +43,9 @@ import { trpc } from "@/app/_trpc/client";
 import { LoadingSpinner } from "@/components/admin/request/approve";
 
 const formSchema = z.object({
-  clientId: z
+  clientID: z
     .string()
-    .min(1, { message: "clientId must be at least 6 character." }),
+    .min(1, { message: "clientID must be at least 6 character." }),
   race: z.string().min(1, { message: "Race must be selected." }),
   sex: z.string().min(1, { message: "Sex must be selected." }),
 });
@@ -55,7 +55,7 @@ export default function NewClient({ userId }: { userId: string | null }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      clientId: "",
+      clientID: "",
       race: "",
       sex: "",
     },
@@ -73,7 +73,7 @@ export default function NewClient({ userId }: { userId: string | null }) {
         userId,
       };
       const response = await newClient(submissionData);
-      if (response && response.id) {
+      if (response) {
         toast.success("Client created successfully");
         reset();
         trpcContext.getClients.invalidate();
@@ -91,7 +91,9 @@ export default function NewClient({ userId }: { userId: string | null }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="default">Add New Client</Button>
+        <Button className="py-10 text-2xl " variant="default">
+          Add New Client
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogTitle>Add New Client</DialogTitle>
@@ -102,7 +104,7 @@ export default function NewClient({ userId }: { userId: string | null }) {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
             <FormField
               control={form.control}
-              name="clientId"
+              name="clientID"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>

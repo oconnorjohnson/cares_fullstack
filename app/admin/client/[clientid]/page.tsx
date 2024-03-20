@@ -13,6 +13,9 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+
+export const runtime = "edge";
+
 const ClientDetails = async ({ clientId }: { clientId: string }) => {
   const ClientId = Number(clientId);
   const client = await getClientById(ClientId);
@@ -24,7 +27,7 @@ const ClientDetails = async ({ clientId }: { clientId: string }) => {
           <CardHeader>
             <CardTitle className="flex flex-cols-3 justify-between">
               <div className="text-center text-3xl pt-0.5">
-                {client?.clientId} | {client?.first_name} {client?.last_name}
+                {client?.clientID} | {client?.sex} {client?.race}
               </div>
             </CardTitle>
           </CardHeader>

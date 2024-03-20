@@ -31,7 +31,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { SaveIcon, XIcon, PlusCircleIcon } from "lucide-react";
-import { LoadingSpinner } from "@/components/admin/request/approve";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -42,12 +42,14 @@ type AddFundProps = {
   requestId: number;
   fundTypeId: number;
   amount: number;
+  needsReceipt: boolean;
 };
 
 const formSchema = z.object({
   requestId: z.number().min(1, { message: "requestId must be included." }),
   fundTypeId: z.number().min(1, { message: "fundId must be included." }),
   amount: z.number().min(1, { message: "Amount must be included." }),
+  needsReceipt: z.boolean(),
 });
 
 export default function AddFund({ requestId }: { requestId: number }) {
@@ -63,18 +65,22 @@ export default function AddFund({ requestId }: { requestId: number }) {
   const { data: fundTypes, isLoading, isError } = trpc.getFundTypes.useQuery();
   const { setValue, watch, register } = form;
   const onSubmit = async (data: AddFundProps) => {
+    setIsSaving(true);
     console.log("Preparing to add fund with data:", data);
     try {
       const result = await newFund({
         requestId: data.requestId,
         fundTypeId: data.fundTypeId,
         amount: data.amount,
+        needsReceipt: data.needsReceipt,
       });
       toast.success("Fund added successfully");
       console.log("added fund successfully with data:", result);
     } catch (error) {
       toast.error("Failed to add fund");
       console.error("Error in adding fund:", error);
+    } finally {
+      setIsSaving(false);
     }
   };
   return (
@@ -127,14 +133,22 @@ export default function AddFund({ requestId }: { requestId: number }) {
                           {...register("fundTypeId")}
                           defaultValue=""
                           onValueChange={(value) => {
-                            console.log(
-                              `Selected fundTypeId before parsing: ${value}`,
-                            );
                             const parsedValue = parseInt(value, 10);
-                            console.log(
-                              `Selected fundTypeId after parsing: ${parsedValue}`,
-                            );
                             setValue("fundTypeId", parsedValue);
+
+                            // Directly find and set the needsReceipt value based on the selected fundTypeId
+                            const selectedFundType = fundTypes?.find(
+                              (fundType) => fundType.id === parsedValue,
+                            );
+                            if (selectedFundType) {
+                              setValue(
+                                "needsReceipt",
+                                selectedFundType.needsReceipt,
+                              );
+                            } else {
+                              // Optionally handle the case where no fundType is found, e.g., reset to default
+                              setValue("needsReceipt", false); // or true, based on your application's needs
+                            }
                           }}
                         >
                           <FormControl>
@@ -186,7 +200,17 @@ export default function AddFund({ requestId }: { requestId: number }) {
                       Close
                     </Button>
                   </DialogClose>
-                  <Button type="submit">Save</Button>
+                  {isSaving ? (
+                    <Button disabled>
+                      {isSaving ? (
+                        <LoadingSpinner className="w-4 h-4 text-white" />
+                      ) : (
+                        "Submit"
+                      )}
+                    </Button>
+                  ) : (
+                    <Button type="submit">Save</Button>
+                  )}
                 </DialogFooter>
               </form>
             </Form>

@@ -53,14 +53,14 @@ export default function ReceiptDialog({ requestId }: { requestId: number }) {
             <DialogTitle>Upload Receipts</DialogTitle>
             <DialogClose />
           </DialogHeader>
-          {funds.map((fund, index) => (
+          {funds.data?.map((fund, index) => (
             <div
               className="flex flex-row justify-between"
               key={index}
               style={{ marginBottom: "10px" }}
             >
               <div>
-                {fund.fundType.typeName} - ${fund.amount}
+                {fund.FundType?.typeName} - ${fund.amount}
               </div>
               {completedUploads.includes(fund.id) ? (
                 <Button

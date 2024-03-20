@@ -1,7 +1,8 @@
+"use client";
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
-
+import { motion, MotionProps } from "framer-motion";
 import { cn } from "@/server/utils";
 
 const buttonVariants = cva(
@@ -39,18 +40,33 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
+  children?: React.ReactNode; // Ensure children is typed as ReactNode
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, forwardedRef) => {
-    const Comp = asChild ? Slot : "button";
-    return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
-        ref={forwardedRef}
-        {...props}
-      />
-    );
+  (
+    { className, variant, size, asChild = false, children, ...props },
+    forwardedRef,
+  ) => {
+    const motionProps: MotionProps = {
+      whileHover: { scale: 1.02, rotate: 2, transition: { duration: 0.2 } },
+      whileTap: { scale: 0.95, transition: { duration: 0.2 } },
+    };
+
+    const Comp = asChild ? Slot : motion.button;
+
+    // Prepare props for the component, ensuring motion props are only included for motion components
+    const componentProps = {
+      ...props,
+      ...(Comp === motion.button ? motionProps : {}),
+      className: cn(buttonVariants({ variant, size, className })),
+      ref: forwardedRef,
+    };
+
+    // Render children directly within the component to ensure compatibility
+
+    // @ts-expect-error
+    return <Comp {...componentProps}>{children}</Comp>;
   },
 );
 Button.displayName = "Button";

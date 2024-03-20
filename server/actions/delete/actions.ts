@@ -1,9 +1,9 @@
 "use server";
 import {
   deleteFundById,
-  deleteAgency as deleteAgencyById,
-  deleteFundType as deleteFundTypeById,
-} from "@/prisma/prismaFunctions";
+  deleteAgencyById,
+  deleteFundTypeById,
+} from "@/server/supabase/functions/delete";
 import { revalidatePath } from "next/cache";
 
 export async function DeleteFund(fundId: number, requestId: number) {

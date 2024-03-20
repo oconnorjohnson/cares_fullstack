@@ -1,41 +1,57 @@
 import { publicProcedure, router } from "./trpc";
 import { TRPCError } from "@trpc/server";
 import {
-  prisma,
+  deleteClientById as deleteClientFromDB,
+  deleteFundTypeById as deleteFundTypeFromDB,
+  deleteAgencyById as deleteAgencyFromDB,
+} from "@/server/supabase/functions/delete";
+import { banUserById } from "@/server/supabase/functions/update";
+import {
   getClientsByUserId,
   getRequestsByUserId,
   getAdminRequests,
   getRequestById,
-  deleteClient as deleteClientFromDB,
-  deleteFundType as deleteFundTypeFromDB,
-  deleteAgency as deleteAgencyFromDB,
-  banUserById as banUserFromDB,
+  getFundTypes,
+  getAllAgencies,
   getFundsThatNeedReceiptsByRequestId,
-  getUserIdAndEmailByRequestId,
-  getUserIdAndEmailByUserId,
+  getUserByUserId,
+  getUserIdByRequestId,
+  getEmailByUserId,
   getRequestsThatNeedAgreementsByUserId,
-} from "@/prisma/prismaFunctions";
+} from "@/server/supabase/functions/read";
+import {
+  getOperatingBalance,
+  getRFFBalance,
+} from "@/server/supabase/functions/read";
 import { z } from "zod";
 
 export const appRouter = router({
+  getOperatingBalance: publicProcedure.query(async () => {
+    const operatingBalance = await getOperatingBalance();
+    return operatingBalance;
+  }),
+  getRFFBalance: publicProcedure.query(async () => {
+    const rffBalance = await getRFFBalance();
+    return rffBalance;
+  }),
   banUser: publicProcedure
     .input(z.string())
     .mutation(async ({ input: userId }) => {
-      const bannedUser = await banUserFromDB(userId);
+      const bannedUser = await banUserById(userId);
       return bannedUser;
     }),
   getUser: publicProcedure
     .input(z.string())
     .query(async ({ input: userId }) => {
-      const user = await prisma.user.findUnique({ where: { userId } });
+      const user = await getUserByUserId(userId);
       return user;
     }),
   getFundTypes: publicProcedure.query(async () => {
-    const fundTypes = await prisma.fundType.findMany();
+    const fundTypes = await getFundTypes();
     return fundTypes;
   }),
   getAgencies: publicProcedure.query(async () => {
-    const getAgencies = await prisma.agency.findMany();
+    const getAgencies = await getAllAgencies();
     return getAgencies;
   }),
   getFundsThatNeedReceipts: publicProcedure
@@ -68,16 +84,45 @@ export const appRouter = router({
       const request = await getRequestById(requestId);
       return request;
     }),
-  getUserByRequestId: publicProcedure
+  getUserDetailsByRequestId: publicProcedure
     .input(z.number())
     .query(async ({ input: requestId }) => {
-      const user = await getUserIdAndEmailByRequestId(requestId);
-      return user;
+      try {
+        // First, get the userId associated with the requestId
+        const userIdResult = await getUserIdByRequestId(requestId);
+        if (!userIdResult.data || userIdResult.data.length === 0) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: `User ID not found for request ID: ${requestId}`,
+          });
+        }
+        const userId = userIdResult.data[0].userId;
+
+        // Then, use the userId to get the user's details
+        const userDetails = await getUserByUserId(userId);
+        if (!userDetails) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: `User details not found for user ID: ${userId}`,
+          });
+        }
+
+        return userDetails;
+      } catch (error) {
+        console.error(
+          `Error fetching user details by request ID ${requestId}: `,
+          error,
+        );
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `Failed to fetch user details for request ID: ${requestId}`,
+        });
+      }
     }),
-  getUserByUserId: publicProcedure
+  getEmailByUserId: publicProcedure
     .input(z.string())
     .query(async ({ input: userId }) => {
-      const user = await getUserIdAndEmailByUserId(userId);
+      const user = await getEmailByUserId(userId);
       return user;
     }),
   getAdminRequests: publicProcedure
@@ -89,7 +134,7 @@ export const appRouter = router({
     )
     .query(async ({ input }) => {
       const { filter, userId } = input;
-      return await getAdminRequests(filter, userId);
+      return await getAdminRequests();
     }),
   deleteAgency: publicProcedure
     .input(z.number())

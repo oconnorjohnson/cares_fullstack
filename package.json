@@ -4,10 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "connect": "pscale connect cares main --port 3309",
     "prepare": "husky install"
   },
   "dependencies": {
@@ -35,6 +34,8 @@
     "@radix-ui/react-toast": "^1.1.5",
     "@radix-ui/react-tooltip": "^1.0.7",
     "@react-email/components": "0.0.14",
+    "@supabase/ssr": "^0.1.0",
+    "@supabase/supabase-js": "^2.39.7",
     "@tanstack/react-form": "^0.13.3",
     "@tanstack/react-query": "^4.18.0",
     "@tanstack/react-query-devtools": "^5.17.21",
@@ -50,6 +51,7 @@
     "date-fns": "^3.3.1",
     "dotenv": "^16.3.2",
     "embla-carousel-react": "8.0.0-rc19",
+    "framer-motion": "^11.0.8",
     "lucide-react": "^0.314.0",
     "next": "14.1.0",
     "next-themes": "^0.2.1",
@@ -86,6 +88,7 @@
     "prettier": "^3.2.4",
     "prettier-plugin-tailwind": "^2.2.12",
     "prisma": "^5.8.1",
+    "supabase": "^1.148.6",
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
     "typescript": "^5"

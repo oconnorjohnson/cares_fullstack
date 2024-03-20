@@ -21,27 +21,45 @@ import ApproveButton from "@/components/admin/request/approve";
 import AddFundToRequestById from "@/components/admin/request/add-fund";
 import MarkPaidButton from "@/components/admin/request/mark-paid";
 import { format } from "date-fns";
+import type { RequestData } from "@/server/actions/request/actions";
+export const runtime = "edge";
 
 const RequestPage = async ({ requestid }: { requestid: string }) => {
+  console.log(requestid);
+  // convert page param string to number
   const requestId = Number(requestid);
-  const request = await requestRequestByRequestId(requestId);
-  const SDOHBadges = request.SDOHs.map((sdoh, index) => (
+  // fetch request data from server
+  const result = await requestRequestByRequestId(requestId);
+  // destructure supabase's array of results into a single object
+  if (!Array.isArray(result)) {
+    throw new Error("Expected an array");
+  }
+  // set the request data to the first element of the array
+  const [request] = result;
+  const SDOHBadges = request.SDOH?.map((SDOH: any, index: number) => (
     <Badge key={index} className="mr-2 mb-2 text-sm">
-      {sdoh.value}
+      {SDOH}
     </Badge>
   ));
-  const RFFBadges = request.RFFs.map((rff, index) => (
+  const RFFBadges = request.RFF?.map((RFF: any, index: number) => (
     <Badge key={index} className="mr-2 mb-2 text-sm">
-      {rff.value}
+      {RFF}
     </Badge>
   ));
-  console.log(request.funds);
-  const FundsBadges = request.funds.map((fund, index) => (
+  const createdAt = format(new Date(request.created_at), "MM/dd/yyyy");
+  const preCreatedAt = format(
+    new Date(request.PreScreenAnswers[0].created_at),
+    "MM/dd/yyyy",
+  );
+
+  console.log(request.Fund);
+  console.log(request.PreScreenAnswerss);
+  const FundsBadges = request.Fund?.map((fund: any, index: number) => (
     <div
       key={index}
       className="flex items-center text-sm justify-end space-x-2 mb-2"
     >
-      <Badge className="text-sm">{fund.fundType.typeName}</Badge>
+      <Badge className="text-sm">{fund.FundType.typeName}</Badge>
       <div className="px-2" />
       <span className="text-lg font-semibold">${fund.amount}</span>
       <div className="px-2" />
@@ -61,10 +79,11 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
       {!request.approved && !request.denied && (
         <FundAction
           fundId={fund.id}
-          fundTypeId={fund.fundType.id}
-          fundTypeName={fund.fundType.typeName}
+          fundTypeId={fund.FundType.id}
+          fundTypeName={fund.FundType.typeName}
           amount={fund.amount}
           requestId={requestId}
+          needsReceipt={fund.needsReceipt}
         />
       )}
     </div>
@@ -85,8 +104,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
             <CardHeader>
               <CardTitle className="flex flex-cols-3 justify-between">
                 <div className="text-center text-3xl pt-0.5">
-                  {request.user.first_name}&apos;s request from{" "}
-                  {formatDateWithSuffix(request.createdAt)}.
+                  {request?.User.first_name}&apos;s request from {createdAt}
                 </div>
                 <div className="flex flex-row justify-between px-6">
                   {request.pendingApproval && (
@@ -106,35 +124,30 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                   <div className="text-xl font-extralight pr-4">User</div>
 
                   <div className="text-xl font-bold">
-                    {request.user.first_name} {request.user.last_name}
+                    {request.User.first_name} {request.User.last_name}
                   </div>
                 </div>
                 <Separator className="my-2" />
                 <div className="flex flex-cols-2 justify-between">
                   <div className="text-xl font-extralight pr-4">Client</div>
-                  {/* <Link href={`/admin/client/${request.client.id}`}>
-                    <div className="text-xl font-bold underline hover:text-zinc-500">
-                      {request.client} | {request.client.first_name}{" "}
-                      {request.client.last_name}
-                    </div>
-                  </Link> */}
+
+                  <div className="text-xl font-bold underline hover:text-zinc-500">
+                    {request.Client.clientID}
+                  </div>
                 </div>
                 <Separator className="my-2" />
                 <div className="flex flex-cols-2 justify-between">
                   <div className="text-xl font-extralight pr-4">Email</div>
-                  <Link
-                    href={`mailto:${request.user.emailAddresses?.[0]?.email}`}
-                  >
+                  <Link href={`mailto:${request.User.EmailAddress.email}`}>
                     <div className="text-xl font-bold underline hover:text-zinc-500">
-                      {request.user.emailAddresses?.[0]?.email ??
-                        "Error rendering email"}
+                      {request.User.EmailAddress[0].email}
                     </div>
                   </Link>
                 </div>
                 <Separator className="my-2" />
                 <div className="flex flex-cols-2 justify-between">
                   <div className="text-xl font-extralight pr-4">Agency</div>
-                  <div className="text-xl font-bold">{request.agency.name}</div>
+                  <div className="text-xl font-bold">{request.Agency.name}</div>
                 </div>
                 <Separator className="my-2" />
                 <div className="flex flex-cols-2 justify-between">
@@ -142,13 +155,13 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                     Request Status
                   </div>
                   <div className="text-xl font-bold">
-                    {request.pendingApproval ? (
+                    {request?.pendingApproval ? (
                       <Badge className="bg-yellow-300 text-black text-sm">
                         Pending Approval
                       </Badge>
-                    ) : request.approved ? (
+                    ) : request?.approved ? (
                       <Badge className="bg-green-600 text-sm">Approved</Badge>
-                    ) : request.denied ? (
+                    ) : request?.denied ? (
                       <Badge className="bg-red-600 text-sm">Denied</Badge>
                     ) : (
                       <Badge className="bg-pink-500">
@@ -162,7 +175,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                 <div className="flex flex-cols-2 justify-between">
                   <div className="text-xl font-extralight pr-4">Pre-Screen</div>
                   <div className="text-xl font-bold">
-                    {request.hasPreScreen ? (
+                    {request?.hasPreScreen ? (
                       <Badge className="bg-green-600 text-sm">Completed</Badge>
                     ) : (
                       <Badge className="bg-red-500 text-sm">Not Started</Badge>
@@ -175,7 +188,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                     Post-Screen
                   </div>
                   <div className="text-xl font-bold">
-                    {request.hasPostScreen ? (
+                    {request?.hasPostScreen ? (
                       <Badge className="bg-green-600 text-sm">Completed</Badge>
                     ) : (
                       <Badge className="bg-red-500 text-sm">Not Started</Badge>
@@ -188,7 +201,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                     Paid Status
                   </div>
                   <div className="text-xl font-bold">
-                    {request.paid ? (
+                    {request?.paid ? (
                       <Badge className="bg-green-600 text-white text-sm">
                         Paid
                       </Badge>
@@ -204,9 +217,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                   <div className="text-xl font-extralight pr-4">
                     Submitted On
                   </div>
-                  <div className="text-xl font-bold">
-                    {format(new Date(request.createdAt), "MM/dd/yyyy")}
-                  </div>
+                  <div className="text-xl font-bold">{createdAt}</div>
                 </div>
               </div>
             </CardContent>
@@ -220,7 +231,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
               </CardTitle>
             </CardHeader>
             <CardContent className="border py-4 mx-4 rounded-lg">
-              <div className="flex flex-col">{request.details}</div>
+              <div className="flex flex-col">{request?.details}</div>
             </CardContent>
             <CardFooter></CardFooter>
           </Card>
@@ -335,7 +346,8 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
               </CardTitle>
             </CardHeader>
             <CardContent className="border py-4 mx-4 rounded-lg">
-              {request.preScreenAnswer ? (
+              {request.PreScreenAnswers &&
+              request.PreScreenAnswers.length > 0 ? (
                 <>
                   <div className="flex flex-col">
                     <div className="flex flex-cols-2 justify-between">
@@ -343,7 +355,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Housing Situation
                       </div>
                       <div className="text-xl font-bold">
-                        {request.preScreenAnswer?.housingSituation}
+                        {request.PreScreenAnswers[0].housingSituation}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -352,7 +364,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Housing Quality
                       </div>
                       <div className="text-xl font-bold">
-                        {request.preScreenAnswer?.housingQuality}
+                        {request.PreScreenAnswers[0].housingQuality}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -361,7 +373,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Utility Stress
                       </div>
                       <div className="text-xl font-bold">
-                        {request.preScreenAnswer?.utilityStress}
+                        {request.PreScreenAnswers[0].utilityStress}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -370,7 +382,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Food Insecurity Stress
                       </div>
                       <div className="text-xl font-bold">
-                        {request.preScreenAnswer?.foodInsecurityStress}
+                        {request.PreScreenAnswers[0].foodInsecurityStress}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -379,7 +391,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Food Money Stress
                       </div>
                       <div className="text-xl font-bold">
-                        {request.preScreenAnswer?.foodMoneyStress}
+                        {request.PreScreenAnswers[0].foodMoneyStress}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -388,7 +400,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Transportation Confidence
                       </div>
                       <div className="text-xl font-bold">
-                        {request.preScreenAnswer?.transpoConfidence}
+                        {request.PreScreenAnswers[0].transpoConfidence}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -397,7 +409,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Transportation Stress
                       </div>
                       <div className="text-xl font-bold">
-                        {request.preScreenAnswer?.transpoStress}
+                        {request.PreScreenAnswers[0].transpoStress}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -406,7 +418,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Financial Difficulties
                       </div>
                       <div className="text-xl font-bold">
-                        {request.preScreenAnswer?.financialDifficulties}
+                        {request.PreScreenAnswers[0].financialDifficulties}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -415,7 +427,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Additional Information
                       </div>
                       <div className="text-xl font-bold">
-                        {request.preScreenAnswer?.additionalInformation}
+                        {request.PreScreenAnswers[0].additionalInformation}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -423,15 +435,13 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                       <div className="text-xl font-extralight pr-4">
                         Submitted On:
                       </div>
-                      <div className="text-xl font-bold">
-                        {request.preScreenAnswer?.createdAt.toDateString()}
-                      </div>
+                      <div className="text-xl font-bold">{preCreatedAt}</div>
                     </div>
                   </div>
                 </>
               ) : (
                 <div className="text-xl font-bold text-destructive">
-                  Not Started. Once {request.user.first_name} completes the
+                  Not Started. Once {request.User.first_name} completes the
                   Pre-Screen questionnaire with their client, you&apos;ll see
                   their answers and an option to mark this request as
                   &quot;Paid&quot;.
@@ -462,7 +472,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
           ) : (
             <div />
           )}
-          {request.preScreenAnswer && request.approved && !request.paid ? (
+          {request.PreScreenAnswers && request.approved && !request.paid ? (
             <>
               <div className="py-4" />
               <Card className="w-2/3">
@@ -478,8 +488,8 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                   <DenyButton requestId={request.id} />
                   <MarkPaidButton
                     requestId={request.id}
-                    firstName={request.user.first_name}
-                    email={request.user.emailAddresses?.[0]?.email || ""}
+                    firstName={request.User.first_name as string}
+                    email={request.User.EmailAddress.email || ""}
                   />
                 </CardContent>
               </Card>
@@ -495,7 +505,8 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
               </CardTitle>
             </CardHeader>
             <CardContent className="border py-4 mx-4 rounded-lg">
-              {request.postScreenAnswer ? (
+              {request.PostScreenAnswers &&
+              request.PostScreenAnswers.length > 0 ? (
                 <>
                   <div className="flex flex-col">
                     <div className="flex flex-cols-2 justify-between">
@@ -503,7 +514,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Housing Situation
                       </div>
                       <div className="text-xl font-bold">
-                        {request.postScreenAnswer?.housingSituation}
+                        {request.PostScreenAnswers[0].housingSituation}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -512,7 +523,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Housing Quality
                       </div>
                       <div className="text-xl font-bold">
-                        {request.postScreenAnswer?.housingQuality}
+                        {request.PostScreenAnswers[0].housingQuality}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -521,7 +532,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Utility Stress
                       </div>
                       <div className="text-xl font-bold">
-                        {request.postScreenAnswer?.utilityStress}
+                        {request.PostScreenAnswers[0].utilityStress}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -530,7 +541,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Food Insecurity Stress
                       </div>
                       <div className="text-xl font-bold">
-                        {request.postScreenAnswer?.foodInsecurityStress}
+                        {request.PostScreenAnswers[0].foodInsecurityStress}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -539,7 +550,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Food Money Stress
                       </div>
                       <div className="text-xl font-bold">
-                        {request.postScreenAnswer?.foodMoneyStress}
+                        {request.PostScreenAnswers[0].foodMoneyStress}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -548,7 +559,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Transportation Confidence
                       </div>
                       <div className="text-xl font-bold">
-                        {request.postScreenAnswer?.transpoConfidence}
+                        {request.PostScreenAnswers[0].transpoConfidence}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -557,7 +568,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Transportation Stress
                       </div>
                       <div className="text-xl font-bold">
-                        {request.postScreenAnswer?.transpoStress}
+                        {request.PostScreenAnswers[0].transpoStress}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -566,7 +577,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Financial Difficulties
                       </div>
                       <div className="text-xl font-bold">
-                        {request.postScreenAnswer?.financialDifficulties}
+                        {request.PostScreenAnswers[0].financialDifficulties}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -575,7 +586,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         Additional Information
                       </div>
                       <div className="text-xl font-bold">
-                        {request.postScreenAnswer?.additionalInformation}
+                        {request.PostScreenAnswers[0].additionalInformation}
                       </div>
                     </div>
                     <Separator className="my-2" />
@@ -583,8 +594,9 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                       <div className="text-xl font-extralight pr-4">
                         Submitted On:
                       </div>
+
                       <div className="text-xl font-bold">
-                        {request.postScreenAnswer?.createdAt.toDateString()}
+                        {request.PostScreenAnswer[0].created_at}
                       </div>
                     </div>
                   </div>
@@ -610,6 +622,7 @@ export default function RequestDetails({
 }) {
   const { sessionClaims } = auth();
   const isAdmin = (sessionClaims?.publicMetadata as any)?.admin;
+  console.log(params.requestid);
   return (
     <>
       {isAdmin ? (

@@ -47,7 +47,7 @@ import { trpc } from "@/app/_trpc/client";
 import { useState } from "react";
 import { UpdateFund } from "@/server/actions/update/actions";
 import { DeleteFund } from "@/server/actions/delete/actions";
-import { LoadingSpinner } from "@/components/admin/request/approve";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -58,6 +58,7 @@ type FundActionProps = {
   fundTypeName: string;
   amount: number;
   requestId: number;
+  needsReceipt: boolean;
 };
 
 type UpdateFundProps = {
@@ -65,6 +66,7 @@ type UpdateFundProps = {
   amount: number;
   fundTypeId: number;
   fundId: number;
+  needsReceipt: boolean;
 };
 
 type DeleteFundProps = {
@@ -80,6 +82,7 @@ const formSchema = z.object({
     .number()
     .min(1, { message: "fundTypeId must be at least 1 number." }),
   amount: z.number().min(1, { message: "Amount must be at least 1 number." }),
+  needsReceipt: z.boolean(),
 });
 
 export default function FundDropdown({
@@ -88,9 +91,10 @@ export default function FundDropdown({
   fundTypeName,
   amount,
   requestId,
+  needsReceipt,
 }: FundActionProps) {
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isUploading, setIsUpdating] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -98,19 +102,17 @@ export default function FundDropdown({
       fundId: fundId,
       fundTypeId: fundTypeId,
       amount: amount,
+      needsReceipt: needsReceipt,
     },
   });
   const { data: fundTypes, isLoading, isError } = trpc.getFundTypes.useQuery();
   const { register, handleSubmit, setValue, watch } = form;
   const selectedFundTypeId = watch("fundTypeId");
   const handleDelete = async (requestId: number, fundId: number) => {
-    console.log("handleDelete clicked with requestId:", requestId);
-    console.log("handleDelete also clicked with fundId:", fundId);
     setIsDeleting(true);
     try {
       await DeleteFund(requestId, fundId);
       toast.success("Fund successfully deleted!");
-      revalidatePath(`/admin/request/${requestId}/page`);
     } catch (error) {
       console.error("Error deleting fund:", error);
       toast.error("Error deleting fund");
@@ -119,6 +121,7 @@ export default function FundDropdown({
     }
   };
   const onSubmit = async (data: UpdateFundProps) => {
+    setIsUpdating(true);
     console.log("Preparing to update fund with ID:", data.fundId);
     console.log("Form Data:", data);
     console.log(
@@ -135,16 +138,18 @@ export default function FundDropdown({
         data.fundTypeId,
         data.amount,
         data.requestId,
+        data.needsReceipt,
       );
-      toast.success("Fund successfully updated!");
-      revalidatePath(`/admin/request/${requestId}/page`);
       console.log("UpdateFund successful:", result);
+      toast.success("Fund successfully updated!");
     } catch (error) {
-      toast.error("Error updating fund");
       console.error("Error in UpdateFund:", error);
+      toast.error("Error updating fund");
+    } finally {
+      setIsUpdating(false);
     }
   };
-
+  const FundTypeId = fundTypeId ? fundTypeId.toString() : undefined;
   return (
     <>
       <AlertDialog>
@@ -167,7 +172,11 @@ export default function FundDropdown({
               onClick={() => handleDelete(fundId, requestId)}
               className="bg-destructive"
             >
-              Delete
+              {isDeleting ? (
+                <LoadingSpinner className="w-4 h-4 text-white" />
+              ) : (
+                "Delete"
+              )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -233,16 +242,24 @@ export default function FundDropdown({
                         </Label>
                         <Select
                           {...register("fundTypeId")}
-                          defaultValue={fundTypeId.toString()}
+                          defaultValue={FundTypeId}
                           onValueChange={(value) => {
-                            console.log(
-                              `Selected fundTypeId before parsing: ${value}`,
-                            );
                             const parsedValue = parseInt(value, 10);
-                            console.log(
-                              `Selected fundTypeId after parsing: ${parsedValue}`,
-                            );
                             setValue("fundTypeId", parsedValue);
+
+                            // Find the selected FundType and its needsReceipt value
+                            const selectedFundType = fundTypes?.find(
+                              (fundType) => fundType.id === parsedValue,
+                            );
+                            if (selectedFundType) {
+                              // Set the needsReceipt value in the form state
+                              setValue(
+                                "needsReceipt",
+                                selectedFundType.needsReceipt,
+                              );
+                            } else {
+                              setValue("needsReceipt", false);
+                            }
                           }}
                         >
                           <FormControl>
@@ -291,7 +308,13 @@ export default function FundDropdown({
               </div>
               <DialogFooter>
                 <DialogClose>Cancel</DialogClose>
-                <Button type="submit">Save changes</Button>
+                <Button type="submit" disabled={isUpdating}>
+                  {isUpdating ? (
+                    <LoadingSpinner className="w-4 h-4 text-white" />
+                  ) : (
+                    "Submit"
+                  )}
+                </Button>
               </DialogFooter>
             </form>
           </Form>

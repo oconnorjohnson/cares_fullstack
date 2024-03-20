@@ -23,6 +23,8 @@ import { SignOutButton } from "@clerk/nextjs";
 import UserTable from "@/components/admin/tables/users/page";
 import SideNavBar from "@/components/admin/dashboard/side-nav";
 
+export const runtime = "edge";
+
 export default async function Requests() {
   const { sessionClaims } = auth();
   const isAdmin = (sessionClaims?.publicMetadata as any)?.admin;

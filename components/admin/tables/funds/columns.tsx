@@ -1,22 +1,26 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+
+interface FundType {
+  created_at: string;
+  id: number;
+  needsReceipt: boolean;
+  typeName: string;
+  userId: string | null;
+}
 
 export type Fund = {
   amount: number;
-  fundType: { typeName: string };
-  request: { id: number };
+  created_at: string;
+  fundTypeId: number;
+  id: number;
+  needsReceipt: boolean;
+  receiptId: number | null;
+  requestId: number;
+  RFFType: string | null;
+  FundType: FundType;
 };
 
 export const columns: ColumnDef<Fund>[] = [
@@ -27,10 +31,10 @@ export const columns: ColumnDef<Fund>[] = [
       return (
         <Link
           href="/admin/requests/[requestId]"
-          as={`/admin/requests/${fund.request.id}`}
+          as={`/admin/requests/${fund.requestId}`}
         >
           <Button size="icon" variant="outline">
-            {fund.request.id}{" "}
+            {fund.requestId}{" "}
           </Button>
         </Link>
       );

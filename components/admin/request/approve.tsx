@@ -28,9 +28,9 @@ export const LoadingSpinner = ({ className }: { className: any }) => {
 export default function Approve({ requestId }: { requestId: number }) {
   const [isDataLoading, setIsDataLoading] = useState(false);
   const trpcContext = trpc.useUtils();
-  const { data: user } = trpc.getUserByRequestId.useQuery(requestId);
-  const email = user?.user.emailAddresses[0]?.email || "";
-  const firstName = user?.user.first_name || "";
+  const { data: user } = trpc.getUserDetailsByRequestId.useQuery(requestId);
+  const email = user?.EmailAddress[0]?.email || "";
+  const firstName = user?.first_name || "";
   const handleApprove = async () => {
     setIsDataLoading(true);
     try {

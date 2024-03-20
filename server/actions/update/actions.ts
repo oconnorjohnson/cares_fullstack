@@ -6,7 +6,12 @@ import {
   updateFundById,
   markRequestPaidById,
   banUserById,
-} from "@/prisma/prismaFunctions";
+  requestNeedsReceipt,
+  requestDoesNotNeedReceipt,
+  updateOperatingBalance as updateTheOperatingBalance,
+  updateRFFBalance as updateTheRFFBalance,
+} from "@/server/supabase/functions/update";
+import { getFundsByRequestId } from "@/server/supabase/functions/read";
 import { revalidatePath } from "next/cache";
 import { Resend } from "resend";
 import { EmailTemplate as PaidEmailTemplate } from "@/components/emails/paid";
@@ -14,6 +19,7 @@ import { EmailTemplate as ReceiptUploadedEmailTemplate } from "@/components/emai
 import { EmailTemplate as BannedEmailTemplate } from "@/components/emails/banned";
 import { EmailTemplate as ApprovedEmailTemplate } from "@/components/emails/approved";
 import { EmailTemplate as DeniedEmailTemplate } from "@/components/emails/denied";
+import { TablesUpdate } from "@/types_db";
 
 export interface RequestData {
   id: number;
@@ -33,6 +39,16 @@ export interface UserData {
   isBanned: boolean;
 }
 
+export interface BalanceUpdateData {
+  availableBalance: number;
+  last_updated: string;
+  reservedBalance: number;
+  totalBalance: number;
+  TransactionId: number | null;
+  version: number;
+  lastVersion: number;
+}
+
 export async function revalidateDashboard() {
   revalidatePath("/dashboard");
 }
@@ -40,6 +56,26 @@ export async function revalidateDashboard() {
 export async function revalidateUserRequests() {
   revalidatePath("/user/requests");
 }
+
+export async function updateOperatingBalance(
+  lastVersion: number,
+  operatingBalanceData: TablesUpdate<"OperatingBalance">,
+) {
+  const operatingBalance = await updateTheOperatingBalance(
+    lastVersion,
+    operatingBalanceData,
+  );
+  return operatingBalance;
+}
+
+export async function updateRFFBalance(
+  lastVersion: number,
+  rffBalanceData: TablesUpdate<"RFFBalance">,
+) {
+  const rffBalance = await updateTheRFFBalance(lastVersion, rffBalanceData);
+  return rffBalance;
+}
+
 export async function sendReceiptEmail(firstname: string, email: string) {
   const resend = new Resend(process.env.RESEND_API_KEY);
   await resend.emails.send({
@@ -53,6 +89,28 @@ export async function sendReceiptEmail(firstname: string, email: string) {
   revalidatePath("/dashboard");
   revalidatePath("/user/requests");
 }
+export async function markRequestAsNeedingReceipt(requestId: number) {
+  try {
+    await requestNeedsReceipt(requestId);
+    revalidatePath("/dashboard");
+    revalidatePath("/user/requests");
+    return true;
+  } catch (error) {
+    console.error("Error marking request as needing receipt:", error);
+    throw error;
+  }
+}
+export async function markRequestAsNotNeedingReceipt(requestId: number) {
+  try {
+    await requestDoesNotNeedReceipt(requestId);
+    revalidatePath("/dashboard");
+    revalidatePath("/user/requests");
+    return true;
+  } catch (error) {
+    console.error("Error marking request as not needing receipt:", error);
+    throw error;
+  }
+}
 export async function BanUser(
   userId: string,
   firstName: string,
@@ -60,7 +118,14 @@ export async function BanUser(
 ): Promise<UserData> {
   const resend = new Resend(process.env.RESEND_API_KEY);
   try {
-    const updatedUser = await banUserById(userId);
+    const response = await banUserById(userId);
+    if (response.error) {
+      throw new Error(response.error.message);
+    }
+    const updatedUser = response.data;
+    if (!updatedUser) {
+      throw new Error("Failed to update user data.");
+    }
     await resend.emails.send({
       from: "CARES <info@yolopublicdefendercares.org>",
       to: [email],
@@ -69,7 +134,7 @@ export async function BanUser(
         firstName: firstName,
       }) as React.ReactElement,
     });
-    await revalidatePath(`/dashboard/page`);
+    revalidatePath(`/dashboard/page`);
     console.log(firstName, email);
     return updatedUser;
   } catch (error) {
@@ -85,9 +150,10 @@ export async function DenyRequest(
 ): Promise<RequestData> {
   const resend = new Resend(process.env.RESEND_API_KEY);
   try {
-    const updatedRequest = await denyRequestById(requestId);
-    await revalidatePath(`/admin/request/${requestId}/page`);
-    await revalidatePath(`/dashboard/page`);
+    const response = await denyRequestById(requestId);
+    const updatedRequest = response.data;
+    revalidatePath(`/admin/request/${requestId}/page`);
+    revalidatePath(`/dashboard/page`);
     await resend.emails.send({
       from: "CARES <info@yolopublicdefendercares.org>",
       to: [email],
@@ -96,7 +162,7 @@ export async function DenyRequest(
         firstName: firstName,
       }) as React.ReactElement,
     });
-    return updatedRequest;
+    return updatedRequest as unknown as RequestData;
   } catch (error) {
     console.error(`Failed to deny request with ID ${requestId}:`, error);
     throw error;
@@ -110,9 +176,14 @@ export async function ApproveRequest(
 ): Promise<RequestData> {
   const resend = new Resend(process.env.RESEND_API_KEY);
   try {
-    const updatedRequest = await approveRequestById(requestId);
-    await revalidatePath(`/admin/request/${requestId}/page`);
-    await revalidatePath(`/dashboard/page`);
+    const response = await approveRequestById(requestId);
+    const updatedRequest = response;
+    const funds = await getFundsByRequestId(requestId);
+    if (funds.some((fund) => fund.needsReceipt === true)) {
+      await markRequestAsNeedingReceipt(requestId);
+    }
+    revalidatePath(`/admin/request/${requestId}/page`);
+    revalidatePath(`/dashboard/page`);
     await resend.emails.send({
       from: "CARES <info@yolopublicdefendercares.org>",
       to: [email],
@@ -121,7 +192,7 @@ export async function ApproveRequest(
         firstName: firstName,
       }) as React.ReactElement,
     });
-    return updatedRequest;
+    return updatedRequest as unknown as RequestData;
   } catch (error) {
     console.error(`Failed to approve request with ID ${requestId}:`, error);
     throw error;
@@ -132,12 +203,16 @@ export async function MarkPaid(
   requestId: number,
   firstName: string,
   email: string,
-): Promise<RequestData> {
+): Promise<TablesUpdate<"Request">> {
   const resend = new Resend(process.env.RESEND_API_KEY);
   try {
-    const updatedRequest = await markRequestPaidById(requestId);
-    await revalidatePath(`/admin/request/${requestId}/page`);
-    await revalidatePath(`/dashboard/page`);
+    const response = await markRequestPaidById(requestId);
+    const updatedRequest = response;
+    if (!updatedRequest) {
+      throw new Error("Failed to update request data.");
+    }
+    revalidatePath(`/admin/request/${requestId}/page`);
+    revalidatePath(`/dashboard/page`);
     await resend.emails.send({
       from: "CARES <info@yolopublicdefendercares.org>",
       to: [email],
@@ -146,7 +221,7 @@ export async function MarkPaid(
         firstName: firstName,
       }) as React.ReactElement,
     });
-    return updatedRequest;
+    return updatedRequest as unknown as TablesUpdate<"Request">;
   } catch (error) {
     console.error(
       `Failed to mark request with ID ${requestId} as paid:`,
@@ -161,21 +236,27 @@ export async function UpdateFund(
   fundTypeId: number,
   amount: number,
   requestId: number,
-) {
+  needsReceipt: boolean,
+): Promise<TablesUpdate<"Fund">> {
+  const fundData = {
+    id: fundId,
+    amount: amount,
+    fundTypeId: fundTypeId,
+    requestId: requestId,
+    needsReceipt: needsReceipt,
+  };
   console.log(
-    `Calling UpdateFund with Fund ID: ${fundId}, Request ID: ${requestId}, Amount: ${amount}, Fund Type ID: ${fundTypeId}`,
+    `Calling UpdateFund with Fund ID: ${fundId}, Request ID: ${requestId}, Amount: ${amount}, Fund Type ID: ${fundTypeId}, needsReceipt: ${needsReceipt}`,
   );
-  console.log(
-    `Before updateFundById - Fund ID: ${fundId}, Fund Type ID: ${fundTypeId}, Amount: ${amount}`,
-  );
-  await updateFundById(fundId, amount, fundTypeId);
   try {
     console.log(
       `Before updateFundById - Fund ID: ${fundId}, Fund Type ID: ${fundTypeId}, Amount: ${amount}`,
     );
-    await updateFundById(fundId, amount, fundTypeId);
+    const response = await updateFundById(fundData);
+    const updatedFund = response;
     console.log(`Successfully updated fund with ID: ${fundId}`);
-    await revalidatePath(`/admin/request/${requestId}/page`);
+    revalidatePath(`/admin/request/${requestId}/page`);
+    return updatedFund as unknown as TablesUpdate<"Fund">;
   } catch (error) {
     console.error(`Failed to update fund with ID ${fundId}:`, error);
     throw error;

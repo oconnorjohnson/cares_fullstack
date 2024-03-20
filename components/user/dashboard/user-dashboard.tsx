@@ -54,27 +54,74 @@ async function fetchCounts(userId: string) {
   return { openRequests, approvedRequests, deniedRequests, clientCount };
 }
 async function fetchRequestsNeedingPreScreen(userId: string) {
-  const requestsNeedPreScreen =
-    await giveUserIdGetRequestsNeedingPreScreen(userId);
-  return requestsNeedPreScreen;
+  const response = await giveUserIdGetRequestsNeedingPreScreen(userId);
+  // Check if the response contains an error
+  if (response.error) {
+    console.error(
+      "Failed to fetch requests needing pre-screen:",
+      response.error,
+    );
+    return []; // Return an empty array in case of error
+  }
+  // Ensure the data is treated as an array
+  return response.data ?? []; // Use the data if available, otherwise default to an empty array
 }
 async function fetchRequestsNeedingReceipts(userId: string) {
-  const requestsNeedReceipts =
-    await giveUserIdGetRequestsNeedingReceipts(userId);
-  return requestsNeedReceipts;
+  try {
+    const response = await giveUserIdGetRequestsNeedingReceipts(userId);
+    // Check if the response contains an error
+    if (response.error) {
+      console.error(
+        "Failed to fetch requests needing receipts:",
+        response.error,
+      );
+      return []; // Return an empty array in case of error
+    }
+    return response.data ?? []; // Use the data if available, otherwise default to an empty array
+  } catch (error) {
+    console.error("Error fetching requests needing receipts:", error);
+    return []; // Return an empty array in case of error
+  }
 }
+
 async function fetchRequestsNeedingPostScreen(userId: string) {
-  const RequestsNeedPostScreen =
-    await giveUserIdGetRequestsNeedingPostScreen(userId);
-  return RequestsNeedPostScreen;
+  try {
+    const response = await giveUserIdGetRequestsNeedingPostScreen(userId);
+    // Check if the response contains an error
+    if (response.error) {
+      console.error(
+        "Failed to fetch requests needing post-screen:",
+        response.error,
+      );
+      return []; // Return an empty array in case of error
+    }
+    return response.data ?? []; // Use the data if available, otherwise default to an empty array
+  } catch (error) {
+    console.error("Error fetching requests needing post-screen:", error);
+    return []; // Return an empty array in case of error
+  }
 }
+
 async function fetchRequestsNeedingAgreements(userId: string) {
-  const requestsNeedAgreements =
-    await giveUserIdGetRequestsNeedingAgreements(userId);
-  return requestsNeedAgreements;
+  try {
+    const response = await giveUserIdGetRequestsNeedingAgreements(userId);
+    // Check if the response contains an error
+    if (response.error) {
+      console.error(
+        "Failed to fetch requests needing agreements:",
+        response.error,
+      );
+      return []; // Return an empty array in case of error
+    }
+    return response.data ?? []; // Use the data if available, otherwise default to an empty array
+  } catch (error) {
+    console.error("Error fetching requests needing agreements:", error);
+    return []; // Return an empty array in case of error
+  }
 }
 export default async function Dashboard() {
   const { userId } = auth();
+  console.log(userId);
   if (!userId) {
     return <div>User not authenticated!</div>;
   } else {
@@ -97,8 +144,8 @@ export default async function Dashboard() {
             <div className="text-3xl font-bold pl-12 pt-12">My Dashboard</div>
             <div className="flex flex-col space-y-8 px-12 pt-6">
               <div className="flex space-x-8">
-                <div className="flex flex-col w-1/2 flex-grow">
-                  {clientCount > 0 ? (
+                <div className="flex flex-col justify-center w-1/2 flex-grow">
+                  {clientCount! > 0 ? (
                     <NewRequest userId={userId} />
                   ) : (
                     <div className="flex flex-row items-center justify-center space-x-4 text-xl font-bold">
@@ -180,14 +227,12 @@ export default async function Dashboard() {
                               {requestsNeedPreScreen.map((request) => (
                                 <TableRow key={request.id}>
                                   <TableCell>
-                                    {request.client.clientId
-                                      ? `${request.client.clientId}`
+                                    {request.clientId
+                                      ? `${request.clientId}`
                                       : "'ClientID' not found."}
                                   </TableCell>
-                                  <TableCell>{request.agency.name}</TableCell>
-                                  <TableCell>
-                                    {request.createdAt.toDateString()}
-                                  </TableCell>
+                                  <TableCell>{request.agencyId}</TableCell>
+                                  <TableCell>{request.created_at}</TableCell>
                                   <TableCell>
                                     <PreScreen requestId={request.id} />
                                   </TableCell>
@@ -220,14 +265,12 @@ export default async function Dashboard() {
                               {requestsNeedReceipts.map((request) => (
                                 <TableRow key={request.id}>
                                   <TableCell>
-                                    {request.client.clientId
-                                      ? `${request.client.clientId}`
+                                    {request.clientId
+                                      ? `${request.clientId}`
                                       : "'ClientID' not found."}
                                   </TableCell>
-                                  <TableCell>{request.agency.name}</TableCell>
-                                  <TableCell>
-                                    {request.createdAt.toDateString()}
-                                  </TableCell>
+                                  <TableCell>{request.agencyId}</TableCell>
+                                  <TableCell>{request.created_at}</TableCell>
                                   <TableCell>
                                     <ReceiptDialog requestId={request.id} />
                                   </TableCell>
@@ -260,14 +303,12 @@ export default async function Dashboard() {
                               {requestsNeedPostScreen.map((request) => (
                                 <TableRow key={request.id}>
                                   <TableCell>
-                                    {request.client.clientId
-                                      ? `${request.client.clientId}`
+                                    {request.clientId
+                                      ? `${request.clientId}`
                                       : "'ClientID' not found."}
                                   </TableCell>
-                                  <TableCell>{request.agency.name}</TableCell>
-                                  <TableCell>
-                                    {request.createdAt.toDateString()}
-                                  </TableCell>
+                                  <TableCell>{request.agencyId}</TableCell>
+                                  <TableCell>{request.created_at}</TableCell>
 
                                   <TableCell>
                                     <PostScreen requestId={request.id} />
@@ -301,17 +342,16 @@ export default async function Dashboard() {
                               {requestsNeedAgreements.map((request) => (
                                 <TableRow key={request.id}>
                                   <TableCell>
-                                    {request.client.clientId
-                                      ? `${request.client.clientId}`
+                                    {request.clientId
+                                      ? `${request.clientId}`
                                       : "'ClientID' not found."}
                                   </TableCell>
-                                  <TableCell>{request.agency.name}</TableCell>
-                                  <TableCell>
-                                    {request.createdAt.toDateString()}
-                                  </TableCell>
+                                  <TableCell>{request.agencyId}</TableCell>
+                                  <TableCell>{request.created_at}</TableCell>
 
                                   <TableCell>
-                                    <AgreementDialog requestId={request.id} />
+                                    <AgreementDialog requestId={request.id} />{" "}
+                                    {request.id}
                                   </TableCell>
                                 </TableRow>
                               ))}
