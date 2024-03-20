@@ -20,13 +20,16 @@ import {
   SendIcon,
 } from "lucide-react";
 import { SignOutButton } from "@clerk/nextjs";
-import FundsTable from "@/components/admin/tables/funds/page";
+import CaresAssetCard from "@/components/admin/assets/cares-asset-card";
+import RFFAssetCard from "@/components/admin/assets/rff-asset-card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { HelpCircleIcon } from "lucide-react";
 import SideNavBar from "@/components/admin/dashboard/side-nav";
 import AddBussPass from "@/components/admin/assets/add-bus-pass";
-import AddArco from "@/components/admin/assets/add-arco";
 import AddGiftCards from "@/components/admin/assets/add-gift-card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const runtime = "edge";
 
@@ -42,7 +45,6 @@ export default async function Requests() {
           <SideNavBar />
           <div className="flex border-t flex-col w-5/6 items-center">
             <div className="flex flex-col justify-center items-center w-full px-8 py-8">
-              <div className="text-start text-3xl font-bold pb-4">Assets</div>
               <div className="flex w-full flex-row align-center border border-1 rounded-xl p-4 space-x-4">
                 <AddBussPass />
                 <AddGiftCards />
@@ -50,8 +52,11 @@ export default async function Requests() {
                   <HelpCircleIcon />
                 </Button>
               </div>
-              <div className="text-start text-3xl font-bold pt-8 pb-4">
-                Inventory
+              <div className="py-4" />
+              <div className="flex w-full flex-row justify-between align-center border border-1 rounded-xl p-8 bg-muted">
+                <RFFAssetCard />
+                <div className="px-4" />
+                <CaresAssetCard />
               </div>
             </div>
           </div>

@@ -68,7 +68,7 @@ export default function AddBusPasses() {
       UserId: userId,
       balanceSource: "",
       fundType: "",
-      lastFour: "1234",
+      lastFour: "",
     },
   });
 
@@ -170,7 +170,7 @@ export default function AddBusPasses() {
                   <FormControl>
                     <Input type="number" placeholder="amount" {...field} />
                   </FormControl>
-                  <FormDescription>(e.g. $100)</FormDescription>
+                  <FormDescription>(e.g. 100 for a $100 card)</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
