@@ -10,6 +10,7 @@ import {
   requestDoesNotNeedReceipt,
   updateOperatingBalance as updateTheOperatingBalance,
   updateRFFBalance as updateTheRFFBalance,
+  markAssetAsReserved,
 } from "@/server/supabase/functions/update";
 import { GetFundsByRequestId } from "@/server/actions/request/actions";
 import {
@@ -17,6 +18,7 @@ import {
   getRFFWalmartCards,
   getRFFArcoCards,
   getRFFBalance,
+  getRFFBusPasses,
 } from "@/server/supabase/functions/read";
 import { countAvailableRFFBusPasses } from "@/server/supabase/functions/count";
 import { revalidatePath } from "next/cache";
@@ -27,6 +29,7 @@ import { EmailTemplate as BannedEmailTemplate } from "@/components/emails/banned
 import { EmailTemplate as ApprovedEmailTemplate } from "@/components/emails/approved";
 import { EmailTemplate as DeniedEmailTemplate } from "@/components/emails/denied";
 import { TablesUpdate } from "@/types_db";
+import { calculateSizeAdjustValues } from "next/dist/server/font-utils";
 
 export interface RequestData {
   id: number;
@@ -209,13 +212,14 @@ export async function ApproveRequest(
     }));
     console.log(modifiedFunds);
   } catch (error) {
-    console.error("Error fetching funds by request ID:", error);
+    console.error("Error in Step 1 of ApproveRequest:", error);
+    throw error;
   }
   // 2. Check the requested funds against the available RFF assets and RFF balance
   try {
     for (const fund of modifiedFunds) {
       switch (fund.fundTypeId) {
-        // fundTypeId = 1 (Walmart Gift Card)
+        // case 1: fundTypeId = 1 (Walmart Gift Card)
         case 1:
           const walmartCards = await getRFFWalmartCards();
           const walmartCardAmounts = walmartCards.map(
@@ -225,7 +229,7 @@ export async function ApproveRequest(
             throw new Error("Gift card amount not found");
           }
           break;
-        // fundTypeId = 2 (Arco Gift Card)
+        // Case 2: fundTypeId = 2 (Arco Gift Card)
         case 2:
           const arcoCards = await getRFFArcoCards();
           const arcoCardAmounts = arcoCards.map(
@@ -235,7 +239,7 @@ export async function ApproveRequest(
             throw new Error("Gift card amount not found");
           }
           break;
-        // fundTypeId = 3 (Bus Pass)
+        // Case 3: fundTypeId = 3 (Bus Pass)
         case 3: {
           const availableBusPasses = await countAvailableRFFBusPasses();
           if (fund.amount > availableBusPasses!) {
@@ -245,7 +249,7 @@ export async function ApproveRequest(
           }
           break;
         }
-        // fundTypeId = 4 (Cash), 5 (Invoice), 6 (Check)
+        // Case 4/5/6:fundTypeId = 4 (Cash), 5 (Invoice), 6 (Check)
         case 4:
         case 5:
         case 6:
@@ -262,10 +266,88 @@ export async function ApproveRequest(
       }
     }
   } catch (error) {
-    console.error("Error in step 2:", error);
+    console.error("Error in Step 2 of ApproveRequest:", error);
     throw error;
   }
   // 3. if all checks passed, then we mark each fund's asset or balance amount as reserved in assets and RFFBalance.
+  try {
+    for (const fund of modifiedFunds) {
+      switch (fund.fundTypeId) {
+        // case 1: fundTypeId = 1 (Walmart Gift Card)
+        case 1:
+          const walmartCards = await getRFFWalmartCards();
+          const matchingCard = walmartCards.find(
+            (card) => card.totalValue === fund.amount,
+          );
+          if (!matchingCard) {
+            console.error("Gift card amount not found");
+            throw new Error("Gift card amount not found");
+          }
+          const reservedCard = await markAssetAsReserved(
+            matchingCard.id,
+            fund.id,
+          );
+          if (!reservedCard) {
+            console.error("Error marking asset as reserved");
+            throw new Error("Error marking asset as reserved");
+          }
+          break;
+        // Case 2: fundTypeId = 2 (Arco Gift Card)
+        case 2:
+          const arcoCards = await getRFFArcoCards();
+          const matchedCard = arcoCards.find(
+            (card) => card.totalValue === fund.amount,
+          );
+          if (!matchedCard) {
+            console.error("Gift card amount not found");
+            throw new Error("Gift card amount not found");
+          }
+          const reserveCard = await markAssetAsReserved(
+            matchedCard.id,
+            fund.id,
+          );
+          if (!reserveCard) {
+            console.error("Error marking asset as reserved");
+            throw new Error("Error marking asset as reserved");
+          }
+          break;
+        // Case 3: fundTypeId = 3 (Bus Pass)
+        case 3: {
+          const availableBusPasses = await getRFFBusPasses();
+          if (fund.amount > availableBusPasses.length) {
+            throw new Error(
+              `Not enough bus passes available. Available: ${availableBusPasses.length}, Requested: ${fund.amount}`,
+            );
+          }
+          const busPassIdsToReserve = availableBusPasses
+            .slice(-fund.amount)
+            .map((pass) => pass.id);
+          const reservedPromises = busPassIdsToReserve.map((bussPassId) =>
+            markAssetAsReserved(bussPassId, fund.id),
+          );
+          try {
+            await Promise.all(reservedPromises);
+          } catch (error) {
+            console.error("error in marking assets as reserved", error);
+            throw new Error("error in marking assets as reserved");
+          }
+          break;
+        }
+        // Case 4/5/6:fundTypeId = 4 (Cash), 5 (Invoice), 6 (Check)
+        case 4:
+        case 5:
+        case 6:
+          // TODO: Add code to subtract the Cash/Invoice/Check amount from availableBalance of RFFBalance and add it to the reservedBalance of RFFBalance
+          break;
+        default:
+          console.error("invalid fundTypeId", fund.fundTypeId);
+          throw new Error("invalid fundTypeId");
+      }
+    }
+  } catch (error) {
+    console.error("Error in Step 2 of ApproveRequest:", error);
+    throw error;
+  }
   // 4. We create a transaction for each fund that reflects the change in balance or asset availability.
   // 5. The request is marked as approved, and the user is notified of the approval.
   try {

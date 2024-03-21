@@ -2,15 +2,41 @@ import { createClient as createSupabaseClient } from "@/server/supabase/server";
 import { Tables } from "@/types_db";
 
 type totalValue = {
+  id: number;
   totalValue: number;
 };
+
+type id = {
+  id: number;
+};
+
+export async function getRFFBusPasses(): Promise<id[]> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Asset")
+      .select("id")
+      .eq("FundTypeId", 3)
+      .eq("isAvailable", true)
+      .eq("isRFF", true)
+      .eq("isCARES", false);
+    if (error) {
+      console.error("Error in getRFFBusPasses:", error);
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.error("Error in getRFFBusPasses:", error);
+    throw error;
+  }
+}
 
 export async function getRFFWalmartCards(): Promise<totalValue[]> {
   const supabase = createSupabaseClient();
   try {
     const { data, error } = await supabase
       .from("Asset")
-      .select("totalValue")
+      .select("id, totalValue")
       .eq("FundTypeId", 1)
       .eq("isAvailable", true)
       .eq("isRFF", true)
@@ -28,7 +54,7 @@ export async function getRFFArcoCards(): Promise<totalValue[]> {
   try {
     const { data, error } = await supabase
       .from("Asset")
-      .select("totalValue")
+      .select("id, totalValue")
       .eq("FundTypeId", 2)
       .eq("isAvailable", true)
       .eq("isRFF", true)

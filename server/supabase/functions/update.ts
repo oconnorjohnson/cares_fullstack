@@ -1,6 +1,24 @@
 import { createClient as createSupabaseClient } from "@/server/supabase/server";
 import { TablesUpdate, Tables } from "@/types_db";
 
+export async function markAssetAsReserved(
+  assetId: number,
+  fundId: number,
+): Promise<boolean> {
+  const supabase = createSupabaseClient();
+  try {
+    const { error } = await supabase
+      .from("Asset")
+      .update({ FundId: fundId, isReserved: true })
+      .eq("id", assetId);
+    if (error) throw error;
+    return true;
+  } catch (error) {
+    console.error("Error in markAssetAsReserved:", error);
+    return false;
+  }
+}
+
 export async function updateRFFBalance(
   lastVersion: number,
   rffBalanceData: TablesUpdate<"RFFBalance">,
