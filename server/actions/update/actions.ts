@@ -20,6 +20,7 @@ import {
   getRFFBalance,
   getRFFBusPasses,
 } from "@/server/supabase/functions/read";
+import { createTransaction } from "@/server/supabase/functions/create";
 import { countAvailableRFFBusPasses } from "@/server/supabase/functions/count";
 import { revalidatePath } from "next/cache";
 import { Resend } from "resend";
@@ -337,7 +338,23 @@ export async function ApproveRequest(
         case 4:
         case 5:
         case 6:
-          // TODO: Add code to subtract the Cash/Invoice/Check amount from availableBalance of RFFBalance and add it to the reservedBalance of RFFBalance
+          const currentRFFBalanceData = await getRFFBalance();
+          if (!currentRFFBalanceData || currentRFFBalanceData.length === 0) {
+            throw new Error("Failed to fetch RFFBalance data.");
+          }
+          const { version } = currentRFFBalanceData[0];
+          const rffBalanceUpdateData = {
+            reservedBalance: fund.amount,
+            availableBalance: -fund.amount,
+            lastVersion: version,
+          };
+          const updateSuccess = await updateRFFBalance(
+            version,
+            rffBalanceUpdateData,
+          );
+          if (!updateSuccess) {
+            throw new Error("Failed to update RFFBalance.");
+          }
           break;
         default:
           console.error("invalid fundTypeId", fund.fundTypeId);
@@ -349,6 +366,37 @@ export async function ApproveRequest(
     throw error;
   }
   // 4. We create a transaction for each fund that reflects the change in balance or asset availability.
+  try {
+    for (const fund of modifiedFunds) {
+      switch (fund.fundTypeId) {
+        // case 1: fundTypeId = 1 (Walmart Gift Card)
+        case 1:
+          // TODO: create a transaction for each Walmart Gift Card reservation
+          break;
+        // Case 2: fundTypeId = 2 (Arco Gift Card)
+        case 2:
+          // TODO: create a transaction for each Arco Gift Card reservation
+          break;
+        // Case 3: fundTypeId = 3 (Bus Pass)
+        case 3: {
+          // TODO: create a transaction for each Bus Pass reservation
+          break;
+        }
+        // Case 4/5/6:fundTypeId = 4 (Cash), 5 (Invoice), 6 (Check)
+        case 4:
+        case 5:
+        case 6:
+          // TODO: create a transaction for each Cash/Invoice/Check RFFBalance reservation
+          break;
+        default:
+          console.error("invalid fundTypeId", fund.fundTypeId);
+          throw new Error("invalid fundTypeId");
+      }
+    }
+  } catch (error) {
+    console.error("Error in Step 2 of ApproveRequest:", error);
+    throw error;
+  }
   // 5. The request is marked as approved, and the user is notified of the approval.
   try {
     const response = await approveRequestById(requestId);

@@ -642,6 +642,7 @@ export type Database = {
           isDeposit: boolean;
           isDisbursement: boolean;
           isPurchase: boolean;
+          isReservation: boolean | null;
           isReversal: boolean;
           isRFF: boolean;
           previousBalance: number | null;
@@ -661,6 +662,7 @@ export type Database = {
           isDeposit?: boolean;
           isDisbursement?: boolean;
           isPurchase?: boolean;
+          isReservation?: boolean | null;
           isReversal?: boolean;
           isRFF?: boolean;
           previousBalance?: number | null;
@@ -680,6 +682,7 @@ export type Database = {
           isDeposit?: boolean;
           isDisbursement?: boolean;
           isPurchase?: boolean;
+          isReservation?: boolean | null;
           isReversal?: boolean;
           isRFF?: boolean;
           previousBalance?: number | null;
