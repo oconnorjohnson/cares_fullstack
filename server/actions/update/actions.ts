@@ -11,7 +11,13 @@ import {
   updateOperatingBalance as updateTheOperatingBalance,
   updateRFFBalance as updateTheRFFBalance,
 } from "@/server/supabase/functions/update";
-import { getFundsByRequestId } from "@/server/supabase/functions/read";
+import { GetFundsByRequestId } from "@/server/actions/request/actions";
+import {
+  getFundsByRequestId,
+  getRFFWalmartCards,
+  getRFFArcoCards,
+} from "@/server/supabase/functions/read";
+import { countAvailableRFFBusPasses } from "@/server/supabase/functions/count";
 import { revalidatePath } from "next/cache";
 import { Resend } from "resend";
 import { EmailTemplate as PaidEmailTemplate } from "@/components/emails/paid";
@@ -37,6 +43,12 @@ export interface RequestData {
 export interface UserData {
   userId: string;
   isBanned: boolean;
+}
+
+export interface FundDetail {
+  id: number;
+  fundTypeId: number;
+  amount: number;
 }
 
 export interface BalanceUpdateData {
@@ -183,6 +195,60 @@ export async function ApproveRequest(
   email: string,
 ): Promise<RequestData> {
   const resend = new Resend(process.env.RESEND_API_KEY);
+  let modifiedFunds: FundDetail[] = [];
+  // 1. Fetch the funds associated with the request
+  try {
+    const funds = await GetFundsByRequestId(requestId);
+    // create a map of the funds, their id, fundTypeId, and amount
+    const modifiedFunds = funds.map(({ id, fundTypeId, amount }) => ({
+      fundId: id,
+      fundTypeId,
+      amount,
+    }));
+    console.log(modifiedFunds);
+  } catch (error) {
+    console.error("Error fetching funds by request ID:", error);
+  }
+  // 2. Check the funds against the available RFF assets and RFF balance
+  try {
+    for (const fund of modifiedFunds) {
+      switch (fund.fundTypeId) {
+        case 1:
+          const walmartCards = await getRFFWalmartCards();
+          const walmartCardAmounts = walmartCards.map(
+            (card: { totalValue: number }) => card.totalValue,
+          );
+          if (!walmartCardAmounts.includes(fund.amount)) {
+            throw new Error("Gift card amount not found");
+          }
+          break;
+        case 2:
+          const arcoCards = await getRFFArcoCards();
+          const arcoCardAmounts = arcoCards.map(
+            (card: { totalValue: number }) => card.totalValue,
+          );
+          if (!arcoCardAmounts.includes(fund.amount)) {
+            throw new Error("Gift card amount not found");
+          }
+          break;
+        case 3:
+          await checkRFFBusPasses(fund);
+          break;
+        case 4:
+        case 5:
+        case 6:
+          await checkRFFBalance(fund);
+          break;
+        default:
+          console.error("invalid fundTypeId", fund.fundTypeId);
+          throw new Error("invalid fundTypeId");
+      }
+    }
+  } catch (error) {
+    console.error("Error in step 2:", error);
+    throw error;
+  }
+
   try {
     const response = await approveRequestById(requestId);
     const updatedRequest = response;

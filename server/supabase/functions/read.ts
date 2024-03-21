@@ -1,5 +1,4 @@
 import { createClient as createSupabaseClient } from "@/server/supabase/server";
-import { PostgrestError } from "@supabase/supabase-js";
 import { Tables } from "@/types_db";
 
 type totalValue = {

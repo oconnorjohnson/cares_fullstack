@@ -117,7 +117,12 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
         <Badge className="text-sm">{fund.FundType.typeName}</Badge>
       )}
       <div className="px-2" />
-      <span className="text-lg font-semibold">${fund.amount}</span>
+      {fund.FundType.typeName === "Bus Pass" ? (
+        <span className="text-lg font-semibold">{fund.amount}</span>
+      ) : (
+        <span className="text-lg font-semibold">${fund.amount}</span>
+      )}
+
       <div className="px-2" />
       {fund.Receipt?.url ? (
         <Link

@@ -9,6 +9,7 @@ import {
   getAgencyNameById,
   getUsers,
   getFunds,
+  getFundsByRequestId,
   getAllAgencies,
   getFundTypes,
   getRequestsNeedingPreScreenByUserId,
@@ -141,6 +142,11 @@ export type RequestData = {
 type totalValue = {
   totalValue: number;
 };
+
+export async function GetFundsByRequestId(requestId: number) {
+  const funds = await getFundsByRequestId(requestId);
+  return funds;
+}
 
 export async function GetRFFWalmartCards(): Promise<totalValue[]> {
   const rffWalmartCards = await getRFFWalmartCards();
