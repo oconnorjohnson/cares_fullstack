@@ -13,14 +13,11 @@ export async function createAgency(agencyData: TablesInsert<"Agency">) {
 export async function createTransaction(
   transactionData: TablesInsert<"Transaction">,
 ): Promise<number> {
-  // Assuming the ID is of type number
   const supabase = createSupabaseClient();
-
   const { data, error } = await supabase
     .from("Transaction")
     .insert([transactionData])
-    .select("id"); // Only select the id field
-
+    .select("id");
   if (error) {
     console.error("Error in createTransaction:", error);
     throw error;
@@ -29,8 +26,6 @@ export async function createTransaction(
     console.error("No data returned from supabase");
     throw new Error("No data returned from supabase");
   }
-
-  // Assuming the first item in the array has the id property
   const transactionId = data[0].id;
   if (typeof transactionId !== "number") {
     throw new Error("Transaction ID is not a number");
@@ -47,7 +42,6 @@ export async function createAsset(
     console.error("Error in createAsset:", error);
     throw error;
   }
-
   return true;
 }
 

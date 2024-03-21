@@ -205,7 +205,6 @@ export async function ApproveRequest(
   // 1. Fetch the funds associated with the request
   try {
     const funds = await GetFundsByRequestId(requestId);
-    // create a map of the funds, their id, fundTypeId, and amount
     const modifiedFunds = funds.map(({ id, fundTypeId, amount }) => ({
       fundId: id,
       fundTypeId,
@@ -220,7 +219,7 @@ export async function ApproveRequest(
   try {
     for (const fund of modifiedFunds) {
       switch (fund.fundTypeId) {
-        // case 1: fundTypeId = 1 (Walmart Gift Card)
+        // Step 2 Case 1: fundTypeId = 1 (Walmart Gift Card)
         case 1:
           const walmartCards = await getRFFWalmartCards();
           const walmartCardAmounts = walmartCards.map(
@@ -230,7 +229,7 @@ export async function ApproveRequest(
             throw new Error("Gift card amount not found");
           }
           break;
-        // Case 2: fundTypeId = 2 (Arco Gift Card)
+        // Step 2 Case 2: fundTypeId = 2 (Arco Gift Card)
         case 2:
           const arcoCards = await getRFFArcoCards();
           const arcoCardAmounts = arcoCards.map(
@@ -240,7 +239,7 @@ export async function ApproveRequest(
             throw new Error("Gift card amount not found");
           }
           break;
-        // Case 3: fundTypeId = 3 (Bus Pass)
+        // Step 2 Case 3: fundTypeId = 3 (Bus Pass)
         case 3: {
           const availableBusPasses = await countAvailableRFFBusPasses();
           if (fund.amount > availableBusPasses!) {
@@ -250,7 +249,7 @@ export async function ApproveRequest(
           }
           break;
         }
-        // Case 4/5/6:fundTypeId = 4 (Cash), 5 (Invoice), 6 (Check)
+        // Step 2 Case 4/5/6:fundTypeId = 4 (Cash), 5 (Invoice), 6 (Check)
         case 4:
         case 5:
         case 6:
@@ -274,7 +273,7 @@ export async function ApproveRequest(
   try {
     for (const fund of modifiedFunds) {
       switch (fund.fundTypeId) {
-        // case 1: fundTypeId = 1 (Walmart Gift Card)
+        // Step 3 case 1: fundTypeId = 1 (Walmart Gift Card)
         case 1:
           const walmartCards = await getRFFWalmartCards();
           const matchingCard = walmartCards.find(
@@ -293,7 +292,7 @@ export async function ApproveRequest(
             throw new Error("Error marking asset as reserved");
           }
           break;
-        // Case 2: fundTypeId = 2 (Arco Gift Card)
+        // Step 3 Case 2: fundTypeId = 2 (Arco Gift Card)
         case 2:
           const arcoCards = await getRFFArcoCards();
           const matchedCard = arcoCards.find(
@@ -312,7 +311,7 @@ export async function ApproveRequest(
             throw new Error("Error marking asset as reserved");
           }
           break;
-        // Case 3: fundTypeId = 3 (Bus Pass)
+        // Step 3 Case 3: fundTypeId = 3 (Bus Pass)
         case 3: {
           const availableBusPasses = await getRFFBusPasses();
           if (fund.amount > availableBusPasses.length) {
@@ -334,7 +333,7 @@ export async function ApproveRequest(
           }
           break;
         }
-        // Case 4/5/6:fundTypeId = 4 (Cash), 5 (Invoice), 6 (Check)
+        // Step 3 Case 4/5/6:fundTypeId = 4 (Cash), 5 (Invoice), 6 (Check)
         case 4:
         case 5:
         case 6:
@@ -369,20 +368,20 @@ export async function ApproveRequest(
   try {
     for (const fund of modifiedFunds) {
       switch (fund.fundTypeId) {
-        // case 1: fundTypeId = 1 (Walmart Gift Card)
+        // Step 4 case 1: fundTypeId = 1 (Walmart Gift Card)
         case 1:
           // TODO: create a transaction for each Walmart Gift Card reservation
           break;
-        // Case 2: fundTypeId = 2 (Arco Gift Card)
+        // Step 4 Case 2: fundTypeId = 2 (Arco Gift Card)
         case 2:
           // TODO: create a transaction for each Arco Gift Card reservation
           break;
-        // Case 3: fundTypeId = 3 (Bus Pass)
+        // Step 4 Case 3: fundTypeId = 3 (Bus Pass)
         case 3: {
           // TODO: create a transaction for each Bus Pass reservation
           break;
         }
-        // Case 4/5/6:fundTypeId = 4 (Cash), 5 (Invoice), 6 (Check)
+        // Step 4 Case 4/5/6:fundTypeId = 4 (Cash), 5 (Invoice), 6 (Check)
         case 4:
         case 5:
         case 6:
