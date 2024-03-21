@@ -2,6 +2,46 @@ import { createClient as createSupabaseClient } from "@/server/supabase/server";
 import { PostgrestError } from "@supabase/supabase-js";
 import { Tables } from "@/types_db";
 
+type totalValue = {
+  totalValue: number;
+};
+
+export async function getRFFWalmartCards(): Promise<totalValue[]> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Asset")
+      .select("totalValue")
+      .eq("FundTypeId", 1)
+      .eq("isAvailable", true)
+      .eq("isRFF", true)
+      .eq("isCARES", false);
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Error in getWalmartCards:", error);
+    throw error;
+  }
+}
+
+export async function getRFFArcoCards(): Promise<totalValue[]> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Asset")
+      .select("totalValue")
+      .eq("FundTypeId", 2)
+      .eq("isAvailable", true)
+      .eq("isRFF", true)
+      .eq("isCARES", false);
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Error in getArcoCards:", error);
+    throw error;
+  }
+}
+
 export async function getTransactions() {
   const supabase = createSupabaseClient();
   try {

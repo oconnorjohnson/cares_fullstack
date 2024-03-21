@@ -22,9 +22,23 @@ import AddFundToRequestById from "@/components/admin/request/add-fund";
 import MarkPaidButton from "@/components/admin/request/mark-paid";
 import { format } from "date-fns";
 import type { RequestData } from "@/server/actions/request/actions";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  GetRFFWalmartCards,
+  GetRFFArcoCards,
+} from "@/server/actions/request/actions";
 export const runtime = "edge";
 
 const RequestPage = async ({ requestid }: { requestid: string }) => {
+  const rffWalmartCards = await GetRFFWalmartCards();
+  console.log("RFF walmart cards", rffWalmartCards);
+  const rffArcoCards = await GetRFFArcoCards();
+  console.log("RFF arco cards", rffArcoCards);
   console.log(requestid);
   // convert page param string to number
   const requestId = Number(requestid);
@@ -59,7 +73,49 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
       key={index}
       className="flex items-center text-sm justify-end space-x-2 mb-2"
     >
-      <Badge className="text-sm">{fund.FundType.typeName}</Badge>
+      {fund.FundType.typeName === "Walmart Gift Card" ? (
+        <HoverCard>
+          <HoverCardTrigger asChild>
+            <Badge className="text-sm">{fund.FundType.typeName}</Badge>
+          </HoverCardTrigger>
+          <HoverCardContent>
+            <ScrollArea className="max-h-[96px] p-4 rounded-md border">
+              <div className="flex flex-col">
+                Available RFF-Funded Card Amounts:
+                {rffWalmartCards.map(
+                  (card: { totalValue: number }, index: number) => (
+                    <div key={index} className="mb-2">
+                      {card.totalValue}
+                    </div>
+                  ),
+                )}
+              </div>
+            </ScrollArea>
+          </HoverCardContent>
+        </HoverCard>
+      ) : fund.FundType.typeName === "Arco Gift Card" ? (
+        <HoverCard>
+          <HoverCardTrigger asChild>
+            <Badge className="text-sm">{fund.FundType.typeName}</Badge>
+          </HoverCardTrigger>
+          <HoverCardContent>
+            <ScrollArea className="max-h-[96px] p-4 rounded-md border">
+              <div className="flex flex-col">
+                Available RFF-Funded Card Amounts:
+                {rffArcoCards.map(
+                  (card: { totalValue: number }, index: number) => (
+                    <div key={index} className="mb-2">
+                      {card.totalValue}
+                    </div>
+                  ),
+                )}
+              </div>
+            </ScrollArea>
+          </HoverCardContent>
+        </HoverCard>
+      ) : (
+        <Badge className="text-sm">{fund.FundType.typeName}</Badge>
+      )}
       <div className="px-2" />
       <span className="text-lg font-semibold">${fund.amount}</span>
       <div className="px-2" />
@@ -309,8 +365,15 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
           </Card>
           <div className="py-4" />
           <Card className="w-2/3">
-            <CardHeader className="flex flex-row text-2xl font-bold">
-              <CardTitle className="pt-1 pr-1">Requested Funds</CardTitle>
+            <CardHeader className="flex flex-col ">
+              <CardTitle className="pt-1 pr-1 text-2xl font-bold">
+                Requested Funds
+              </CardTitle>
+              <CardDescription className="text-lg">
+                Hover over Gift Card badges to see the available card values.
+                Card values must match available cards in order to approve the
+                request.
+              </CardDescription>
             </CardHeader>
             <CardContent className="border py-4 mx-4 rounded-lg">
               <div className="flex flex-col">

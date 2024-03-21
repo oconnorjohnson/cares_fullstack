@@ -19,6 +19,8 @@ import {
   getOperatingBalance,
   getRFFBalance,
   getTransactions,
+  getRFFWalmartCards,
+  getRFFArcoCards,
 } from "@/server/supabase/functions/read";
 import { Tables } from "@/types_db";
 import { PostgrestError } from "@supabase/supabase-js";
@@ -135,6 +137,20 @@ export type RequestData = {
     value: string;
   }[];
 };
+
+type totalValue = {
+  totalValue: number;
+};
+
+export async function GetRFFWalmartCards(): Promise<totalValue[]> {
+  const rffWalmartCards = await getRFFWalmartCards();
+  return rffWalmartCards;
+}
+
+export async function GetRFFArcoCards(): Promise<totalValue[]> {
+  const rffArcoCards = await getRFFArcoCards();
+  return rffArcoCards;
+}
 
 export async function requestAllTransactions() {
   const requests = await getTransactions();
