@@ -79,8 +79,8 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
             <Badge className="text-sm">{fund.FundType.typeName}</Badge>
           </HoverCardTrigger>
           <HoverCardContent>
-            <ScrollArea className="max-h-[96px] p-4 rounded-md border">
-              <div className="flex flex-col">
+            <ScrollArea className="max-h-[96px]  rounded-md border">
+              <div className="flex flex-col p-4">
                 Available RFF-Funded Card Amounts:
                 {rffWalmartCards.map(
                   (card: { totalValue: number }, index: number) => (
@@ -99,8 +99,8 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
             <Badge className="text-sm">{fund.FundType.typeName}</Badge>
           </HoverCardTrigger>
           <HoverCardContent>
-            <ScrollArea className="max-h-[96px] p-4 rounded-md border">
-              <div className="flex flex-col">
+            <ScrollArea className="max-h-[96px] rounded-md border">
+              <div className="flex flex-col p-4 ">
                 Available RFF-Funded Card Amounts:
                 {rffArcoCards.map(
                   (card: { totalValue: number }, index: number) => (

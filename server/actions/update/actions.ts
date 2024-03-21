@@ -168,7 +168,7 @@ export async function DenyRequest(
     throw error;
   }
 }
-
+// note for approval: UI has been added to guide admin to edit gift cards to match existing cards, so flow of fund checking on approval will remain the same and will not require any dynamic handling of existing cards vs requested cards.
 // 1. we need to get the array of funds that are associated with the request
 // 2. depending on the fundTypeId, we fire the appropriate server function to check the availability of said fundType
 // 3. Each of these functions gets the fundTypeId and the amount of the fund
