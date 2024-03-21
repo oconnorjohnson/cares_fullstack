@@ -32,6 +32,7 @@ export type Transaction = {
   isCARES: boolean;
   isRFF: boolean;
   details: string;
+  previousBalance: number | null;
 };
 
 export const columns: ColumnDef<Transaction>[] = [
@@ -67,16 +68,31 @@ export const columns: ColumnDef<Transaction>[] = [
     },
   },
   {
-    accessorFn: (row) => getTransactionType(row),
-    id: "transactionType",
-    cell: ({ getValue }) => <Badge>{getValue() as string}</Badge>,
-    header: () => <span>Transaction Type</span>,
+    accessorKey: "previousBalance",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Previous Balance
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
     accessorFn: (row) => getBalanceType(row),
     id: "balanceType",
     cell: ({ getValue }) => <Badge>{getValue() as string}</Badge>,
     header: () => <span>Balance Type</span>,
+  },
+  {
+    accessorFn: (row) => getTransactionType(row),
+    id: "transactionType",
+    cell: ({ getValue }) => <Badge>{getValue() as string}</Badge>,
+    header: () => <span>Transaction Type</span>,
   },
   {
     accessorKey: "details",

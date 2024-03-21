@@ -169,6 +169,14 @@ export async function DenyRequest(
   }
 }
 
+// 1. we need to get the array of funds that are associated with the request
+// 2. depending on the fundTypeId, we fire the appropriate server function to check the availability of said fundType
+// 3. Each of these functions gets the fundTypeId and the amount of the fund
+// 4. Bus passes (id: 3) are assets that need to be checked for availability, if the number of assets exist, with fundTypeId: 3, and isAvailable = true, then the bus pass check clears.
+// 5. Walmart Gift Card (id: 1) and Arco Gift Card (id: 2) are assets that exist with specific amounts. If no card exists with the requested amount, then the fund check fails, and the approval fails, then the admin is alerted that no gift card exists with the requested amount. If the gift card value does exist, then the fund check passes.
+// 6. Cash/check/invoice (id: 4, 5, 6) are not assets, but instead the total requested amount from these types of funds is checked against the availableBalance in the RFFbalance. If the total requested amount is greater than the availableBalance, then the fund check fails, and the approval fails, then the admin is alerted that the requested amount is greater than the available balance. If the total requested amount is less than the availableBalance, then the fund check passes.
+// 7. If all fund checks pass, then a transaction is created for each fund that reflects the change in balance or asset availability, and the request is marked as approved.
+// On marking assets/funds as reserved and on marking assets/funds as expended (or subtracted, for cash/check/invoice), we need to creat a new transaction that reflects the change in assets/RFFBalance.
 export async function ApproveRequest(
   requestId: number,
   firstName: string,
@@ -198,7 +206,9 @@ export async function ApproveRequest(
     throw error;
   }
 }
-
+// 1. we need to get the array of funds that are associated with the request
+// 2. depending on the fundTypeId, we fire the appropriate server function to mark the asset as expended and remove the totalAmount from reservedBalance as well as totalBalance
+// 3. On success, we create a transaction for each fund that reflects the change in balance or asset availability, and the request is marked as paid.
 export async function MarkPaid(
   requestId: number,
   firstName: string,

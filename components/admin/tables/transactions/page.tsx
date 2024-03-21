@@ -27,6 +27,7 @@ async function getTransactions(): Promise<Transaction[]> {
     isCARES: transaction.isCARES,
     isRFF: transaction.isRFF,
     details: transaction.details,
+    previousBalance: transaction.previousBalance,
   }));
   console.log(modifiedTransactions);
   return modifiedTransactions as unknown as Transaction[];

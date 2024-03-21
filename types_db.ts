@@ -207,11 +207,12 @@ export type Database = {
           created_at: string;
           fundTypeId: number;
           id: number;
+          isCARES: boolean | null;
+          isRFF: boolean | null;
           needsReceipt: boolean | null;
           paid: boolean;
           receiptId: number | null;
           requestId: number;
-          RFFType: string | null;
           TransactionId: number | null;
         };
         Insert: {
@@ -219,11 +220,12 @@ export type Database = {
           created_at?: string;
           fundTypeId: number;
           id?: number;
+          isCARES?: boolean | null;
+          isRFF?: boolean | null;
           needsReceipt?: boolean | null;
           paid?: boolean;
           receiptId?: number | null;
           requestId: number;
-          RFFType?: string | null;
           TransactionId?: number | null;
         };
         Update: {
@@ -231,11 +233,12 @@ export type Database = {
           created_at?: string;
           fundTypeId?: number;
           id?: number;
+          isCARES?: boolean | null;
+          isRFF?: boolean | null;
           needsReceipt?: boolean | null;
           paid?: boolean;
           receiptId?: number | null;
           requestId?: number;
-          RFFType?: string | null;
           TransactionId?: number | null;
         };
         Relationships: [

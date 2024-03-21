@@ -91,14 +91,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
 
   return (
     <>
-      <div className="w-5/6 items-center justify-start">
-        <div className="pl-12">
-          <Link href="/admin/requests">
-            <Button size="icon">
-              <ArrowLeftIcon />
-            </Button>
-          </Link>
-        </div>
+      <div className="w-5/6 border-t items-center justify-start">
         <div className="flex flex-col items-center justify-center py-12">
           <Card className="w-2/3">
             <CardHeader>
