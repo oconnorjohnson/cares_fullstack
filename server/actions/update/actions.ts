@@ -16,6 +16,7 @@ import {
   getFundsByRequestId,
   getRFFWalmartCards,
   getRFFArcoCards,
+  getRFFBalance,
 } from "@/server/supabase/functions/read";
 import { countAvailableRFFBusPasses } from "@/server/supabase/functions/count";
 import { revalidatePath } from "next/cache";
@@ -209,10 +210,11 @@ export async function ApproveRequest(
   } catch (error) {
     console.error("Error fetching funds by request ID:", error);
   }
-  // 2. Check the funds against the available RFF assets and RFF balance
+  // 2. Check the requested funds against the available RFF assets and RFF balance
   try {
     for (const fund of modifiedFunds) {
       switch (fund.fundTypeId) {
+        // fundTypeId = 1 (Walmart Gift Card)
         case 1:
           const walmartCards = await getRFFWalmartCards();
           const walmartCardAmounts = walmartCards.map(
@@ -222,6 +224,7 @@ export async function ApproveRequest(
             throw new Error("Gift card amount not found");
           }
           break;
+        // fundTypeId = 2 (Arco Gift Card)
         case 2:
           const arcoCards = await getRFFArcoCards();
           const arcoCardAmounts = arcoCards.map(
@@ -231,13 +234,26 @@ export async function ApproveRequest(
             throw new Error("Gift card amount not found");
           }
           break;
-        case 3:
-          await checkRFFBusPasses(fund);
+        // fundTypeId = 3 (Bus Pass)
+        case 3: {
+          const availableBusPasses = await countAvailableRFFBusPasses();
+          if (fund.amount > availableBusPasses!) {
+            throw new Error(
+              `Requested number of bus passes exceeds available stock. Available: ${availableBusPasses}, Requested: ${fund.amount}`,
+            );
+          }
           break;
+        }
+        // fundTypeId = 4 (Cash), 5 (Invoice), 6 (Check)
         case 4:
         case 5:
         case 6:
-          await checkRFFBalance(fund);
+          const rffBalance = await getRFFBalance();
+          if (fund.amount > rffBalance[0].availableBalance) {
+            throw new Error(
+              `Requested amount exceeds available balance. Available: ${rffBalance[0].availableBalance}, Requested: ${fund.amount}`,
+            );
+          }
           break;
         default:
           console.error("invalid fundTypeId", fund.fundTypeId);
