@@ -188,7 +188,8 @@ export async function DenyRequest(
 // 4. Bus passes (id: 3) are assets that need to be checked for availability, if the number of assets exist, with fundTypeId: 3, and isAvailable = true, then the bus pass check clears.
 // 5. Walmart Gift Card (id: 1) and Arco Gift Card (id: 2) are assets that exist with specific amounts. If no card exists with the requested amount, then the fund check fails, and the approval fails, then the admin is alerted that no gift card exists with the requested amount. If the gift card value does exist, then the fund check passes.
 // 6. Cash/check/invoice (id: 4, 5, 6) are not assets, but instead the total requested amount from these types of funds is checked against the availableBalance in the RFFbalance. If the total requested amount is greater than the availableBalance, then the fund check fails, and the approval fails, then the admin is alerted that the requested amount is greater than the available balance. If the total requested amount is less than the availableBalance, then the fund check passes.
-// 7. If all fund checks pass, then a transaction is created for each fund that reflects the change in balance or asset availability, and the request is marked as approved.
+// 7. If all fund checks pass, then a transaction is created for each fund that reflects the change in balance or asset availability
+// 8. the request is marked as approved.
 // On marking assets/funds as reserved and on marking assets/funds as expended (or subtracted, for cash/check/invoice), we need to creat a new transaction that reflects the change in assets/RFFBalance.
 export async function ApproveRequest(
   requestId: number,
@@ -264,7 +265,9 @@ export async function ApproveRequest(
     console.error("Error in step 2:", error);
     throw error;
   }
-
+  // 3. if all checks passed, then we mark each fund's asset or balance amount as reserved in assets and RFFBalance.
+  // 4. We create a transaction for each fund that reflects the change in balance or asset availability.
+  // 5. The request is marked as approved, and the user is notified of the approval.
   try {
     const response = await approveRequestById(requestId);
     const updatedRequest = response;
