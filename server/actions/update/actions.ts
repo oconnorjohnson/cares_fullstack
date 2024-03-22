@@ -19,6 +19,9 @@ import {
   getRFFWalmartCards,
   getRFFArcoCards,
   getRFFBalance,
+  getReservedRFFArcoCards,
+  getReservedRFFWalmartCards,
+  getReservedRFFBusPasses,
   getRFFBusPasses,
 } from "@/server/supabase/functions/read";
 import { createTransaction } from "@/server/supabase/functions/create";
@@ -533,7 +536,7 @@ export async function MarkPaid(
         switch (fund.fundTypeId) {
           // Step 3 case 1: fundTypeId = 1 (Walmart Gift Card)
           case 1:
-            const walmartCards = await getRFFWalmartCards();
+            const walmartCards = await getReservedRFFWalmartCards();
             const matchingCard = walmartCards.find(
               (card) => card.totalValue === fund.amount,
             );
@@ -552,7 +555,7 @@ export async function MarkPaid(
             break;
           // Step 3 Case 2: fundTypeId = 2 (Arco Gift Card)
           case 2:
-            const arcoCards = await getRFFArcoCards();
+            const arcoCards = await getReservedRFFArcoCards();
             const matchedCard = arcoCards.find(
               (card) => card.totalValue === fund.amount,
             );
@@ -639,7 +642,7 @@ export async function MarkPaid(
                 UserId: UserId,
                 isRFF: true,
                 isReservation: false,
-                isExpenditure: true,
+                isDisbursement: true,
               };
               await createTransaction(walmartTransactionData);
             } catch (error) {
@@ -663,7 +666,7 @@ export async function MarkPaid(
                 UserId: UserId,
                 isRFF: true,
                 isReservation: false,
-                isExpenditure: true,
+                isDisbursement: true,
               };
               await createTransaction(arcoTransactionData);
             } catch (error) {
@@ -687,7 +690,7 @@ export async function MarkPaid(
                 UserId: UserId,
                 isRFF: true,
                 isReservation: false,
-                isExpenditure: true,
+                isDisbursement: true,
               };
               await createTransaction(busPassTransactionData);
             } catch (error) {
@@ -714,7 +717,7 @@ export async function MarkPaid(
                 UserId: UserId,
                 isRFF: true,
                 isReservation: false,
-                isExpenditure: true,
+                isDisbursement: true,
               };
               await createTransaction(rffBalanceTransactionData);
             } catch (error) {

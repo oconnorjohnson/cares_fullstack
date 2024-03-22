@@ -67,6 +67,63 @@ export async function getRFFArcoCards(): Promise<totalValue[]> {
   }
 }
 
+export async function getReservedRFFArcoCards(): Promise<totalValue[]> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Asset")
+      .select("id, totalValue")
+      .eq("FundTypeId", 2)
+      .eq("isAvailable", false)
+      .eq("isRFF", true)
+      .eq("isCARES", false)
+      .eq("isReserved", true);
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Error in getReservedArcoCards:", error);
+    throw error;
+  }
+}
+
+export async function getReservedRFFWalmartCards(): Promise<totalValue[]> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Asset")
+      .select("id, totalValue")
+      .eq("FundTypeId", 1)
+      .eq("isAvailable", false)
+      .eq("isRFF", true)
+      .eq("isCARES", false)
+      .eq("isReserved", true);
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Error in getReservedWalmartCards:", error);
+    throw error;
+  }
+}
+
+export async function getReservedRFFBusPasses(): Promise<id[]> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Asset")
+      .select("id")
+      .eq("FundTypeId", 3)
+      .eq("isAvailable", false)
+      .eq("isRFF", true)
+      .eq("isCARES", false)
+      .eq("isReserved", true);
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Error in getReservedBusPasses:", error);
+    throw error;
+  }
+}
+
 export async function getTransactions() {
   const supabase = createSupabaseClient();
   try {
