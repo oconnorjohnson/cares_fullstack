@@ -31,10 +31,11 @@ export default function Approve({ requestId }: { requestId: number }) {
   const { data: user } = trpc.getUserDetailsByRequestId.useQuery(requestId);
   const email = user?.EmailAddress[0]?.email || "";
   const firstName = user?.first_name || "";
+  const UserId = user?.userId || "";
   const handleApprove = async () => {
     setIsDataLoading(true);
     try {
-      await ApproveRequest(requestId, firstName, email);
+      await ApproveRequest(requestId, firstName, email, UserId);
       toast.success("Request approved.");
     } catch (error) {
       console.error("Error approving request:", error);

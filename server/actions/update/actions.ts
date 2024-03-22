@@ -199,9 +199,11 @@ export async function ApproveRequest(
   requestId: number,
   firstName: string,
   email: string,
+  UserId: string,
 ): Promise<RequestData> {
   const resend = new Resend(process.env.RESEND_API_KEY);
   let modifiedFunds: FundDetail[] = [];
+  let reservedWalmartCardIds: number[] = [];
   // 1. Fetch the funds associated with the request
   try {
     const funds = await GetFundsByRequestId(requestId);
@@ -291,6 +293,7 @@ export async function ApproveRequest(
             console.error("Error marking asset as reserved");
             throw new Error("Error marking asset as reserved");
           }
+          reservedWalmartCardIds.push(matchingCard.id);
           break;
         // Step 3 Case 2: fundTypeId = 2 (Arco Gift Card)
         case 2:
@@ -370,17 +373,74 @@ export async function ApproveRequest(
       switch (fund.fundTypeId) {
         // Step 4 case 1: fundTypeId = 1 (Walmart Gift Card)
         case 1:
-          // TODO: create a transaction for each Walmart Gift Card reservation
+          try {
+            const walmartTransactionData = {
+              fundTypeId: 1,
+              quantity: 1,
+              unitValue: fund.amount, // Corrected from unitvalue to unitValue
+              totalValue: fund.amount,
+              requestId: requestId,
+              UserId: UserId,
+              isRFF: true,
+              isReservation: true,
+            };
+            await createTransaction(walmartTransactionData);
+          } catch (error) {
+            console.error(
+              `Error creating Walmart gift card transaction for fund ID ${fund.id}:`,
+              error,
+            );
+            throw new Error(
+              `Failed to create transaction for Walmart gift card with fund ID ${fund.id}`,
+            );
+          }
           break;
-        // Step 4 Case 2: fundTypeId = 2 (Arco Gift Card)
         case 2:
-          // TODO: create a transaction for each Arco Gift Card reservation
+          try {
+            const arcoTransactionData = {
+              fundTypeId: 2,
+              quantity: 1,
+              unitValue: fund.amount,
+              totalValue: fund.amount,
+              requestId: requestId,
+              UserId: UserId,
+              isRFF: true,
+              isReservation: true,
+            };
+            await createTransaction(arcoTransactionData);
+          } catch (error) {
+            console.error(
+              `Error creating Arco gift card transaction for fund ID ${fund.id}:`,
+              error,
+            );
+            throw new Error(
+              `Failed to create transaction for Arco gift card with fund ID ${fund.id}`,
+            );
+          }
           break;
-        // Step 4 Case 3: fundTypeId = 3 (Bus Pass)
-        case 3: {
-          // TODO: create a transaction for each Bus Pass reservation
+        case 3:
+          try {
+            const busPassTransactionData = {
+              fundTypeId: 3,
+              quantity: fund.amount, // Assuming this represents the number of bus passes
+              unitValue: 2.5, // Assuming a fixed unit value for bus passes
+              totalValue: fund.amount * 2.5,
+              requestId: requestId,
+              UserId: UserId,
+              isRFF: true,
+              isReservation: true,
+            };
+            await createTransaction(busPassTransactionData);
+          } catch (error) {
+            console.error(
+              `Error creating bus pass transaction for fund ID ${fund.id}:`,
+              error,
+            );
+            throw new Error(
+              `Failed to create transaction for bus passes with fund ID ${fund.id}`,
+            );
+          }
           break;
-        }
         // Step 4 Case 4/5/6:fundTypeId = 4 (Cash), 5 (Invoice), 6 (Check)
         case 4:
         case 5:
