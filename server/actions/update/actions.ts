@@ -345,9 +345,9 @@ export async function ApproveRequest(
             }
             const { version } = currentRFFBalanceData[0];
             const rffBalanceUpdateData = {
-              reservedBalance: fund.amount,
-              availableBalance: -fund.amount,
-              totalBalance: 0,
+              reservedBalance: -fund.amount,
+              availableBalance: 0,
+              totalBalance: -fund.amount,
               lastVersion: version,
             };
             const updateSuccess = await updateRFFBalance(
