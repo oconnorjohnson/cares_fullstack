@@ -422,8 +422,8 @@ export async function ApproveRequest(
           try {
             const busPassTransactionData = {
               fundTypeId: 3,
-              quantity: fund.amount, // Assuming this represents the number of bus passes
-              unitValue: 2.5, // Assuming a fixed unit value for bus passes
+              quantity: fund.amount,
+              unitValue: 2.5,
               totalValue: fund.amount * 2.5,
               requestId: requestId,
               UserId: UserId,
