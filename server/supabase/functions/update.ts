@@ -30,7 +30,7 @@ export async function updateRFFBalance(
     // First, fetch the current version and balances of the OperatingBalance from the database
     const { data: currentRFFBalance, error: fetchError } = await supabase
       .from("RFFBalance")
-      .select("version, availableBalance, totalBalance")
+      .select("version, availableBalance, totalBalance, reservedBalance")
       .eq("id", 2)
       .single(); // Assuming there's only one RFF balance record
 
@@ -58,6 +58,8 @@ export async function updateRFFBalance(
       currentRFFBalance.availableBalance + rffBalanceData.availableBalance!;
     const newTotalBalance =
       currentRFFBalance.totalBalance + rffBalanceData.totalBalance!;
+    const newReservedBalance =
+      currentRFFBalance.reservedBalance + rffBalanceData.reservedBalance!;
 
     // Proceed with the update if the versions match
     const { data: updatedRFFBalance, error: updateError } = await supabase
@@ -65,6 +67,7 @@ export async function updateRFFBalance(
       .update({
         availableBalance: newAvailableBalance,
         totalBalance: newTotalBalance,
+        reservedBalance: newReservedBalance,
         // Increment the version number upon update
         version: lastVersion + 1,
       })

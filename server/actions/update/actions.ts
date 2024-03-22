@@ -197,9 +197,10 @@ export async function ApproveRequest(
   try {
     // 1. Fetch the funds associated with the request
     try {
+      console.log("Fetching funds associated with request");
       const funds = await GetFundsByRequestId(requestId);
-      const modifiedFunds = funds.map(({ id, fundTypeId, amount }) => ({
-        fundId: id,
+      modifiedFunds = funds.map(({ id, fundTypeId, amount }) => ({
+        id: id,
         fundTypeId,
         amount,
       }));
@@ -210,6 +211,9 @@ export async function ApproveRequest(
     }
     // 2. Check the requested funds against the available RFF assets and RFF balance
     try {
+      console.log(
+        "Checking requested funds against available RFF assets and RFF balance",
+      );
       for (const fund of modifiedFunds) {
         switch (fund.fundTypeId) {
           // Step 2 Case 1: fundTypeId = 1 (Walmart Gift Card)
@@ -221,6 +225,7 @@ export async function ApproveRequest(
             if (!walmartCardAmounts.includes(fund.amount)) {
               throw new Error("Gift card amount not found");
             }
+            console.log("Gift card amount found");
             break;
           // Step 2 Case 2: fundTypeId = 2 (Arco Gift Card)
           case 2:
@@ -231,6 +236,7 @@ export async function ApproveRequest(
             if (!arcoCardAmounts.includes(fund.amount)) {
               throw new Error("Gift card amount not found");
             }
+            console.log("Gift card amount found");
             break;
           // Step 2 Case 3: fundTypeId = 3 (Bus Pass)
           case 3: {
@@ -240,6 +246,7 @@ export async function ApproveRequest(
                 `Requested number of bus passes exceeds available stock. Available: ${availableBusPasses}, Requested: ${fund.amount}`,
               );
             }
+            console.log("Bus pass amount found");
             break;
           }
           // Step 2 Case 4/5/6:fundTypeId = 4 (Cash), 5 (Invoice), 6 (Check)
@@ -252,6 +259,7 @@ export async function ApproveRequest(
                 `Requested amount exceeds available balance. Available: ${rffBalance[0].availableBalance}, Requested: ${fund.amount}`,
               );
             }
+            console.log("RFF balance amount found");
             break;
           default:
             console.error("invalid fundTypeId", fund.fundTypeId);
@@ -338,6 +346,7 @@ export async function ApproveRequest(
             const rffBalanceUpdateData = {
               reservedBalance: fund.amount,
               availableBalance: -fund.amount,
+              totalBalance: 0,
               lastVersion: version,
             };
             const updateSuccess = await updateRFFBalance(
@@ -365,11 +374,11 @@ export async function ApproveRequest(
           case 1:
             try {
               const walmartTransactionData = {
-                fundTypeId: 1,
+                FundTypeId: 1,
                 quantity: 1,
                 unitValue: fund.amount, // Corrected from unitvalue to unitValue
                 totalValue: fund.amount,
-                requestId: requestId,
+                RequestId: requestId,
                 UserId: UserId,
                 isRFF: true,
                 isReservation: true,
@@ -388,11 +397,11 @@ export async function ApproveRequest(
           case 2:
             try {
               const arcoTransactionData = {
-                fundTypeId: 2,
+                FundTypeId: 2,
                 quantity: 1,
                 unitValue: fund.amount,
                 totalValue: fund.amount,
-                requestId: requestId,
+                RequestId: requestId,
                 UserId: UserId,
                 isRFF: true,
                 isReservation: true,
@@ -411,11 +420,11 @@ export async function ApproveRequest(
           case 3:
             try {
               const busPassTransactionData = {
-                fundTypeId: 3,
+                FundTypeId: 3,
                 quantity: fund.amount,
                 unitValue: 2.5,
                 totalValue: fund.amount * 2.5,
-                requestId: requestId,
+                RequestId: requestId,
                 UserId: UserId,
                 isRFF: true,
                 isReservation: true,
@@ -437,11 +446,11 @@ export async function ApproveRequest(
           case 6:
             try {
               const rffBalanceTransactionData = {
-                fundTypeId: fund.fundTypeId,
+                FundTypeId: fund.fundTypeId,
                 quantity: 1,
                 unitValue: fund.amount,
                 totalValue: fund.amount,
-                requestId: requestId,
+                RequestId: requestId,
                 UserId: UserId,
                 isRFF: true,
                 isReservation: true,
