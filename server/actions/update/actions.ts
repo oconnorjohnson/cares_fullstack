@@ -625,7 +625,113 @@ export async function MarkPaid(
     }
     // 3. Create a transaction for each fund
     try {
-      //
+      for (const fund of modifiedFunds) {
+        switch (fund.fundTypeId) {
+          // Step 4 case 1: fundTypeId = 1 (Walmart Gift Card)
+          case 1:
+            try {
+              const walmartTransactionData = {
+                FundTypeId: 1,
+                quantity: 1,
+                unitValue: fund.amount, // Corrected from unitvalue to unitValue
+                totalValue: fund.amount,
+                RequestId: requestId,
+                UserId: UserId,
+                isRFF: true,
+                isReservation: false,
+                isExpenditure: true,
+              };
+              await createTransaction(walmartTransactionData);
+            } catch (error) {
+              console.error(
+                `Error creating Walmart gift card transaction for fund ID ${fund.id}:`,
+                error,
+              );
+              throw new Error(
+                `Failed to create transaction for Walmart gift card with fund ID ${fund.id}`,
+              );
+            }
+            break;
+          case 2:
+            try {
+              const arcoTransactionData = {
+                FundTypeId: 2,
+                quantity: 1,
+                unitValue: fund.amount,
+                totalValue: fund.amount,
+                RequestId: requestId,
+                UserId: UserId,
+                isRFF: true,
+                isReservation: false,
+                isExpenditure: true,
+              };
+              await createTransaction(arcoTransactionData);
+            } catch (error) {
+              console.error(
+                `Error creating Arco gift card transaction for fund ID ${fund.id}:`,
+                error,
+              );
+              throw new Error(
+                `Failed to create transaction for Arco gift card with fund ID ${fund.id}`,
+              );
+            }
+            break;
+          case 3:
+            try {
+              const busPassTransactionData = {
+                FundTypeId: 3,
+                quantity: fund.amount,
+                unitValue: 2.5,
+                totalValue: fund.amount * 2.5,
+                RequestId: requestId,
+                UserId: UserId,
+                isRFF: true,
+                isReservation: false,
+                isExpenditure: true,
+              };
+              await createTransaction(busPassTransactionData);
+            } catch (error) {
+              console.error(
+                `Error creating bus pass transaction for fund ID ${fund.id}:`,
+                error,
+              );
+              throw new Error(
+                `Failed to create transaction for bus passes with fund ID ${fund.id}`,
+              );
+            }
+            break;
+          // Step 4 Case 4/5/6:fundTypeId = 4 (Cash), 5 (Invoice), 6 (Check)
+          case 4:
+          case 5:
+          case 6:
+            try {
+              const rffBalanceTransactionData = {
+                FundTypeId: fund.fundTypeId,
+                quantity: 1,
+                unitValue: fund.amount,
+                totalValue: fund.amount,
+                RequestId: requestId,
+                UserId: UserId,
+                isRFF: true,
+                isReservation: false,
+                isExpenditure: true,
+              };
+              await createTransaction(rffBalanceTransactionData);
+            } catch (error) {
+              console.error(
+                `Error creating RFF balance transaction for fund ID ${fund.id}:`,
+                error,
+              );
+              throw new Error(
+                `Failed to create transaction for RFF balance with fund ID ${fund.id}`,
+              );
+            }
+            break;
+          default:
+            console.error("invalid fundTypeId", fund.fundTypeId);
+            throw new Error("invalid fundTypeId");
+        }
+      }
     } catch (error) {
       throw error;
     }
