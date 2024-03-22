@@ -445,7 +445,27 @@ export async function ApproveRequest(
         case 4:
         case 5:
         case 6:
-          // TODO: create a transaction for each Cash/Invoice/Check RFFBalance reservation
+          try {
+            const rffBalanceTransactionData = {
+              fundTypeId: fund.fundTypeId,
+              quantity: 1,
+              unitValue: fund.amount,
+              totalValue: fund.amount,
+              requestId: requestId,
+              UserId: UserId,
+              isRFF: true,
+              isReservation: true,
+            };
+            await createTransaction(rffBalanceTransactionData);
+          } catch (error) {
+            console.error(
+              `Error creating RFF balance transaction for fund ID ${fund.id}:`,
+              error,
+            );
+            throw new Error(
+              `Failed to create transaction for RFF balance with fund ID ${fund.id}`,
+            );
+          }
           break;
         default:
           console.error("invalid fundTypeId", fund.fundTypeId);
