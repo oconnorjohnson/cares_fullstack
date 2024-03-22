@@ -11,6 +11,7 @@ import {
   updateOperatingBalance as updateTheOperatingBalance,
   updateRFFBalance as updateTheRFFBalance,
   markAssetAsReserved,
+  markAssetAsExpended,
 } from "@/server/supabase/functions/update";
 import { GetFundsByRequestId } from "@/server/actions/request/actions";
 import {
@@ -324,7 +325,7 @@ export async function ApproveRequest(
               .slice(-fund.amount)
               .map((pass) => pass.id);
             const reservedPromises = busPassIdsToReserve.map((bussPassId) =>
-              markAssetAsReserved(bussPassId, fund.id),
+              markAssetAsExpended(bussPassId, fund.id),
             );
             try {
               await Promise.all(reservedPromises);
@@ -510,25 +511,149 @@ export async function MarkPaid(
   requestId: number,
   firstName: string,
   email: string,
+  UserId: string,
 ): Promise<TablesUpdate<"Request">> {
   const resend = new Resend(process.env.RESEND_API_KEY);
+  let modifiedFunds: FundDetail[] = [];
   try {
-    const response = await markRequestPaidById(requestId);
-    const updatedRequest = response;
-    if (!updatedRequest) {
-      throw new Error("Failed to update request data.");
+    // 1. Fetch the funds associated with the request
+    try {
+      const funds = await GetFundsByRequestId(requestId);
+      modifiedFunds = funds.map(({ id, fundTypeId, amount }) => ({
+        id: id,
+        fundTypeId,
+        amount,
+      }));
+    } catch (error) {
+      throw error;
     }
-    revalidatePath(`/admin/request/${requestId}/page`);
-    revalidatePath(`/dashboard/page`);
-    await resend.emails.send({
-      from: "CARES <info@yolopublicdefendercares.org>",
-      to: [email],
-      subject: "Your request has been paid.",
-      react: PaidEmailTemplate({
-        firstName: firstName,
-      }) as React.ReactElement,
-    });
-    return updatedRequest as unknown as TablesUpdate<"Request">;
+    // 2. Mark each fund's asset or balance amount as expended in assets and subtracted from reservedBalance and totalBalance of the RFFBalance.
+    try {
+      for (const fund of modifiedFunds) {
+        switch (fund.fundTypeId) {
+          // Step 3 case 1: fundTypeId = 1 (Walmart Gift Card)
+          case 1:
+            const walmartCards = await getRFFWalmartCards();
+            const matchingCard = walmartCards.find(
+              (card) => card.totalValue === fund.amount,
+            );
+            if (!matchingCard) {
+              console.error("Gift card amount not found");
+              throw new Error("Gift card amount not found");
+            }
+            const reservedCard = await markAssetAsExpended(
+              matchingCard.id,
+              fund.id,
+            );
+            if (!reservedCard) {
+              console.error("Error marking asset as reserved");
+              throw new Error("Error marking asset as reserved");
+            }
+            break;
+          // Step 3 Case 2: fundTypeId = 2 (Arco Gift Card)
+          case 2:
+            const arcoCards = await getRFFArcoCards();
+            const matchedCard = arcoCards.find(
+              (card) => card.totalValue === fund.amount,
+            );
+            if (!matchedCard) {
+              console.error("Gift card amount not found");
+              throw new Error("Gift card amount not found");
+            }
+            const reserveCard = await markAssetAsExpended(
+              matchedCard.id,
+              fund.id,
+            );
+            if (!reserveCard) {
+              console.error("Error marking asset as reserved");
+              throw new Error("Error marking asset as reserved");
+            }
+            break;
+          // Step 3 Case 3: fundTypeId = 3 (Bus Pass)
+          case 3: {
+            const availableBusPasses = await getRFFBusPasses();
+            if (fund.amount > availableBusPasses.length) {
+              throw new Error(
+                `Not enough bus passes available. Available: ${availableBusPasses.length}, Requested: ${fund.amount}`,
+              );
+            }
+            const busPassIdsToReserve = availableBusPasses
+              .slice(-fund.amount)
+              .map((pass) => pass.id);
+            const reservedPromises = busPassIdsToReserve.map((bussPassId) =>
+              markAssetAsExpended(bussPassId, fund.id),
+            );
+            try {
+              await Promise.all(reservedPromises);
+            } catch (error) {
+              console.error("error in marking assets as reserved", error);
+              throw new Error("error in marking assets as reserved");
+            }
+            break;
+          }
+          // Step 3 Case 4/5/6:fundTypeId = 4 (Cash), 5 (Invoice), 6 (Check)
+          case 4:
+          case 5:
+          case 6:
+            const currentRFFBalanceData = await getRFFBalance();
+            if (!currentRFFBalanceData || currentRFFBalanceData.length === 0) {
+              throw new Error("Failed to fetch RFFBalance data.");
+            }
+            const { version } = currentRFFBalanceData[0];
+            const rffBalanceUpdateData = {
+              reservedBalance: fund.amount,
+              availableBalance: -fund.amount,
+              totalBalance: 0,
+              lastVersion: version,
+            };
+            const updateSuccess = await updateRFFBalance(
+              version,
+              rffBalanceUpdateData,
+            );
+            if (!updateSuccess) {
+              throw new Error("Failed to update RFFBalance.");
+            }
+            break;
+          default:
+            console.error("invalid fundTypeId", fund.fundTypeId);
+            throw new Error("invalid fundTypeId");
+        }
+      }
+    } catch (error) {
+      console.error("Error in Step 2 of ApproveRequest:", error);
+      throw error;
+    }
+    // 3. Create a transaction for each fund
+    try {
+      //
+    } catch (error) {
+      throw error;
+    }
+    // 4. Finally, mark Request as Paid and notify user
+    try {
+      const response = await markRequestPaidById(requestId);
+      const updatedRequest = response;
+      if (!updatedRequest) {
+        throw new Error("Failed to update request data.");
+      }
+      revalidatePath(`/admin/request/${requestId}/page`);
+      revalidatePath(`/dashboard/page`);
+      await resend.emails.send({
+        from: "CARES <info@yolopublicdefendercares.org>",
+        to: [email],
+        subject: "Your request has been paid.",
+        react: PaidEmailTemplate({
+          firstName: firstName,
+        }) as React.ReactElement,
+      });
+      return updatedRequest as unknown as TablesUpdate<"Request">;
+    } catch (error) {
+      console.error(
+        `Failed to mark request with ID ${requestId} as paid:`,
+        error,
+      );
+      throw error;
+    }
   } catch (error) {
     console.error(
       `Failed to mark request with ID ${requestId} as paid:`,

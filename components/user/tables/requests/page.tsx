@@ -24,7 +24,6 @@ async function getRequests({ userId }: { userId: string }): Promise<Request[]> {
           : "Error",
     hasPreScreen: request.hasPreScreen,
     hasPostScreen: request.hasPostScreen,
-    pendingApproval: request.pendingApproval,
     paid: request.paid ? "Yes" : "No",
     approved: request.approved,
     denied: request.denied,

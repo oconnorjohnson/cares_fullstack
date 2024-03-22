@@ -549,6 +549,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                   <DenyButton requestId={request.id} />
                   <MarkPaidButton
                     requestId={request.id}
+                    UserId={request.User.userId}
                     firstName={request.User.first_name as string}
                     email={request.User.EmailAddress.email || ""}
                   />

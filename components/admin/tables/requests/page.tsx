@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge";
 type RequestStatus = "Pending" | "Approved" | "Denied" | "Error";
 async function getRequests(): Promise<Request[]> {
   const requests = await requestAllRequests();
-  console.log(requests);
   const modifiedRequests = requests.map((request) => ({
     ...request,
     id: request.id,
@@ -30,25 +29,21 @@ async function getRequests(): Promise<Request[]> {
     hasPostScreen: request.hasPostScreen ? "Complete" : "Incomplete",
     isHighlighted: request.pendingApproval,
   }));
-  console.log(modifiedRequests);
   const statusPriority: { [key in RequestStatus]: number } = {
     Pending: 1,
     Approved: 2,
     Denied: 3,
     Error: 4,
   };
-
   modifiedRequests.sort((a, b) => {
-    // Explicitly assert the type of combinedStatus as RequestStatus
     const statusA = a.combinedStatus as RequestStatus;
     const statusB = b.combinedStatus as RequestStatus;
-
     return statusPriority[statusA] - statusPriority[statusB];
   });
   return modifiedRequests as unknown as Request[];
 }
 
-export default async function DemoPage() {
+export default async function AdminRequestsTable() {
   const requests = await getRequests();
 
   return (
