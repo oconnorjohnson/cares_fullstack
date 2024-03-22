@@ -19,6 +19,8 @@ import {
 import {
   updateOperatingBalance,
   updateRFFBalance,
+  updateRequestWithPostScreen,
+  updateRequestWithPreScreen,
 } from "@/server/supabase/functions/update";
 import { deleteTransaction } from "@/server/supabase/functions/delete";
 import { Submitted } from "@/server/actions/resend/actions";
@@ -143,11 +145,12 @@ export async function createOperatingDeposit(
 
   try {
     // Create the transaction
-    await createTransaction(transactionData);
-
+    const transaction = await createTransaction(transactionData);
+    const transactionId = transaction;
     // Update the operating balance
     const updatedBalance = await updateOperatingBalance(lastVersion, {
       availableBalance: totalValue,
+      reservedBalance: 0,
       totalBalance: totalValue,
       // Assuming you want to add totalValue to the available balance
       // Include other necessary fields for updating the balance
@@ -156,6 +159,7 @@ export async function createOperatingDeposit(
     // Check if the balance update was successful
     if (!updatedBalance) {
       // If the balance update fails, consider rolling back the transaction if necessary
+      await deleteTransaction(transactionId!);
       throw new Error("Failed to update operating balance. Please try again.");
     }
     revalidatePath("/admin/finances");
@@ -184,11 +188,13 @@ export async function createRFFDeposit(RFFDepositData: DepositData) {
 
   try {
     // Create the transaction
-    await createTransaction(transactionData);
+    const transaction = await createTransaction(transactionData);
+    const transactionId = transaction;
 
     // Update the operating balance
     const updatedBalance = await updateRFFBalance(lastVersion, {
       availableBalance: totalValue,
+      reservedBalance: 0,
       totalBalance: totalValue,
       // Assuming you want to add totalValue to the available balance
       // Include other necessary fields for updating the balance
@@ -197,6 +203,7 @@ export async function createRFFDeposit(RFFDepositData: DepositData) {
     // Check if the balance update was successful
     if (!updatedBalance) {
       // If the balance update fails, consider rolling back the transaction if necessary
+      await deleteTransaction(transactionId!);
       throw new Error("Failed to update operating balance. Please try again.");
     }
     revalidatePath("/admin/finances");
@@ -426,8 +433,8 @@ export async function addGiftCard({
     // TRY 3: Update the balance
     try {
       const balanceUpdateData = {
-        availableBalance: -totalValue, // Pass as negative to subtract
-        totalBalance: -totalValue, // Pass as negative to subtract
+        availableBalance: -totalValue,
+        totalBalance: -totalValue,
         reservedBalance: 0,
       };
 
@@ -442,7 +449,7 @@ export async function addGiftCard({
         throw new Error("Failed to update balance.");
       }
       console.error("Error in addBusPasses:", error);
-      throw error; // Rethrow the error to be handled by the caller
+      throw error;
     }
     // TRY 4: Create the asset record
     try {
@@ -464,33 +471,26 @@ export async function addGiftCard({
     }
   } catch (error) {
     console.error("Error in addGiftCard:", error);
-    // Handle error (e.g., rollback transaction, notify the user, etc.)
+    if ((balanceUpdated = false)) {
+      await deleteTransaction(transactionId!);
+      throw new Error("Failed to update balance.");
+    }
   }
 }
 
 export async function createBusPassAssets(
   assetData: TablesInsert<"Asset"> & { amount: number },
 ) {
-  // Extract the amount and remove it from the assetData object
   const { amount, ...dataWithoutAmount } = assetData;
-
-  // Define the totalValue for each asset
   const totalValue = 2.5;
-
-  // Create an array to hold all promises for the insert operations
   const insertPromises = [];
-
-  // Loop for the amount times to insert the asset records
   for (let i = 0; i < amount; i++) {
-    // Add the totalValue to each asset record
     const assetRecord = { ...dataWithoutAmount, totalValue };
     insertPromises.push(createNewAsset(assetRecord));
   }
-
-  // Use Promise.all to execute all insert operations concurrently
   try {
     const results = await Promise.all(insertPromises);
-    return results; // This will be an array of all inserted asset records
+    return results;
   } catch (error) {
     console.error("Error creating assets:", error);
     throw error;
@@ -503,7 +503,6 @@ export async function newAgency(agencyState: AgencyData) {
   }
   const newAgencyRecord = await createAgency(agencyState);
   revalidatePath(`/admin/settings/page`);
-
   return newAgencyRecord;
 }
 
@@ -513,7 +512,6 @@ export async function newFund(fundState: NewFundData) {
     throw new Error("Data incomplete");
   }
   const newFundRecord = await createNewFundByRequestId(fundState);
-
   const requestId = fundState.requestId;
   revalidatePath(`/admin/request/${requestId}/page`);
   return newFundRecord;
@@ -529,11 +527,20 @@ export async function newPreScreen(
     );
   }
   try {
-    await createPreScreen(preScreenState);
-    revalidatePath("/admin/request/${requestId}");
-    revalidatePath("/dashboard");
-    revalidatePath("/user/requests");
-    return true;
+    const newPreScreenRecord = await createPreScreen(preScreenState);
+    const preScreenId = newPreScreenRecord.id;
+    const updatedPreScreenRecord = await updateRequestWithPreScreen(
+      requestId,
+      preScreenId,
+    );
+    if (!updatedPreScreenRecord) {
+      throw new Error("Failed to update request data.");
+    } else {
+      revalidatePath("/admin/request/${requestId}");
+      revalidatePath("/dashboard");
+      revalidatePath("/user/requests");
+    }
+    return newPreScreenRecord;
   } catch (error) {
     console.error("Failed to create new prescreen record:", error);
     throw error;
@@ -554,17 +561,27 @@ export async function newPostScreen(
   }
   try {
     const newPostScreenRecord = await createPostScreen(postScreenState);
-    revalidatePath("/admin/request/${requestId}");
-    revalidatePath("/dashboard");
-    revalidatePath("/user/requests");
-    await resend.emails.send({
-      from: "CARES <info@yolopublicdefendercares.org>",
-      to: [email],
-      subject: "Post-Screen Received!",
-      react: CompletedEmailTemplate({
-        firstName: firstName,
-      }) as React.ReactElement,
-    });
+    const postScreenId = newPostScreenRecord.id;
+    const updatedPostScreenRecord = await updateRequestWithPostScreen(
+      requestId,
+      postScreenId,
+    );
+    if (!updatedPostScreenRecord) {
+      throw new Error("Failed to update request data.");
+    } else {
+      console.log("newPostScreenRecord", newPostScreenRecord);
+      revalidatePath("/admin/request/${requestId}");
+      revalidatePath("/dashboard");
+      revalidatePath("/user/requests");
+      await resend.emails.send({
+        from: "CARES <info@yolopublicdefendercares.org>",
+        to: [email],
+        subject: "Post-Screen Received!",
+        react: CompletedEmailTemplate({
+          firstName: firstName,
+        }) as React.ReactElement,
+      });
+    }
     return newPostScreenRecord;
   } catch (error) {
     console.error("Failed to create new postscreen record:", error);

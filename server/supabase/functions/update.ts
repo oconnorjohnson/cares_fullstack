@@ -1,6 +1,56 @@
 import { createClient as createSupabaseClient } from "@/server/supabase/server";
 import { TablesUpdate, Tables } from "@/types_db";
 
+export async function updateRequestWithPostScreen(
+  requestId: number,
+  postScreenId: number,
+): Promise<Tables<"Request">> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Request")
+      .update({ postScreenAnswerId: postScreenId, hasPostScreen: true })
+      .eq("id", requestId)
+      .select("*")
+      .single();
+    if (error) {
+      throw new Error("Failed to update request data.");
+    }
+    return data;
+  } catch (error) {
+    throw new Error(
+      `Failed to update request: ${
+        error instanceof Error ? error.message : "Unknown error"
+      }`,
+    );
+  }
+}
+
+export async function updateRequestWithPreScreen(
+  requestId: number,
+  preScreenId: number,
+): Promise<Tables<"Request">> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Request")
+      .update({ preScreenAnswerId: preScreenId, hasPreScreen: true })
+      .eq("id", requestId)
+      .select("*")
+      .single();
+    if (error) {
+      throw new Error("Failed to update request data.");
+    }
+    return data;
+  } catch (error) {
+    throw new Error(
+      `Failed to update request: ${
+        error instanceof Error ? error.message : "Unknown error"
+      }`,
+    );
+  }
+}
+
 export async function markAssetAsExpended(
   assetId: number,
   fundId: number,

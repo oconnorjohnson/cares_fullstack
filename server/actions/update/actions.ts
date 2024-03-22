@@ -328,7 +328,7 @@ export async function ApproveRequest(
               .slice(-fund.amount)
               .map((pass) => pass.id);
             const reservedPromises = busPassIdsToReserve.map((bussPassId) =>
-              markAssetAsExpended(bussPassId, fund.id),
+              markAssetAsReserved(bussPassId, fund.id),
             );
             try {
               await Promise.all(reservedPromises);

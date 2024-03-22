@@ -28,11 +28,11 @@ export default function SideNavBar() {
             Agencies
           </div>
         </Link>
-        <Link href="/admin/settings/fundtypes">
+        <Link href="/admin/settings/email">
           <div
-            className={`rounded-xl hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 py-2 px-4 mx-2 text-md font-semibold text-start ${pathname === "/admin/settings/fundtypes" ? "bg-zinc-200 dark:bg-zinc-800" : ""}`}
+            className={`rounded-xl hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 py-2 px-4 mx-2 text-md font-semibold text-start ${pathname === "/admin/settings/email" ? "bg-zinc-200 dark:bg-zinc-800" : ""}`}
           >
-            Funds
+            Email
           </div>
         </Link>
       </div>

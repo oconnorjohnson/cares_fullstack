@@ -21,11 +21,18 @@ export default function LearnMore() {
       <SheetContent>
         <SheetHeader>
           <SheetTitle>Understanding Transactions & Balances</SheetTitle>
-          <SheetDescription>
-            Transactions are any movement of money in or out of either the CARES
-            General Fund or the RFF Grant. Total Balances are the sum of all
-            transactions in a given period. Available Balances are the sum of
-            all transactions that have not yet been paid out.
+          <SheetDescription className="text-md">
+            The balances tracked in this platform are not synced with any
+            external financial institutions.
+            <br />
+            <div className="py-2" />
+            The architecture of the platform is designed to allow for a rough
+            mirroring of our finances as they relate to the acquisition of
+            assets and distribution of funds to the community.
+            <br />
+            <div className="py-2" />
+            This is a rough approximation of our finances and is not intended to
+            be a complete representation of our financial situation.
           </SheetDescription>
         </SheetHeader>
         <div className="grid gap-4 py-4"></div>

@@ -47,7 +47,7 @@ const formSchema = z.object({
   requestId: z.number().min(1),
 });
 
-export default function PreScreen({ requestId }: { requestId: number }) {
+export default function PostScreen({ requestId }: { requestId: number }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user } = useUser();
   const email = user?.emailAddresses[0]?.emailAddress || "";
@@ -81,13 +81,10 @@ export default function PreScreen({ requestId }: { requestId: number }) {
         firstName,
         email,
       );
-      if (newPostScreenRecord) {
-        toast.success("Post-screen completed!");
-        form.reset();
-        trpcContext.getRequests.invalidate();
-      } else {
-        toast.error("Failed to submit post-screen form.");
-      }
+      toast.success("Post-screen completed!");
+      form.reset();
+      trpcContext.getRequests.invalidate();
+      return newPostScreenRecord;
     } catch (error) {
       toast.error("An error occurred while submitting the form.");
     } finally {

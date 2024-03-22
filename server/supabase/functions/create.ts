@@ -1,5 +1,5 @@
 import { createClient as createSupabaseClient } from "@/server/supabase/server";
-import { TablesInsert } from "@/types_db";
+import { Tables, TablesInsert } from "@/types_db";
 
 export async function createAgency(agencyData: TablesInsert<"Agency">) {
   const supabase = createSupabaseClient();
@@ -142,24 +142,15 @@ export async function createPreScreen(
   try {
     const { data: preScreenDataResult, error: preScreenError } = await supabase
       .from("PreScreenAnswers")
-      .insert([preScreenData]);
+      .insert([preScreenData])
+      .select("*")
+      .single();
     if (preScreenError) {
       console.error(
         "Error during insert operation in PreScreenAnswers table:",
         preScreenError,
       );
       throw new Error(preScreenError.message);
-    }
-    const { error: requestUpdateError } = await supabase
-      .from("Request")
-      .update({ hasPreScreen: true })
-      .match({ id: preScreenData.requestId });
-    if (requestUpdateError) {
-      console.error(
-        "Error during update operation in Request table:",
-        requestUpdateError,
-      );
-      throw new Error(requestUpdateError.message);
     }
     return preScreenDataResult;
   } catch (error) {
@@ -173,18 +164,27 @@ export async function createPreScreen(
 
 export async function createPostScreen(
   postScreenData: TablesInsert<"PostScreenAnswers">,
-) {
+): Promise<Tables<"PostScreenAnswers">> {
   const supabase = createSupabaseClient();
   console.log("Creating new post-screen record with data:", postScreenData);
   try {
-    const { data, error } = await supabase
-      .from("PostScreenAnswers")
-      .insert([postScreenData]);
-    if (error) throw error;
-    return data;
+    const { data: postScreenDataResult, error: postScreenError } =
+      await supabase
+        .from("PostScreenAnswers")
+        .insert([postScreenData])
+        .select("*")
+        .single();
+    if (postScreenError) {
+      console.error(
+        "Error during insert operation in PreScreenAnswers table:",
+        postScreenError,
+      );
+      throw new Error(postScreenError.message);
+    }
+    return postScreenDataResult;
   } catch (error) {
     throw new Error(
-      `Failed to create new post-screen record: ${
+      `Failed to create new pre-screen record: ${
         error instanceof Error ? error.message : "Unknown error"
       }`,
     );

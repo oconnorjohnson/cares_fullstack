@@ -28,7 +28,7 @@ import AddAgency from "@/components/forms/new-agency";
 import AddFundType from "@/components/forms/new-fund-type";
 import SideNavBar from "@/components/admin/dashboard/side-nav";
 import SettingsSideNav from "@/components/admin/dashboard/settings-side-nav";
-
+import AdminEmailPreferences from "@/components/admin/settings/email-preferences";
 export const runtime = "edge";
 
 export default async function Requests() {
@@ -46,10 +46,10 @@ export default async function Requests() {
           <div className="flex flex-col justify-center w-full">
             <div className="flex flex-row items-start justify-center space-x-12 px-10 pt-12">
               <div className="flex flex-col justify-center text-center space-y-8">
-                <div className="text-4xl font-bold py-8">Fund Types</div>
-                <AddFundType userId={user} />
-                <div className="border-2 rounded-xl w-full">
-                  <FundTypes />
+                <div className="text-4xl font-bold py-8">Email Preferences</div>
+
+                <div className="border-2 p-12 rounded-xl w-full">
+                  <AdminEmailPreferences />
                 </div>
               </div>
             </div>
