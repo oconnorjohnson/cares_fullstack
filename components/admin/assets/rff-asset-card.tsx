@@ -43,13 +43,13 @@ export default async function CaresAssetCard() {
               </CardHeader>
               <CardContent>
                 <div className="grid w-full items-center gap-4">
-                  <div className="flex flex-row space-x-4 space-y-1.5">
-                    Available Bus Passes:{" "}
-                    <Badge className="text-sm">{availableBusPasses}</Badge>
+                  <div className="flex flex-row space-x-4 items-center space-y-1.5 space-x-1">
+                    Available Bus Passes:
+                    <Badge className="text-sm ml-2">{availableBusPasses}</Badge>
                   </div>
-                  <div className="flex flex-row space-x-4 space-y-1.5">
-                    Reserved Bus Passes:{" "}
-                    <Badge className="text-sm">{reservedBusPasses}</Badge>
+                  <div className="flex flex-row space-x-4 items-center space-y-1.5 space-x-1">
+                    Reserved Bus Passes:
+                    <Badge className="text-sm ml-2">{reservedBusPasses}</Badge>
                   </div>
                 </div>
               </CardContent>
@@ -67,13 +67,15 @@ export default async function CaresAssetCard() {
               </CardHeader>
               <CardContent>
                 <div className="grid w-full items-center gap-4">
-                  <div className="flex flex-row space-x-4 space-y-1.5">
-                    Total Cash Value of Walmart Cards:{" "}
-                    <Badge className="text-sm">{walmartCards.totalSum}</Badge>
+                  <div className="flex flex-row space-x-4 items-center space-y-1.5 space-x-1">
+                    Total Cash Value of Walmart Cards:
+                    <Badge className="text-sm ml-2">
+                      {walmartCards.totalSum}
+                    </Badge>
                   </div>
-                  <div className="flex flex-row space-x-4 space-y-1.5">
-                    Total Number of Walmart Cards:{" "}
-                    <Badge className="text-sm">{walmartCards.count}</Badge>
+                  <div className="flex flex-row space-x-4 items-center space-y-1.5 space-x-1">
+                    Total Number of Walmart Cards:
+                    <Badge className="text-sm ml-2">{walmartCards.count}</Badge>
                   </div>
                 </div>
               </CardContent>
@@ -91,13 +93,13 @@ export default async function CaresAssetCard() {
               </CardHeader>
               <CardContent>
                 <div className="grid w-full items-center gap-4">
-                  <div className="flex flex-row space-x-4 space-y-1.5">
-                    Total Cash Value of Walmart Cards:{" "}
-                    <Badge className="text-sm">{arcoCards.totalSum}</Badge>
+                  <div className="flex flex-row space-x-4 items-center space-y-1.5 space-x-1">
+                    Total Cash Value of Walmart Cards:
+                    <Badge className="text-sm ml-2">{arcoCards.totalSum}</Badge>
                   </div>
-                  <div className="flex flex-row space-x-4 space-y-1.5">
-                    Total Number of Walmart Cards:{" "}
-                    <Badge className="text-sm">{arcoCards.count}</Badge>
+                  <div className="flex flex-row space-x-4 items-center space-y-1.5 space-x-1">
+                    Total Number of Walmart Cards:
+                    <Badge className="text-sm ml-2">{arcoCards.count}</Badge>
                   </div>
                 </div>
               </CardContent>

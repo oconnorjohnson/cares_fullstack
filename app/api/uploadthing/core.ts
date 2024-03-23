@@ -1,7 +1,7 @@
 import { currentUser } from "@clerk/nextjs";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { z } from "zod";
-
+import { revalidatePath } from "next/cache";
 import { createNewReceiptRecord } from "@/server/supabase/functions/create";
 import { addAgreementToRequest } from "@/server/supabase/functions/update";
 import {
@@ -49,6 +49,8 @@ export const ourFileRouter = {
           file.url,
         );
         console.log("Agreement added successfully:", addAgreement);
+        revalidatePath("/user/requests");
+        revalidatePath("/dashboard");
         return {
           uploadedBy: metadata.userId,
           agreementUrl: file.url,

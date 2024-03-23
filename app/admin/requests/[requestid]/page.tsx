@@ -659,7 +659,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                       </div>
 
                       <div className="text-xl font-bold">
-                        {request.PostScreenAnswer[0].created_at}
+                        {request.PostScreenAnswers[0].created_at}
                       </div>
                     </div>
                   </div>

@@ -3,9 +3,7 @@ import { Tables, TablesInsert } from "@/types_db";
 
 export async function createAgency(agencyData: TablesInsert<"Agency">) {
   const supabase = createSupabaseClient();
-
   const { data, error } = await supabase.from("Agency").insert([agencyData]);
-
   if (error) throw error;
   return data;
 }

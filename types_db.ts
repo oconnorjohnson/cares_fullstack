@@ -502,6 +502,7 @@ export type Database = {
           agencyId: number;
           agreementUrl: string | null;
           approved: boolean;
+          assetIds: number[] | null;
           clientId: number;
           created_at: string;
           denied: boolean;
@@ -526,6 +527,7 @@ export type Database = {
           agencyId: number;
           agreementUrl?: string | null;
           approved?: boolean;
+          assetIds?: number[] | null;
           clientId: number;
           created_at?: string;
           denied?: boolean;
@@ -550,6 +552,7 @@ export type Database = {
           agencyId?: number;
           agreementUrl?: string | null;
           approved?: boolean;
+          assetIds?: number[] | null;
           clientId?: number;
           created_at?: string;
           denied?: boolean;

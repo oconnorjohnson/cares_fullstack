@@ -11,6 +11,7 @@ export async function countRFFWalmartCards(): Promise<{
       .select("totalValue", { count: "exact" })
       .eq("isRFF", true)
       .eq("isCARES", false)
+      .eq("isAvailable", true)
       .eq("FundTypeId", 1);
 
     if (error) throw error;
@@ -38,6 +39,7 @@ export async function countRFFArcoCards(): Promise<{
       .select("*", { count: "exact" })
       .eq("isRFF", true)
       .eq("isCARES", false)
+      .eq("isAvailable", true)
       .eq("FundTypeId", 2);
     if (error) throw error;
     const totalSum = data.reduce(
