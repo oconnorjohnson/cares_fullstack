@@ -204,6 +204,7 @@ export type Database = {
       Fund: {
         Row: {
           amount: number;
+          AssetIds: number[] | null;
           created_at: string;
           fundTypeId: number;
           id: number;
@@ -217,6 +218,7 @@ export type Database = {
         };
         Insert: {
           amount: number;
+          AssetIds?: number[] | null;
           created_at?: string;
           fundTypeId: number;
           id?: number;
@@ -230,6 +232,7 @@ export type Database = {
         };
         Update: {
           amount?: number;
+          AssetIds?: number[] | null;
           created_at?: string;
           fundTypeId?: number;
           id?: number;
@@ -502,7 +505,6 @@ export type Database = {
           agencyId: number;
           agreementUrl: string | null;
           approved: boolean;
-          assetIds: number[] | null;
           clientId: number;
           created_at: string;
           denied: boolean;
@@ -527,7 +529,6 @@ export type Database = {
           agencyId: number;
           agreementUrl?: string | null;
           approved?: boolean;
-          assetIds?: number[] | null;
           clientId: number;
           created_at?: string;
           denied?: boolean;
@@ -552,7 +553,6 @@ export type Database = {
           agencyId?: number;
           agreementUrl?: string | null;
           approved?: boolean;
-          assetIds?: number[] | null;
           clientId?: number;
           created_at?: string;
           denied?: boolean;

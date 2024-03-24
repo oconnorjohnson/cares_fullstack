@@ -1,6 +1,26 @@
 import { createClient as createSupabaseClient } from "@/server/supabase/server";
 import { TablesUpdate, Tables } from "@/types_db";
 
+export async function updateFundWithAssets(
+  fundId: number,
+  assetIds: number[],
+): Promise<boolean> {
+  const supabase = createSupabaseClient();
+  try {
+    const { error } = await supabase
+      .from("Fund")
+      .update({ AssetIds: assetIds })
+      .eq("id", fundId);
+    if (error) {
+      console.log("Error in updateFundAssetIds:", error);
+      throw error;
+    }
+    return true;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function updateRequestWithPostScreen(
   requestId: number,
   postScreenId: number,

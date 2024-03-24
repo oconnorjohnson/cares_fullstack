@@ -10,6 +10,47 @@ type id = {
   id: number;
 };
 
+export async function getAssetIdsByFundId(
+  fundId: number,
+): Promise<{ AssetIds: number[] | null }> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Fund")
+      .select("AssetIds")
+      .eq("id", fundId)
+      .single();
+    if (error) {
+      console.log("Error in getAssetIdsByFundId:", error);
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getAssetFundTypeById(AssetId: number): Promise<
+  {
+    FundTypeId: number;
+  }[]
+> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Asset")
+      .select("FundTypeId")
+      .eq("id", AssetId);
+    if (error) {
+      console.log("Error in getAssetById:", error);
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function getRFFBusPasses(): Promise<id[]> {
   const supabase = createSupabaseClient();
   try {

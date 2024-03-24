@@ -12,6 +12,7 @@ import {
   updateRFFBalance as updateTheRFFBalance,
   markAssetAsReserved,
   markAssetAsExpended,
+  updateFundWithAssets,
 } from "@/server/supabase/functions/update";
 import { GetFundsByRequestId } from "@/server/actions/request/actions";
 import {
@@ -23,6 +24,8 @@ import {
   getReservedRFFWalmartCards,
   getReservedRFFBusPasses,
   getRFFBusPasses,
+  getAssetFundTypeById,
+  getAssetIdsByFundId,
 } from "@/server/supabase/functions/read";
 import { createTransaction } from "@/server/supabase/functions/create";
 import { countAvailableRFFBusPasses } from "@/server/supabase/functions/count";
@@ -34,7 +37,6 @@ import { EmailTemplate as BannedEmailTemplate } from "@/components/emails/banned
 import { EmailTemplate as ApprovedEmailTemplate } from "@/components/emails/approved";
 import { EmailTemplate as DeniedEmailTemplate } from "@/components/emails/denied";
 import { TablesUpdate } from "@/types_db";
-import { calculateSizeAdjustValues } from "next/dist/server/font-utils";
 
 export interface RequestData {
   id: number;
@@ -58,6 +60,7 @@ export interface FundDetail {
   id: number;
   fundTypeId: number;
   amount: number;
+  AssetIds?: number[];
 }
 
 export interface BalanceUpdateData {
@@ -277,6 +280,7 @@ export async function ApproveRequest(
     // 3. if all checks passed, then we mark each fund's asset or balance amount as reserved in assets and RFFBalance.
     try {
       for (const fund of modifiedFunds) {
+        let assetIdsToReserve: number[] = [];
         switch (fund.fundTypeId) {
           // Step 3 case 1: fundTypeId = 1 (Walmart Gift Card)
           case 1:
@@ -296,6 +300,7 @@ export async function ApproveRequest(
               console.error("Error marking asset as reserved");
               throw new Error("Error marking asset as reserved");
             }
+            assetIdsToReserve.push(matchingCard.id);
             break;
           // Step 3 Case 2: fundTypeId = 2 (Arco Gift Card)
           case 2:
@@ -315,6 +320,7 @@ export async function ApproveRequest(
               console.error("Error marking asset as reserved");
               throw new Error("Error marking asset as reserved");
             }
+            assetIdsToReserve.push(matchedCard.id);
             break;
           // Step 3 Case 3: fundTypeId = 3 (Bus Pass)
           case 3: {
@@ -336,6 +342,7 @@ export async function ApproveRequest(
               console.error("error in marking assets as reserved", error);
               throw new Error("error in marking assets as reserved");
             }
+            assetIdsToReserve = busPassIdsToReserve;
             break;
           }
           // Step 3 Case 4/5/6:fundTypeId = 4 (Cash), 5 (Invoice), 6 (Check)
@@ -364,6 +371,9 @@ export async function ApproveRequest(
           default:
             console.error("invalid fundTypeId", fund.fundTypeId);
             throw new Error("invalid fundTypeId");
+        }
+        if (assetIdsToReserve.length > 0) {
+          await updateFundWithAssets(fund.id, assetIdsToReserve);
         }
       }
     } catch (error) {
@@ -515,7 +525,7 @@ export async function MarkPaid(
   firstName: string,
   email: string,
   UserId: string,
-): Promise<TablesUpdate<"Request">> {
+): Promise<boolean> {
   const resend = new Resend(process.env.RESEND_API_KEY);
   let modifiedFunds: FundDetail[] = [];
   try {
@@ -530,100 +540,116 @@ export async function MarkPaid(
     } catch (error) {
       throw error;
     }
+    // Retireve the assetIds associated with the request
     // 2. Mark each fund's asset or balance amount as expended in assets and subtracted from reservedBalance and totalBalance of the RFFBalance.
     try {
       for (const fund of modifiedFunds) {
-        switch (fund.fundTypeId) {
-          // Step 3 case 1: fundTypeId = 1 (Walmart Gift Card)
-          case 1:
-            const walmartCards = await getReservedRFFWalmartCards();
-            const matchingCard = walmartCards.find(
-              (card) => card.totalValue === fund.amount,
-            );
-            if (!matchingCard) {
-              console.error("Gift card amount not found");
-              throw new Error("Gift card amount not found");
+        // Ensure fund.AssetIds is defined and not empty
+        if (fund.AssetIds && fund.AssetIds.length > 0) {
+          for (const asset of fund.AssetIds) {
+            switch (fund.fundTypeId) {
+              // Step 3 case 1: fundTypeId = 1 (Walmart Gift Card)
+              case 1:
+                // Mark the Walmart gift card as expended
+                try {
+                  const expended = await markAssetAsExpended(asset, fund.id);
+                  if (!expended) {
+                    console.error(
+                      `Error marking Walmart gift card (Asset ID: ${asset}) as expended`,
+                    );
+                    throw new Error(
+                      `Error marking Walmart gift card (Asset ID: ${asset}) as expended`,
+                    );
+                  }
+                } catch (error) {
+                  console.error(
+                    `Error processing Walmart gift card (Asset ID: ${asset}):`,
+                    error,
+                  );
+                  throw error;
+                }
+                break;
+
+              // Step 3 Case 2: fundTypeId = 2 (Arco Gift Card)
+              case 2:
+                // Mark the Arco gift card as expended
+                try {
+                  const expended = await markAssetAsExpended(asset, fund.id);
+                  if (!expended) {
+                    console.error(
+                      `Error marking Arco gift card (Asset ID: ${asset}) as expended`,
+                    );
+                    throw new Error(
+                      `Error marking Arco gift card (Asset ID: ${asset}) as expended`,
+                    );
+                  }
+                } catch (error) {
+                  console.error(
+                    `Error processing Arco gift card (Asset ID: ${asset}):`,
+                    error,
+                  );
+                  throw error;
+                }
+                break;
+
+              // Step 3 Case 3: fundTypeId = 3 (Bus Pass)
+              case 3:
+                // Mark the bus pass as expended
+                try {
+                  const expended = await markAssetAsExpended(asset, fund.id);
+                  if (!expended) {
+                    console.error(
+                      `Error marking bus pass (Asset ID: ${asset}) as expended`,
+                    );
+                    throw new Error(
+                      `Error marking bus pass (Asset ID: ${asset}) as expended`,
+                    );
+                  }
+                } catch (error) {
+                  console.error(
+                    `Error processing bus pass (Asset ID: ${asset}):`,
+                    error,
+                  );
+                  throw error;
+                }
+                break;
+              // Step 3 Case 4/5/6:fundTypeId = 4 (Cash), 5 (Invoice), 6 (Check)
+              case 4:
+              case 5:
+              case 6:
+                const currentRFFBalanceData = await getRFFBalance();
+                if (
+                  !currentRFFBalanceData ||
+                  currentRFFBalanceData.length === 0
+                ) {
+                  throw new Error("Failed to fetch RFFBalance data.");
+                }
+                const { version } = currentRFFBalanceData[0];
+                const rffBalanceUpdateData = {
+                  reservedBalance: -fund.amount,
+                  availableBalance: 0,
+                  totalBalance: -fund.amount,
+                  lastVersion: version,
+                };
+                const updateSuccess = await updateRFFBalance(
+                  version,
+                  rffBalanceUpdateData,
+                );
+                if (!updateSuccess) {
+                  throw new Error("Failed to update RFFBalance.");
+                }
+                break;
+              default:
+                console.error("invalid fundTypeId", fund.fundTypeId);
+                throw new Error("invalid fundTypeId");
             }
-            const reservedCard = await markAssetAsExpended(
-              matchingCard.id,
-              fund.id,
-            );
-            if (!reservedCard) {
-              console.error("Error marking asset as reserved");
-              throw new Error("Error marking asset as reserved");
-            }
-            break;
-          // Step 3 Case 2: fundTypeId = 2 (Arco Gift Card)
-          case 2:
-            const arcoCards = await getReservedRFFArcoCards();
-            const matchedCard = arcoCards.find(
-              (card) => card.totalValue === fund.amount,
-            );
-            if (!matchedCard) {
-              console.error("Gift card amount not found");
-              throw new Error("Gift card amount not found");
-            }
-            const reserveCard = await markAssetAsExpended(
-              matchedCard.id,
-              fund.id,
-            );
-            if (!reserveCard) {
-              console.error("Error marking asset as reserved");
-              throw new Error("Error marking asset as reserved");
-            }
-            break;
-          // Step 3 Case 3: fundTypeId = 3 (Bus Pass)
-          case 3: {
-            const availableBusPasses = await getRFFBusPasses();
-            if (fund.amount > availableBusPasses.length) {
-              throw new Error(
-                `Not enough bus passes available. Available: ${availableBusPasses.length}, Requested: ${fund.amount}`,
-              );
-            }
-            const busPassIdsToReserve = availableBusPasses
-              .slice(-fund.amount)
-              .map((pass) => pass.id);
-            const reservedPromises = busPassIdsToReserve.map((bussPassId) =>
-              markAssetAsExpended(bussPassId, fund.id),
-            );
-            try {
-              await Promise.all(reservedPromises);
-            } catch (error) {
-              console.error("error in marking assets as reserved", error);
-              throw new Error("error in marking assets as reserved");
-            }
-            break;
           }
-          // Step 3 Case 4/5/6:fundTypeId = 4 (Cash), 5 (Invoice), 6 (Check)
-          case 4:
-          case 5:
-          case 6:
-            const currentRFFBalanceData = await getRFFBalance();
-            if (!currentRFFBalanceData || currentRFFBalanceData.length === 0) {
-              throw new Error("Failed to fetch RFFBalance data.");
-            }
-            const { version } = currentRFFBalanceData[0];
-            const rffBalanceUpdateData = {
-              reservedBalance: -fund.amount,
-              availableBalance: 0,
-              totalBalance: -fund.amount,
-              lastVersion: version,
-            };
-            const updateSuccess = await updateRFFBalance(
-              version,
-              rffBalanceUpdateData,
-            );
-            if (!updateSuccess) {
-              throw new Error("Failed to update RFFBalance.");
-            }
-            break;
-          default:
-            console.error("invalid fundTypeId", fund.fundTypeId);
-            throw new Error("invalid fundTypeId");
+        } else {
+          console.log(`No assets to mark as expended for fund ID: ${fund.id}`);
         }
       }
     } catch (error) {
-      console.error("Error in Step 2 of ApproveRequest:", error);
+      console.error("Error in processing assets:", error);
       throw error;
     }
     // 3. Create a transaction for each fund
@@ -755,7 +781,6 @@ export async function MarkPaid(
           firstName: firstName,
         }) as React.ReactElement,
       });
-      return updatedRequest as unknown as TablesUpdate<"Request">;
     } catch (error) {
       console.error(
         `Failed to mark request with ID ${requestId} as paid:`,
@@ -763,6 +788,7 @@ export async function MarkPaid(
       );
       throw error;
     }
+    return true;
   } catch (error) {
     console.error(
       `Failed to mark request with ID ${requestId} as paid:`,
