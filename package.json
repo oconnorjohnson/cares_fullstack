@@ -10,7 +10,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@clerk/nextjs": "^4.29.5",
+    "@clerk/nextjs": "^4.29.9",
     "@hookform/resolvers": "^3.3.4",
     "@planetscale/database": "^1.14.0",
     "@prisma/client": "^5.10.2",
@@ -54,7 +54,7 @@
     "embla-carousel-react": "8.0.0-rc19",
     "framer-motion": "^11.0.8",
     "lucide-react": "^0.314.0",
-    "next": "14.1.0",
+    "next": "14.1.4",
     "next-themes": "^0.2.1",
     "posthog-js": "^1.109.0",
     "prettier-plugin-tailwindcss": "^0.5.11",
