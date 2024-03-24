@@ -196,7 +196,7 @@ const transactionHandlers: FundTypeTransactionHandlers = {
   6: createFundDisbursementTransaction,
 };
 
-export async function MarkPaid(requestId: number, UserId: string) {
+export default async function MarkPaid(requestId: number, UserId: string) {
   let modifiedFunds: FundDetail[] = [];
   try {
     const funds = await GetFundsByRequestId(requestId);

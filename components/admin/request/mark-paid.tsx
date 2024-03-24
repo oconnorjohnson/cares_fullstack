@@ -1,7 +1,8 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { CheckIcon } from "lucide-react";
-import { MarkPaid } from "@/server/actions/update/actions";
+// import { MarkPaid } from "@/server/actions/update/actions";
+import MarkPaid from "@/server/actions/rff/paid";
 import { useState } from "react";
 import { trpc } from "@/app/_trpc/client";
 import { LoadingSpinner } from "@/components/admin/request/deny";
@@ -23,7 +24,7 @@ export default function MarkAsPaid({
   const handleMarkPaid = async () => {
     setIsLoading(true);
     try {
-      await MarkPaid(requestId, firstName, email, UserId);
+      await MarkPaid(requestId, UserId);
       try {
         await Awaiting({ firstName, email });
       } catch (error) {
