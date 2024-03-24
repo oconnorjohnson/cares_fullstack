@@ -517,9 +517,7 @@ export async function ApproveRequest(
     throw error;
   }
 }
-// 1. we need to get the array of funds that are associated with the request
-// 2. depending on the fundTypeId, we fire the appropriate server function to mark the asset as expended and remove the totalAmount from reservedBalance as well as totalBalance
-// 3. On success, we create a transaction for each fund that reflects the change in balance or asset availability, and the request is marked as paid.
+
 export async function MarkPaid(
   requestId: number,
   firstName: string,

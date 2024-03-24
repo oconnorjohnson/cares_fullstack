@@ -1,7 +1,8 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { XIcon } from "lucide-react";
-import { ApproveRequest } from "@/server/actions/update/actions";
+// import { ApproveRequest } from "@/server/actions/update/actions";
+import ApproveRequest from "@/server/actions/rff/approve";
 import { cn } from "@/server/utils";
 import { useState } from "react";
 import { trpc } from "@/app/_trpc/client";
