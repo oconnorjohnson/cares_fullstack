@@ -28,7 +28,7 @@ export default function SideNavBar() {
           <div
             className={`rounded-xl hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 py-2 px-2 lg:px-6 mx-1 lg:mx-2 text-sm lg:text-md font-semibold flex flex-row justify-between items-center ${pathname === "/dashboard" ? "bg-zinc-200 dark:bg-zinc-800" : ""}`}
           >
-            <span className="hidden lg:block">Dashboard </span>
+            <div className="hidden lg:block">Dashboard </div>
             <HomeIcon className="w-5 h-5" />
           </div>
         </Link>
@@ -36,7 +36,7 @@ export default function SideNavBar() {
           <div
             className={`rounded-xl hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 py-2 px-2 lg:px-6 mx-1 lg:mx-2 text-sm lg:text-md font-semibold flex flex-row justify-between items-center ${pathname.startsWith("/admin/requests") ? "bg-zinc-200 dark:bg-zinc-800" : ""}`}
           >
-            <span className="hidden lg:block">Requests</span>
+            <div className="hidden lg:block">Requests</div>
             <GitPullRequestIcon className="w-5 h-5" />
           </div>
         </Link>
@@ -44,7 +44,7 @@ export default function SideNavBar() {
           <div
             className={`rounded-xl hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 py-2 px-2 lg:px-6 mx-1 lg:mx-2 text-sm lg:text-md font-semibold flex flex-row justify-between items-center ${pathname === "/admin/users" ? "bg-zinc-200 dark:bg-zinc-800" : ""}`}
           >
-            <span className="hidden lg:block">Users</span>{" "}
+            <div className="hidden lg:block">Users</div>{" "}
             <UsersIcon className="w-5 h-5" />
           </div>
         </Link>
@@ -52,7 +52,7 @@ export default function SideNavBar() {
           <div
             className={`rounded-xl hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 py-2 px-2 lg:px-6 mx-1 lg:mx-2 text-sm lg:text-md font-semibold flex flex-row justify-between items-center ${pathname === "/admin/funds" ? "bg-zinc-200 dark:bg-zinc-800" : ""}`}
           >
-            <span className="hidden lg:block">Funds</span>{" "}
+            <div className="hidden lg:block">Funds</div>{" "}
             <HeartHandshakeIcon className="w-5 h-5" />
           </div>
         </Link>
@@ -60,7 +60,7 @@ export default function SideNavBar() {
           <div
             className={`rounded-xl hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 py-2 px-2 lg:px-6 mx-1 lg:mx-2 text-sm lg:text-md font-semibold flex flex-row justify-between items-center ${pathname === "/admin/assets" ? "bg-zinc-200 dark:bg-zinc-800" : ""}`}
           >
-            <span className="hidden lg:block">Assets</span>{" "}
+            <div className="hidden lg:block">Assets</div>{" "}
             <WalletCardsIcon className="w-5 h-5" />
           </div>
         </Link>
@@ -68,7 +68,7 @@ export default function SideNavBar() {
           <div
             className={`rounded-xl hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 py-2 px-2 lg:px-6 mx-1 lg:mx-2 text-sm lg:text-md font-semibold flex flex-row justify-between items-center ${pathname === "/admin/finances" ? "bg-zinc-200 dark:bg-zinc-800" : ""}`}
           >
-            <span className="hidden lg:block">Finances</span>{" "}
+            <div className="hidden lg:block">Finances</div>{" "}
             <LandmarkIcon className="w-5 h-5" />
           </div>
         </Link>
@@ -76,14 +76,14 @@ export default function SideNavBar() {
           <div
             className={`rounded-xl hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 py-2 px-2 lg:px-6 mx-1 lg:mx-2 text-sm lg:text-md font-semibold flex flex-row justify-between items-center ${pathname === "/admin/settings/agencies" || pathname === "/admin/settings/fundtypes" ? "bg-zinc-200 dark:bg-zinc-800" : ""}`}
           >
-            <span className="hidden lg:block">Settings</span>{" "}
+            <div className="hidden lg:block">Settings</div>{" "}
             <SettingsIcon className="w-5 h-5" />
           </div>
         </Link>
         <Separator />
         <SignOutButton signOutCallback={() => router.push("/")}>
           <div className="rounded-xl hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 py-2 px-2 lg:px-6 mx-1 lg:mx-2 text-sm lg:text-md font-semibold flex flex-row justify-between items-center hover:bg-zinc-200 dark:hover:bg-zinc-800">
-            <span className="hidden lg:block">Sign Out</span>{" "}
+            <div className="hidden lg:block">Sign Out</div>{" "}
             <LogOutIcon className="w-5 h-5" />
           </div>
         </SignOutButton>
