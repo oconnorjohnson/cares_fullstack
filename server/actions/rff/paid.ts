@@ -1,4 +1,6 @@
 "use server";
+import { revalidatePath } from "next/cache";
+
 import {
   markAssetAsExpended,
   updateRFFBalance,
@@ -242,6 +244,7 @@ export default async function MarkPaid(requestId: number, UserId: string) {
       console.log(`Request ID ${requestId} marked as paid.`);
     }
     await markRequestPaidById(requestId);
+    revalidatePath("/admin/requests/[requestid]");
   } catch (error) {
     console.error("Error in MarkPaid function:", error);
     throw error;

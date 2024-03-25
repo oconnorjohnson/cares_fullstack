@@ -1,4 +1,5 @@
 "use server";
+import { revalidatePath } from "next/cache";
 import { Resend } from "resend";
 
 import { EmailTemplate as ApprovedEmailTemplate } from "@/components/emails/approved";
@@ -291,6 +292,7 @@ export default async function ApproveRFFRequest(
     if (funds.some((fund) => fund.needsReceipt === true)) {
       await markRequestAsNeedingReceipt(requestId);
     }
+    revalidatePath("/admin/requests/[requestid]");
     await resend.emails.send({
       from: "CARES <info@yolocountycares.com>",
       to: [email],
