@@ -271,10 +271,8 @@ export default async function ApproveRFFRequest(
     if (!reservationHandler || !transactionHandler) {
       throw new Error("Invalid fundTypeId");
     }
-    // First, handle reservation
     await reservationHandler(fund);
     console.log(`Reservation successful for fund ID ${fund.id}`);
-    // Then, create the transaction
     await transactionHandler(fund, requestId, UserId);
     console.log(`Transaction successful for fund ID ${fund.id}`);
   };

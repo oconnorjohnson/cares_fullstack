@@ -220,8 +220,6 @@ export default async function MarkPaid(requestId: number, UserId: string) {
         console.error("Invalid fundTypeId:", fund.fundTypeId);
         throw new Error("Invalid fundTypeId");
       }
-
-      // Check if AssetIds are present or if the fund type is 4, 5, or 6 which do not require AssetIds
       if (fund.AssetIds && fund.AssetIds.length > 0) {
         console.log("AssetIds", fund.AssetIds);
         for (const asset of fund.AssetIds) {
@@ -229,12 +227,9 @@ export default async function MarkPaid(requestId: number, UserId: string) {
           console.log(`Processed fund ID ${fund.id} successfully.`);
         }
       } else if ([4, 5, 6].includes(fund.fundTypeId)) {
-        // For fund types 4, 5, and 6, call the handler without an assetId
-        await expendHandler(null, fund.id, fund); // Assuming the handler can handle null as the assetId
+        await expendHandler(null, fund.id, fund);
         console.log(`Processed fund ID ${fund.id} successfully.`);
       }
-
-      // Proceed with creating disbursement transaction
       const transactionHandler = transactionHandlers[fund.fundTypeId];
       if (!transactionHandler) {
         console.error("Invalid fundTypeId for transaction:", fund.fundTypeId);

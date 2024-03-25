@@ -125,9 +125,9 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
       )}
 
       <div className="px-2" />
-      {fund.Receipt?.url ? (
+      {fund.Receipt[0]?.url && fund.Receipt[0].url !== "" ? (
         <Link
-          href={fund.Receipt.url}
+          href={fund.Receipt[0].url}
           target="_blank"
           rel="noopener noreferrer"
           className="text-lg font-semibold underline"

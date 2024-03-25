@@ -292,6 +292,7 @@ export async function requestRequestByRequestId(requestId: number): Promise<
       }[];
     preScreenAnswer: Tables<"PreScreenAnswers">;
     postScreenAnswer: Tables<"PostScreenAnswers">;
+    Receipt: Tables<"Receipt">;
   }
 > {
   console.log(requestId);
@@ -320,6 +321,7 @@ export async function requestRequestByRequestId(requestId: number): Promise<
         }[];
       preScreenAnswer: Tables<"PreScreenAnswers">;
       postScreenAnswer: Tables<"PostScreenAnswers">;
+      Receipt: Tables<"Receipt">;
     };
   } catch (error) {
     console.error("Failed to retrieve request by ID:", error);
