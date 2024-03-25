@@ -358,7 +358,7 @@ export async function denyRequestById(requestId: number) {
   }
 }
 
-export async function approveRequestById(requestId: number) {
+export async function approveRequestById(requestId: number): Promise<boolean> {
   console.log("Attempting to approve request with ID:", requestId);
   const supabase = createSupabaseClient();
   try {
@@ -370,7 +370,7 @@ export async function approveRequestById(requestId: number) {
       console.log("Error in approveRequestById:", error);
       throw error;
     }
-    return data;
+    return true;
   } catch (error) {
     console.error("Error in approveRequestById:", error);
     throw error;

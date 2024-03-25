@@ -1,6 +1,8 @@
+"use server";
 import {
   markAssetAsExpended,
   updateRFFBalance,
+  markRequestPaidById,
 } from "@/server/supabase/functions/update";
 import { createTransaction } from "@/server/supabase/functions/create";
 import { getRFFBalance } from "@/server/supabase/functions/read";
@@ -13,11 +15,11 @@ import type {
 } from "@/server/actions/rff/types";
 
 async function expendWalmartGiftCard(
-  asset: number,
+  asset: number | null,
   fundId: number,
   fund: FundDetail,
 ): Promise<boolean> {
-  const expended = await markAssetAsExpended(asset, fundId);
+  const expended = await markAssetAsExpended(asset!, fundId);
   if (!expended) {
     console.error(
       `Error marking Walmart gift card (Asset ID: ${asset}) as expended`,
@@ -31,11 +33,11 @@ async function expendWalmartGiftCard(
 }
 
 async function expendArcoGiftCard(
-  asset: number,
+  asset: number | null,
   fundId: number,
   fund: FundDetail,
 ): Promise<boolean> {
-  const expended = await markAssetAsExpended(asset, fundId);
+  const expended = await markAssetAsExpended(asset!, fundId);
   if (!expended) {
     console.error(
       `Error marking Arco gift card (Asset ID: ${asset}) as expended`,
@@ -49,11 +51,11 @@ async function expendArcoGiftCard(
 }
 
 async function expendBusPass(
-  asset: number,
+  asset: number | null,
   fundId: number,
   fund: FundDetail,
 ): Promise<boolean> {
-  const expended = await markAssetAsExpended(asset, fundId);
+  const expended = await markAssetAsExpended(asset!, fundId);
   if (!expended) {
     console.error(`Error marking bus pass (Asset ID: ${asset}) as expended`);
     throw new Error(`Error marking bus pass (Asset ID: ${asset}) as expended`);
@@ -63,7 +65,7 @@ async function expendBusPass(
 }
 
 async function expendFunds(
-  asset: number,
+  asset: number | null,
   fundId: number,
   fund: FundDetail,
 ): Promise<boolean> {
@@ -200,32 +202,46 @@ export default async function MarkPaid(requestId: number, UserId: string) {
   let modifiedFunds: FundDetail[] = [];
   try {
     const funds = await GetFundsByRequestId(requestId);
-    modifiedFunds = funds.map(({ id, fundTypeId, amount }) => ({
+    modifiedFunds = funds.map(({ id, fundTypeId, amount, AssetIds }) => ({
       id: id,
       fundTypeId,
       amount,
+      AssetIds: AssetIds,
     }));
   } catch (error) {
     throw error;
   }
   try {
     for (const fund of modifiedFunds) {
+      const expendHandler = expendHandlers[fund.fundTypeId];
+      if (!expendHandler) {
+        console.error("Invalid fundTypeId:", fund.fundTypeId);
+        throw new Error("Invalid fundTypeId");
+      }
+
+      // Check if AssetIds are present or if the fund type is 4, 5, or 6 which do not require AssetIds
       if (fund.AssetIds && fund.AssetIds.length > 0) {
+        console.log("AssetIds", fund.AssetIds);
         for (const asset of fund.AssetIds) {
-          const expendHandler = expendHandlers[asset];
-          if (!expendHandler) {
-            console.error("Invalid fundTypeId:", asset);
-            throw new Error("Invalid fundTypeId");
-          }
-          // Mark asset as expended
-          await expendHandler(fund.id, asset, fund);
+          await expendHandler(asset, fund.id, fund);
           console.log(`Processed fund ID ${fund.id} successfully.`);
         }
+      } else if ([4, 5, 6].includes(fund.fundTypeId)) {
+        // For fund types 4, 5, and 6, call the handler without an assetId
+        await expendHandler(null, fund.id, fund); // Assuming the handler can handle null as the assetId
+        console.log(`Processed fund ID ${fund.id} successfully.`);
       }
-      // Create disbursement transaction
+
+      // Proceed with creating disbursement transaction
       const transactionHandler = transactionHandlers[fund.fundTypeId];
+      if (!transactionHandler) {
+        console.error("Invalid fundTypeId for transaction:", fund.fundTypeId);
+        throw new Error("Invalid fundTypeId for transaction");
+      }
       await transactionHandler(fund, requestId, UserId);
+      console.log(`Request ID ${requestId} marked as paid.`);
     }
+    await markRequestPaidById(requestId);
   } catch (error) {
     console.error("Error in MarkPaid function:", error);
     throw error;

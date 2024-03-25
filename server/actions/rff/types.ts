@@ -2,7 +2,7 @@ export type FundDetail = {
   id: number;
   fundTypeId: number;
   amount: number;
-  AssetIds?: number[];
+  AssetIds?: number[] | null;
 };
 
 export type FundTypeHandlers = {
@@ -11,7 +11,7 @@ export type FundTypeHandlers = {
 
 export type ExpendTypeHandlers = {
   [key: number]: (
-    asset: number,
+    asset: number | null,
     fundId: number,
     fund: FundDetail,
   ) => Promise<boolean>;

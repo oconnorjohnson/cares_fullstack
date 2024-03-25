@@ -3,6 +3,7 @@ import { DataTable } from "@/components/ui/data-table";
 import { getPaidFunds } from "@/server/actions/request/actions";
 import type { FundData } from "@/server/actions/request/actions";
 import { format } from "date-fns";
+import { Card, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 async function getFunds(): Promise<Fund[]> {
@@ -21,18 +22,23 @@ export default async function FundsTable() {
   const funds = await getFunds();
   return (
     <div className="container mx-auto">
-      <DataTable
-        columns={columns}
-        data={funds}
-        defaultSorting={[
-          {
-            id: "amount",
-            desc: true,
-          },
-        ]}
-        searchColumn="typeName"
-        searchPlaceholder="Filter fund types..."
-      />
+      <Card className="p-8">
+        <CardHeader className="text-center text-3xl font-bold">
+          Processed and Paid Funds
+        </CardHeader>
+        <DataTable
+          columns={columns}
+          data={funds}
+          defaultSorting={[
+            {
+              id: "amount",
+              desc: true,
+            },
+          ]}
+          searchColumn="typeName"
+          searchPlaceholder="Filter fund types..."
+        />
+      </Card>
     </div>
   );
 }

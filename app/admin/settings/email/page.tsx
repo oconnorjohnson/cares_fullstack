@@ -1,31 +1,6 @@
 import GetFundTypes from "@/components/admin/tables/funds/get-fundTypes";
 import { auth } from "@clerk/nextjs";
-import CurrentUser from "@/components/shared/current-user";
-import NewFundType from "@/components/forms/new-fund-type";
-import NewAgency from "@/components/forms/new-agency";
-import GetAgencies from "@/components/admin/tables/agencies/get-agencies";
-import GetServerRequests from "@/components/admin/tables/requests/page";
-import { Separator } from "@/components/ui/separator";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { FreshPageAlert } from "@/components/shared/alerts";
-import {
-  HomeIcon,
-  GitPullRequestIcon,
-  UsersIcon,
-  DollarSignIcon,
-  BarChart2,
-  MailIcon,
-  SettingsIcon,
-  LogOutIcon,
-  SendIcon,
-} from "lucide-react";
-import { SignOutButton } from "@clerk/nextjs";
-import FundTypes from "@/components/admin/tables/fund-types/page";
-import AgencyTypes from "@/components/admin/tables/agencies/page";
-import AddAgency from "@/components/forms/new-agency";
-import AddFundType from "@/components/forms/new-fund-type";
+import { Card, CardHeader } from "@/components/ui/card";
 import SideNavBar from "@/components/admin/dashboard/side-nav";
 import SettingsSideNav from "@/components/admin/dashboard/settings-side-nav";
 import AdminEmailPreferences from "@/components/admin/settings/email-preferences";
@@ -45,13 +20,13 @@ export default async function Requests() {
         <div className="flex border-t flex-col w-5/6 ">
           <div className="flex flex-col justify-center w-full">
             <div className="flex flex-row items-start justify-center space-x-12 px-10 pt-12">
-              <div className="flex flex-col justify-center text-center space-y-8">
+              <Card className="flex flex-col justify-center text-center space-y-8">
                 <div className="text-4xl font-bold py-8">Email Preferences</div>
 
                 <div className="border-2 p-12 rounded-xl w-full">
                   <AdminEmailPreferences />
                 </div>
-              </div>
+              </Card>
             </div>
           </div>
         </div>

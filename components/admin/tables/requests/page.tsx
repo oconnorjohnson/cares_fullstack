@@ -3,6 +3,7 @@ import { DataTable } from "@/components/ui/data-table";
 import { requestAllRequests } from "@/server/actions/request/actions";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardHeader } from "@/components/ui/card";
 type RequestStatus = "Pending" | "Approved" | "Denied" | "Error";
 async function getRequests(): Promise<Request[]> {
   const requests = await requestAllRequests();
@@ -48,18 +49,23 @@ export default async function AdminRequestsTable() {
 
   return (
     <div className="container mx-auto">
-      <DataTable
-        columns={columns}
-        data={requests}
-        defaultSorting={[
-          {
-            id: "pendingApproval",
-            desc: true,
-          },
-        ]}
-        searchColumn="client"
-        searchPlaceholder="Filter clients..."
-      />
+      <Card className="p-8">
+        <CardHeader className="text-center text-3xl font-bold">
+          All Requests
+        </CardHeader>
+        <DataTable
+          columns={columns}
+          data={requests}
+          defaultSorting={[
+            {
+              id: "pendingApproval",
+              desc: true,
+            },
+          ]}
+          searchColumn="client"
+          searchPlaceholder="Filter clients..."
+        />
+      </Card>
     </div>
   );
 }

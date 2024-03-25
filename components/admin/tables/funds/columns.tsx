@@ -16,11 +16,13 @@ export type Fund = {
   created_at: string;
   fundTypeId: number;
   id: number;
-  needsReceipt: boolean;
+  needsReceipt: boolean | null;
   receiptId: number | null;
   requestId: number;
-  RFFType: string | null;
+  isCARES: boolean | null;
+  isRFF: boolean | null;
   FundType: FundType;
+  AssetIds: number[] | null;
 };
 
 export const columns: ColumnDef<Fund>[] = [

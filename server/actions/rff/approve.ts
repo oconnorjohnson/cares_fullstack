@@ -1,3 +1,4 @@
+"use server";
 import { Resend } from "resend";
 
 import { EmailTemplate as ApprovedEmailTemplate } from "@/components/emails/approved";
@@ -12,9 +13,11 @@ import {
   markAssetAsReserved,
   updateFundWithAssets,
   updateRFFBalance,
+  approveRequestById,
 } from "@/server/supabase/functions/update";
 import { createTransaction } from "@/server/supabase/functions/create";
 import { GetFundsByRequestId } from "@/server/actions/request/actions";
+import { markRequestAsNeedingReceipt } from "@/server/actions/update/actions";
 
 import type {
   FundDetail,
@@ -244,15 +247,17 @@ export default async function ApproveRFFRequest(
   email: string,
   UserId: string,
 ) {
+  console.log("ApproveRFFRequest function called");
   const resend = new Resend(process.env.RESEND_API_KEY);
 
   let modifiedFunds: FundDetail[] = [];
   console.log("Fetching funds associated with request");
   const funds = await GetFundsByRequestId(requestId);
-  modifiedFunds = funds.map(({ id, fundTypeId, amount }) => ({
+  modifiedFunds = funds.map(({ id, fundTypeId, amount, AssetIds }) => ({
     id: id,
     fundTypeId,
     amount,
+    AssetIds: AssetIds,
   }));
   console.log(modifiedFunds);
   const processFund = async (
@@ -282,6 +287,10 @@ export default async function ApproveRFFRequest(
   }
   console.log("Successfully processed funds");
   try {
+    await approveRequestById(requestId);
+    if (funds.some((fund) => fund.needsReceipt === true)) {
+      await markRequestAsNeedingReceipt(requestId);
+    }
     await resend.emails.send({
       from: "CARES <info@yolocountycares.com>",
       to: [email],

@@ -36,10 +36,7 @@ export default async function Requests() {
         <div className="flex flex-row">
           <SideNavBar />
           <div className="flex border-t flex-col w-5/6 items-center justify-start">
-            <FreshPageAlert />
-            <div className="text-4xl font-bold py-8">
-              Processed and Paid Funds
-            </div>
+            <div className="py-4" />
             <FundsTable />
           </div>
         </div>

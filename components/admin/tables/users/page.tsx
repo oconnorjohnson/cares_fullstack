@@ -3,6 +3,7 @@ import { DataTable } from "@/components/ui/data-table";
 import { GetAllUsers } from "@/server/actions/request/actions";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardHeader } from "@/components/ui/card";
 
 async function getUsers(): Promise<User[]> {
   const users = await GetAllUsers();
@@ -22,18 +23,23 @@ export default async function UserTable() {
   const users = await getUsers();
   return (
     <div className="container mx-auto">
-      <DataTable
-        columns={columns}
-        data={users}
-        defaultSorting={[
-          {
-            id: "users", // Make sure this id matches one of the column accessorKeys
-            desc: true,
-          },
-        ]}
-        searchColumn="users"
-        searchPlaceholder="Filter users..."
-      />
+      <Card className="p-8">
+        <CardHeader className="text-center text-3xl font-bold">
+          All Users
+        </CardHeader>
+        <DataTable
+          columns={columns}
+          data={users}
+          defaultSorting={[
+            {
+              id: "users",
+              desc: true,
+            },
+          ]}
+          searchColumn="users"
+          searchPlaceholder="Filter users..."
+        />
+      </Card>
     </div>
   );
 }
