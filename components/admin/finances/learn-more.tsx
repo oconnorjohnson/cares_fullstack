@@ -28,7 +28,7 @@ export default function LearnMore() {
           </SheetTitle>
           <SheetDescription className="flex flex-col text-md font-semilight">
             <div className="py-2" />
-            <Card className="flex flex-row justify-between items-center align-center py-4 pr-2">
+            <Card className="flex flex-row justify-between items-center align-center py-4 pr-6">
               <CornerDownRightIcon size={20} className="w-1/6" />
               <div className="px-1" />
               <div className="w-5/6">
@@ -38,7 +38,7 @@ export default function LearnMore() {
               </div>
             </Card>
             <div className="py-2" />
-            <Card className="flex flex-row justify-between items-center align-center py-4 pr-2">
+            <Card className="flex flex-row justify-between items-center align-center py-4 pr-6">
               <CornerDownRightIcon size={20} className="w-1/6" />
               <div className="px-1" />
               <div className="w-5/6">
@@ -50,7 +50,7 @@ export default function LearnMore() {
               </div>
             </Card>
             <div className="py-2" />
-            <Card className="flex flex-row justify-between items-center align-center py-4 pr-2">
+            <Card className="flex flex-row justify-between items-center align-center py-4 pr-6">
               <CornerDownRightIcon size={20} className="w-1/6" />
               <div className="px-1" />
               <div className="w-5/6">
@@ -63,7 +63,7 @@ export default function LearnMore() {
               </div>
             </Card>
             <div className="py-2" />
-            <Card className="flex flex-row justify-between items-center align-center py-4 pr-2">
+            <Card className="flex flex-row justify-between items-center align-center py-4 pr-6">
               <CornerDownRightIcon size={20} className="w-1/6" />
               <div className="px-1" />
               <div className="w-5/6">
@@ -73,7 +73,7 @@ export default function LearnMore() {
               </div>
             </Card>
             <div className="py-2" />
-            <Card className="flex flex-row justify-between items-center align-center py-4 pr-2">
+            <Card className="flex flex-row justify-between items-center align-center py-4 pr-6">
               <CornerDownRightIcon size={20} className="w-1/6" />
               <div className="px-1" />
               <div className="w-5/6">

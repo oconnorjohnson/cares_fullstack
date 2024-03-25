@@ -15,7 +15,6 @@ export type AnswerCategories = {
   financialDifficulties: number;
 };
 
-// function to calculate average for each category of pre-screen answers
 export async function getPreScreenAverages() {
   const preScreenAnswers = await getAllPreScreenAnswers();
   const categories: AnswerCategories = {
@@ -31,7 +30,6 @@ export async function getPreScreenAverages() {
   const categoryCounts: AnswerCategories = {
     ...categories,
   };
-
   preScreenAnswers.forEach((answer) => {
     categories.housingSituation += answer.housingSituation;
     categories.housingQuality += answer.housingQuality;
@@ -41,19 +39,16 @@ export async function getPreScreenAverages() {
     categories.transpoConfidence += answer.transpoConfidence;
     categories.transpoStress += answer.transpoStress;
     categories.financialDifficulties += answer.financialDifficulties;
-
     Object.keys(categoryCounts).forEach((key) => {
       categoryCounts[key as keyof AnswerCategories]++;
     });
   });
-
   const averages = Object.keys(categories).reduce((acc, key) => {
     acc[key as keyof AnswerCategories] =
       categories[key as keyof AnswerCategories] /
       categoryCounts[key as keyof AnswerCategories];
     return acc;
   }, {} as AnswerCategories);
-
   return averages;
 }
 
@@ -72,7 +67,6 @@ export async function getPostScreenAverages() {
   const categoryCounts: AnswerCategories = {
     ...categories,
   };
-
   postScreenAnswers.forEach((answer) => {
     categories.housingSituation += answer.housingSituation;
     categories.housingQuality += answer.housingQuality;
@@ -82,18 +76,15 @@ export async function getPostScreenAverages() {
     categories.transpoConfidence += answer.transpoConfidence;
     categories.transpoStress += answer.transpoStress;
     categories.financialDifficulties += answer.financialDifficulties;
-
     Object.keys(categoryCounts).forEach((key) => {
       categoryCounts[key as keyof AnswerCategories]++;
     });
   });
-
   const averages = Object.keys(categories).reduce((acc, key) => {
     acc[key as keyof AnswerCategories] =
       categories[key as keyof AnswerCategories] /
       categoryCounts[key as keyof AnswerCategories];
     return acc;
   }, {} as AnswerCategories);
-
   return averages;
 }
