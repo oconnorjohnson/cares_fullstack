@@ -10,6 +10,42 @@ type id = {
   id: number;
 };
 
+export async function getAllPreScreenAnswers(): Promise<
+  Tables<"PreScreenAnswers">[]
+> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase.from("PreScreenAnswers").select("*");
+    if (error) {
+      console.error("Error in getAllPreScreenAnswers:", error);
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.error("Unexpected error in getAllPreScreenAnswers:", error);
+    throw error;
+  }
+}
+
+export async function getAllPostScreenAnswers(): Promise<
+  Tables<"PostScreenAnswers">[]
+> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("PostScreenAnswers")
+      .select("*");
+    if (error) {
+      console.error("Error in getAllPostScreenAnswers:", error);
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.error("Unexpected error in getAllPostScreenAnswers:", error);
+    throw error;
+  }
+}
+
 export async function getAssetIdsByFundId(
   fundId: number,
 ): Promise<{ AssetIds: number[] | null }> {

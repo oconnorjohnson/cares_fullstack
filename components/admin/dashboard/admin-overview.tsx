@@ -10,12 +10,20 @@ import {
   CountRequestsDenied,
   CountRequestsByAgency,
 } from "@/server/actions/count/actions";
+import {
+  getPreScreenAverages,
+  getPostScreenAverages,
+} from "@/server/actions/calculations/actions";
+import type { AnswerCategories } from "@/server/actions/calculations/actions";
+import PrePostAnalysis from "@/components/admin/dashboard/pre-post-analysis";
 
 export default async function AdminOverview() {
   const pendingRequests = (await CountRequestsPendingApproval()) ?? 0;
   const completedRequests = (await CountRequestsCompleted()) ?? 0;
   const deniedRequests = (await CountRequestsDenied()) ?? 0;
   const agencyDataWithNames = (await CountRequestsByAgency()) ?? 0;
+  const preAnswers: AnswerCategories = await getPreScreenAverages();
+  const postAnswers: AnswerCategories = await getPostScreenAverages();
 
   return (
     <>
@@ -25,7 +33,8 @@ export default async function AdminOverview() {
         <DeniedCard deniedRequests={deniedRequests} />
       </div>
       <div className="flex flex-col pb-10 w-full px-10">
-        <RequestsTimeGraph AgencyData={agencyDataWithNames} />
+        <PrePostAnalysis preAnswers={preAnswers} postAnswers={postAnswers} />
+        {/* <RequestsTimeGraph AgencyData={agencyDataWithNames} /> */}
       </div>
     </>
   );
