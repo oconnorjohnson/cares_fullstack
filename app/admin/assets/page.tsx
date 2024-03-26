@@ -32,10 +32,6 @@ import AddGiftCards from "@/components/admin/assets/add-gift-card";
 import { Card } from "@/components/ui/card";
 import LearnMoreCard from "@/components/admin/assets/learn-more-card";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-export const runtime = "edge";
-
 export default async function Requests() {
   const { sessionClaims } = auth();
   const isAdmin = (sessionClaims?.publicMetadata as any)?.admin;

@@ -4,7 +4,6 @@ import { Card, CardHeader } from "@/components/ui/card";
 import SideNavBar from "@/components/admin/dashboard/side-nav";
 import SettingsSideNav from "@/components/admin/dashboard/settings-side-nav";
 import AdminEmailPreferences from "@/components/admin/settings/email-preferences";
-export const runtime = "edge";
 
 export default async function Requests() {
   const { sessionClaims, userId } = auth();

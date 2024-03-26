@@ -6,8 +6,6 @@ import AddFundType from "@/components/forms/new-fund-type";
 import SideNavBar from "@/components/admin/dashboard/side-nav";
 import SettingsSideNav from "@/components/admin/dashboard/settings-side-nav";
 
-export const runtime = "edge";
-
 export default async function Requests() {
   const { sessionClaims, userId } = auth();
   const isAdmin = (sessionClaims?.publicMetadata as any)?.admin;

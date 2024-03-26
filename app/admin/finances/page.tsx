@@ -6,18 +6,7 @@ import {
   RFFBalanceCard,
   LearnMoreCard,
 } from "@/components/admin/finances/balance-cards";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import LearnMore from "@/components/admin/finances/learn-more";
-
-export const runtime = "edge";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 
 export default async function Requests() {
   const { sessionClaims } = auth();

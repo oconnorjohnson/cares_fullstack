@@ -1,5 +1,4 @@
 import SideNavBar from "@/components/user/dashboard/side-nav";
-export const runtime = "edge";
 export default function SettingsPage() {
   return (
     <div className="flex flex-row">

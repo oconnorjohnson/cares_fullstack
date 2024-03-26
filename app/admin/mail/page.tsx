@@ -22,8 +22,6 @@ import {
 } from "lucide-react";
 import { SignOutButton } from "@clerk/nextjs";
 
-export const runtime = "edge";
-
 export default async function Requests() {
   const { sessionClaims } = auth();
   const isAdmin = (sessionClaims?.publicMetadata as any)?.admin;

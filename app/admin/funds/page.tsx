@@ -1,9 +1,6 @@
-import GetFundTypes from "@/components/admin/tables/funds/get-fundTypes";
 import { auth } from "@clerk/nextjs";
 import FundsTable from "@/components/admin/tables/funds/page";
 import SideNavBar from "@/components/admin/dashboard/side-nav";
-
-export const runtime = "edge";
 
 export default async function Requests() {
   const { sessionClaims } = auth();

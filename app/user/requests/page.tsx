@@ -1,7 +1,6 @@
 import SideNavBar from "@/components/user/dashboard/side-nav";
 import GetRequests from "@/components/user/tables/requests/page";
 import { auth } from "@clerk/nextjs";
-export const runtime = "edge";
 export default function RequestsPage() {
   const { userId } = auth();
   console.log(userId);

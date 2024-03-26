@@ -32,7 +32,6 @@ import {
   GetRFFWalmartCards,
   GetRFFArcoCards,
 } from "@/server/actions/request/actions";
-export const runtime = "edge";
 
 const RequestPage = async ({ requestid }: { requestid: string }) => {
   const rffWalmartCards = await GetRFFWalmartCards();
