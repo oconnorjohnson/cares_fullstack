@@ -25,11 +25,6 @@ export default function MarkAsPaid({
     setIsLoading(true);
     try {
       await MarkPaid(requestId, UserId);
-      // try {
-      //   await Awaiting({ firstName, email });
-      // } catch (error) {
-      //   console.error("Failed to submit:", error);
-      // }
     } catch (error) {
       console.error("Error marking request as paid:", error);
     } finally {

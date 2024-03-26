@@ -17,7 +17,7 @@ import {
 export type FundType = {
   id: number;
   typeName: string;
-  userId: string;
+  userId: string | null;
 };
 
 export const columns: ColumnDef<FundType>[] = [
