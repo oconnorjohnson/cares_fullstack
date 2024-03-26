@@ -4,6 +4,7 @@ import { WebhookEvent } from "@clerk/nextjs/server";
 import {
   createUser,
   createEmailAddresses,
+  createAdminEmailPreferenceRecord,
 } from "@/server/supabase/functions/create";
 import { updateUser } from "@/server/supabase/functions/update";
 import { deleteUser } from "@/server/supabase/functions/delete";
@@ -115,6 +116,9 @@ export async function POST(req: Request) {
 
       const emails = await createEmailAddresses(emailData);
       console.log(`Emails ${emails} created successfully`);
+
+      const addedRecord = await createAdminEmailPreferenceRecord(id);
+      console.log(`Admin email preference record added successfully`);
       if (email_addresses.length > 0) {
         const primaryEmail = email_addresses[0].email_address;
         await sendWelcomeEmail(first_name, primaryEmail);

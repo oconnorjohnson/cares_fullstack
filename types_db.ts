@@ -46,7 +46,7 @@ export type Database = {
           requestReceived: boolean;
           rffAssetsAdded: boolean;
           rffBalanceUpdated: boolean;
-          UserId: number;
+          UserId: string | null;
         };
         Insert: {
           agreementUploaded?: boolean;
@@ -59,7 +59,7 @@ export type Database = {
           requestReceived?: boolean;
           rffAssetsAdded?: boolean;
           rffBalanceUpdated?: boolean;
-          UserId: number;
+          UserId?: string | null;
         };
         Update: {
           agreementUploaded?: boolean;
@@ -72,7 +72,7 @@ export type Database = {
           requestReceived?: boolean;
           rffAssetsAdded?: boolean;
           rffBalanceUpdated?: boolean;
-          UserId?: number;
+          UserId?: string | null;
         };
         Relationships: [
           {
@@ -80,7 +80,7 @@ export type Database = {
             columns: ["UserId"];
             isOneToOne: false;
             referencedRelation: "User";
-            referencedColumns: ["id"];
+            referencedColumns: ["userId"];
           },
         ];
       };

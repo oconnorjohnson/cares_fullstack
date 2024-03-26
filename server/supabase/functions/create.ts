@@ -8,6 +8,20 @@ export async function createAgency(agencyData: TablesInsert<"Agency">) {
   return data;
 }
 
+export async function createAdminEmailPreferenceRecord(
+  UserId: string,
+): Promise<boolean> {
+  const supabase = createSupabaseClient();
+  const addedRecord = await supabase
+    .from("AdminEmailPrefs")
+    .insert({ UserId: UserId });
+  if (addedRecord) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 export async function createTransaction(
   transactionData: TablesInsert<"Transaction">,
 ): Promise<number> {
