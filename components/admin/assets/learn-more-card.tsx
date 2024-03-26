@@ -59,10 +59,10 @@ export default function LearnMore() {
               <div className="px-1" />
               <div className="w-5/6">
                 {" "}
-                When viewing a request, you can hover over the "Walmart Gift
-                Card" or "Arco Gift Card" badges to see the available card
-                values. Card values must match available cards in order to
-                approve the request.
+                When viewing a request, you can hover over the &ldquo;Walmart
+                Gift Card&rdquo; or &ldquo;Arco Gift Card&rdquo; badges to see
+                the available card values. Card values must match available
+                cards in order to approve the request.
               </div>
             </Card>
             <div className="py-2" />
