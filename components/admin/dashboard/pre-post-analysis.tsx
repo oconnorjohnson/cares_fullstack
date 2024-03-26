@@ -26,12 +26,14 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
         xKey: "category",
         yKey: "preValue",
         yName: "Pre-Screen",
+        cornerRadius: 10,
       },
       {
         type: "bar",
         xKey: "category",
         yKey: "postValue",
         yName: "Post-Screen",
+        cornerRadius: 10,
       },
     ],
     axes: [
