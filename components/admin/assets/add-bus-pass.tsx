@@ -54,15 +54,12 @@ const formSchema = z.object({
 export default function AddBusPasses() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { userId } = useAuth();
-  if (!userId) {
-    return <div>Not authenticated</div>;
-  }
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       amount: 0,
-      UserId: userId,
+      UserId: userId!,
       balanceSource: "",
     },
   });
