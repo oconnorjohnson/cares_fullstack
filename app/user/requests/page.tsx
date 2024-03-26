@@ -11,8 +11,9 @@ export default function RequestsPage() {
       <div className="flex flex-row">
         <SideNavBar />
         <div className="flex border-t flex-col w-5/6">
-          <div className="text-3xl font-bold pl-12 pt-12">My Requests</div>
-          <GetRequests userId={userId} />
+          <div className="p-8">
+            <GetRequests userId={userId} />
+          </div>
         </div>
       </div>
     );

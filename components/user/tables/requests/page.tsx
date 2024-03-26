@@ -3,6 +3,13 @@ import { DataTable } from "@/components/ui/data-table";
 import { requestUsersRequests } from "@/server/actions/request/actions";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 
 type RequestStatus = "Pending" | "Approved" | "Denied" | "Error";
 
@@ -47,18 +54,31 @@ export default async function UserRequests({ userId }: { userId: string }) {
   const requests = await getRequests({ userId });
 
   return (
-    <div className="container mx-auto">
-      <DataTable
-        columns={columns}
-        data={requests}
-        defaultSorting={[
-          {
-            id: "actions",
-            desc: true,
-          },
-        ]}
-        searchPlaceholder="Search requests"
-      />
-    </div>
+    <>
+      <Card>
+        <CardHeader>
+          <CardTitle>My Requests</CardTitle>
+          <CardDescription>
+            All of your requests, and their required actions if relevant, are
+            listed and updated here.
+          </CardDescription>
+          <CardContent>
+            <div className="container mx-auto">
+              <DataTable
+                columns={columns}
+                data={requests}
+                defaultSorting={[
+                  {
+                    id: "actions",
+                    desc: true,
+                  },
+                ]}
+                searchPlaceholder="Search requests"
+              />
+            </div>
+          </CardContent>
+        </CardHeader>
+      </Card>
+    </>
   );
 }

@@ -13,9 +13,7 @@ export default async function ClientsPage() {
       <div className="flex flex-row">
         <SideNavBar />
         <div className="flex border-t flex-col w-5/6">
-          <div className="flex flex-row justify-between py-6"></div>
-          <div className="text-3xl font-bold pl-12">My Clients</div>
-          <div className="w-full">
+          <div className="w-full p-8">
             <ClientsTable userId={userId} />
           </div>
 
