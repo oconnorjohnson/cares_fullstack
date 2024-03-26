@@ -6,7 +6,10 @@ import {
   createEmailAddresses,
   createAdminEmailPreferenceRecord,
 } from "@/server/supabase/functions/create";
-import { updateUser } from "@/server/supabase/functions/update";
+import {
+  updateUser,
+  updateAdminUser,
+} from "@/server/supabase/functions/update";
 import { deleteUser } from "@/server/supabase/functions/delete";
 import { EmailTemplate } from "@/components/emails/welcome";
 import { Resend } from "resend";
@@ -22,6 +25,7 @@ interface UserData {
   email_addresses: EmailAddress[];
   first_name: string;
   last_name: string;
+  public_metadata: any;
 }
 const resend = new Resend(process.env.RESEND_API_KEY);
 async function sendWelcomeEmail(firstName: string, email: string) {
@@ -128,9 +132,10 @@ export async function POST(req: Request) {
     }
     case "user.updated": {
       console.log("User update event detected");
-      const { id, first_name, last_name, email_addresses } =
+      const { id, first_name, last_name, email_addresses, public_metadata } =
         evt.data as UserData;
       console.log(`Updating user: ID=${id}`);
+
       const userData = {
         userId: id,
         first_name,
@@ -139,7 +144,20 @@ export async function POST(req: Request) {
           email: emailAddress.email_address,
           id: emailAddress.id,
         })),
+        public_metadata: public_metadata,
       };
+      if (
+        userData.public_metadata &&
+        userData.public_metadata.admin === "true"
+      ) {
+        console.log(
+          `User ${userData.userId} is an admin. Updating admin status.`,
+        );
+        const adminStatus: boolean = await updateAdminUser(userData.userId);
+        if (adminStatus === true) {
+          console.log(`Admin status for user ${userData.userId} updated.`);
+        }
+      }
       console.log("Updating user in database with new details");
       const user = await updateUser(id, userData);
       console.log(`User ${user} updated`);

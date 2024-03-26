@@ -1,5 +1,6 @@
 import { createClient as createSupabaseClient } from "@/server/supabase/server";
 import { TablesUpdate, Tables } from "@/types_db";
+import type { WebhookEvent } from "@clerk/nextjs/server";
 
 export async function updateFundWithAssets(
   fundId: number,
@@ -251,6 +252,24 @@ export async function updateOperatingBalance(
     return true;
   } catch (error) {
     console.error("Error updating operating balance:", error);
+    throw error;
+  }
+}
+
+export async function updateAdminUser(UserId: string): Promise<boolean> {
+  const supabase = createSupabaseClient();
+  try {
+    const { error } = await supabase
+      .from("AdminUser")
+      .update({ isAdmin: true })
+      .eq("userId", UserId);
+    if (error) {
+      console.log("Error in updateAdminUser:", error);
+      throw error;
+    }
+    return true;
+  } catch (error) {
+    console.error("Failed to update admin user:", error);
     throw error;
   }
 }
