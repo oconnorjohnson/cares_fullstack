@@ -4,7 +4,6 @@ import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import ViewRequest from "@/components/shared/view-request";
 import Link from "next/link";
 import {
   DropdownMenu,
