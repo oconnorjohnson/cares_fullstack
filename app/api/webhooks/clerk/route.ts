@@ -153,10 +153,7 @@ export async function POST(req: Request) {
         console.log(
           `User ${userData.userId} is an admin. Updating admin status.`,
         );
-        const adminStatus: boolean = await updateAdminUser(userData.userId);
-        if (adminStatus === true) {
-          console.log(`Admin status for user ${userData.userId} updated.`);
-        }
+        await updateAdminUser(userData.userId);
       }
       console.log("Updating user in database with new details");
       const user = await updateUser(id, userData);

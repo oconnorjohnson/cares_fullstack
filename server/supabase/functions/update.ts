@@ -256,18 +256,13 @@ export async function updateOperatingBalance(
   }
 }
 
-export async function updateAdminUser(UserId: string): Promise<boolean> {
+export async function updateAdminUser(UserId: string) {
   const supabase = createSupabaseClient();
   try {
-    const { error } = await supabase
+    await supabase
       .from("AdminUser")
       .update({ isAdmin: true })
       .eq("userId", UserId);
-    if (error) {
-      console.log("Error in updateAdminUser:", error);
-      throw error;
-    }
-    return true;
   } catch (error) {
     console.error("Failed to update admin user:", error);
     throw error;
