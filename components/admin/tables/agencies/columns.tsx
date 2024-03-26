@@ -18,7 +18,7 @@ import DeleteAgencyButton from "@/components/admin/tables/agencies/delete-agency
 export type Agency = {
   id: number;
   name: string;
-  userId: string;
+  userId: string | null;
 };
 
 export const columns: ColumnDef<Agency>[] = [
