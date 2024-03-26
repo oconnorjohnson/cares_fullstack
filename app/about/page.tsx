@@ -1,7 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-// export const runtime = "edge";
-
 export default function About() {
   return (
     <>
