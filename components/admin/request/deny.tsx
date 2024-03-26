@@ -43,7 +43,11 @@ export default function Deny({ requestId }: { requestId: number }) {
     setIsLoading(true);
     try {
       // Assuming DenyRequest takes requestId, firstName, and email as arguments
-      await DenyRequest(requestId, userDetails?.firstName, userDetails?.email);
+      await DenyRequest(
+        requestId,
+        userDetails?.first_name!,
+        userDetails?.EmailAddress[0].email!,
+      );
       toast.success("Request denied successfully.");
     } catch (error) {
       console.error("Error denying request:", error);
