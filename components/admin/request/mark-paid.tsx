@@ -5,7 +5,7 @@ import { CheckIcon } from "lucide-react";
 import MarkPaid from "@/server/actions/rff/paid";
 import { useState } from "react";
 import { trpc } from "@/app/_trpc/client";
-import { LoadingSpinner } from "@/components/admin/request/deny";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Awaiting } from "@/server/actions/resend/actions";
 
 export default function MarkAsPaid({
