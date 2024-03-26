@@ -140,10 +140,6 @@ export async function POST(req: Request) {
         userId: id,
         first_name,
         last_name,
-        emailAddresses: email_addresses.map((emailAddress) => ({
-          email: emailAddress.email_address,
-          id: emailAddress.id,
-        })),
         public_metadata: public_metadata,
       };
       if (
