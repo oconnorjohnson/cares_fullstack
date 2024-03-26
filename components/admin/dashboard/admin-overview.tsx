@@ -16,7 +16,12 @@ import {
 } from "@/server/actions/calculations/actions";
 import type { AnswerCategories } from "@/server/actions/calculations/actions";
 import PrePostAnalysis from "@/components/admin/dashboard/pre-post-analysis";
-
+function getCategoryValue(
+  category: keyof AnswerCategories,
+  data: AnswerCategories,
+): number {
+  return data[category];
+}
 export default async function AdminOverview() {
   const pendingRequests = (await CountRequestsPendingApproval()) ?? 0;
   const completedRequests = (await CountRequestsCompleted()) ?? 0;
@@ -24,6 +29,22 @@ export default async function AdminOverview() {
   const agencyDataWithNames = (await CountRequestsByAgency()) ?? 0;
   const preAnswers: AnswerCategories = await getPreScreenAverages();
   const postAnswers: AnswerCategories = await getPostScreenAverages();
+  const categories: (keyof AnswerCategories)[] = [
+    "housingSituation",
+    "housingQuality",
+    "utilityStress",
+    "foodInsecurityStress",
+    "foodMoneyStress",
+    "transpoConfidence",
+    "transpoStress",
+    "financialDifficulties",
+  ];
+
+  const chartData = categories.map((category) => ({
+    category,
+    preValue: getCategoryValue(category, preAnswers),
+    postValue: getCategoryValue(category, postAnswers),
+  }));
 
   return (
     <>
@@ -33,7 +54,7 @@ export default async function AdminOverview() {
         <DeniedCard deniedRequests={deniedRequests} />
       </div>
       <div className="flex flex-col pb-10 w-full px-10">
-        <PrePostAnalysis preAnswers={preAnswers} postAnswers={postAnswers} />
+        <PrePostAnalysis chartData={chartData} />
         {/* <RequestsTimeGraph AgencyData={agencyDataWithNames} /> */}
       </div>
     </>

@@ -1,65 +1,48 @@
 "use client";
-
-import { Chart } from "react-charts";
-import React from "react";
-import type { AnswerCategories } from "@/server/actions/calculations/actions";
+import { AgChartsReact } from "ag-charts-react";
+import { AgChartOptions } from "ag-charts-community";
 import {
   Card,
   CardHeader,
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-
-interface PrePostAnalysisProps {
-  preAnswers: AnswerCategories;
-  postAnswers: AnswerCategories;
+interface CategoryData {
+  category: string;
+  preValue: number;
+  postValue: number;
 }
 
-export default function PrePostAnalysis({
-  preAnswers,
-  postAnswers,
-}: PrePostAnalysisProps) {
-  // Transform your data here
-  const data = React.useMemo(
-    () => [
+interface PrePostAnalysisProps {
+  chartData: CategoryData[];
+}
+
+export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
+  const options: AgChartOptions = {
+    data: chartData,
+    series: [
       {
-        label: "Pre",
-        data: Object.entries(preAnswers).map(([category, value]) => ({
-          category,
-          value,
-        })),
+        type: "bar",
+        xKey: "category",
+        yKey: "preValue",
+        yName: "Pre-Screen",
       },
       {
-        label: "Post",
-        data: Object.entries(postAnswers).map(([category, value]) => ({
-          category,
-          value,
-        })),
+        type: "bar",
+        xKey: "category",
+        yKey: "postValue",
+        yName: "Post-Screen",
       },
     ],
-    [preAnswers, postAnswers],
-  );
-
-  const primaryAxis = React.useMemo(
-    () => ({
-      getValue: (datum: any) => datum.category,
-    }),
-    [],
-  );
-
-  const secondaryAxes = React.useMemo(
-    () => [
+    axes: [
+      { type: "category", position: "bottom" },
       {
-        getValue: (datum: { category: string; value: number }) => datum.value,
-        elementType: "bar" as const, // Explicitly set as a constant of type "bar"
-        scale: {
-          type: "linear" as const, // Explicitly set as a constant of type "linear"
-          domain: [0, 5], // Ensures the scale starts at 0
-        },
+        type: "number",
+        position: "left",
+        title: { text: "Average Responses" },
       },
     ],
-    [],
-  );
+  };
 
   return (
     <Card className="p-8">
@@ -73,13 +56,7 @@ export default function PrePostAnalysis({
         </CardDescription>
       </CardHeader>
       <div style={{ width: "100%", height: "300px" }}>
-        <Chart
-          options={{
-            data,
-            primaryAxis,
-            secondaryAxes,
-          }}
-        />
+        <AgChartsReact options={options} />
       </div>
     </Card>
   );

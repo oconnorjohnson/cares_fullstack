@@ -113,6 +113,12 @@ dependencies:
   "@uploadthing/react":
     specifier: ^6.2.1
     version: 6.2.2(next@14.1.4)(react@18.2.0)(uploadthing@6.3.1)
+  ag-charts-community:
+    specifier: ^9.2.0
+    version: 9.2.0
+  ag-charts-react:
+    specifier: ^9.2.0
+    version: 9.2.0(ag-charts-community@9.2.0)(react-dom@18.2.0)(react@18.2.0)
   class-variance-authority:
     specifier: ^0.7.0
     version: 0.7.0
@@ -152,9 +158,6 @@ dependencies:
   react:
     specifier: ^18
     version: 18.2.0
-  react-charts:
-    specifier: 3.0.0-beta.57
-    version: 3.0.0-beta.57(react-dom@18.2.0)(react@18.2.0)
   react-day-picker:
     specifier: ^8.10.0
     version: 8.10.0(date-fns@3.3.1)(react@18.2.0)
@@ -4026,27 +4029,11 @@ packages:
       }
     dev: false
 
-  /@types/raf@3.4.3:
-    resolution:
-      {
-        integrity: sha512-c4YAvMedbPZ5tEyxzQdMoOhhJ4RD3rngZIdwC2/qDN3d7JpEhB6fiBRKVY1lg5B7Wk+uPBjn5f39j1/2MY1oOw==,
-      }
-    dev: false
-
   /@types/range-parser@1.2.7:
     resolution:
       {
         integrity: sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==,
       }
-    dev: false
-
-  /@types/react-dom@17.0.25:
-    resolution:
-      {
-        integrity: sha512-urx7A7UxkZQmThYA4So0NelOVjx3V4rNFVJwp0WZlbIK5eM4rNJDiN3R/E9ix0MBh6kAEojk/9YL+Te6D9zHNA==,
-      }
-    dependencies:
-      "@types/react": 17.0.79
     dev: false
 
   /@types/react-dom@18.2.18:
@@ -4056,17 +4043,6 @@ packages:
       }
     dependencies:
       "@types/react": 18.2.48
-
-  /@types/react@17.0.79:
-    resolution:
-      {
-        integrity: sha512-gavKA8AwJAML9zWHuiQRASjrrPJHbT/zrUDHiUGUf+l5a3pkEd6atvjjq+8y2vfRHBJLQJjFpxSa9I8qe9zHAw==,
-      }
-    dependencies:
-      "@types/prop-types": 15.7.11
-      "@types/scheduler": 0.16.8
-      csstype: 3.1.3
-    dev: false
 
   /@types/react@18.2.48:
     resolution:
@@ -4491,6 +4467,29 @@ packages:
       }
     engines: { node: ">=0.4.0" }
     hasBin: true
+
+  /ag-charts-community@9.2.0:
+    resolution:
+      {
+        integrity: sha512-dS5nPExh81owIIdyHli0TvWvSyhmZy2RncM/s3/KXpjAf3eiVN2fxfT2z+QxqsLyoms+fernp5cAuSju0peYXw==,
+      }
+    dev: false
+
+  /ag-charts-react@9.2.0(ag-charts-community@9.2.0)(react-dom@18.2.0)(react@18.2.0):
+    resolution:
+      {
+        integrity: sha512-W7sAzXbKH62Dc15Cp2N7OfekhilJo978clOvxh823KDyDKDtseemagk8qsQd4EHgyf1+WW8IS9/s/LnQLDkndQ==,
+      }
+    peerDependencies:
+      ag-charts-community: 9.2.0
+      react: ^16.3.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.3.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      ag-charts-community: 9.2.0
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
 
   /agent-base@7.1.0:
     resolution:
@@ -5408,15 +5407,6 @@ packages:
         integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==,
       }
 
-  /d3-array@2.12.1:
-    resolution:
-      {
-        integrity: sha512-B0ErZK/66mHtEsR1TkPEEkwdy+WDesimkM5gpZr5Dsg54BiTA5RXtYW5qTLIAcekaS9xfZrzBLF/OAkB3Qn1YQ==,
-      }
-    dependencies:
-      internmap: 1.0.1
-    dev: false
-
   /d3-array@3.2.4:
     resolution:
       {
@@ -5427,28 +5417,12 @@ packages:
       internmap: 2.0.3
     dev: false
 
-  /d3-color@2.0.0:
-    resolution:
-      {
-        integrity: sha512-SPXi0TSKPD4g9tw0NMZFnR95XVgUZiBH+uUTqQuDu1OsE2zomHU7ho0FISciaPvosimixwHFl3WHLGabv6dDgQ==,
-      }
-    dev: false
-
   /d3-color@3.1.0:
     resolution:
       {
         integrity: sha512-zg/chbXyeBtMQ1LbD/WSoW2DpC3I0mpmPdW+ynRTj/x2DAWYrIY7qeZIHidozwV24m4iavr15lNwIwLxRmOxhA==,
       }
     engines: { node: ">=12" }
-    dev: false
-
-  /d3-delaunay@5.3.0:
-    resolution:
-      {
-        integrity: sha512-amALSrOllWVLaHTnDLHwMIiz0d1bBu9gZXd1FiLfXf8sHcX9jrcj81TVZOqD4UX7MgBZZ07c8GxzEgBpJqc74w==,
-      }
-    dependencies:
-      delaunator: 4.0.1
     dev: false
 
   /d3-ease@3.0.1:
@@ -5459,28 +5433,12 @@ packages:
     engines: { node: ">=12" }
     dev: false
 
-  /d3-format@2.0.0:
-    resolution:
-      {
-        integrity: sha512-Ab3S6XuE/Q+flY96HXT0jOXcM4EAClYFnRGY5zsjRGNy6qCYrQsMffs7cV5Q9xejb35zxW5hf/guKw34kvIKsA==,
-      }
-    dev: false
-
   /d3-format@3.1.0:
     resolution:
       {
         integrity: sha512-YyUI6AEuY/Wpt8KWLgZHsIU86atmikuoOmCfommt0LYHiQSPjvX2AcFc38PX0CBpr2RCyZhjex+NS/LPOv6YqA==,
       }
     engines: { node: ">=12" }
-    dev: false
-
-  /d3-interpolate@2.0.1:
-    resolution:
-      {
-        integrity: sha512-c5UhwwTs/yybcmTpAVqwSFl6vrQ8JZJoT5F7xNFK9pymv5C0Ymcc9/LIJHtYIggg/yS9YHw8i8O8tgb9pupjeQ==,
-      }
-    dependencies:
-      d3-color: 2.0.0
     dev: false
 
   /d3-interpolate@3.0.1:
@@ -5493,32 +5451,12 @@ packages:
       d3-color: 3.1.0
     dev: false
 
-  /d3-path@2.0.0:
-    resolution:
-      {
-        integrity: sha512-ZwZQxKhBnv9yHaiWd6ZU4x5BtCQ7pXszEV9CU6kRgwIQVQGLMv1oiL4M+MK/n79sYzsj+gcgpPQSctJUsLN7fA==,
-      }
-    dev: false
-
   /d3-path@3.1.0:
     resolution:
       {
         integrity: sha512-p3KP5HCf/bvjBSSKuXid6Zqijx7wIfNW+J/maPs+iwR35at5JCbLUT0LzF1cnjbCHWhqzQTIN2Jpe8pRebIEFQ==,
       }
     engines: { node: ">=12" }
-    dev: false
-
-  /d3-scale@3.3.0:
-    resolution:
-      {
-        integrity: sha512-1JGp44NQCt5d1g+Yy+GeOnZP7xHo0ii8zsQp6PGzd+C1/dl0KGsp9A7Mxwp+1D1o4unbTTxVdU/ZOIEBoeZPbQ==,
-      }
-    dependencies:
-      d3-array: 2.12.1
-      d3-format: 2.0.0
-      d3-interpolate: 2.0.1
-      d3-time: 2.1.1
-      d3-time-format: 3.0.0
     dev: false
 
   /d3-scale@4.0.2:
@@ -5535,15 +5473,6 @@ packages:
       d3-time-format: 4.1.0
     dev: false
 
-  /d3-shape@2.1.0:
-    resolution:
-      {
-        integrity: sha512-PnjUqfM2PpskbSLTJvAzp2Wv4CZsnAgTfcVRTwW03QR3MkXF8Uo7B1y/lWkAsmbKwuecto++4NlsYcvYpXpTHA==,
-      }
-    dependencies:
-      d3-path: 2.0.0
-    dev: false
-
   /d3-shape@3.2.0:
     resolution:
       {
@@ -5554,15 +5483,6 @@ packages:
       d3-path: 3.1.0
     dev: false
 
-  /d3-time-format@3.0.0:
-    resolution:
-      {
-        integrity: sha512-UXJh6EKsHBTjopVqZBhFysQcoXSv/5yLONZvkQ5Kk3qbwiUYkdX17Xa1PT6U1ZWXGGfB1ey5L8dKMlFq2DO0Ag==,
-      }
-    dependencies:
-      d3-time: 2.1.1
-    dev: false
-
   /d3-time-format@4.1.0:
     resolution:
       {
@@ -5571,15 +5491,6 @@ packages:
     engines: { node: ">=12" }
     dependencies:
       d3-time: 3.1.0
-    dev: false
-
-  /d3-time@2.1.1:
-    resolution:
-      {
-        integrity: sha512-/eIQe/eR4kCQwq7yxi7z4c6qEXf2IYGcjoWB5OOQy4Tq9Uv39/947qlDcN2TLkiTzQWzvnsuYPB9TrWaNfipKQ==,
-      }
-    dependencies:
-      d3-array: 2.12.1
     dev: false
 
   /d3-time@3.1.0:
@@ -5745,13 +5656,6 @@ packages:
       has-property-descriptors: 1.0.1
       object-keys: 1.1.1
     dev: true
-
-  /delaunator@4.0.1:
-    resolution:
-      {
-        integrity: sha512-WNPWi1IRKZfCt/qIDMfERkDp93+iZEmOxN2yy4Jg+Xhv8SLk2UTqqbe1sfiipn0and9QrE914/ihdx82Y/Giag==,
-      }
-    dev: false
 
   /delayed-stream@1.0.0:
     resolution:
@@ -7321,13 +7225,6 @@ packages:
       hasown: 2.0.0
       side-channel: 1.0.4
     dev: true
-
-  /internmap@1.0.1:
-    resolution:
-      {
-        integrity: sha512-lDB5YccMydFBtasVtxnZ3MRBHuaoE8GKsppq+EchKL2U4nK/DmEpPHNH8MZe5HkMtpSiTSOZwfN0tzYjO/lJEw==,
-      }
-    dev: false
 
   /internmap@2.0.3:
     resolution:
@@ -9154,33 +9051,6 @@ packages:
       safe-buffer: 5.2.1
     dev: false
 
-  /react-charts@3.0.0-beta.57(react-dom@18.2.0)(react@18.2.0):
-    resolution:
-      {
-        integrity: sha512-vqas7IQhsnDGcMxreGaWXvSIL3poEMoUBNltJrslz/+m0pI3QejBCszL1QrLNYQfOWXrbZADfedi/a+yWOQ7Hw==,
-      }
-    peerDependencies:
-      react: ">=16"
-      react-dom: ">=16"
-    dependencies:
-      "@babel/runtime": 7.23.9
-      "@types/d3-array": 3.2.1
-      "@types/d3-scale": 4.0.8
-      "@types/d3-shape": 3.1.6
-      "@types/raf": 3.4.3
-      "@types/react": 17.0.79
-      "@types/react-dom": 17.0.25
-      d3-array: 2.12.1
-      d3-delaunay: 5.3.0
-      d3-scale: 3.3.0
-      d3-shape: 2.1.0
-      d3-time: 2.1.1
-      d3-time-format: 4.1.0
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      ts-toolbelt: 9.6.0
-    dev: false
-
   /react-day-picker@8.10.0(date-fns@3.3.1)(react@18.2.0):
     resolution:
       {
@@ -10758,13 +10628,6 @@ packages:
       typescript: 5.3.3
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
-
-  /ts-toolbelt@9.6.0:
-    resolution:
-      {
-        integrity: sha512-nsZd8ZeNUzukXPlJmTBwUAuABDe/9qtVDelJeT/qW0ow3ZS3BsQJtNkan1802aM9Uf68/Y8ljw86Hu0h5IUW3w==,
-      }
-    dev: false
 
   /tsconfig-paths@3.15.0:
     resolution:
