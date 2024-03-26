@@ -259,10 +259,7 @@ export async function updateOperatingBalance(
 export async function updateAdminUser(UserId: string) {
   const supabase = createSupabaseClient();
   try {
-    await supabase
-      .from("AdminUser")
-      .update({ isAdmin: true })
-      .eq("userId", UserId);
+    await supabase.from("User").update({ isAdmin: true }).eq("userId", UserId);
   } catch (error) {
     console.error("Failed to update admin user:", error);
     throw error;
