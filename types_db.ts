@@ -34,6 +34,56 @@ export type Database = {
   };
   public: {
     Tables: {
+      AdminEmailPrefs: {
+        Row: {
+          agreementUploaded: boolean;
+          caresAssetsAdded: boolean;
+          caresBalanceUpdated: boolean;
+          created_at: string;
+          id: number;
+          postCompleted: boolean;
+          receiptUploaded: boolean;
+          requestReceived: boolean;
+          rffAssetsAdded: boolean;
+          rffBalanceUpdated: boolean;
+          UserId: number;
+        };
+        Insert: {
+          agreementUploaded?: boolean;
+          caresAssetsAdded?: boolean;
+          caresBalanceUpdated?: boolean;
+          created_at?: string;
+          id?: number;
+          postCompleted?: boolean;
+          receiptUploaded?: boolean;
+          requestReceived?: boolean;
+          rffAssetsAdded?: boolean;
+          rffBalanceUpdated?: boolean;
+          UserId: number;
+        };
+        Update: {
+          agreementUploaded?: boolean;
+          caresAssetsAdded?: boolean;
+          caresBalanceUpdated?: boolean;
+          created_at?: string;
+          id?: number;
+          postCompleted?: boolean;
+          receiptUploaded?: boolean;
+          requestReceived?: boolean;
+          rffAssetsAdded?: boolean;
+          rffBalanceUpdated?: boolean;
+          UserId?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "public_AdminEmailPrefs_UserId_fkey";
+            columns: ["UserId"];
+            isOneToOne: false;
+            referencedRelation: "User";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       Agency: {
         Row: {
           id: number;
@@ -729,30 +779,44 @@ export type Database = {
       };
       User: {
         Row: {
+          AdminEmailPrefId: number | null;
           created_at: string;
           first_name: string | null;
           id: number;
+          isAdmin: boolean;
           isBanned: boolean;
           last_name: string | null;
           userId: string;
         };
         Insert: {
+          AdminEmailPrefId?: number | null;
           created_at?: string;
           first_name?: string | null;
           id?: number;
+          isAdmin?: boolean;
           isBanned?: boolean;
           last_name?: string | null;
           userId: string;
         };
         Update: {
+          AdminEmailPrefId?: number | null;
           created_at?: string;
           first_name?: string | null;
           id?: number;
+          isAdmin?: boolean;
           isBanned?: boolean;
           last_name?: string | null;
           userId?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "public_User_AdminEmailPrefId_fkey";
+            columns: ["AdminEmailPrefId"];
+            isOneToOne: false;
+            referencedRelation: "AdminEmailPrefs";
+            referencedColumns: ["id"];
+          },
+        ];
       };
     };
     Views: {
