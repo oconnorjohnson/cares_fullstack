@@ -1,13 +1,4 @@
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const runtime = "edge";
 
@@ -18,12 +9,6 @@ export default function About() {
         <Card>
           <CardHeader>
             <CardTitle>Supporting the Journey to Health & Safety</CardTitle>
-            {/* <CardDescription className="text-sm lg:text-lg">
-              The mission of CARES is to enhance the ability of the Yolo County
-              Public Defender&apos;s Office to address the unmet social,
-              financial, and behavioral health care needs of individuals
-              navigating the criminal justice system.
-            </CardDescription> */}
           </CardHeader>
           <CardContent className="grid gap=4">
             <div className="space-y-6">
@@ -93,7 +78,6 @@ export default function About() {
               </div>
             </div>
           </CardContent>
-          {/* <CardFooter>CARES copyright 2021</CardFooter> */}
         </Card>
       </div>
     </>
