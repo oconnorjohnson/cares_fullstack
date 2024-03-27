@@ -46,7 +46,6 @@ export type Database = {
           requestReceived: boolean;
           rffAssetsAdded: boolean;
           rffBalanceUpdated: boolean;
-          UserId: string | null;
         };
         Insert: {
           agreementUploaded?: boolean;
@@ -59,7 +58,6 @@ export type Database = {
           requestReceived?: boolean;
           rffAssetsAdded?: boolean;
           rffBalanceUpdated?: boolean;
-          UserId?: string | null;
         };
         Update: {
           agreementUploaded?: boolean;
@@ -72,17 +70,8 @@ export type Database = {
           requestReceived?: boolean;
           rffAssetsAdded?: boolean;
           rffBalanceUpdated?: boolean;
-          UserId?: string | null;
         };
-        Relationships: [
-          {
-            foreignKeyName: "public_AdminEmailPrefs_UserId_fkey";
-            columns: ["UserId"];
-            isOneToOne: false;
-            referencedRelation: "User";
-            referencedColumns: ["userId"];
-          },
-        ];
+        Relationships: [];
       };
       Agency: {
         Row: {

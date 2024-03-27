@@ -266,6 +266,31 @@ export async function updateAdminUser(UserId: string) {
   }
 }
 
+export async function updateAdminEmailPreference(
+  Tables: TablesUpdate<"AdminEmailPrefs">,
+): Promise<boolean> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("AdminEmailPrefs")
+      .update(Tables)
+      .eq("id", Tables.id!);
+    if (error) {
+      console.error("Error updating admin email preference:", error);
+      throw error;
+    }
+    console.log("Updated admin email preference:", data);
+    if (!data) {
+      console.error("No record was updated.");
+      throw new Error("No record was updated.");
+    }
+    return true;
+  } catch (error) {
+    console.error("Error updating admin email preference:", error);
+    throw error;
+  }
+}
+
 export async function updateUser(
   userId: string,
   userData: TablesUpdate<"User">,

@@ -22,6 +22,8 @@ import {
   getTransactions,
   getRFFWalmartCards,
   getRFFArcoCards,
+  getAdminEmailPreferenceByUserId,
+  getAdminEmailPreferenceById,
 } from "@/server/supabase/functions/read";
 import { Tables } from "@/types_db";
 import { PostgrestError } from "@supabase/supabase-js";
@@ -142,6 +144,28 @@ export type RequestData = {
 type totalValue = {
   totalValue: number;
 };
+
+type AdminEmailPreference = {
+  agreementUploaded: boolean;
+  caresAssetsAdded: boolean;
+  caresBalanceUpdated: boolean;
+  created_at: string;
+  id: number;
+  postCompleted: boolean;
+  receiptUploaded: boolean;
+  requestReceived: boolean;
+  rffAssetsAdded: boolean;
+  rffBalanceUpdated: boolean;
+};
+
+export async function GetAdminEmailPreferenceByUserId(
+  userId: string,
+): Promise<AdminEmailPreference> {
+  const adminEmailPreferenceId = await getAdminEmailPreferenceByUserId(userId);
+  const prefId = adminEmailPreferenceId?.AdminEmailPrefId;
+  const adminEmailPreference = await getAdminEmailPreferenceById(prefId!);
+  return adminEmailPreference;
+}
 
 export async function GetFundsByRequestId(requestId: number) {
   const funds = await getFundsByRequestId(requestId);

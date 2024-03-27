@@ -10,6 +10,46 @@ type id = {
   id: number;
 };
 
+export async function getAdminEmailPreferenceByUserId(userId: string) {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("User")
+      .select("AdminEmailPrefId")
+      .eq("userId", userId)
+      .single();
+    if (error) {
+      console.log("Error in getAdminEmailPreferenceByUserId:", error);
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.log("Unexpected error in getAdminEmailPreferenceByUserId:", error);
+    throw error;
+  }
+}
+
+export async function getAdminEmailPreferenceById(
+  AdminEmailPrefId: number,
+): Promise<Tables<"AdminEmailPrefs">> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("AdminEmailPrefs")
+      .select("*")
+      .eq("id", AdminEmailPrefId)
+      .single();
+    if (error) {
+      console.log("Error in getAdminEmailPreferenceById:", error);
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.log("Unexpected error in getAdminEmailPreferenceById:", error);
+    throw error;
+  }
+}
+
 export async function getAllPreScreenAnswers(): Promise<
   Tables<"PreScreenAnswers">[]
 > {

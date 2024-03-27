@@ -8,6 +8,7 @@ import {
   requestDoesNotNeedReceipt,
   updateOperatingBalance as updateTheOperatingBalance,
   updateRFFBalance as updateTheRFFBalance,
+  updateAdminEmailPreference,
 } from "@/server/supabase/functions/update";
 import { revalidatePath } from "next/cache";
 import { Resend } from "resend";
@@ -41,7 +42,17 @@ export interface FundDetail {
   amount: number;
   AssetIds?: number[];
 }
-
+type AdminEmailPreference = {
+  agreementUploaded: boolean;
+  caresAssetsAdded: boolean;
+  caresBalanceUpdated: boolean;
+  id: number;
+  postCompleted: boolean;
+  receiptUploaded: boolean;
+  requestReceived: boolean;
+  rffAssetsAdded: boolean;
+  rffBalanceUpdated: boolean;
+};
 export interface BalanceUpdateData {
   availableBalance: number;
   last_updated: string;
@@ -50,6 +61,13 @@ export interface BalanceUpdateData {
   TransactionId: number | null;
   version: number;
   lastVersion: number;
+}
+
+export async function updateAdminEmailPrefs(
+  emailPreference: AdminEmailPreference,
+) {
+  const updateSuccess = await updateAdminEmailPreference(emailPreference);
+  return updateSuccess;
 }
 
 export async function revalidateDashboard() {
