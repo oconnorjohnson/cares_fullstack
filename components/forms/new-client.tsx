@@ -43,9 +43,9 @@ import { trpc } from "@/app/_trpc/client";
 import { LoadingSpinner } from "@/components/admin/request/approve";
 
 const formSchema = z.object({
-  clientID: z
-    .string()
-    .min(1, { message: "clientID must be at least 6 character." }),
+  clientID: z.string().regex(/^[A-Za-z]{2}\d{4}$/, {
+    message: "clientID must be 2 letters followed by 4 digits.",
+  }),
   race: z.string().min(1, { message: "Race must be selected." }),
   sex: z.string().min(1, { message: "Sex must be selected." }),
 });

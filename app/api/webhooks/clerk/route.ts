@@ -121,8 +121,6 @@ export async function POST(req: Request) {
       const emails = await createEmailAddresses(emailData);
       console.log(`Emails ${emails} created successfully`);
 
-      const addedRecord = await createAdminEmailPreferenceRecord(id);
-      console.log(`Admin email preference record added successfully`);
       if (email_addresses.length > 0) {
         const primaryEmail = email_addresses[0].email_address;
         await sendWelcomeEmail(first_name, primaryEmail);
@@ -150,6 +148,18 @@ export async function POST(req: Request) {
           `User ${userData.userId} is an admin. Updating admin status.`,
         );
         await updateAdminUser(userData.userId);
+        console.log("adding admin email preference record");
+        const addedRecord = await createAdminEmailPreferenceRecord(id);
+        console.log(`Admin email preference record added successfully`);
+        const preferenceId = addedRecord[0].id;
+        console.log(`preferenceId: ${preferenceId}`);
+        const usersData = {
+          AdminEmailPrefId: preferenceId,
+        };
+        const updatedUser = await updateUser(userData.userId, usersData);
+        console.log(
+          `User ${userData.userId} updated successfully: ${updatedUser}`,
+        );
       }
       console.log("Updating user in database with new details");
       const user = await updateUser(id, userData);

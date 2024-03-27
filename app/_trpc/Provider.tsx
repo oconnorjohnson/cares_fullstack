@@ -23,17 +23,8 @@ export default function Provider({ children }: { children: React.ReactNode }) {
     trpc.createClient({
       links: [
         httpBatchLink({
-          // url: "http://localhost:3000/api/trpc",
-          url: "https://www.yolopublicdefendercares.org/api/trpc",
-          fetch(url, options) {
-            return fetch(url, {
-              ...options,
-              credentials: "include", // Include credentials for cross-origin requests
-            });
-          },
-        }),
-        httpBatchLink({
-          url: "https://yolopublicdefendercares.org/api/trpc",
+          url: "http://localhost:3000/api/trpc",
+          // url: "https://www.yolopublicdefendercares.org/api/trpc",
           fetch(url, options) {
             return fetch(url, {
               ...options,

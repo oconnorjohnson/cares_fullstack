@@ -1,6 +1,10 @@
 import { createClient as createSupabaseClient } from "@/server/supabase/server";
 import { Tables, TablesInsert } from "@/types_db";
 
+type AdminEmailPref = {
+  id: number;
+}[];
+
 export async function createAgency(agencyData: TablesInsert<"Agency">) {
   const supabase = createSupabaseClient();
   const { data, error } = await supabase.from("Agency").insert([agencyData]);
@@ -10,16 +14,17 @@ export async function createAgency(agencyData: TablesInsert<"Agency">) {
 
 export async function createAdminEmailPreferenceRecord(
   UserId: string,
-): Promise<boolean> {
+): Promise<AdminEmailPref> {
   const supabase = createSupabaseClient();
-  const addedRecord = await supabase
+  const { data, error } = await supabase
     .from("AdminEmailPrefs")
-    .insert({ UserId: UserId });
-  if (addedRecord) {
-    return true;
-  } else {
-    return false;
+    .insert({ UserId: UserId })
+    .select("id");
+  if (error) {
+    console.log("Error in createAdminEmailPreferenceRecord:", error);
+    throw error;
   }
+  return data;
 }
 
 export async function createTransaction(

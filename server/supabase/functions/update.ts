@@ -269,7 +269,7 @@ export async function updateAdminUser(UserId: string) {
 export async function updateUser(
   userId: string,
   userData: TablesUpdate<"User">,
-) {
+): Promise<boolean> {
   const supabase = createSupabaseClient();
 
   const { data, error } = await supabase
@@ -277,7 +277,7 @@ export async function updateUser(
     .update(userData)
     .eq("userId", userId);
   if (error) throw error;
-  return data;
+  return true;
 }
 
 export async function addAgreementToRequest(
