@@ -74,7 +74,15 @@ export type Database = {
           rffBalanceUpdated?: boolean;
           UserId?: string | null;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "public_AdminEmailPrefs_UserId_fkey";
+            columns: ["UserId"];
+            isOneToOne: true;
+            referencedRelation: "User";
+            referencedColumns: ["userId"];
+          },
+        ];
       };
       Agency: {
         Row: {
@@ -771,7 +779,6 @@ export type Database = {
       };
       User: {
         Row: {
-          AdminEmailPrefId: number | null;
           created_at: string;
           first_name: string | null;
           id: number;
@@ -781,7 +788,6 @@ export type Database = {
           userId: string;
         };
         Insert: {
-          AdminEmailPrefId?: number | null;
           created_at?: string;
           first_name?: string | null;
           id?: number;
@@ -791,7 +797,6 @@ export type Database = {
           userId: string;
         };
         Update: {
-          AdminEmailPrefId?: number | null;
           created_at?: string;
           first_name?: string | null;
           id?: number;
@@ -800,15 +805,7 @@ export type Database = {
           last_name?: string | null;
           userId?: string;
         };
-        Relationships: [
-          {
-            foreignKeyName: "public_User_AdminEmailPrefId_fkey";
-            columns: ["AdminEmailPrefId"];
-            isOneToOne: false;
-            referencedRelation: "AdminEmailPrefs";
-            referencedColumns: ["id"];
-          },
-        ];
+        Relationships: [];
       };
     };
     Views: {
