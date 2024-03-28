@@ -83,7 +83,7 @@ export default function AdminEmailPreferences({
             name="requestReceived"
             render={({ field }) => (
               <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                <div className="space-y-0.5">
+                <div className="space-y-0.5 flex flex-col items-start">
                   <FormLabel className="text-base">Request Received</FormLabel>
                   <FormDescription>
                     Receive email notifications when a new request has been
@@ -104,7 +104,7 @@ export default function AdminEmailPreferences({
             name="postCompleted"
             render={({ field }) => (
               <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                <div className="space-y-0.5">
+                <div className="space-y-0.5 flex flex-col items-start">
                   <FormLabel className="text-base">
                     Post-Screen Completed
                   </FormLabel>
@@ -127,7 +127,7 @@ export default function AdminEmailPreferences({
             name="receiptUploaded"
             render={({ field }) => (
               <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                <div className="space-y-0.5">
+                <div className="space-y-0.5 flex flex-col items-start">
                   <FormLabel className="text-base">Receipt Uploaded</FormLabel>
                   <FormDescription>
                     Receive email notifications when a receipt has been
@@ -148,7 +148,7 @@ export default function AdminEmailPreferences({
             name="agreementUploaded"
             render={({ field }) => (
               <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                <div className="space-y-0.5">
+                <div className="space-y-0.5 flex flex-col items-start">
                   <FormLabel className="text-base">
                     Agreement Uploaded
                   </FormLabel>
@@ -171,7 +171,7 @@ export default function AdminEmailPreferences({
             name="rffBalanceUpdated"
             render={({ field }) => (
               <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                <div className="space-y-0.5">
+                <div className="space-y-0.5 flex flex-col items-start">
                   <FormLabel className="text-base">
                     RFF Balance Updated
                   </FormLabel>
@@ -194,7 +194,7 @@ export default function AdminEmailPreferences({
             name="caresBalanceUpdated"
             render={({ field }) => (
               <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                <div className="space-y-0.5">
+                <div className="space-y-0.5 flex flex-col items-start">
                   <FormLabel className="text-base">
                     Cares Balance Updated
                   </FormLabel>
@@ -217,7 +217,7 @@ export default function AdminEmailPreferences({
             name="rffAssetsAdded"
             render={({ field }) => (
               <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                <div className="space-y-0.5">
+                <div className="space-y-0.5 flex flex-col items-start">
                   <FormLabel className="text-base">RFF Assets Added</FormLabel>
                   <FormDescription>
                     Receive email notifications when an RFF asset has been
@@ -238,7 +238,7 @@ export default function AdminEmailPreferences({
             name="caresAssetsAdded"
             render={({ field }) => (
               <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                <div className="space-y-0.5">
+                <div className="space-y-0.5 flex flex-col items-start">
                   <FormLabel className="text-base">
                     CARES Assets Added
                   </FormLabel>
