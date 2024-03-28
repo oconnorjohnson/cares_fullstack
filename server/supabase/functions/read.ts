@@ -14,9 +14,9 @@ export async function getAdminEmailPreferenceByUserId(userId: string) {
   const supabase = createSupabaseClient();
   try {
     const { data, error } = await supabase
-      .from("User")
-      .select("AdminEmailPrefId")
-      .eq("userId", userId)
+      .from("AdminEmailPrefs")
+      .select("id")
+      .eq("UserId", userId)
       .single();
     if (error) {
       console.log("Error in getAdminEmailPreferenceByUserId:", error);
