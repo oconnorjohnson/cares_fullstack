@@ -149,7 +149,9 @@ export async function POST(req: Request) {
         );
         await updateAdminUser(userData.userId);
         console.log("adding admin email preference record");
-        const addedRecord = await createAdminEmailPreferenceRecord();
+        const addedRecord = await createAdminEmailPreferenceRecord(
+          userData.userId,
+        );
         console.log(`Admin email preference record added successfully`);
         const preferenceId = addedRecord.id;
         console.log(`preferenceId: ${preferenceId}`);

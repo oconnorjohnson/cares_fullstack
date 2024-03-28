@@ -11,6 +11,7 @@ export default async function Requests() {
   const isAdmin = (sessionClaims?.publicMetadata as any)?.admin;
   const user = userId;
   const adminEmailPreference = await GetAdminEmailPreferenceByUserId(user!);
+  console.log("Admin email preference:", adminEmailPreference);
   if (!isAdmin || !user) {
     return <div>Not authenticated</div>;
   } else {

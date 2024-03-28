@@ -76,8 +76,6 @@ export default function AdminEmailPreferences({
   };
   return (
     <div className="space-y-4 text-lg">
-      Switches to turn on/off email notifications for each of the following
-      events:
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
@@ -86,9 +84,10 @@ export default function AdminEmailPreferences({
             render={({ field }) => (
               <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
-                  <FormLabel className="text-base">Marketing emails</FormLabel>
+                  <FormLabel className="text-base">Request Received</FormLabel>
                   <FormDescription>
-                    Receive emails about new products, features, and more.
+                    Receive email notifications when a new request has been
+                    submitted.
                   </FormDescription>
                 </div>
                 <FormControl>
@@ -106,9 +105,12 @@ export default function AdminEmailPreferences({
             render={({ field }) => (
               <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
-                  <FormLabel className="text-base">Marketing emails</FormLabel>
+                  <FormLabel className="text-base">
+                    Post-Screen Completed
+                  </FormLabel>
                   <FormDescription>
-                    Receive emails about new products, features, and more.
+                    Receive email notifications when a post-screen has been
+                    completed.
                   </FormDescription>
                 </div>
                 <FormControl>
@@ -126,9 +128,10 @@ export default function AdminEmailPreferences({
             render={({ field }) => (
               <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
-                  <FormLabel className="text-base">Marketing emails</FormLabel>
+                  <FormLabel className="text-base">Receipt Uploaded</FormLabel>
                   <FormDescription>
-                    Receive emails about new products, features, and more.
+                    Receive email notifications when a receipt has been
+                    uploaded.
                   </FormDescription>
                 </div>
                 <FormControl>
@@ -146,9 +149,12 @@ export default function AdminEmailPreferences({
             render={({ field }) => (
               <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
-                  <FormLabel className="text-base">Marketing emails</FormLabel>
+                  <FormLabel className="text-base">
+                    Agreement Uploaded
+                  </FormLabel>
                   <FormDescription>
-                    Receive emails about new products, features, and more.
+                    Receive email notifications when an agreement has been
+                    uploaded.
                   </FormDescription>
                 </div>
                 <FormControl>
@@ -166,9 +172,12 @@ export default function AdminEmailPreferences({
             render={({ field }) => (
               <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
-                  <FormLabel className="text-base">Marketing emails</FormLabel>
+                  <FormLabel className="text-base">
+                    RFF Balance Updated
+                  </FormLabel>
                   <FormDescription>
-                    Receive emails about new products, features, and more.
+                    Receive email notifications when the RFF balance has been
+                    updated.
                   </FormDescription>
                 </div>
                 <FormControl>
@@ -186,9 +195,12 @@ export default function AdminEmailPreferences({
             render={({ field }) => (
               <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
-                  <FormLabel className="text-base">Marketing emails</FormLabel>
+                  <FormLabel className="text-base">
+                    Cares Balance Updated
+                  </FormLabel>
                   <FormDescription>
-                    Receive emails about new products, features, and more.
+                    Receive email notifications when the CARES balance has been
+                    updated.{" "}
                   </FormDescription>
                 </div>
                 <FormControl>
@@ -206,9 +218,10 @@ export default function AdminEmailPreferences({
             render={({ field }) => (
               <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
-                  <FormLabel className="text-base">Marketing emails</FormLabel>
+                  <FormLabel className="text-base">RFF Assets Added</FormLabel>
                   <FormDescription>
-                    Receive emails about new products, features, and more.
+                    Receive email notifications when an RFF asset has been
+                    added.
                   </FormDescription>
                 </div>
                 <FormControl>
@@ -226,9 +239,12 @@ export default function AdminEmailPreferences({
             render={({ field }) => (
               <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
-                  <FormLabel className="text-base">Marketing emails</FormLabel>
+                  <FormLabel className="text-base">
+                    CARES Assets Added
+                  </FormLabel>
                   <FormDescription>
-                    Receive emails about new products, features, and more.
+                    Receive email notifications when an CARES asset has been
+                    added.
                   </FormDescription>
                 </div>
                 <FormControl>

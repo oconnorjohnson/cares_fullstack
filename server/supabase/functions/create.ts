@@ -12,18 +12,19 @@ export async function createAgency(agencyData: TablesInsert<"Agency">) {
   return data;
 }
 
-export async function createAdminEmailPreferenceRecord(): Promise<{
+export async function createAdminEmailPreferenceRecord(
+  UserId: string,
+): Promise<{
   id: number;
 }> {
   const supabase = createSupabaseClient();
   const { data, error } = await supabase
     .from("AdminEmailPrefs")
-    .insert({})
+    .insert({ UserId: UserId })
+    .eq("UserId", UserId)
     .select("id")
     .single();
   if (error) throw error;
-  if (!data) throw new Error("Failed to create AdminEmailPref record.");
-
   return { id: data.id };
 }
 

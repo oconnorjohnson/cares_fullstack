@@ -280,10 +280,7 @@ export async function updateAdminEmailPreference(
       throw error;
     }
     console.log("Updated admin email preference:", data);
-    if (!data) {
-      console.error("No record was updated.");
-      throw new Error("No record was updated.");
-    }
+
     return true;
   } catch (error) {
     console.error("Error updating admin email preference:", error);

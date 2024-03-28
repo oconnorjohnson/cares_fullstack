@@ -46,6 +46,7 @@ export type Database = {
           requestReceived: boolean;
           rffAssetsAdded: boolean;
           rffBalanceUpdated: boolean;
+          UserId: string | null;
         };
         Insert: {
           agreementUploaded?: boolean;
@@ -58,6 +59,7 @@ export type Database = {
           requestReceived?: boolean;
           rffAssetsAdded?: boolean;
           rffBalanceUpdated?: boolean;
+          UserId?: string | null;
         };
         Update: {
           agreementUploaded?: boolean;
@@ -70,6 +72,7 @@ export type Database = {
           requestReceived?: boolean;
           rffAssetsAdded?: boolean;
           rffBalanceUpdated?: boolean;
+          UserId?: string | null;
         };
         Relationships: [];
       };
