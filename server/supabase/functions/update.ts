@@ -292,13 +292,14 @@ export async function updateUser(
   userId: string,
   userData: TablesUpdate<"User">,
 ): Promise<boolean> {
+  console.log("Updating user with data:", userData);
   const supabase = createSupabaseClient();
-
   const { data, error } = await supabase
     .from("User")
     .update(userData)
     .eq("userId", userId);
   if (error) throw error;
+  console.log("Updated user with data:", data);
   return true;
 }
 
