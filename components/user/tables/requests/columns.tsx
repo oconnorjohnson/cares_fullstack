@@ -157,6 +157,7 @@ export const columns: ColumnDef<Request>[] = [
         approved &&
         paid &&
         agreementUrl &&
+        !hasPostScreen &&
         !needsReceipts
       ) {
         return <PostScreen requestId={requestId} />;
