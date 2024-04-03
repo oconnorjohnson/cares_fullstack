@@ -128,6 +128,7 @@ export default function FundSelect({
               <Button
                 variant="destructive"
                 className="text-black"
+                type="button"
                 size="sm"
                 onClick={() => handleRemoveFund(index)}
               >
