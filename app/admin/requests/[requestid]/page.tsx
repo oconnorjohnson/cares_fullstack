@@ -60,10 +60,10 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
     </Badge>
   ));
   const createdAt = format(new Date(request.created_at), "MM/dd/yyyy");
-  const preCreatedAt = format(
-    new Date(request.PreScreenAnswers[0].created_at),
-    "MM/dd/yyyy",
-  );
+  // const preCreatedAt = format(
+  //   new Date(request.PreScreenAnswers[0].created_at),
+  //   "MM/dd/yyyy",
+  // );
 
   console.log(request.Fund);
   console.log(request.PreScreenAnswerss);
@@ -491,13 +491,13 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         {request.PreScreenAnswers[0].additionalInformation}
                       </div>
                     </div>
-                    <Separator className="my-2" />
+                    {/* <Separator className="my-2" />
                     <div className="flex flex-cols-2 justify-between">
                       <div className="text-xl font-extralight pr-4">
                         Submitted On:
                       </div>
                       <div className="text-xl font-bold">{preCreatedAt}</div>
-                    </div>
+                    </div> */}
                   </div>
                 </>
               ) : (
