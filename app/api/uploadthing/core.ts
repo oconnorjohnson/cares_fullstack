@@ -51,6 +51,7 @@ export const ourFileRouter = {
         console.log("Agreement added successfully:", addAgreement);
         revalidatePath("/user/requests");
         revalidatePath("/dashboard");
+
         return {
           uploadedBy: metadata.userId,
           agreementUrl: file.url,

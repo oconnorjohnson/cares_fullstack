@@ -83,7 +83,7 @@ export default function AddBusPasses() {
         lastFour: values.lastFour,
         fundType: values.fundType,
       });
-      toast.success("Walmart Gift Cards added successfully");
+      toast.success("Gift Card(s) added successfully");
     } catch (error) {
       console.error("Error adding bus passes:", error);
       toast.error("Error adding bus passes");

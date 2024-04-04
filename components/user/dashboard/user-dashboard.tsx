@@ -2,7 +2,13 @@ import { auth } from "@clerk/nextjs";
 import NewClient from "@/components/forms/new-client";
 import NewRequest from "@/components/forms/new-request";
 import SideNavBar from "@/components/user/dashboard/side-nav";
-import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
@@ -141,7 +147,6 @@ export default async function Dashboard() {
         <div className="flex flex-row">
           <SideNavBar />
           <div className="flex flex-col border-t w-5/6">
-            <div className="text-3xl font-bold pl-12 pt-12">My Dashboard</div>
             <div className="flex flex-col space-y-8 px-12 pt-6">
               <div className="flex space-x-8">
                 <div className="flex flex-col justify-center w-1/2 flex-grow">
@@ -158,42 +163,56 @@ export default async function Dashboard() {
                   <NewClient userId={userId} />
                 </div>
               </div>
-              <div className="flex space-x-8">
-                <div className="flex flex-col flex-grow">
-                  <Card className="">
+              <div className="flex space-x-8 h-[300px]">
+                <div className="flex flex-col w-1/8 h-full">
+                  <Card className="h-full">
                     <CardHeader>
-                      <CardTitle>Pending Requests</CardTitle>
+                      <CardTitle>Pending</CardTitle>
                     </CardHeader>
                     <CardContent className="flex flex-row justify-start space-x-4 items-center">
                       <ClockIcon />
                       <div className="text-4xl font-black">{openRequests}</div>
                     </CardContent>
-                  </Card>
-                </div>
-                <div className="flex flex-col flex-grow">
-                  <Card className="">
                     <CardHeader>
-                      <CardTitle>Approved Requests</CardTitle>
+                      <CardTitle>Approved</CardTitle>
                     </CardHeader>
                     <CardContent className="flex flex-row justify-start space-x-4 items-center">
-                      <CheckCircleIcon />
+                      <ClockIcon />
                       <div className="text-4xl font-black">
                         {approvedRequests}
                       </div>
                     </CardContent>
                   </Card>
                 </div>
-                <div className="flex flex-col flex-grow">
-                  <Card className="">
-                    <CardHeader>
-                      <CardTitle>Denied Requests</CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex flex-row justify-start space-x-4 items-center">
-                      <XCircleIcon />
-                      <div className="text-4xl font-black">
-                        {deniedRequests}
-                      </div>
-                    </CardContent>
+                <div className="flex flex-col flex-grow h-full">
+                  <Card className="h-full flex flex-row justify-evenly align-center space-x-4 items-center py-8">
+                    {/* Update Card #1 */}
+                    <Card className="w-[275px] h-full">
+                      <CardHeader>
+                        <CardTitle>Title</CardTitle>
+                        <CardDescription>Description</CardDescription>
+                        <CardContent>
+                          A bright moon illuminates the quiet lake, as gentle
+                          waves whisper secrets to the night's embrace.
+                        </CardContent>
+                      </CardHeader>
+                    </Card>
+                    {/* Update Card #2 */}
+                    <Card className="w-[275px] h-full">
+                      <CardHeader>
+                        <CardTitle>Title</CardTitle>
+                        <CardDescription>Description</CardDescription>
+                        <CardContent>Content</CardContent>
+                      </CardHeader>
+                    </Card>
+                    {/* Update Card #3 */}
+                    <Card className="w-[275px] h-full">
+                      <CardHeader>
+                        <CardTitle>Title</CardTitle>
+                        <CardDescription>Description</CardDescription>
+                        <CardContent>Content</CardContent>
+                      </CardHeader>
+                    </Card>
                   </Card>
                 </div>
               </div>
@@ -350,8 +369,7 @@ export default async function Dashboard() {
                                   <TableCell>{request.created_at}</TableCell>
 
                                   <TableCell>
-                                    <AgreementDialog requestId={request.id} />{" "}
-                                    {request.id}
+                                    <AgreementDialog requestId={request.id} />
                                   </TableCell>
                                 </TableRow>
                               ))}
