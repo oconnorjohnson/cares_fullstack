@@ -9,6 +9,10 @@ import {
 import { createTransaction } from "@/server/supabase/functions/create";
 import { getRFFBalance } from "@/server/supabase/functions/read";
 import { GetFundsByRequestId } from "@/server/actions/request/actions";
+import {
+  markRequestAsNeedingReceipt,
+  markRequestAsNotNeedingReceipt,
+} from "@/server/actions/update/actions";
 
 import type {
   FundDetail,
@@ -210,38 +214,49 @@ export default async function MarkPaid(requestId: number, UserId: string) {
       amount,
       AssetIds: AssetIds,
     }));
-  } catch (error) {
-    throw error;
-  }
-  try {
-    for (const fund of modifiedFunds) {
-      const expendHandler = expendHandlers[fund.fundTypeId];
-      if (!expendHandler) {
-        console.error("Invalid fundTypeId:", fund.fundTypeId);
-        throw new Error("Invalid fundTypeId");
-      }
-      if (fund.AssetIds && fund.AssetIds.length > 0) {
-        console.log("AssetIds", fund.AssetIds);
-        for (const asset of fund.AssetIds) {
-          await expendHandler(asset, fund.id, fund);
+    try {
+      for (const fund of modifiedFunds) {
+        const expendHandler = expendHandlers[fund.fundTypeId];
+        if (!expendHandler) {
+          console.error("Invalid fundTypeId:", fund.fundTypeId);
+          throw new Error("Invalid fundTypeId");
+        }
+        if (fund.AssetIds && fund.AssetIds.length > 0) {
+          console.log("AssetIds", fund.AssetIds);
+          for (const asset of fund.AssetIds) {
+            await expendHandler(asset, fund.id, fund);
+            console.log(`Processed fund ID ${fund.id} successfully.`);
+          }
+        } else if ([4, 5, 6].includes(fund.fundTypeId)) {
+          await expendHandler(null, fund.id, fund);
           console.log(`Processed fund ID ${fund.id} successfully.`);
         }
-      } else if ([4, 5, 6].includes(fund.fundTypeId)) {
-        await expendHandler(null, fund.id, fund);
-        console.log(`Processed fund ID ${fund.id} successfully.`);
+        const transactionHandler = transactionHandlers[fund.fundTypeId];
+        if (!transactionHandler) {
+          console.error("Invalid fundTypeId for transaction:", fund.fundTypeId);
+          throw new Error("Invalid fundTypeId for transaction");
+        }
+        await transactionHandler(fund, requestId, UserId);
+        console.log(`Request ID ${requestId} marked as paid.`);
       }
-      const transactionHandler = transactionHandlers[fund.fundTypeId];
-      if (!transactionHandler) {
-        console.error("Invalid fundTypeId for transaction:", fund.fundTypeId);
-        throw new Error("Invalid fundTypeId for transaction");
-      }
-      await transactionHandler(fund, requestId, UserId);
-      console.log(`Request ID ${requestId} marked as paid.`);
+    } catch (error) {
+      console.error("Error in MarkPaid function:", error);
+      throw error;
     }
-    await markRequestPaidById(requestId);
-    revalidatePath("/admin/requests/[requestid]");
+    try {
+      await markRequestPaidById(requestId);
+      const needsReceipt = funds.some((fund) => fund.needsReceipt === true);
+      if (needsReceipt) {
+        await markRequestAsNeedingReceipt(requestId);
+      } else {
+        await markRequestAsNotNeedingReceipt(requestId);
+      }
+      revalidatePath("/admin/requests/[requestid]");
+    } catch (error) {
+      console.error("Error in MarkPaid function:", error);
+      throw error;
+    }
   } catch (error) {
-    console.error("Error in MarkPaid function:", error);
     throw error;
   }
 }
