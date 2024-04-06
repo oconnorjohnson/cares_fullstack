@@ -268,6 +268,7 @@ export async function requestAllFundTypes(): Promise<Tables<"FundType">[]> {
 }
 
 export async function requestAllRequests(): Promise<Request[]> {
+  console.log("requestAllRequests server action running");
   try {
     const response = await getAllRequests();
     const requests = response.data;

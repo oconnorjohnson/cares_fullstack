@@ -6,7 +6,9 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader } from "@/components/ui/card";
 type RequestStatus = "Pending" | "Approved" | "Denied" | "Error";
 async function getRequests(): Promise<Request[]> {
+  console.log("getting requests");
   const requests = await requestAllRequests();
+  console.log("got requests:", requests);
   const modifiedRequests = requests.map((request) => ({
     ...request,
     id: request.id,

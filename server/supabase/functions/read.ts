@@ -431,6 +431,7 @@ export async function getRequestsThatNeedAgreementsByUserId(userId: string) {
 }
 
 export async function getAllRequests() {
+  console.log("getAllRequests supabase function running");
   const supabase = createSupabaseClient();
   try {
     const requests = await supabase
