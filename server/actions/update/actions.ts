@@ -10,6 +10,7 @@ import {
   updateRFFBalance as updateTheRFFBalance,
   updateAdminEmailPreference,
   updateRequestAdminColumn,
+  setAllAdminColumnsNull,
 } from "@/server/supabase/functions/update";
 import {
   isAdminOneNull,
@@ -86,7 +87,6 @@ export async function revalidateUserRequests() {
   revalidatePath("/user/requests");
 }
 
-// right now this lets admins add their id multiple times, we need to ensure each admin can only agree once
 export async function addAdminAgreementToRequest({
   requestId,
   userId,
@@ -243,6 +243,10 @@ export async function UpdateFund(
     );
     const response = await updateFundById(fundData);
     const updatedFund = response;
+    const setAdminColumnsNull = await setAllAdminColumnsNull(requestId);
+    if (!setAdminColumnsNull) {
+      throw new Error("Failed to set all admin columns to null");
+    }
     console.log(`Successfully updated fund with ID: ${fundId}`);
     revalidatePath(`/admin/request/${requestId}/page`);
     return updatedFund as unknown as TablesUpdate<"Fund">;

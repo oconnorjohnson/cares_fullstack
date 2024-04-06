@@ -8,6 +8,26 @@ export type updateRequestAdminColumnData = {
   columnName: string;
 };
 
+export async function setAllAdminColumnsNull(
+  requestId: number,
+): Promise<boolean> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Request")
+      .update({ adminOne: null, adminTwo: null, adminThree: null })
+      .eq("id", requestId);
+    if (error) {
+      console.error("Error in setAllAdminColumnsNull:", error);
+      throw error;
+    }
+    return true;
+  } catch (error) {
+    console.error("Error in setAllAdminColumnsNull:", error);
+    throw error;
+  }
+}
+
 export async function updateRequestAdminColumn(
   updateData: updateRequestAdminColumnData,
 ): Promise<boolean> {

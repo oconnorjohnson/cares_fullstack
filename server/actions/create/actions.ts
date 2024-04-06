@@ -21,6 +21,7 @@ import {
   updateRFFBalance,
   updateRequestWithPostScreen,
   updateRequestWithPreScreen,
+  setAllAdminColumnsNull,
 } from "@/server/supabase/functions/update";
 import { deleteTransaction } from "@/server/supabase/functions/delete";
 import { Submitted } from "@/server/actions/resend/actions";
@@ -513,6 +514,10 @@ export async function newFund(fundState: NewFundData) {
   }
   const newFundRecord = await createNewFundByRequestId(fundState);
   const requestId = fundState.requestId;
+  const setAdminColumnsNull = await setAllAdminColumnsNull(requestId);
+  if (!setAdminColumnsNull) {
+    throw new Error("Failed to set all admin columns to null");
+  }
   revalidatePath(`/admin/request/${requestId}/page`);
   return newFundRecord;
 }
