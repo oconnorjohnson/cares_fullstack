@@ -62,6 +62,9 @@ export type Request = {
   hasPostScreen: boolean;
   created_at: string;
   isHighlighted?: boolean;
+  adminOne: string | null;
+  adminTwo: string | null;
+  adminThree: string | null;
 };
 export type RequestData = {
   id: number;
@@ -139,6 +142,9 @@ export type RequestData = {
   RFFs: {
     value: string;
   }[];
+  adminOne: string | null;
+  adminTwo: string | null;
+  adminThree: string | null;
 };
 
 type totalValue = {
@@ -272,10 +278,7 @@ export async function requestAllRequests(): Promise<Request[]> {
   try {
     const response = await getAllRequests();
     const requests = response.data;
-    if (!requests) {
-      throw new Error("Failed to fetch requests.");
-    }
-    return requests;
+    return requests as unknown as Request[];
   } catch (error) {
     console.error(`Failed to fetch requests:`, error);
     throw error;
