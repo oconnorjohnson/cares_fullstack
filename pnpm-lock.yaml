@@ -149,6 +149,9 @@ dependencies:
   lucide-react:
     specifier: ^0.314.0
     version: 0.314.0(react@18.2.0)
+  million:
+    specifier: ^3.0.6
+    version: 3.0.6
   next:
     specifier: 14.2.0-canary.56
     version: 14.2.0-canary.56(@babel/core@7.24.4)(react-dom@18.2.0)(react@18.2.0)
@@ -8888,6 +8891,14 @@ packages:
     engines: { node: ">=0.10.0" }
     dev: false
 
+  /kleur@4.1.5:
+    resolution:
+      {
+        integrity: sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==,
+      }
+    engines: { node: ">=6" }
+    dev: false
+
   /language-subtag-registry@0.3.22:
     resolution:
       {
@@ -9205,6 +9216,24 @@ packages:
     dependencies:
       braces: 3.0.2
       picomatch: 2.3.1
+
+  /million@3.0.6:
+    resolution:
+      {
+        integrity: sha512-OLjRVASGOZdyZw2ctBSSOu5kb9PaxafqkueqVvw0iQtUUnTLVRk1EmtqcNAtJWCIm8wn+WGRpDbnp+5Hi8//Kg==,
+      }
+    hasBin: true
+    dependencies:
+      "@babel/core": 7.24.4
+      "@babel/types": 7.24.0
+      "@rollup/pluginutils": 5.1.0(rollup@2.78.0)
+      kleur: 4.1.5
+      undici: 6.11.1
+      unplugin: 1.10.1
+    transitivePeerDependencies:
+      - rollup
+      - supports-color
+    dev: false
 
   /mime-db@1.52.0:
     resolution:
@@ -12148,6 +12177,14 @@ packages:
       {
         integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==,
       }
+
+  /undici@6.11.1:
+    resolution:
+      {
+        integrity: sha512-KyhzaLJnV1qa3BSHdj4AZ2ndqI0QWPxYzaIOio0WzcEJB9gvuysprJSLtpvc2D9mhR9jPDUk7xlJlZbH2KR5iw==,
+      }
+    engines: { node: ">=18.0" }
+    dev: false
 
   /unplugin@1.10.1:
     resolution:
