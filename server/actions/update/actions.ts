@@ -38,6 +38,9 @@ export interface RequestData {
   hasPreScreen: boolean;
   hasPostScreen: boolean;
   createdAt: Date;
+  adminOne: string | null;
+  adminTwo: string | null;
+  adminThree: string | null;
 }
 
 export interface UserData {
