@@ -278,10 +278,15 @@ export async function requestAllRequests(): Promise<Request[]> {
   try {
     const response = await getAllRequests();
     const requests = response.data;
+    if (!requests) {
+      // Ensure an empty array is returned if there are no requests
+      return [];
+    }
     return requests as unknown as Request[];
   } catch (error) {
     console.error(`Failed to fetch requests:`, error);
-    throw error;
+    // Return an empty array in case of an error to prevent .map() from failing
+    return [];
   }
 }
 
