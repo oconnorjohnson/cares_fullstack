@@ -20,6 +20,7 @@ import DenyButton from "@/components/admin/request/deny";
 import ApproveButton from "@/components/admin/request/approve";
 import AddFundToRequestById from "@/components/admin/request/add-fund";
 import MarkPaidButton from "@/components/admin/request/mark-paid";
+import { isAnyNull } from "@/server/supabase/functions/read";
 import { format } from "date-fns";
 import type { RequestData } from "@/server/actions/request/actions";
 import {
@@ -32,22 +33,20 @@ import {
   GetRFFWalmartCards,
   GetRFFArcoCards,
 } from "@/server/actions/request/actions";
+import { hasAdminAgreed } from "@/server/supabase/functions/read";
+import AgreeButton from "@/components/admin/request/agree-button";
+import { useAuth } from "@clerk/nextjs";
 
 const RequestPage = async ({ requestid }: { requestid: string }) => {
+  const currentAdminUser = await useAuth();
+  const currentAdminUserId = currentAdminUser?.userId;
   const rffWalmartCards = await GetRFFWalmartCards();
-  console.log("RFF walmart cards", rffWalmartCards);
   const rffArcoCards = await GetRFFArcoCards();
-  console.log("RFF arco cards", rffArcoCards);
-  console.log(requestid);
-  // convert page param string to number
   const requestId = Number(requestid);
-  // fetch request data from server
   const result = await requestRequestByRequestId(requestId);
-  // destructure supabase's array of results into a single object
   if (!Array.isArray(result)) {
     throw new Error("Expected an array");
   }
-  // set the request data to the first element of the array
   const [request] = result;
   const SDOHBadges = request.SDOH?.map((SDOH: any, index: number) => (
     <Badge key={index} className="mr-2 mb-2 text-sm">
@@ -59,14 +58,12 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
       {RFF}
     </Badge>
   ));
+  const isAnyAdminNull = await isAnyNull(requestId);
+  const hasCurrentAdminAgreed = await hasAdminAgreed({
+    requestId,
+    userId: currentAdminUserId!,
+  });
   const createdAt = format(new Date(request.created_at), "MM/dd/yyyy");
-  // const preCreatedAt = format(
-  //   new Date(request.PreScreenAnswers[0].created_at),
-  //   "MM/dd/yyyy",
-  // );
-
-  console.log(request.Fund);
-  console.log(request.PreScreenAnswerss);
   const FundsBadges = request.Fund?.map((fund: any, index: number) => (
     <div
       key={index}
@@ -122,7 +119,6 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
       ) : (
         <span className="text-lg font-semibold">${fund.amount}</span>
       )}
-
       <div className="px-2" />
       {fund.Receipt[0]?.url && fund.Receipt[0].url !== "" ? (
         <Link
@@ -149,7 +145,6 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
       )}
     </div>
   ));
-
   return (
     <>
       <div className="w-5/6 border-t items-center justify-start">
@@ -161,13 +156,25 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                   {request?.User.first_name}&apos;s request from {createdAt}
                 </div>
                 <div className="flex flex-row justify-between px-6">
-                  {request.pendingApproval && (
+                  {request.pendingApproval ? (
                     <>
                       <DenyButton requestId={requestId} />
-                      <div className="px-2" />{" "}
-                      {/* This div acts as a spacer between the buttons */}
-                      <ApproveButton requestId={requestId} />
+                      <div className="px-2" />
+                      {isAnyAdminNull ? (
+                        hasCurrentAdminAgreed ? (
+                          <Button disabled>Agreed</Button>
+                        ) : (
+                          <AgreeButton
+                            requestId={requestId}
+                            userId={currentAdminUserId!}
+                          />
+                        )
+                      ) : (
+                        <ApproveButton requestId={requestId} />
+                      )}
                     </>
+                  ) : (
+                    <></>
                   )}
                 </div>
               </CardTitle>
@@ -491,13 +498,6 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         {request.PreScreenAnswers[0].additionalInformation}
                       </div>
                     </div>
-                    {/* <Separator className="my-2" />
-                    <div className="flex flex-cols-2 justify-between">
-                      <div className="text-xl font-extralight pr-4">
-                        Submitted On:
-                      </div>
-                      <div className="text-xl font-bold">{preCreatedAt}</div>
-                    </div> */}
                   </div>
                 </>
               ) : (

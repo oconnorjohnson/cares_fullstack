@@ -9,14 +9,22 @@ import {
   updateOperatingBalance as updateTheOperatingBalance,
   updateRFFBalance as updateTheRFFBalance,
   updateAdminEmailPreference,
+  updateRequestAdminColumn,
 } from "@/server/supabase/functions/update";
+import {
+  isAdminOneNull,
+  isAdminTwoNull,
+  isAdminThreeNull,
+} from "@/server/supabase/functions/read";
 import { revalidatePath } from "next/cache";
 import { Resend } from "resend";
 
 import { EmailTemplate as ReceiptUploadedEmailTemplate } from "@/components/emails/receipt-uploaded";
 import { EmailTemplate as BannedEmailTemplate } from "@/components/emails/banned";
 import { EmailTemplate as DeniedEmailTemplate } from "@/components/emails/denied";
-import { TablesUpdate } from "@/types_db";
+
+import type { updateRequestAdminColumnData } from "@/server/supabase/functions/update";
+import type { TablesUpdate } from "@/types_db";
 
 export interface RequestData {
   id: number;
@@ -76,6 +84,28 @@ export async function revalidateDashboard() {
 
 export async function revalidateUserRequests() {
   revalidatePath("/user/requests");
+}
+
+// right now this lets admins add their id multiple times, we need to ensure each admin can only agree once
+export async function addAdminAgreementToRequest({
+  requestId,
+  userId,
+}: {
+  requestId: number;
+  userId: string;
+}) {
+  if (await isAdminOneNull(requestId)) {
+    const updateData = { columnName: "adminOne", userId, requestId };
+    return await updateRequestAdminColumn(updateData);
+  } else if (await isAdminTwoNull(requestId)) {
+    const updateData = { columnName: "adminTwo", userId, requestId };
+    return await updateRequestAdminColumn(updateData);
+  } else if (await isAdminThreeNull(requestId)) {
+    const updateData = { columnName: "adminThree", userId, requestId };
+    return await updateRequestAdminColumn(updateData);
+  } else {
+    throw new Error("All admin columns are already filled.");
+  }
 }
 
 export async function updateOperatingBalance(

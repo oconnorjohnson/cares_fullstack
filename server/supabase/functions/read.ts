@@ -10,6 +10,121 @@ type id = {
   id: number;
 };
 
+export async function hasAdminAgreed({
+  requestId,
+  userId,
+}: {
+  requestId: number;
+  userId: string;
+}) {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Request")
+      .select("*")
+      .eq("id", requestId)
+      .single();
+    if (error) {
+      throw error;
+    } else if (data?.adminOne === userId) {
+      return true;
+    } else if (data?.adminTwo === userId) {
+      return true;
+    } else if (data?.adminThree === userId) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log("Unexpected error in hasAdminAgreed function:", error);
+    throw error;
+  }
+}
+
+export async function isAnyNull(requestId: number): Promise<boolean> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Request")
+      .select("*")
+      .eq("id", requestId)
+      .single();
+    if (error) {
+      console.log("Error in isAnyNull:", error);
+      throw error;
+    }
+    if (
+      data?.adminOne === null &&
+      data?.adminTwo === null &&
+      data?.adminThree === null
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log("unexpected error in isAnyNull function:", error);
+    throw error;
+  }
+}
+
+export async function isAdminOneNull(requestId: number): Promise<boolean> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Request")
+      .select("adminOne")
+      .eq("id", requestId)
+      .single();
+    if (error) {
+      console.log("Error in isAdminOneNull:", error);
+      throw error;
+    }
+    return data?.adminOne === null;
+  } catch (error) {
+    console.log("unexpected error in isAdminOneNull function:", error);
+    throw error;
+  }
+}
+
+export async function isAdminTwoNull(requestId: number): Promise<boolean> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Request")
+      .select("adminTwo")
+      .eq("id", requestId)
+      .single();
+    if (error) {
+      console.log("Error in isAdminTwoNull:", error);
+      throw error;
+    }
+    return data?.adminTwo === null;
+  } catch (error) {
+    console.log("unexpected error in isAdminTwoNull function:", error);
+    throw error;
+  }
+}
+
+export async function isAdminThreeNull(requestId: number): Promise<boolean> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Request")
+      .select("adminThree")
+      .eq("id", requestId)
+      .single();
+    if (error) {
+      console.log("Error in isAdminThreeNull:", error);
+      throw error;
+    }
+    return data?.adminThree === null;
+  } catch (error) {
+    console.log("unexpected error in isAdminThreeNull function:", error);
+    throw error;
+  }
+}
+
 export async function getAdminEmailPreferenceByUserId(userId: string) {
   const supabase = createSupabaseClient();
   try {

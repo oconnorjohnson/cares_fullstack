@@ -2,6 +2,32 @@ import { createClient as createSupabaseClient } from "@/server/supabase/server";
 import { TablesUpdate, Tables } from "@/types_db";
 import type { WebhookEvent } from "@clerk/nextjs/server";
 
+export type updateRequestAdminColumnData = {
+  requestId: number;
+  userId: string;
+  columnName: string;
+};
+
+export async function updateRequestAdminColumn(
+  updateData: updateRequestAdminColumnData,
+): Promise<boolean> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Request")
+      .update({ [updateData.columnName]: updateData.userId })
+      .eq("id", updateData.requestId);
+    if (error) {
+      console.log("Error in updateRequestAdminColumn:", error);
+      throw error;
+    }
+    return true;
+  } catch (error) {
+    console.log("Unexpected error in updateRequestAdminColumn:", error);
+    throw error;
+  }
+}
+
 export async function updateFundWithAssets(
   fundId: number,
   assetIds: number[],
