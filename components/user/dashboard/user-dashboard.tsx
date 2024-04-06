@@ -191,10 +191,7 @@ export default async function Dashboard() {
                       <CardHeader>
                         <CardTitle>Title</CardTitle>
                         <CardDescription>Description</CardDescription>
-                        <CardContent>
-                          A bright moon illuminates the quiet lake, as gentle
-                          waves whisper secrets to the night's embrace.
-                        </CardContent>
+                        <CardContent>filler text.</CardContent>
                       </CardHeader>
                     </Card>
                     {/* Update Card #2 */}
