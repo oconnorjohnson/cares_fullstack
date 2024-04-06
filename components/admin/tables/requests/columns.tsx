@@ -43,6 +43,9 @@ export type Request = {
   hasPostScreen: boolean;
   createdAt: Date;
   isHighlighted?: boolean;
+  adminOne: string | null;
+  adminTwo: string | null;
+  adminThree: string | null;
 };
 export const columns: ColumnDef<Request>[] = [
   // checkboxes
