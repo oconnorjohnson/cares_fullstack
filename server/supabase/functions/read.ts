@@ -1,6 +1,6 @@
 import { createClient as createSupabaseClient } from "@/server/supabase/server";
 import { Tables } from "@/types_db";
-
+import type { Request } from "@/server/actions/request/actions";
 type totalValue = {
   id: number;
   totalValue: number;
@@ -54,8 +54,8 @@ export async function isAnyNull(requestId: number): Promise<boolean> {
       throw error;
     }
     if (
-      data?.adminOne === null &&
-      data?.adminTwo === null &&
+      data?.adminOne === null ||
+      data?.adminTwo === null ||
       data?.adminThree === null
     ) {
       return true;
@@ -434,13 +434,31 @@ export async function getAllRequests() {
   console.log("getAllRequests supabase function running");
   const supabase = createSupabaseClient();
   try {
-    const requests = await supabase
+    const { data, error, status } = await supabase
       .from("Request")
       .select(
         `*, User ( first_name, last_name ), Client ( clientID, sex, race ), Agency ( name )`,
       );
-    return requests;
+
+    if (error) {
+      console.error(
+        "Error fetching all requests:",
+        error,
+        "Status code:",
+        status,
+      );
+      throw error;
+    }
+
+    if (!data) {
+      console.log("No data returned", "Status code:", status);
+      return [];
+    }
+
+    console.log("Fetched requests data:", data);
+    return data;
   } catch (error) {
+    console.error("Unexpected error in getAllRequests:", error);
     throw error;
   }
 }

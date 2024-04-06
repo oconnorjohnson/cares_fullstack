@@ -277,7 +277,7 @@ export async function requestAllRequests(): Promise<Request[]> {
   console.log("requestAllRequests server action running");
   try {
     const response = await getAllRequests();
-    const requests = response.data;
+    const requests = response;
     if (!requests) {
       // Ensure an empty array is returned if there are no requests
       return [];

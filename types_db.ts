@@ -609,27 +609,6 @@ export type Database = {
         };
         Relationships: [
           {
-            foreignKeyName: "public_Request_adminOne_fkey";
-            columns: ["adminOne"];
-            isOneToOne: false;
-            referencedRelation: "User";
-            referencedColumns: ["userId"];
-          },
-          {
-            foreignKeyName: "public_Request_adminThree_fkey";
-            columns: ["adminThree"];
-            isOneToOne: false;
-            referencedRelation: "User";
-            referencedColumns: ["userId"];
-          },
-          {
-            foreignKeyName: "public_Request_adminTwo_fkey";
-            columns: ["adminTwo"];
-            isOneToOne: false;
-            referencedRelation: "User";
-            referencedColumns: ["userId"];
-          },
-          {
             foreignKeyName: "public_Request_agencyId_fkey";
             columns: ["agencyId"];
             isOneToOne: false;

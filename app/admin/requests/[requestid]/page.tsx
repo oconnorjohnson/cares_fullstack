@@ -35,11 +35,9 @@ import {
 } from "@/server/actions/request/actions";
 import { hasAdminAgreed } from "@/server/supabase/functions/read";
 import AgreeButton from "@/components/admin/request/agree-button";
-import { useAuth } from "@clerk/nextjs";
 
 const RequestPage = async ({ requestid }: { requestid: string }) => {
-  const currentAdminUser = await useAuth();
-  const currentAdminUserId = currentAdminUser?.userId;
+  const { userId: currentAdminUserId } = await auth();
   const rffWalmartCards = await GetRFFWalmartCards();
   const rffArcoCards = await GetRFFArcoCards();
   const requestId = Number(requestid);

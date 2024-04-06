@@ -97,17 +97,24 @@ export async function addAdminAgreementToRequest({
   requestId: number;
   userId: string;
 }) {
-  if (await isAdminOneNull(requestId)) {
-    const updateData = { columnName: "adminOne", userId, requestId };
-    return await updateRequestAdminColumn(updateData);
-  } else if (await isAdminTwoNull(requestId)) {
-    const updateData = { columnName: "adminTwo", userId, requestId };
-    return await updateRequestAdminColumn(updateData);
-  } else if (await isAdminThreeNull(requestId)) {
-    const updateData = { columnName: "adminThree", userId, requestId };
-    return await updateRequestAdminColumn(updateData);
-  } else {
-    throw new Error("All admin columns are already filled.");
+  try {
+    if (await isAdminOneNull(requestId)) {
+      const updateData = { columnName: "adminOne", userId, requestId };
+      return await updateRequestAdminColumn(updateData);
+    } else if (await isAdminTwoNull(requestId)) {
+      const updateData = { columnName: "adminTwo", userId, requestId };
+      return await updateRequestAdminColumn(updateData);
+    } else if (await isAdminThreeNull(requestId)) {
+      const updateData = { columnName: "adminThree", userId, requestId };
+      return await updateRequestAdminColumn(updateData);
+    } else {
+      throw new Error("All admin columns are already filled.");
+    }
+  } catch (error) {
+    console.error("Error adding admin agreement to request:", error);
+    throw error;
+  } finally {
+    revalidatePath(`/admin/requests/[requestid]`);
   }
 }
 
