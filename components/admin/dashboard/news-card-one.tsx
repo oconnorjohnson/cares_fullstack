@@ -56,7 +56,7 @@ const formSchema = z.object({
     .min(12, {
       message: "Card Content must be at least 12 characters.",
     })
-    .max(150, { message: "Card Content must be at most 150 characters." }),
+    .max(250, { message: "Card Content must be at most 250 characters." }),
 });
 export default function NewsCardThree({
   newsCardOneData,
@@ -101,9 +101,7 @@ export default function NewsCardThree({
         <CardTitle>{newsCardOneData.card_title}</CardTitle>
         <CardDescription>{newsCardOneData.card_description}</CardDescription>
       </CardHeader>
-      <CardContent className="border py-4 mx-4 rounded-lg">
-        {newsCardOneData.card_content}
-      </CardContent>
+      <CardContent>{newsCardOneData.card_content}</CardContent>
       <CardFooter className="py-4">
         <Dialog>
           <DialogTrigger asChild>
