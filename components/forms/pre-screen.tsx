@@ -63,6 +63,11 @@ export default function PreScreen({ requestId }: { requestId: number }) {
       additionalInformation: "",
     },
   });
+  const closeHandler = (open: boolean) => {
+    if (!open) {
+      form.reset();
+    }
+  };
   useEffect(() => {
     if (Object.keys(form.formState.errors).length > 0) {
     }
@@ -89,7 +94,7 @@ export default function PreScreen({ requestId }: { requestId: number }) {
 
   return (
     <>
-      <Dialog>
+      <Dialog onOpenChange={closeHandler}>
         <DialogTrigger asChild>
           <Button>Complete Pre-Screen</Button>
         </DialogTrigger>

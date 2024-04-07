@@ -5,8 +5,19 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 
 import { cn } from "@/server/utils";
+interface DialogProps extends DialogPrimitive.DialogProps {
+  onOpenChange?: (open: boolean) => void;
+}
 
-const Dialog = DialogPrimitive.Root;
+const Dialog: React.FC<DialogProps> = ({
+  children,
+  onOpenChange,
+  ...props
+}) => (
+  <DialogPrimitive.Root {...props} onOpenChange={onOpenChange}>
+    {children}
+  </DialogPrimitive.Root>
+);
 
 const DialogTrigger = DialogPrimitive.Trigger;
 
