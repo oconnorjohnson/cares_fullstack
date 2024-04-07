@@ -101,7 +101,7 @@ export default function NewsCardThree({
         <CardTitle>{newsCardOneData.card_title}</CardTitle>
         <CardDescription>{newsCardOneData.card_description}</CardDescription>
       </CardHeader>
-      <CardContent className="text-md">
+      <CardContent className="text-sm font-medium">
         {newsCardOneData.card_content}
       </CardContent>
       <CardFooter className="py-4">

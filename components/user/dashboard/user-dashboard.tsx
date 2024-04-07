@@ -176,7 +176,7 @@ export default async function Dashboard() {
                   <NewClient userId={userId} />
                 </div>
               </div>
-              <div className="flex space-x-8 h-[300px]">
+              <div className="flex space-x-8 h-[400px]">
                 <div className="flex flex-col w-1/8 h-full">
                   <Card className="h-full">
                     <CardHeader>
@@ -207,7 +207,9 @@ export default async function Dashboard() {
                           {newsCardOne?.card_description}
                         </CardDescription>
                       </CardHeader>
-                      <CardContent>{newsCardOne?.card_content}</CardContent>
+                      <CardContent className="text-sm font-light">
+                        {newsCardOne?.card_content}
+                      </CardContent>
                     </Card>
                     {/* Update Card #2 */}
                     <Card className="w-[275px] h-full">
@@ -217,7 +219,9 @@ export default async function Dashboard() {
                           {newsCardTwo?.card_description}
                         </CardDescription>
                       </CardHeader>
-                      <CardContent>{newsCardTwo?.card_content}</CardContent>
+                      <CardContent className="text-sm font-light">
+                        {newsCardTwo?.card_content}
+                      </CardContent>
                     </Card>
                     {/* Update Card #3 */}
                     <Card className="w-[275px] h-full">
@@ -227,7 +231,9 @@ export default async function Dashboard() {
                           {newsCardThree?.card_description}
                         </CardDescription>
                       </CardHeader>
-                      <CardContent>{newsCardThree?.card_content}</CardContent>
+                      <CardContent className="text-sm font-light">
+                        {newsCardThree?.card_content}
+                      </CardContent>
                     </Card>
                   </Card>
                 </div>
