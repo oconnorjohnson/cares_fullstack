@@ -10,6 +10,78 @@ type id = {
   id: number;
 };
 
+export async function getNewsCardOne() {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("NewsCards")
+      .select("*")
+      .eq("id", 1)
+      .single(); // Use .single() to get a single object
+    if (error) {
+      console.log("Error in getNewsCardOne:", error);
+      throw error;
+    }
+    // Ensure data matches the NewsCard type
+    return {
+      card_title: data.card_title,
+      card_description: data.card_description,
+      card_content: data.card_content,
+    };
+  } catch (error) {
+    console.log("Unexpected error in getNewsCardOne:", error);
+    throw error;
+  }
+}
+
+export async function getNewsCardTwo() {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("NewsCards")
+      .select("*")
+      .eq("id", 2)
+      .single(); // Use .single() to get a single object
+    if (error) {
+      console.log("Error in getNewsCardOne:", error);
+      throw error;
+    }
+    // Ensure data matches the NewsCard type
+    return {
+      card_title: data.card_title,
+      card_description: data.card_description,
+      card_content: data.card_content,
+    };
+  } catch (error) {
+    console.log("Unexpected error in getNewsCardTwo:", error);
+    throw error;
+  }
+}
+
+export async function getNewsCardThree() {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("NewsCards")
+      .select("*")
+      .eq("id", 3)
+      .single(); // Use .single() to get a single object
+    if (error) {
+      console.log("Error in getNewsCardOne:", error);
+      throw error;
+    }
+    // Ensure data matches the NewsCard type
+    return {
+      card_title: data.card_title,
+      card_description: data.card_description,
+      card_content: data.card_content,
+    };
+  } catch (error) {
+    console.log("Unexpected error in getNewsCardThree:", error);
+    throw error;
+  }
+}
+
 export async function hasAdminAgreed({
   requestId,
   userId,
@@ -130,7 +202,7 @@ export async function getAdminEmailPreferenceByUserId(userId: string) {
   try {
     const { data, error } = await supabase
       .from("AdminEmailPrefs")
-      .select("id")
+      .select("*")
       .eq("UserId", userId)
       .single();
     if (error) {

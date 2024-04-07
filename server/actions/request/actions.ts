@@ -167,9 +167,7 @@ type AdminEmailPreference = {
 export async function GetAdminEmailPreferenceByUserId(
   userId: string,
 ): Promise<AdminEmailPreference> {
-  const adminEmailPreferenceId = await getAdminEmailPreferenceByUserId(userId);
-  const prefId = adminEmailPreferenceId?.id;
-  const adminEmailPreference = await getAdminEmailPreferenceById(prefId!);
+  const adminEmailPreference = await getAdminEmailPreferenceByUserId(userId);
   return adminEmailPreference;
 }
 

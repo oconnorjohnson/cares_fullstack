@@ -10,6 +10,7 @@ export default async function Requests() {
   const { sessionClaims, userId } = auth();
   const isAdmin = (sessionClaims?.publicMetadata as any)?.admin;
   const user = userId;
+  console.log(user);
   const adminEmailPreference = await GetAdminEmailPreferenceByUserId(user!);
   console.log("Admin email preference:", adminEmailPreference);
   if (!isAdmin || !user) {

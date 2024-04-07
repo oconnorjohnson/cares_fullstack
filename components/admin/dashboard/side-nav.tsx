@@ -40,6 +40,14 @@ export default function SideNavBar() {
             <GitPullRequestIcon className="w-5 h-5" />
           </div>
         </Link>
+        <Link href="/admin/analytics">
+          <div
+            className={`rounded-xl hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 py-2 px-2 lg:px-6 mx-1 lg:mx-2 text-sm lg:text-md font-semibold flex flex-row justify-between items-center ${pathname === "/admin/analytics" ? "bg-zinc-200 dark:bg-zinc-800" : ""}`}
+          >
+            <div className="hidden lg:block">Analytics</div>{" "}
+            <BarChart2 className="w-5 h-5" />
+          </div>
+        </Link>
         <Link href="/admin/users">
           <div
             className={`rounded-xl hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 py-2 px-2 lg:px-6 mx-1 lg:mx-2 text-sm lg:text-md font-semibold flex flex-row justify-between items-center ${pathname === "/admin/users" ? "bg-zinc-200 dark:bg-zinc-800" : ""}`}
@@ -75,14 +83,6 @@ export default function SideNavBar() {
         <Link href="/admin/settings/agencies">
           <div
             className={`rounded-xl hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 py-2 px-2 lg:px-6 mx-1 lg:mx-2 text-sm lg:text-md font-semibold flex flex-row justify-between items-center ${pathname === "/admin/settings/agencies" || pathname === "/admin/settings/fundtypes" ? "bg-zinc-200 dark:bg-zinc-800" : ""}`}
-          >
-            <div className="hidden lg:block">Settings</div>{" "}
-            <SettingsIcon className="w-5 h-5" />
-          </div>
-        </Link>
-        <Link href="/dashboard/bug-report">
-          <div
-            className={`rounded-xl hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 py-2 px-2 lg:px-6 mx-1 lg:mx-2 text-sm lg:text-md font-semibold flex flex-row justify-between items-center ${pathname === "/dashboard/bug-report" ? "bg-zinc-200 dark:bg-zinc-800" : ""}`}
           >
             <div className="hidden lg:block">Settings</div>{" "}
             <SettingsIcon className="w-5 h-5" />

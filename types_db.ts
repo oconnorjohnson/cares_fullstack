@@ -332,6 +332,30 @@ export type Database = {
           },
         ];
       };
+      NewsCards: {
+        Row: {
+          card_content: string;
+          card_description: string;
+          card_title: string;
+          created_at: string;
+          id: number;
+        };
+        Insert: {
+          card_content?: string;
+          card_description?: string;
+          card_title?: string;
+          created_at?: string;
+          id?: number;
+        };
+        Update: {
+          card_content?: string;
+          card_description?: string;
+          card_title?: string;
+          created_at?: string;
+          id?: number;
+        };
+        Relationships: [];
+      };
       OperatingBalance: {
         Row: {
           availableBalance: number;
