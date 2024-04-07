@@ -101,7 +101,7 @@ export default function NewsCardThree({
         <CardTitle>{cardTitle}</CardTitle>
         <CardDescription>{cardDescription}</CardDescription>
       </CardHeader>
-      <CardContent>{cardContent}</CardContent>
+      <CardContent className="text-md">{cardContent}</CardContent>
       <CardFooter className="py-4">
         <Dialog>
           <DialogTrigger asChild>
