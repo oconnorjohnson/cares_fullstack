@@ -8,6 +8,33 @@ export type updateRequestAdminColumnData = {
   columnName: string;
 };
 
+export async function updateNewsCard(
+  NewsCardId: number,
+  cardTitle: string,
+  cardDescription: string,
+  cardContent: string,
+) {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("NewsCards")
+      .update({
+        card_title: cardTitle,
+        card_description: cardDescription,
+        card_content: cardContent,
+      })
+      .eq("id", NewsCardId);
+    if (error) {
+      console.log("Error in updateNewsCard:", error);
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.log("Unexpected error in updateNewsCard:", error);
+    throw error;
+  }
+}
+
 export async function setAllAdminColumnsNull(
   requestId: number,
 ): Promise<boolean> {

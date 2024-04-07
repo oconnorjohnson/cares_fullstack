@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -7,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -32,8 +34,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { updateNewsCards } from "@/server/actions/update/actions";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import type { NewsCard } from "@/components/admin/dashboard/news-updater";
 const formSchema = z.object({
+  NewsCardId: z.number().min(1),
   card_title: z
     .string()
     .min(2, {
@@ -45,25 +50,27 @@ const formSchema = z.object({
     .min(4, {
       message: "Card Description must be at least 4 characters.",
     })
-    .max(25, { message: "Card Description must be at most 25 characters." }),
+    .max(50, { message: "Card Description must be at most 50 characters." }),
   card_content: z
     .string()
     .min(12, {
       message: "Card Content must be at least 12 characters.",
     })
-    .max(100, { message: "Card Content must be at most 100 characters." }),
+    .max(150, { message: "Card Content must be at most 150 characters." }),
 });
 export default function NewsCardThree({
   newsCardOneData,
 }: {
   newsCardOneData: NewsCard;
 }) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const cardTitle = newsCardOneData.card_title;
   const cardDescription = newsCardOneData.card_description;
   const cardContent = newsCardOneData.card_content;
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      NewsCardId: 1,
       card_title: cardTitle,
       card_description: cardDescription,
       card_content: cardContent,
@@ -71,13 +78,25 @@ export default function NewsCardThree({
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsSubmitting(true);
+    try {
+      await updateNewsCards(
+        values.NewsCardId,
+        values.card_title,
+        values.card_description,
+        values.card_content,
+      );
+      toast.success("News Card One updated successfully");
+    } catch (error) {
+      console.error("Error updating news card one:", error);
+      toast.error("Error updating news card one");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
   return (
-    <Card className="w-2/3 h-[350px]">
+    <Card className="w-2/3 h-[350px] flex flex-col justify-between">
       <CardHeader>
         <CardTitle>{newsCardOneData.card_title}</CardTitle>
         <CardDescription>{newsCardOneData.card_description}</CardDescription>
@@ -145,7 +164,13 @@ export default function NewsCardThree({
                   <DialogClose>
                     <Button>Cancel</Button>
                   </DialogClose>
-                  <Button type="submit">Save changes</Button>
+                  {isSubmitting ? (
+                    <Button disabled>
+                      <LoadingSpinner className="w-4 h-4 text-white" />
+                    </Button>
+                  ) : (
+                    <Button type="submit">Save changes</Button>
+                  )}
                 </DialogFooter>
               </form>
             </Form>

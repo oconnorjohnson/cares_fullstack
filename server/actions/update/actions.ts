@@ -11,6 +11,7 @@ import {
   updateAdminEmailPreference,
   updateRequestAdminColumn,
   setAllAdminColumnsNull,
+  updateNewsCard,
 } from "@/server/supabase/functions/update";
 import {
   isAdminOneNull,
@@ -73,6 +74,22 @@ export interface BalanceUpdateData {
   TransactionId: number | null;
   version: number;
   lastVersion: number;
+}
+
+export async function updateNewsCards(
+  NewsCardId: number,
+  cardTitle: string,
+  cardDescription: string,
+  cardContent: string,
+) {
+  const updateSuccess = await updateNewsCard(
+    NewsCardId,
+    cardTitle,
+    cardDescription,
+    cardContent,
+  );
+  revalidatePath("/dashboard");
+  return updateSuccess;
 }
 
 export async function updateAdminEmailPrefs(

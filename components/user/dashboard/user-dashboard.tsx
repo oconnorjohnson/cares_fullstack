@@ -51,6 +51,18 @@ import PreScreen from "@/components/forms/pre-screen";
 import PostScreen from "@/components/forms/post-screen";
 import AgreementDialog from "@/components/user/agreement-dialog";
 import ReceiptDialog from "@/components/user/receipt-dialog";
+import {
+  getNewsCardOne,
+  getNewsCardTwo,
+  getNewsCardThree,
+} from "@/server/supabase/functions/read";
+
+async function fetchNewsCards() {
+  const newsCardOne = await getNewsCardOne();
+  const newsCardTwo = await getNewsCardTwo();
+  const newsCardThree = await getNewsCardThree();
+  return [newsCardOne, newsCardTwo, newsCardThree];
+}
 
 async function fetchCounts(userId: string) {
   const clientCount = await CountClientsByUserId(userId);
@@ -137,6 +149,7 @@ export default async function Dashboard() {
     const requestsNeedReceipts = await fetchRequestsNeedingReceipts(userId);
     const requestsNeedPostScreen = await fetchRequestsNeedingPostScreen(userId);
     const requestsNeedAgreements = await fetchRequestsNeedingAgreements(userId);
+    const [newsCardOne, newsCardTwo, newsCardThree] = await fetchNewsCards();
     const countPreScreenRequests = () => requestsNeedPreScreen.length;
     const countReceiptsRequests = () => requestsNeedReceipts.length;
     const countPostScreenRequests = () => requestsNeedPostScreen.length;
@@ -189,26 +202,32 @@ export default async function Dashboard() {
                     {/* Update Card #1 */}
                     <Card className="w-[275px] h-full">
                       <CardHeader>
-                        <CardTitle>Title</CardTitle>
-                        <CardDescription>Description</CardDescription>
-                        <CardContent>filler text.</CardContent>
+                        <CardTitle>{newsCardOne?.card_title}</CardTitle>
+                        <CardDescription>
+                          {newsCardOne?.card_description}
+                        </CardDescription>
                       </CardHeader>
+                      <CardContent>{newsCardOne?.card_content}</CardContent>
                     </Card>
                     {/* Update Card #2 */}
                     <Card className="w-[275px] h-full">
                       <CardHeader>
-                        <CardTitle>Title</CardTitle>
-                        <CardDescription>Description</CardDescription>
-                        <CardContent>Content</CardContent>
+                        <CardTitle>{newsCardTwo?.card_title}</CardTitle>
+                        <CardDescription>
+                          {newsCardTwo?.card_description}
+                        </CardDescription>
                       </CardHeader>
+                      <CardContent>{newsCardTwo?.card_content}</CardContent>
                     </Card>
                     {/* Update Card #3 */}
                     <Card className="w-[275px] h-full">
                       <CardHeader>
-                        <CardTitle>Title</CardTitle>
-                        <CardDescription>Description</CardDescription>
-                        <CardContent>Content</CardContent>
+                        <CardTitle>{newsCardThree?.card_title}</CardTitle>
+                        <CardDescription>
+                          {newsCardThree?.card_description}
+                        </CardDescription>
                       </CardHeader>
+                      <CardContent>{newsCardThree?.card_content}</CardContent>
                     </Card>
                   </Card>
                 </div>

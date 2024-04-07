@@ -28,6 +28,11 @@ export default async function NewsUpdater() {
   const newsCardThreeData = await getNewsCardThree();
   return (
     <Card>
+      <CardHeader>
+        <CardTitle className="">
+          User Dashboard News &amp; Updates Portal
+        </CardTitle>
+      </CardHeader>
       <CardContent className="flex flex-row items-center justify-center align-center space-x-6 text-xl font-bold pt-6">
         <CardOne newsCardOneData={newsCardOneData} />
         <CardTwo newsCardTwoData={newsCardTwoData} />
