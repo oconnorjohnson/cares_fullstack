@@ -48,13 +48,7 @@ export default function SideNavBar() {
             <UsersIcon className="w-5 h-5" />
           </div>
         </Link>
-        <Link href="/dashboard/bug-report">
-          <div
-            className={`rounded-xl hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 py-2 px-6 mx-2 text-md font-semibold flex flex-row justify-between items-center ${pathname === "/dashboard/bug-report" ? "bg-zinc-200 dark:bg-zinc-800" : ""}`}
-          >
-            Report A Bug <BugIcon className="w-5 h-5" />
-          </div>
-        </Link>
+
         <Separator />
 
         <SignOutButton signOutCallback={() => router.push("/")}>
