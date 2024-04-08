@@ -37,6 +37,7 @@ import {
 import { updateNewsCards } from "@/server/actions/update/actions";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import type { NewsCard } from "@/components/admin/dashboard/news-updater";
+import { Textarea } from "@/components/ui/textarea";
 const formSchema = z.object({
   NewsCardId: z.number().min(1),
   card_title: z
@@ -154,7 +155,7 @@ export default function NewsCardThree({
                     <FormItem>
                       <FormLabel>Card Content</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Textarea {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
