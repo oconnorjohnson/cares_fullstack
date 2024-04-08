@@ -8,6 +8,10 @@ import {
   revalidateDashboard,
   revalidateUserRequests,
 } from "@/server/actions/update/actions";
+import {
+  sendReceiptUploadedAdminEmails,
+  sendAgreementUploadedAdminEmails,
+} from "@/server/actions/email-events/admin";
 const f = createUploadthing();
 
 const auth = async () => {
@@ -22,21 +26,17 @@ const uploadInputSchema = z.object({
 const uploadAgreementInputSchema = z.object({
   requestId: z.number(),
 });
-// FileRouter for your app, can contain multiple FileRoutes
+
 export const ourFileRouter = {
   agreementUploader: f({ pdf: { maxFileSize: "16MB", maxFileCount: 1 } })
     .input(uploadAgreementInputSchema)
     .middleware(async ({ files, input }) => {
-      // This code runs on your server before upload
       const user = await auth();
-      // If you throw, the user will not be able to upload
       if (!user) throw new Error("Unauthorized");
       const { requestId } = input;
-      // Whatever is returned here is accessible in onUploadComplete as `metadata`
       return { userId: user?.id, requestId };
     })
     .onUploadComplete(async ({ metadata, file }) => {
-      // This code RUNS ON YOUR SERVER after upload
       console.log("Agreement upload complete for userId:", metadata.userId);
       revalidateDashboard();
       revalidateUserRequests();
@@ -51,7 +51,7 @@ export const ourFileRouter = {
         console.log("Agreement added successfully:", addAgreement);
         revalidatePath("/user/requests");
         revalidatePath("/dashboard");
-
+        await sendAgreementUploadedAdminEmails();
         return {
           uploadedBy: metadata.userId,
           agreementUrl: file.url,
@@ -62,28 +62,22 @@ export const ourFileRouter = {
         throw error;
       }
     }),
-  // Define as many FileRoutes as you like, each with a unique routeSlug
+
   receiptUploader: f({ pdf: { maxFileSize: "16MB", maxFileCount: 1 } })
-    // Set permissions and file types for this FileRoute
     .input(uploadInputSchema)
     .middleware(async ({ files, input }) => {
-      // This code runs on your server before upload
       const user = await auth();
       const uploadCount = files.length;
-      // If you throw, the user will not be able to upload
       if (!user) throw new Error("Unauthorized");
       const { fundId, requestId } = input;
-      // Whatever is returned here is accessible in onUploadComplete as `metadata`
       return { userId: user?.id, fundId, requestId };
     })
     .onUploadComplete(async ({ metadata, file }) => {
-      // This code RUNS ON YOUR SERVER after upload
       console.log("Upload complete for userId:", metadata.userId);
       revalidateDashboard();
       revalidateUserRequests();
       console.log("file url", file.url);
       console.log("FundID:", metadata.fundId);
-
       try {
         const newReceipt = await createNewReceiptRecord({
           userId: metadata.userId,
@@ -92,7 +86,7 @@ export const ourFileRouter = {
           url: file.url,
         });
         console.log("New receipt record created successfully:", newReceipt);
-
+        await sendReceiptUploadedAdminEmails();
         return {
           uploadedBy: metadata.userId,
           fileUrl: file.url,

@@ -24,7 +24,12 @@ import {
   setAllAdminColumnsNull,
 } from "@/server/supabase/functions/update";
 import { deleteTransaction } from "@/server/supabase/functions/delete";
-import { Submitted } from "@/server/actions/resend/actions";
+import {
+  sendNewRequestAdminEmails,
+  sendNewPostScreenAdminEmails,
+  sendRFFAssetsAddedAdminEmails,
+  sendCARESAssetsAddedAdminEmails,
+} from "@/server/actions/email-events/admin";
 import {
   markRequestAsNeedingReceipt,
   markRequestAsNotNeedingReceipt,
@@ -247,16 +252,12 @@ export async function addBusPasses({
     } else if (balanceSource === "RFF") {
       currentBalance = await getRFFBalance();
     }
-
     if (!currentBalance) {
       throw new Error("Failed to retrieve current balance.");
     }
-
-    // Assuming currentBalance object has availableBalance and version properties
     if (currentBalance[0].availableBalance < totalValue) {
       throw new Error("Insufficient funds to complete this transaction.");
     }
-
     lastVersion = currentBalance[0].version;
     previousBalance = currentBalance[0].availableBalance;
     // Step 2: Create the transaction
@@ -280,11 +281,10 @@ export async function addBusPasses({
     // Step 3: Update balance with the lastVersion
     try {
       const balanceUpdateData = {
-        availableBalance: -totalValue, // Pass as negative to subtract
-        totalBalance: -totalValue, // Pass as negative to subtract
+        availableBalance: -totalValue,
+        totalBalance: -totalValue,
         reservedBalance: 0,
       };
-
       if (balanceSource === "CARES") {
         await updateOperatingBalance(lastVersion, balanceUpdateData);
       } else if (balanceSource === "RFF") {
@@ -296,9 +296,8 @@ export async function addBusPasses({
         throw new Error("Failed to update balance.");
       }
       console.error("Error in addBusPasses:", error);
-      throw error; // Rethrow the error to be handled by the caller
+      throw error;
     }
-
     if (!transactionId) {
       throw new Error("No transaction ID, failed to create asset records.");
     }
@@ -308,7 +307,7 @@ export async function addBusPasses({
       assetPromises.push(
         createNewAsset({
           UserId: UserId,
-          FundTypeId: 3, // Integer for Bus Pass fund type id
+          FundTypeId: 3,
           isAvailable: true,
           TransactionId: transactionId,
           totalValue: unitValue,
@@ -317,25 +316,17 @@ export async function addBusPasses({
         }),
       );
     }
-
     try {
       await Promise.all(assetPromises);
-      // Since createAsset now only throws on error, no need to check return values
     } catch (error) {
       console.error("Error in addBusPasses:", error);
-      // Handle error, such as rolling back transactions if necessary
       throw error;
     }
   } catch (error) {
     console.error("Error in addBusPasses:", error);
-
-    // Attempt to rollback if necessary
     if (transactionId) {
-      // Delete the transaction
-      await deleteTransaction(transactionId); // Assuming you have a function to delete a transaction
+      await deleteTransaction(transactionId);
     }
-
-    // If balance was updated, revert the balance update
     if (
       balanceUpdated === true &&
       currentBalance &&
@@ -348,15 +339,12 @@ export async function addBusPasses({
         await revertBalanceUpdate(lastVersion + 1, {
           availableBalance: currentBalance[0].availableBalance,
           totalBalance: currentBalance[0].totalBalance,
-          // Include other necessary fields for reverting the balance
         });
       } catch (revertError) {
         console.error("Failed to revert balance update:", revertError);
-        // Handle the error of reverting the balance (e.g., log it, notify someone, etc.)
       }
     }
-
-    throw error; // Rethrow the error to be handled by the caller
+    throw error;
   }
 }
 
@@ -466,6 +454,11 @@ export async function addGiftCard({
         cardType: giftCardType,
       });
       console.log("Asset created successfully with ID:", createdAsset);
+      if (balanceSource === "RFF") {
+        await sendRFFAssetsAddedAdminEmails();
+      } else if (balanceSource === "CARES") {
+        await sendCARESAssetsAddedAdminEmails();
+      }
     } catch (error) {
       console.error("Error in addGiftCard at step 4:", error);
       throw error;
@@ -491,6 +484,11 @@ export async function createBusPassAssets(
   }
   try {
     const results = await Promise.all(insertPromises);
+    if (assetData.isRFF) {
+      await sendRFFAssetsAddedAdminEmails();
+    } else if (assetData.isCARES) {
+      await sendCARESAssetsAddedAdminEmails();
+    }
     return results;
   } catch (error) {
     console.error("Error creating assets:", error);
@@ -586,6 +584,7 @@ export async function newPostScreen(
           firstName: firstName,
         }) as React.ReactElement,
       });
+      await sendNewPostScreenAdminEmails();
     }
     return newPostScreenRecord;
   } catch (error) {
@@ -661,6 +660,7 @@ export async function newRequest(requestState: RequestData) {
         firstName: requestState.firstName,
       }) as React.ReactElement,
     });
+    await sendNewRequestAdminEmails();
     revalidatePath(`/dashboard/page`);
     return { requestId, fundsRecords };
   } catch (error) {

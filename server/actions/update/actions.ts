@@ -18,6 +18,10 @@ import {
   isAdminTwoNull,
   isAdminThreeNull,
 } from "@/server/supabase/functions/read";
+import {
+  sendRFFBalanceUpdatedAdminEmails,
+  sendCARESBalanceUpdatedAdminEmails,
+} from "@/server/actions/email-events/admin";
 import { revalidatePath } from "next/cache";
 import { Resend } from "resend";
 
@@ -143,6 +147,7 @@ export async function updateOperatingBalance(
     lastVersion,
     operatingBalanceData,
   );
+  await sendCARESBalanceUpdatedAdminEmails();
   return operatingBalance;
 }
 
@@ -151,6 +156,7 @@ export async function updateRFFBalance(
   rffBalanceData: TablesUpdate<"RFFBalance">,
 ) {
   const rffBalance = await updateTheRFFBalance(lastVersion, rffBalanceData);
+  await sendRFFBalanceUpdatedAdminEmails();
   return rffBalance;
 }
 
