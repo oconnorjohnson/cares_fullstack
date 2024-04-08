@@ -500,10 +500,11 @@ export default function NewRequest({ userId }: { userId: string }) {
                 >
                   <FormItem>
                     <FormLabel>
-                      Your request has been submitted! Head to your dashboard to
-                      complete the pre-screen questionnaire with your client.
-                      Once completed, our team will review your request and
-                      contact you if necessary.
+                      Your request has been submitted! In order for us to review
+                      the request, please head to your dashboard to complete the
+                      pre-screen questionnaire with your client. Once completed,
+                      our team will review your request and contact you if
+                      necessary.
                     </FormLabel>
                     <div className="py-2" />
                   </FormItem>

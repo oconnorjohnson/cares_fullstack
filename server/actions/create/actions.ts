@@ -39,9 +39,7 @@ import { EmailTemplate as CompletedEmailTemplate } from "@/components/emails/com
 import { Resend } from "resend";
 import { revalidatePath } from "next/cache";
 import { TablesInsert } from "@/types_db";
-import { StringValidation } from "zod";
 
-// Extracted from types_db.ts for brevity and clarity
 interface RequestInsert {
   agencyId: number;
   agreementUrl?: string | null;
