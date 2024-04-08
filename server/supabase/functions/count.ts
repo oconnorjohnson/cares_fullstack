@@ -252,18 +252,40 @@ export async function countDeniedRequests() {
   }
 }
 
-export async function countRequestsByAgency(agencyId: number) {
+export async function countTotalRequests() {
   const supabase = createSupabaseClient();
   try {
     const { count, error } = await supabase
+      .from("Request")
+      .select("*", { count: "exact" });
+    if (error) {
+      console.log(error);
+      throw error;
+    }
+    return count;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function countRequestsByAgency(agencyId: number): Promise<number> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error, count } = await supabase
       .from("Request")
       .select("*", { count: "exact" })
       .eq("agencyId", agencyId);
 
     if (error) throw error;
 
-    return { count };
+    // Directly return the count as a number. If count is null, return 0.
+    return count ?? 0;
   } catch (error) {
+    console.error(
+      `Error in countRequestsByAgency for agencyId ${agencyId}:`,
+      error,
+    );
     throw error;
   }
 }

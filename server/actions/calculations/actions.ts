@@ -3,6 +3,10 @@ import {
   getAllPreScreenAnswers,
   getAllPostScreenAnswers,
 } from "@/server/supabase/functions/read";
+import {
+  countTotalRequests,
+  countRequestsByAgency,
+} from "@/server/supabase/functions/count";
 
 export type AnswerCategories = {
   housingSituation: number;
@@ -14,6 +18,32 @@ export type AnswerCategories = {
   transpoStress: number;
   financialDifficulties: number;
 };
+
+interface AgencyData {
+  agencyId: number;
+  percentage: number;
+}
+
+export async function getAgencyRequestPercentages(): Promise<AgencyData[]> {
+  const agencyIds = [1, 3, 4, 5, 6, 7, 8];
+  const agencyCounts = await Promise.all(
+    agencyIds.map(async (agencyId) => {
+      try {
+        const count = await countRequestsByAgency(agencyId);
+        return { agencyId, count };
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    }),
+  );
+  const totalRequests = agencyCounts.reduce((acc, { count }) => acc + count, 0);
+  const percentages = agencyCounts.map(({ agencyId, count }) => {
+    const percentage = totalRequests > 0 ? (count / totalRequests) * 100 : 0;
+    return { agencyId, percentage };
+  });
+  return percentages;
+}
 
 export async function getPreScreenAverages() {
   const preScreenAnswers = await getAllPreScreenAnswers();
