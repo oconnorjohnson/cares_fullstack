@@ -10,6 +10,193 @@ type id = {
   id: number;
 };
 
+// get all admins who want to receive emails regarding new requests received
+export async function getAdminWithRequestReceivedPreference() {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("AdminEmailPrefs")
+      .select("UserId")
+      .eq("requestReceived", true);
+    if (error) {
+      console.error(
+        "Error fetching admin with request received preference:",
+        error,
+      );
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.error(
+      "Error fetching admin with request received preference:",
+      error,
+    );
+    throw error;
+  }
+}
+// get all admins who want to receive emails regarding new post-screens received
+export async function getAdminWithPostScreenPreference() {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("AdminEmailPrefs")
+      .select("UserId")
+      .eq("postCompleted", true);
+    if (error) {
+      console.error("Error fetching admin with post screen preference:", error);
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.error("Error fetching admin with post screen preference:", error);
+    throw error;
+  }
+}
+// receiptUploaded
+export async function getAdminWithReceiptUploadedPreference() {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("AdminEmailPrefs")
+      .select("UserId")
+      .eq("receiptUploaded", true);
+    if (error) {
+      console.error(
+        "Error fetching admin with receipt upload preference:",
+        error,
+      );
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.error(
+      "Error fetching admin with receipt upload preference:",
+      error,
+    );
+    throw error;
+  }
+}
+// agreementUploaded
+export async function getAdminWithAgreementUploadedPreference() {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("AdminEmailPrefs")
+      .select("UserId")
+      .eq("agreementUploaded", true);
+    if (error) {
+      console.error(
+        "Error fetching admin with agreement upload preference:",
+        error,
+      );
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.error(
+      "Error fetching admin with agreement upload preference:",
+      error,
+    );
+    throw error;
+  }
+}
+// rffBalanceUpdated
+export async function getAdminWithRFFBalanceUpdatedPreference() {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("AdminEmailPrefs")
+      .select("UserId")
+      .eq("rffBalanceUpdated", true);
+    if (error) {
+      console.error(
+        "Error fetching admin with RFF balance updated preference:",
+        error,
+      );
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.error(
+      "Error fetching admin with RFF balance updated preference:",
+      error,
+    );
+    throw error;
+  }
+}
+// caresBalanceUpdated
+export async function getAdminWithCaresBalanceUpdatedPreference() {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("AdminEmailPrefs")
+      .select("UserId")
+      .eq("caresBalanceUpdated", true);
+    if (error) {
+      console.error(
+        "Error fetching admin with CARES balance updated preference:",
+        error,
+      );
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.error(
+      "Error fetching admin with CARES balance updated preference:",
+      error,
+    );
+    throw error;
+  }
+}
+// rffAssetsAdded
+export async function getAdminWithRffAssetsAddedPreference() {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("AdminEmailPrefs")
+      .select("UserId")
+      .eq("rffAssetsAdded", true);
+    if (error) {
+      console.error(
+        "Error fetching admin with RFF assets added preference:",
+        error,
+      );
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.error(
+      "Error fetching admin with RFF assets added preference:",
+      error,
+    );
+    throw error;
+  }
+}
+// caresAssetsAdded
+export async function getAdminWithCaresAssetsAddedPreference() {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("AdminEmailPrefs")
+      .select("UserId")
+      .eq("caresAssetsAdded", true);
+    if (error) {
+      console.error(
+        "Error fetching admin with CARES assets added preference:",
+        error,
+      );
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.error(
+      "Error fetching admin with CARES assets added preference:",
+      error,
+    );
+    throw error;
+  }
+}
+
 export async function getNewsCardOne() {
   const supabase = createSupabaseClient();
   try {
