@@ -77,12 +77,14 @@ export default function PickupScheduler({
               <Button>Schedule Pick-Up</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader>
+              <DialogHeader className="flex flex-col justify-start align-start">
                 <DialogTitle>Schedule Funds Pick-Up</DialogTitle>
-                <DialogDescription className="py-2 outline rounded-xl px-4">
-                  <b>Pickup Hours</b> <br /> Mon-Thurs: 8a-12p & 1p-5p <br />{" "}
-                  Fri: 8a-12p
-                </DialogDescription>
+                <div className="py-2 mr-auto">
+                  <DialogDescription className="py-2 outline rounded-xl px-4 mr-auto">
+                    <b>Pickup Hours</b> <br /> Mon-Thurs: 8a-12p & 1p-5p <br />{" "}
+                    Fri: 8a-12p
+                  </DialogDescription>
+                </div>
               </DialogHeader>
 
               <FormField

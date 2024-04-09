@@ -394,6 +394,45 @@ export type Database = {
           },
         ];
       };
+      PickupEvents: {
+        Row: {
+          created_at: string;
+          id: number;
+          pickup_date: string;
+          RequestId: number;
+          UserId: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: number;
+          pickup_date: string;
+          RequestId: number;
+          UserId: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: number;
+          pickup_date?: string;
+          RequestId?: number;
+          UserId?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "public_PickupEvents_RequestId_fkey";
+            columns: ["RequestId"];
+            isOneToOne: false;
+            referencedRelation: "Request";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "public_PickupEvents_UserId_fkey";
+            columns: ["UserId"];
+            isOneToOne: false;
+            referencedRelation: "User";
+            referencedColumns: ["userId"];
+          },
+        ];
+      };
       PostScreenAnswers: {
         Row: {
           additionalInformation: string | null;
@@ -566,10 +605,12 @@ export type Database = {
           hasReceipts: boolean;
           id: number;
           implementation: string;
+          isPickupScheduled: boolean;
           needsReceipts: boolean | null;
           paid: boolean;
           pendingApproval: boolean;
           pendingPayout: boolean;
+          PickupEventId: number | null;
           postScreenAnswerId: number | null;
           preScreenAnswerId: number | null;
           RFF: string[] | null;
@@ -593,10 +634,12 @@ export type Database = {
           hasReceipts?: boolean;
           id?: number;
           implementation: string;
+          isPickupScheduled?: boolean;
           needsReceipts?: boolean | null;
           paid?: boolean;
           pendingApproval?: boolean;
           pendingPayout?: boolean;
+          PickupEventId?: number | null;
           postScreenAnswerId?: number | null;
           preScreenAnswerId?: number | null;
           RFF?: string[] | null;
@@ -620,10 +663,12 @@ export type Database = {
           hasReceipts?: boolean;
           id?: number;
           implementation?: string;
+          isPickupScheduled?: boolean;
           needsReceipts?: boolean | null;
           paid?: boolean;
           pendingApproval?: boolean;
           pendingPayout?: boolean;
+          PickupEventId?: number | null;
           postScreenAnswerId?: number | null;
           preScreenAnswerId?: number | null;
           RFF?: string[] | null;
@@ -644,6 +689,13 @@ export type Database = {
             columns: ["clientId"];
             isOneToOne: false;
             referencedRelation: "Client";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "public_Request_PickupEventId_fkey";
+            columns: ["PickupEventId"];
+            isOneToOne: false;
+            referencedRelation: "PickupEvents";
             referencedColumns: ["id"];
           },
           {
