@@ -56,7 +56,7 @@ import {
   getNewsCardTwo,
   getNewsCardThree,
 } from "@/server/supabase/functions/read";
-
+import PickupScheduler from "@/components/forms/pickup-scheduler";
 async function fetchNewsCards() {
   const newsCardOne = await getNewsCardOne();
   const newsCardTwo = await getNewsCardTwo();
@@ -237,6 +237,9 @@ export default async function Dashboard() {
                     </Card>
                   </Card>
                 </div>
+              </div>
+              <div>
+                <PickupScheduler userId={userId} requestId={1} />
               </div>
               <div className="flex flex-col flex-grow">
                 <Card className="">

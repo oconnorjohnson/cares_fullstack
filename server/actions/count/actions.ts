@@ -90,16 +90,6 @@ export async function CountRequestsDenied() {
   return deniedRequests;
 }
 
-// export async function CountRequestsByAgency() {
-//   const { data: agencyData, error: agencyError } = await getAllAgencyIds();
-//   const results = [];
-//   for (const agency of agencyData) {
-//     const { count } = await countRequestsByAgency(agency.id);
-//     results.push({ agencyId: agency.id, agencyName: agency.name, count });
-//   }
-//   return results;
-// }
-
 export async function CountOpenRequestsByUserId(userId: string) {
   const openRequests = await countOpenRequestsByUserId(userId);
   console.log(Error);

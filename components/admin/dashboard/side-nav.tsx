@@ -14,6 +14,7 @@ import {
   LogOutIcon,
   SendIcon,
   WalletCardsIcon,
+  CalendarDaysIcon,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { SignOutButton } from "@clerk/nextjs";
@@ -38,6 +39,14 @@ export default function SideNavBar() {
           >
             <div className="hidden lg:block">Requests</div>
             <GitPullRequestIcon className="w-5 h-5" />
+          </div>
+        </Link>
+        <Link href="/admin/pick-ups">
+          <div
+            className={`rounded-xl hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 py-2 px-2 lg:px-6 mx-1 lg:mx-2 text-sm lg:text-md font-semibold flex flex-row justify-between items-center ${pathname.startsWith("/admin/pick-ups") ? "bg-zinc-200 dark:bg-zinc-800" : ""}`}
+          >
+            <div className="hidden lg:block">Pick-Ups</div>
+            <CalendarDaysIcon className="w-5 h-5" />
           </div>
         </Link>
         <Link href="/admin/analytics">

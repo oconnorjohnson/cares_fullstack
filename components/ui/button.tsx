@@ -48,24 +48,14 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     { className, variant, size, asChild = false, children, ...props },
     forwardedRef,
   ) => {
-    const motionProps: MotionProps = {
-      whileHover: { scale: 1.02, rotate: 2, transition: { duration: 0.2 } },
-      whileTap: { scale: 0.95, transition: { duration: 0.2 } },
-    };
+    const Comp = asChild ? Slot : "button";
 
-    const Comp = asChild ? Slot : motion.button;
-
-    // Prepare props for the component, ensuring motion props are only included for motion components
     const componentProps = {
       ...props,
-      ...(Comp === motion.button ? motionProps : {}),
       className: cn(buttonVariants({ variant, size, className })),
       ref: forwardedRef,
     };
 
-    // Render children directly within the component to ensure compatibility
-
-    // @ts-expect-error
     return <Comp {...componentProps}>{children}</Comp>;
   },
 );
