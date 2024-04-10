@@ -165,6 +165,7 @@ type AdminEmailPreference = {
   requestReceived: boolean;
   rffAssetsAdded: boolean;
   rffBalanceUpdated: boolean;
+  pickupEventScheduled: boolean;
 };
 
 export async function getTomorrowsEventsAndFunds() {
