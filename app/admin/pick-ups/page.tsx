@@ -55,7 +55,7 @@ export default async function PickUps() {
               </CardContent>
             </Card>
           </div>
-          <div className="w-full px-8 py-8">
+          <div className="w-full px-8 pb-8 ">
             <Card className="w-full">
               <CardContent>
                 <CardHeader>
