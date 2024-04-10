@@ -3,6 +3,7 @@ import {
   getTomorrowsEventsAndFunds,
   getTodaysEventsAndFunds,
 } from "@/server/actions/request/actions";
+import Link from "next/link";
 import {
   Accordion,
   AccordionContent,
@@ -18,7 +19,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { ArrowRightIcon } from "lucide-react";
 import PickupEventsTable from "@/components/admin/tables/pickup-events/page";
+import MarkPaidButton from "@/components/admin/request/mark-paid";
 // we want to get each scheduled pickup mapped into an accordion item, where we also map the related request's id, funds and user's name and email, with a link to the request's [requestid] page
 export default async function PickUps() {
   const tomorrowEvents = await getTomorrowsEventsAndFunds();
@@ -40,13 +53,64 @@ export default async function PickUps() {
                 <Accordion type="single" collapsible className="w-full">
                   {todayEvents.map((event, index) => (
                     <AccordionItem key={index} value={`item-${index}`}>
-                      <AccordionTrigger>{`Event ${index + 1}`}</AccordionTrigger>
+                      <AccordionTrigger>{`${event.user.first_name} ${event.user.last_name}`}</AccordionTrigger>
                       <AccordionContent>
-                        {/* Customize this part with the actual event details you want to display */}
-                        <div>User: {event.UserId}</div>
-                        <div>Pickup Date: {event.pickup_date}</div>
-                        <div>Request ID: {event.RequestId}</div>
-                        {/* Add more event details here */}
+                        <Link
+                          href={`mailto:${event.user.EmailAddress[0].email}`}
+                        >
+                          <div className="underline text-green-600">
+                            {event.user.EmailAddress[0].email}
+                          </div>
+                        </Link>
+                        <div>{event.pickup_date}</div>
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead className="w-[200px]">
+                                Fund Type
+                              </TableHead>
+                              <TableHead>Amount</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {event.funds.map((fund) => {
+                              const assetMap: { [key: number]: string } = {
+                                1: "Walmart Gift Card",
+                                2: "Arco Gift Card",
+                                3: "Bus Pass",
+                                4: "Cash",
+                                5: "Invoice",
+                                6: "Check",
+                              };
+                              const assetName =
+                                assetMap[
+                                  fund.fundTypeId as keyof typeof assetMap
+                                ] || "Unknown Asset";
+                              return (
+                                <TableRow key={fund.id}>
+                                  <TableCell className="font-medium">
+                                    {assetName}
+                                  </TableCell>
+                                  <TableCell className="font-medium">
+                                    {fund.amount}
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            })}
+                          </TableBody>
+                        </Table>
+                        <div className="flex flex-row w-full justify-between pt-8">
+                          <MarkPaidButton
+                            requestId={event.RequestId}
+                            UserId={event.UserId}
+                          />
+                          <Link href={`/admin/requests/${event.RequestId}`}>
+                            <Button>
+                              View Request{" "}
+                              <ArrowRightIcon className="h-4 w-4" />
+                            </Button>
+                          </Link>
+                        </div>
                       </AccordionContent>
                     </AccordionItem>
                   ))}
@@ -67,13 +131,64 @@ export default async function PickUps() {
                 <Accordion type="single" collapsible className="w-full">
                   {tomorrowEvents.map((event, index) => (
                     <AccordionItem key={index} value={`item-${index}`}>
-                      <AccordionTrigger>{`Event ${index + 1}`}</AccordionTrigger>
+                      <AccordionTrigger>{`${event.user.first_name} ${event.user.last_name}`}</AccordionTrigger>
                       <AccordionContent>
-                        {/* Customize this part with the actual event details you want to display */}
-                        <div>User: {event.UserId}</div>
-                        <div>Pickup Date: {event.pickup_date}</div>
-                        <div>Request ID: {event.RequestId}</div>
-                        {/* Add more event details here */}
+                        <Link
+                          href={`mailto:${event.user.EmailAddress[0].email}`}
+                        >
+                          <div className="underline text-green-600">
+                            {event.user.EmailAddress[0].email}
+                          </div>
+                        </Link>
+                        <div>{event.pickup_date}</div>
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead className="w-[200px]">
+                                Fund Type
+                              </TableHead>
+                              <TableHead>Amount</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {event.funds.map((fund) => {
+                              const assetMap: { [key: number]: string } = {
+                                1: "Walmart Gift Card",
+                                2: "Arco Gift Card",
+                                3: "Bus Pass",
+                                4: "Cash",
+                                5: "Invoice",
+                                6: "Check",
+                              };
+                              const assetName =
+                                assetMap[
+                                  fund.fundTypeId as keyof typeof assetMap
+                                ] || "Unknown Asset";
+                              return (
+                                <TableRow key={fund.id}>
+                                  <TableCell className="font-medium">
+                                    {assetName}
+                                  </TableCell>
+                                  <TableCell className="font-medium">
+                                    {fund.amount}
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            })}
+                          </TableBody>
+                        </Table>
+                        <div className="flex flex-row w-full justify-between pt-8">
+                          <MarkPaidButton
+                            requestId={event.RequestId}
+                            UserId={event.UserId}
+                          />
+                          <Link href={`/admin/requests/${event.RequestId}`}>
+                            <Button>
+                              View Request{" "}
+                              <ArrowRightIcon className="h-4 w-4" />
+                            </Button>
+                          </Link>
+                        </div>
                       </AccordionContent>
                     </AccordionItem>
                   ))}

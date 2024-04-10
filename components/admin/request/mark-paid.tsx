@@ -30,7 +30,7 @@ export default function MarkAsPaid({
   };
 
   return (
-    <Button onClick={handleMarkPaid} variant="confirmation">
+    <Button onClick={handleMarkPaid} className="bg-green-600">
       {isLoading ? (
         <LoadingSpinner className="w-4 h-4 text-white" />
       ) : (
