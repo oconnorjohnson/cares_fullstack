@@ -38,12 +38,45 @@ export default async function PickUps() {
                   </CardDescription>
                 </CardHeader>
                 <Accordion type="single" collapsible className="w-full">
-                  <AccordionItem value="item-1">
-                    <AccordionTrigger>Is it accessible?</AccordionTrigger>
-                    <AccordionContent>
-                      Yes. It adheres to the WAI-ARIA design pattern.
-                    </AccordionContent>
-                  </AccordionItem>
+                  {todayEvents.map((event, index) => (
+                    <AccordionItem key={index} value={`item-${index}`}>
+                      <AccordionTrigger>{`Event ${index + 1}`}</AccordionTrigger>
+                      <AccordionContent>
+                        {/* Customize this part with the actual event details you want to display */}
+                        <div>User: {event.UserId}</div>
+                        <div>Pickup Date: {event.pickup_date}</div>
+                        <div>Request ID: {event.RequestId}</div>
+                        {/* Add more event details here */}
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+                <CardFooter></CardFooter>
+              </CardContent>
+            </Card>
+          </div>
+          <div className="w-full px-8 py-8">
+            <Card className="w-full">
+              <CardContent>
+                <CardHeader>
+                  <CardTitle>Tomorrow</CardTitle>
+                  <CardDescription>
+                    Pick-ups scheduled for tomorrow.
+                  </CardDescription>
+                </CardHeader>
+                <Accordion type="single" collapsible className="w-full">
+                  {tomorrowEvents.map((event, index) => (
+                    <AccordionItem key={index} value={`item-${index}`}>
+                      <AccordionTrigger>{`Event ${index + 1}`}</AccordionTrigger>
+                      <AccordionContent>
+                        {/* Customize this part with the actual event details you want to display */}
+                        <div>User: {event.UserId}</div>
+                        <div>Pickup Date: {event.pickup_date}</div>
+                        <div>Request ID: {event.RequestId}</div>
+                        {/* Add more event details here */}
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
                 </Accordion>
                 <CardFooter></CardFooter>
               </CardContent>

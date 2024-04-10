@@ -4,6 +4,7 @@ import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   DropdownMenu,
@@ -13,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Eye } from "lucide-react";
 
 export type PickupEvent = {
   id: number;
@@ -39,9 +41,15 @@ export const columns: ColumnDef<PickupEvent>[] = [
     },
   },
   {
-    accessorKey: "RequestId",
-    header: ({ column }) => {
-      return <>View Request</>;
+    id: "RequestId",
+    cell: ({ row }) => {
+      const request = row.original;
+
+      return (
+        <Link href={`/admin/requests/${request.RequestId}`}>
+          <Eye className="h-4 w-4" />
+        </Link>
+      );
     },
   },
 ];

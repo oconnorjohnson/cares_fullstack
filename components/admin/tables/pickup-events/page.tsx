@@ -7,7 +7,6 @@ import { DataTable } from "@/components/ui/data-table";
 import { getAllFuturePickupEvents } from "@/server/supabase/functions/read";
 import { format } from "date-fns";
 import { Card, CardHeader } from "@/components/ui/card";
-import { Eye } from "lucide-react";
 
 async function getPickupEvents(): Promise<PickupEvent[]> {
   const pickupEvents = await getAllFuturePickupEvents();
@@ -18,14 +17,7 @@ async function getPickupEvents(): Promise<PickupEvent[]> {
     created_at: format(new Date(pickupEvent.created_at), "MM/dd/yyyy hh:mm a"), // Adjust the format string as needed
     pickup_date: format(new Date(pickupEvent.pickup_date), "MM/dd/yyyy"),
     UserId: pickupEvent.UserId,
-    RequestId: (
-      <Link
-        href={`/admin/request/${pickupEvent.RequestId}`}
-        className="border rounded-full p-1"
-      >
-        <Eye className="h-4 w-4" />
-      </Link>
-    ),
+    RequestId: pickupEvent.RequestId,
   }));
   return modifiedPickupEvents as unknown as PickupEvent[];
 }

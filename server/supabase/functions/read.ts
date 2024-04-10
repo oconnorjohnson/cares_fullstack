@@ -34,10 +34,17 @@ export async function getTodaysPickupEvents(): Promise<
 > {
   const supabase = createSupabaseClient();
   try {
+    // Adjust for UTC-8 timezone
+    const today = new Date(
+      new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles" }),
+    );
+    today.setHours(0, 0, 0, 0); // Set to start of day in local time zone
+    const todayStr = today.toISOString().split("T")[0];
+
     const { data, error } = await supabase
       .from("PickupEvents")
       .select("*")
-      .eq("pickup_date", new Date().toISOString().split("T")[0]);
+      .eq("pickup_date", todayStr);
     if (error) {
       console.error("Error in getTodaysPickupEvents:", error);
       throw error;
@@ -54,10 +61,19 @@ export async function getTomorrowsPickupEvents(): Promise<
 > {
   const supabase = createSupabaseClient();
   try {
+    // Adjust for UTC-8 timezone
+    const today = new Date(
+      new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles" }),
+    );
+    today.setHours(0, 0, 0, 0); // Set to start of day in local time zone
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1); // Move to tomorrow
+    const tomorrowStr = tomorrow.toISOString().split("T")[0];
+
     const { data, error } = await supabase
       .from("PickupEvents")
       .select("*")
-      .eq("pickup_date", new Date().toISOString().split("T")[0] + "T23:59:59");
+      .eq("pickup_date", tomorrowStr);
     if (error) {
       console.error("Error in getTomorrowsPickupEvents:", error);
       throw error;
