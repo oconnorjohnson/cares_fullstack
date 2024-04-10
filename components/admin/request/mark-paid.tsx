@@ -10,13 +10,9 @@ import { Awaiting } from "@/server/actions/resend/actions";
 
 export default function MarkAsPaid({
   requestId,
-  firstName,
-  email,
   UserId,
 }: {
   requestId: number;
-  firstName: string;
-  email: string;
   UserId: string;
 }) {
   const [isLoading, setIsLoading] = useState(false);

@@ -548,8 +548,6 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                   <MarkPaidButton
                     requestId={request.id}
                     UserId={request.userId}
-                    firstName={request.User.first_name as string}
-                    email={request.User.EmailAddress.email || ""}
                   />
                 </CardContent>
               </Card>
