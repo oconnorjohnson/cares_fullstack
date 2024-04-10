@@ -8,10 +8,8 @@ import { format } from "date-fns";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import {
@@ -22,21 +20,25 @@ import {
 import {
   Dialog,
   DialogContent,
+  DialogClose,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Calendar as CalendarIcon } from "lucide-react";
+import { createNewPickupEvent } from "@/server/actions/create/actions";
 
 const FormSchema = z.object({
-  pickup_date: z.date(),
+  pickup_date: z.string().min(1, {
+    message: "Pickup date must be at least 1 character.",
+  }),
   RequestId: z.number().min(1),
   UserId: z.string().min(1),
 });
@@ -57,36 +59,56 @@ export default function PickupScheduler({
       UserId: userId,
     },
   });
-  function onSubmit(data: z.infer<typeof FormSchema>) {
+  function closeHandler(open: boolean) {
+    if (!open) {
+      form.reset();
+    }
+  }
+  const isToday = (date: Date) => {
+    const today = new Date();
+    const localDate = new Date(date.setHours(0, 0, 0, 0));
+    const localToday = new Date(today.setHours(0, 0, 0, 0));
+    return localDate.getTime() === localToday.getTime();
+  };
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
     setIsSubmitting(true);
     try {
-      // call server action to create new schedule event for the current request
+      await createNewPickupEvent({
+        pickup_date: data.pickup_date,
+        RequestId: data.RequestId,
+        UserId: data.UserId,
+      });
     } catch (error) {
       console.error(error);
       toast.error("Error submitting form");
     } finally {
+      form.reset();
+      toast.success("Pickup scheduled successfully");
       setIsSubmitting(false);
     }
   }
   return (
     <div className="w-full">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button>Schedule Pick-Up</Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+      <Dialog onOpenChange={closeHandler}>
+        <DialogTrigger asChild>
+          <Button>Schedule Pick-Up</Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <DialogHeader className="flex flex-col justify-start align-start">
                 <DialogTitle>Schedule Funds Pick-Up</DialogTitle>
-                <div className="py-2 mr-auto">
-                  <DialogDescription className="py-2 outline rounded-xl px-4 mr-auto">
-                    <b>Pickup Hours</b> <br /> Mon-Thurs: 8a-12p & 1p-5p <br />{" "}
-                    Fri: 8a-12p
-                  </DialogDescription>
-                </div>
               </DialogHeader>
-
+              <div className="flex flex-col space-y-2 pr-12 mr-auto">
+                Come in any time during the following hours on your scheduled
+                day:
+                <div className="py-2" />
+                <DialogDescription className="py-2 outline rounded-xl px-4 mr-auto">
+                  Mon-Thurs: 8a-11:30a | 1p-4:30p
+                  <Separator className="my-2 bg-gray-400" />
+                  Fri: 8a-12p | Weekend: Closed
+                </DialogDescription>
+              </div>
               <FormField
                 control={form.control}
                 name="pickup_date"
@@ -102,7 +124,7 @@ export default function PickupScheduler({
                             )}
                           >
                             {field.value ? (
-                              format(field.value, "PPP")
+                              format(new Date(field.value), "PPP")
                             ) : (
                               <span>Pick a date</span>
                             )}
@@ -113,42 +135,61 @@ export default function PickupScheduler({
                       <PopoverContent className="w-auto p-0" align="start">
                         <Calendar
                           mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
+                          selected={
+                            field.value ? new Date(field.value) : undefined
+                          }
+                          onSelect={(date) => {
+                            const formattedDate = format(date!, "MM/dd/yyyy");
+                            field.onChange(formattedDate);
+                          }}
                           disabled={(date) => {
-                            // Check if the day is Saturday (6) or Sunday (0)
+                            const today = new Date(
+                              new Date().setHours(0, 0, 0, 0),
+                            );
+                            const tomorrow = new Date(today);
+                            tomorrow.setDate(tomorrow.getDate() + 1);
                             const isWeekend =
                               date.getDay() === 0 || date.getDay() === 6;
-                            // Check if the date is before today
-                            const isPast =
-                              date < new Date(new Date().setHours(0, 0, 0, 0));
-                            return isWeekend || isPast;
+                            const isPast = date < today;
+                            const isTomorrow =
+                              date.getTime() === tomorrow.getTime();
+                            const isFridayToday = today.getDay() === 5;
+                            const isMonday = date.getDay() === 1;
+                            const isMondayAfterFriday =
+                              isFridayToday && isMonday;
+                            // Pickups can not be scheduled in the past, they can not be scheduled for Saturdays or Sundays, and they can not be cheduled for "today" or "tomorrow", and if "today" is Friday, a pickup can not be scheduled until Tuesday, giving admin plenty of time to arrange for funds to be located at front of office for pick-up.
+                            return (
+                              isToday(date) ||
+                              isWeekend ||
+                              isPast ||
+                              isTomorrow ||
+                              isMondayAfterFriday
+                            );
                           }}
                           initialFocus
                         />
                       </PopoverContent>
                     </Popover>
-                    {/* <FormDescription>
-                      <b>Pickup Hours</b> <br /> M-Th: 8a-12p and 1p-5p <br />{" "}
-                      F: 8a-12p
-                    </FormDescription> */}
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <DialogFooter>
+              <div className="flex flex-row justify-between">
+                <DialogFooter>
+                  <DialogClose>Cancel</DialogClose>
+                </DialogFooter>
                 {isSubmitting ? (
                   <Button disabled>
                     <LoadingSpinner className="w-4 h-4 text-white" />
                   </Button>
                 ) : (
-                  <Button type="submit">Save changes</Button>
+                  <Button type="submit">Save</Button>
                 )}
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </form>
-      </Form>
+              </div>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

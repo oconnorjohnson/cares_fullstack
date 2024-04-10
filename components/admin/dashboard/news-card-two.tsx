@@ -51,7 +51,7 @@ const formSchema = z.object({
     .min(4, {
       message: "Card Description must be at least 4 characters.",
     })
-    .max(50, { message: "Card Description must be at most 50 characters." }),
+    .max(25, { message: "Card Description must be at most 25 characters." }),
   card_content: z
     .string()
     .min(12, {

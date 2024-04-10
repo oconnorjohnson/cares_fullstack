@@ -5,6 +5,20 @@ type AdminEmailPref = {
   id: number;
 }[];
 
+export async function createPickupEvent(
+  pickupEventData: TablesInsert<"PickupEvents">,
+): Promise<boolean> {
+  const supabase = createSupabaseClient();
+  const { error } = await supabase
+    .from("PickupEvents")
+    .insert([pickupEventData]);
+  if (error) {
+    console.log("Error in createPickupEvent:", error);
+    return false;
+  }
+  return true;
+}
+
 export async function createAgency(agencyData: TablesInsert<"Agency">) {
   const supabase = createSupabaseClient();
   const { data, error } = await supabase.from("Agency").insert([agencyData]);

@@ -10,6 +10,7 @@ import {
   createFunds,
   createTransaction as createNewTransaction,
   createAsset as createNewAsset,
+  createPickupEvent,
 } from "@/server/supabase/functions/create";
 import {
   getFundTypeNeedsReceiptById,
@@ -22,6 +23,7 @@ import {
   updateRequestWithPostScreen,
   updateRequestWithPreScreen,
   setAllAdminColumnsNull,
+  addPickupToRequest,
 } from "@/server/supabase/functions/update";
 import { deleteTransaction } from "@/server/supabase/functions/delete";
 import {
@@ -130,6 +132,26 @@ type DepositData = {
   lastVersion: number;
   userId: string;
 };
+
+export async function createNewPickupEvent(
+  pickupEventData: TablesInsert<"PickupEvents">,
+) {
+  try {
+    const didSet = await createPickupEvent(pickupEventData);
+    if (didSet) {
+      await addPickupToRequest({
+        requestId: pickupEventData.RequestId,
+        pickup_date: pickupEventData.pickup_date,
+      });
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error("Error in createPickupEvent:", error);
+    throw error;
+  }
+}
 
 export async function createOperatingDeposit(
   OperatingDepositData: DepositData,

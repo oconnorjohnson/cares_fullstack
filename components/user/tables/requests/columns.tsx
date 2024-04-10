@@ -15,6 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import SchedulePickup from "@/components/forms/pickup-scheduler";
 import ReceiptDialog from "@/components/user/receipt-dialog";
 import AgreementDialog from "@/components/user/agreement-dialog";
 
@@ -54,6 +55,8 @@ export type Request = {
   hasReceipts: boolean;
   createdAt: Date;
   isHighlighted?: boolean;
+  isPickupScheduled: boolean;
+  pickup_date: string | null;
 };
 
 export const columns: ColumnDef<Request>[] = [
@@ -139,6 +142,8 @@ export const columns: ColumnDef<Request>[] = [
         hasReceipts,
         agreementUrl,
         id: requestId,
+        isPickupScheduled,
+        pickup_date,
       } = row.original;
       let content;
 
@@ -148,8 +153,10 @@ export const columns: ColumnDef<Request>[] = [
         return <PreScreen requestId={requestId} />;
       } else if (hasPreScreen && pendingApproval) {
         return <Badge color="yellow">Pending Approval</Badge>;
-      } else if (hasPreScreen && approved && !paid) {
-        return <Badge color="green">Awaiting Payment</Badge>;
+      } else if (hasPreScreen && approved && !isPickupScheduled && !paid) {
+        return <SchedulePickup requestId={requestId} userId={user?.userId} />;
+      } else if (hasPreScreen && approved && isPickupScheduled && paid) {
+        return <div>{pickup_date}</div>;
       } else if (hasPreScreen && approved && paid && !agreementUrl) {
         return <AgreementDialog requestId={requestId} />;
       } else if (

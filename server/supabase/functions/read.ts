@@ -10,6 +10,101 @@ type id = {
   id: number;
 };
 
+export async function getPickupEventByRequestId(requestId: number) {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("PickupEvents")
+      .select("pickup_date")
+      .eq("RequestId", requestId)
+      .single();
+    if (error) {
+      console.error("Error in getPickupEventByRequestId:", error);
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.error("Unexpected error in getPickupEventByRequestId:", error);
+    throw error;
+  }
+}
+
+export async function getTodaysPickupEvents(): Promise<
+  Tables<"PickupEvents">[]
+> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("PickupEvents")
+      .select("*")
+      .eq("pickup_date", new Date().toISOString().split("T")[0]);
+    if (error) {
+      console.error("Error in getTodaysPickupEvents:", error);
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.error("Unexpected error in getTodaysPickupEvents:", error);
+    throw error;
+  }
+}
+
+export async function getTomorrowsPickupEvents(): Promise<
+  Tables<"PickupEvents">[]
+> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("PickupEvents")
+      .select("*")
+      .eq("pickup_date", new Date().toISOString().split("T")[0] + "T23:59:59");
+    if (error) {
+      console.error("Error in getTomorrowsPickupEvents:", error);
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.error("Unexpected error in getTomorrowsPickupEvents:", error);
+    throw error;
+  }
+}
+
+export async function getAllFuturePickupEvents(): Promise<
+  Tables<"PickupEvents">[]
+> {
+  const supabase = createSupabaseClient();
+  try {
+    const today = new Date().toISOString().split("T")[0];
+    const { data, error } = await supabase
+      .from("PickupEvents")
+      .select("*")
+      .gte("pickup_date", today);
+    if (error) {
+      console.error("Error in getAllFuturePickupEvents:", error);
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.error("Unexpected error in getAllFuturePickupEvents:", error);
+    throw error;
+  }
+}
+
+export async function getAllPickupEvents(): Promise<Tables<"PickupEvents">[]> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase.from("PickupEvents").select("*");
+    if (error) {
+      console.error("Error in getAllPickupEvents:", error);
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.error("Unexpected error in getAllPickupEvents:", error);
+    throw error;
+  }
+}
+
 // get all admins who want to receive emails regarding new requests received
 export async function getAdminWithRequestReceivedPreference() {
   const supabase = createSupabaseClient();

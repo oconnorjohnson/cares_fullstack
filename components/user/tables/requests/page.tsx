@@ -10,6 +10,7 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
+import { getPickupEventByRequestId } from "@/server/supabase/functions/read";
 
 type RequestStatus = "Pending" | "Approved" | "Denied" | "Error";
 
@@ -35,6 +36,8 @@ async function getRequests({ userId }: { userId: string }): Promise<Request[]> {
     approved: request.approved,
     denied: request.denied,
     isHighlighted: request.pendingApproval,
+    isPickupScheduled: request.isPickupScheduled,
+    pickup_date: request.pickup_date,
   }));
   const statusPriority: { [key in RequestStatus]: number } = {
     Pending: 1,

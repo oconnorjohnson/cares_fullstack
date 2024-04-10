@@ -420,7 +420,7 @@ export type Database = {
           {
             foreignKeyName: "public_PickupEvents_RequestId_fkey";
             columns: ["RequestId"];
-            isOneToOne: false;
+            isOneToOne: true;
             referencedRelation: "Request";
             referencedColumns: ["id"];
           },
@@ -610,6 +610,7 @@ export type Database = {
           paid: boolean;
           pendingApproval: boolean;
           pendingPayout: boolean;
+          pickup_date: string | null;
           PickupEventId: number | null;
           postScreenAnswerId: number | null;
           preScreenAnswerId: number | null;
@@ -639,6 +640,7 @@ export type Database = {
           paid?: boolean;
           pendingApproval?: boolean;
           pendingPayout?: boolean;
+          pickup_date?: string | null;
           PickupEventId?: number | null;
           postScreenAnswerId?: number | null;
           preScreenAnswerId?: number | null;
@@ -668,6 +670,7 @@ export type Database = {
           paid?: boolean;
           pendingApproval?: boolean;
           pendingPayout?: boolean;
+          pickup_date?: string | null;
           PickupEventId?: number | null;
           postScreenAnswerId?: number | null;
           preScreenAnswerId?: number | null;
