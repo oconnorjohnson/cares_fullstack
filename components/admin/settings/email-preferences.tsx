@@ -29,6 +29,7 @@ type AdminEmailPreference = {
   requestReceived: boolean;
   rffAssetsAdded: boolean;
   rffBalanceUpdated: boolean;
+  pickupEventScheduled: boolean;
 };
 const formSchema = z.object({
   id: z.number().min(1),
@@ -40,6 +41,7 @@ const formSchema = z.object({
   caresBalanceUpdated: z.boolean(),
   rffAssetsAdded: z.boolean(),
   caresAssetsAdded: z.boolean(),
+  pickupEventScheduled: z.boolean(),
 });
 
 export default function AdminEmailPreferences({
@@ -60,6 +62,7 @@ export default function AdminEmailPreferences({
       caresBalanceUpdated: currentPreference.caresBalanceUpdated,
       rffAssetsAdded: currentPreference.rffAssetsAdded,
       caresAssetsAdded: currentPreference.caresAssetsAdded,
+      pickupEventScheduled: currentPreference.pickupEventScheduled,
     },
   });
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
@@ -245,6 +248,29 @@ export default function AdminEmailPreferences({
                   <FormDescription>
                     Receive email notifications when an CARES asset has been
                     added.
+                  </FormDescription>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="pickupEventScheduled"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                <div className="space-y-0.5 flex flex-col items-start">
+                  <FormLabel className="text-base">
+                    New Pickup Event Scheduled
+                  </FormLabel>
+                  <FormDescription>
+                    Receive email notifications when a new pickup event has been
+                    scheduled.
                   </FormDescription>
                 </div>
                 <FormControl>

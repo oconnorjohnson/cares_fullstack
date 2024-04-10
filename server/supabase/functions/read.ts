@@ -10,6 +10,30 @@ type id = {
   id: number;
 };
 
+export async function getAdminWithPickupEventScheduledPreference() {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("AdminEmailPrefs")
+      .select("*")
+      .eq("pickupEventScheduled", true);
+    if (error) {
+      console.log(
+        "Error in getAdminWithPickupEventScheduledPreference:",
+        error,
+      );
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.log(
+      "Unexpected error in getAdminWithPickupEventScheduledPreference:",
+      error,
+    );
+    throw error;
+  }
+}
+
 export async function getPickupEventByRequestId(requestId: number) {
   const supabase = createSupabaseClient();
   try {

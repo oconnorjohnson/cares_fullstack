@@ -16,6 +16,7 @@ export type Database = {
           caresBalanceUpdated: boolean;
           created_at: string;
           id: number;
+          pickupEventScheduled: boolean;
           postCompleted: boolean;
           receiptUploaded: boolean;
           requestReceived: boolean;
@@ -29,6 +30,7 @@ export type Database = {
           caresBalanceUpdated?: boolean;
           created_at?: string;
           id?: number;
+          pickupEventScheduled?: boolean;
           postCompleted?: boolean;
           receiptUploaded?: boolean;
           requestReceived?: boolean;
@@ -42,6 +44,7 @@ export type Database = {
           caresBalanceUpdated?: boolean;
           created_at?: string;
           id?: number;
+          pickupEventScheduled?: boolean;
           postCompleted?: boolean;
           receiptUploaded?: boolean;
           requestReceived?: boolean;

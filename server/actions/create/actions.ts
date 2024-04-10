@@ -41,6 +41,7 @@ import { EmailTemplate as CompletedEmailTemplate } from "@/components/emails/com
 import { Resend } from "resend";
 import { revalidatePath } from "next/cache";
 import { TablesInsert } from "@/types_db";
+import { sendPickupEventScheduledAdminEmails } from "@/server/actions/email-events/admin";
 
 interface RequestInsert {
   agencyId: number;
@@ -143,6 +144,7 @@ export async function createNewPickupEvent(
         requestId: pickupEventData.RequestId,
         pickup_date: pickupEventData.pickup_date,
       });
+      await sendPickupEventScheduledAdminEmails();
       return true;
     } else {
       return false;
@@ -156,88 +158,61 @@ export async function createNewPickupEvent(
 export async function createOperatingDeposit(
   OperatingDepositData: DepositData,
 ) {
-  // Assuming DepositData is properly typed according to your form data
   const { userId, details, totalValue, lastVersion } = OperatingDepositData;
-
-  // Create a new transaction with the details
   const transactionData: TablesInsert<"Transaction"> = {
     UserId: userId,
     details,
     totalValue,
     isDeposit: true,
     isCARES: true,
-    // Add any other necessary fields
   };
 
   try {
-    // Create the transaction
     const transaction = await createTransaction(transactionData);
     const transactionId = transaction;
-    // Update the operating balance
     const updatedBalance = await updateOperatingBalance(lastVersion, {
       availableBalance: totalValue,
       reservedBalance: 0,
       totalBalance: totalValue,
-      // Assuming you want to add totalValue to the available balance
-      // Include other necessary fields for updating the balance
     });
-
-    // Check if the balance update was successful
     if (!updatedBalance) {
-      // If the balance update fails, consider rolling back the transaction if necessary
       await deleteTransaction(transactionId!);
       throw new Error("Failed to update operating balance. Please try again.");
     }
     revalidatePath("/admin/finances");
-    // Return success or the updated balance/transaction details as needed
     return updatedBalance;
   } catch (error) {
     console.error("Error creating operating deposit:", error);
-    // Handle error (e.g., rollback transaction, notify the user, etc.)
     throw error;
   }
 }
 
 export async function createRFFDeposit(RFFDepositData: DepositData) {
-  // Assuming DepositData is properly typed according to your form data
   const { userId, details, totalValue, lastVersion } = RFFDepositData;
-
-  // Create a new transaction with the details
   const transactionData: TablesInsert<"Transaction"> = {
     UserId: userId,
     details,
     totalValue,
     isDeposit: true,
     isRFF: true,
-    // Add any other necessary fields
   };
 
   try {
-    // Create the transaction
     const transaction = await createTransaction(transactionData);
     const transactionId = transaction;
-
-    // Update the operating balance
     const updatedBalance = await updateRFFBalance(lastVersion, {
       availableBalance: totalValue,
       reservedBalance: 0,
       totalBalance: totalValue,
-      // Assuming you want to add totalValue to the available balance
-      // Include other necessary fields for updating the balance
     });
-
-    // Check if the balance update was successful
     if (!updatedBalance) {
-      // If the balance update fails, consider rolling back the transaction if necessary
       await deleteTransaction(transactionId!);
       throw new Error("Failed to update operating balance. Please try again.");
     }
     revalidatePath("/admin/finances");
-    // Return success or the updated balance/transaction details as needed
     return updatedBalance;
   } catch (error) {
     console.error("Error creating operating deposit:", error);
-    // Handle error (e.g., rollback transaction, notify the user, etc.)
     throw error;
   }
 }

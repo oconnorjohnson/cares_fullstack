@@ -10,6 +10,7 @@ import {
   CARESBalanceUpdated as CARESBalanceUpdatedTemplate,
   RFFAssetsAdded as RFFAssetsAddedTemplate,
   CARESAssetsAdded as CARESAssetsAddedTemplate,
+  PickupEventScheduled as PickupEventScheduledTemplate,
 } from "@/components/emails/admin/emails";
 
 export async function sendRequestReceivedEmail({
@@ -151,6 +152,24 @@ export async function sendCARESAssetsAddedEmail({
     to: [email],
     subject: "CARES Assets Added!",
     react: CARESAssetsAddedTemplate({
+      firstName: firstName,
+    }) as React.ReactElement,
+  });
+}
+
+export async function sendPickupEventScheduledEmail({
+  email,
+  firstName,
+}: {
+  email: string;
+  firstName: string;
+}) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  await resend.emails.send({
+    from: "CARES <info@yolocountycares.com>",
+    to: [email],
+    subject: "Pickup Event Scheduled!",
+    react: PickupEventScheduledTemplate({
       firstName: firstName,
     }) as React.ReactElement,
   });

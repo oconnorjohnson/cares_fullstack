@@ -7,6 +7,7 @@ import {
   getAdminWithCaresBalanceUpdatedPreference,
   getAdminWithRffAssetsAddedPreference,
   getAdminWithCaresAssetsAddedPreference,
+  getAdminWithPickupEventScheduledPreference,
   getUserByUserId,
 } from "@/server/supabase/functions/read";
 import {
@@ -18,6 +19,7 @@ import {
   sendCARESBalanceUpdatedEmail,
   sendRFFAssetsAddedEmail,
   sendCARESAssetsAddedEmail,
+  sendPickupEventScheduledEmail,
 } from "@/server/actions/email-events/admin/actions";
 
 export async function sendNewRequestAdminEmails() {
@@ -186,6 +188,30 @@ export async function sendCARESAssetsAddedAdminEmails() {
         });
       } catch (error) {
         console.error("Error sending CARES assets added admin email:", error);
+      }
+    }),
+  );
+}
+
+export async function sendPickupEventScheduledAdminEmails() {
+  const adminWithPickupEventScheduledPreference =
+    await getAdminWithPickupEventScheduledPreference();
+  await Promise.all(
+    adminWithPickupEventScheduledPreference.map(async (admin) => {
+      try {
+        const user = await getUserByUserId(admin.UserId!);
+        const firstName = user?.first_name || "";
+        const email = user?.EmailAddress[0]?.email || "";
+
+        await sendPickupEventScheduledEmail({
+          email: email,
+          firstName: firstName,
+        });
+      } catch (error) {
+        console.error(
+          "Error sending pickup event scheduled admin email:",
+          error,
+        );
       }
     }),
   );
