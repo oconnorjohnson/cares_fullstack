@@ -24,6 +24,9 @@ import {
   getRFFArcoCards,
   getAdminEmailPreferenceByUserId,
   getAdminEmailPreferenceById,
+  getTomorrowsPickupEvents,
+  getTodaysPickupEvents,
+  getUserByUserId,
 } from "@/server/supabase/functions/read";
 import { Tables } from "@/types_db";
 import { PostgrestError } from "@supabase/supabase-js";
@@ -163,6 +166,46 @@ type AdminEmailPreference = {
   rffAssetsAdded: boolean;
   rffBalanceUpdated: boolean;
 };
+
+export async function getTomorrowsEventsAndFunds() {
+  try {
+    const events = await getTomorrowsPickupEvents();
+    const eventsWithFundsAndUser = await Promise.all(
+      events.map(async (event) => {
+        // Fetch both funds and user in parallel for each event
+        const [funds, user] = await Promise.all([
+          getFundsByRequestId(event.RequestId),
+          getUserByUserId(event.UserId),
+        ]);
+        // Combine event data with funds and user
+        return { ...event, funds, user };
+      }),
+    );
+    return eventsWithFundsAndUser;
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    throw error;
+  }
+}
+
+export async function getTodaysEventsAndFunds() {
+  try {
+    const events = await getTodaysPickupEvents();
+    const eventsWithFundsAndUser = await Promise.all(
+      events.map(async (event) => {
+        const [funds, user] = await Promise.all([
+          getFundsByRequestId(event.RequestId),
+          getUserByUserId(event.UserId),
+        ]);
+        return { ...event, funds, user };
+      }),
+    );
+    return eventsWithFundsAndUser;
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    throw error;
+  }
+}
 
 export async function GetAdminEmailPreferenceByUserId(
   userId: string,

@@ -1,8 +1,8 @@
 import SideNavBar from "@/components/admin/dashboard/side-nav";
 import {
-  getTomorrowsPickupEvents as getTomorrowEvents,
-  getTodaysPickupEvents as getTodayEvents,
-} from "@/server/supabase/functions/read";
+  getTomorrowsEventsAndFunds,
+  getTodaysEventsAndFunds,
+} from "@/server/actions/request/actions";
 import {
   Accordion,
   AccordionContent,
@@ -21,8 +21,8 @@ import {
 import PickupEventsTable from "@/components/admin/tables/pickup-events/page";
 // we want to get each scheduled pickup mapped into an accordion item, where we also map the related request's id, funds and user's name and email, with a link to the request's [requestid] page
 export default async function PickUps() {
-  const tomorrowEvents = await getTomorrowEvents();
-  const todayEvents = await getTodayEvents();
+  const tomorrowEvents = await getTomorrowsEventsAndFunds();
+  const todayEvents = await getTodaysEventsAndFunds();
   return (
     <>
       <div className="flex flex-row">
