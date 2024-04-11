@@ -278,6 +278,7 @@ export async function requestUsersRequests(userId: string): Promise<
 > {
   try {
     const response = await getRequestsByUserId(userId);
+    console.log(response);
     const requests = response.data;
     if (!requests) {
       throw new Error("Failed to fetch requests for user.");

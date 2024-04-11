@@ -39,6 +39,7 @@ async function getRequests({ userId }: { userId: string }): Promise<Request[]> {
     isPickupScheduled: request.isPickupScheduled,
     pickup_date: request.pickup_date,
   }));
+  console.log(modifiedRequests);
   const statusPriority: { [key in RequestStatus]: number } = {
     Pending: 1,
     Approved: 2,
