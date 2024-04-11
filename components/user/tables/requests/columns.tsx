@@ -160,7 +160,13 @@ export const columns: ColumnDef<Request>[] = [
         return (
           <PickupRescheduler requestId={requestId} userId={user?.userId} />
         );
-      } else if (hasPreScreen && approved && paid && !agreementUrl) {
+      } else if (
+        hasPreScreen &&
+        approved &&
+        paid &&
+        isPickupScheduled &&
+        !agreementUrl
+      ) {
         return <AgreementDialog requestId={requestId} />;
       } else if (
         hasPreScreen &&
