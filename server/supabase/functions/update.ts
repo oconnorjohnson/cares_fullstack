@@ -8,6 +8,48 @@ export type updateRequestAdminColumnData = {
   columnName: string;
 };
 
+export async function updatePickupEvent(
+  pickupEventData: TablesUpdate<"PickupEvents">,
+): Promise<boolean> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("PickupEvents")
+      .update({ pickup_date: pickupEventData.pickup_date })
+      .eq("RequestId", pickupEventData.RequestId!);
+    if (error) {
+      console.log("Error in updatePickupEvent:", error);
+      return false;
+    }
+    return true;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function updatePickupOnRequest({
+  requestId,
+  pickup_date,
+}: {
+  requestId: number;
+  pickup_date: string;
+}): Promise<boolean> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Request")
+      .update({ pickup_date })
+      .eq("id", requestId);
+    if (error) {
+      console.log("Error in updatePickupOnRequest:", error);
+      return false;
+    }
+    return true;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function addPickupToRequest({
   requestId,
   pickup_date,

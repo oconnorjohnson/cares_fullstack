@@ -24,6 +24,8 @@ import {
   updateRequestWithPreScreen,
   setAllAdminColumnsNull,
   addPickupToRequest,
+  updatePickupOnRequest,
+  updatePickupEvent,
 } from "@/server/supabase/functions/update";
 import { deleteTransaction } from "@/server/supabase/functions/delete";
 import {
@@ -151,6 +153,27 @@ export async function createNewPickupEvent(
     }
   } catch (error) {
     console.error("Error in createPickupEvent:", error);
+    throw error;
+  }
+}
+
+export async function updateThePickupEvent(
+  pickupEventData: TablesInsert<"PickupEvents">,
+) {
+  try {
+    const didSet = await updatePickupEvent(pickupEventData);
+    if (didSet) {
+      await updatePickupOnRequest({
+        requestId: pickupEventData.RequestId,
+        pickup_date: pickupEventData.pickup_date,
+      });
+      await sendPickupEventScheduledAdminEmails();
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error("Error in updatePickupEvent:", error);
     throw error;
   }
 }

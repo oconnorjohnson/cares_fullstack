@@ -18,6 +18,7 @@ import {
 import SchedulePickup from "@/components/forms/pickup-scheduler";
 import ReceiptDialog from "@/components/user/receipt-dialog";
 import AgreementDialog from "@/components/user/agreement-dialog";
+import PickupRescheduler from "@/components/forms/pickup-rescheduler";
 
 export type Request = {
   id: number;
@@ -156,7 +157,9 @@ export const columns: ColumnDef<Request>[] = [
       } else if (hasPreScreen && approved && !isPickupScheduled && !paid) {
         return <SchedulePickup requestId={requestId} userId={user?.userId} />;
       } else if (hasPreScreen && approved && isPickupScheduled && paid) {
-        return <div>{pickup_date}</div>;
+        return (
+          <PickupRescheduler requestId={requestId} userId={user?.userId} />
+        );
       } else if (hasPreScreen && approved && paid && !agreementUrl) {
         return <AgreementDialog requestId={requestId} />;
       } else if (

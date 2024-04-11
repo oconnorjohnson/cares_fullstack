@@ -32,7 +32,7 @@ import {
 import { ArrowRightIcon } from "lucide-react";
 import PickupEventsTable from "@/components/admin/tables/pickup-events/page";
 import MarkPaidButton from "@/components/admin/request/mark-paid";
-// we want to get each scheduled pickup mapped into an accordion item, where we also map the related request's id, funds and user's name and email, with a link to the request's [requestid] page
+
 export default async function PickUps() {
   const tomorrowEvents = await getTomorrowsEventsAndFunds();
   const todayEvents = await getTodaysEventsAndFunds();
@@ -40,7 +40,7 @@ export default async function PickUps() {
     <>
       <div className="flex flex-row">
         <SideNavBar />
-        <div className="flex border-t flex-col w-5/6 items-center">
+        <div className="flex border-t flex-col w-5/6 items-center pb-8">
           <div className="w-full px-8 py-8">
             <Card className="w-full">
               <CardContent>
