@@ -9,6 +9,7 @@ import {
   CountRequestsCompleted,
   CountRequestsDenied,
 } from "@/server/actions/count/actions";
+import PickupScheduler from "@/components/forms/pickup-scheduler";
 
 import NewsUpdater from "@/components/admin/dashboard/news-updater";
 
@@ -23,6 +24,10 @@ export default async function AdminOverview() {
         <CompletedCard completedRequests={completedRequests} />
         <DeniedCard deniedRequests={deniedRequests} />
       </div>
+      {/* <PickupScheduler
+        userId={"user_2eIOj4WjWzwJJbBusyQYrTUcorF"}
+        requestId={39}
+      /> */}
       <div className="flex flex-col pb-10 w-full px-10">
         <NewsUpdater />
       </div>

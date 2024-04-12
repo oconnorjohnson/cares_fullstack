@@ -152,11 +152,11 @@ export const columns: ColumnDef<Request>[] = [
         return <Badge color="red">Denied</Badge>;
       } else if (!hasPreScreen) {
         return <PreScreen requestId={requestId} />;
-      } else if (hasPreScreen && pendingApproval) {
+      } else if (hasPreScreen && !approved) {
         return <Badge color="yellow">Pending Approval</Badge>;
       } else if (hasPreScreen && approved && !paid && !isPickupScheduled) {
         return <SchedulePickup requestId={requestId} userId={user?.userId} />;
-      } else if (hasPreScreen && approved && paid && isPickupScheduled) {
+      } else if (hasPreScreen && approved && !paid && isPickupScheduled) {
         return (
           <PickupRescheduler requestId={requestId} userId={user?.userId} />
         );
