@@ -104,7 +104,7 @@ export default function PickupScheduler({
                 day:
                 <div className="py-2" />
                 <DialogDescription className="py-2 outline rounded-xl px-4 mr-auto">
-                  Mon-Thurs: 8a-11:30a | 1p-4:30p
+                  Mon-Thurs: 8:30a-12p | 1p-3p
                   <Separator className="my-2 bg-gray-400" />
                   Fri: 8a-12p | Weekend: Closed
                 </DialogDescription>
