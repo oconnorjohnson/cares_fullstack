@@ -33,7 +33,12 @@ import {
   GetRFFWalmartCards,
   GetRFFArcoCards,
 } from "@/server/actions/request/actions";
-import { hasAdminAgreed } from "@/server/supabase/functions/read";
+import {
+  hasAdminAgreed,
+  isAdminOneNull,
+  isAdminTwoNull,
+} from "@/server/supabase/functions/read";
+import { getFundsSumByRequestId } from "@/server/actions/request/actions";
 import AgreeButton from "@/components/admin/request/agree-button";
 
 const RequestPage = async ({ requestid }: { requestid: string }) => {
@@ -41,6 +46,9 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
   const rffWalmartCards = await GetRFFWalmartCards();
   const rffArcoCards = await GetRFFArcoCards();
   const requestId = Number(requestid);
+  const isFirstAdminNull = await isAdminOneNull(requestId);
+  const isSecondAdminNull = await isAdminTwoNull(requestId);
+  const totalValue = await getFundsSumByRequestId(requestId);
   const result = await requestRequestByRequestId(requestId);
   if (!Array.isArray(result)) {
     throw new Error("Expected an array");
@@ -158,7 +166,19 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                     <>
                       <DenyButton requestId={requestId} />
                       <div className="px-2" />
-                      {isAnyAdminNull ? (
+
+                      {isFirstAdminNull ? (
+                        hasCurrentAdminAgreed ? (
+                          <Button disabled>Agreed</Button>
+                        ) : (
+                          <AgreeButton
+                            requestId={requestId}
+                            userId={currentAdminUserId!}
+                          />
+                        )
+                      ) : totalValue <= 250 ? (
+                        <ApproveButton requestId={requestId} />
+                      ) : isSecondAdminNull ? (
                         hasCurrentAdminAgreed ? (
                           <Button disabled>Agreed</Button>
                         ) : (

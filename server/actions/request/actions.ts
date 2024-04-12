@@ -168,17 +168,30 @@ type AdminEmailPreference = {
   pickupEventScheduled: boolean;
 };
 
+export async function getFundsSumByRequestId(
+  requestId: number,
+): Promise<number> {
+  const funds = await getFundsByRequestId(requestId);
+  let totalValue = 0;
+  for (const fund of funds) {
+    if (fund.fundTypeId === 3) {
+      totalValue += fund.amount * 2.5;
+    } else {
+      totalValue += fund.amount;
+    }
+  }
+  return totalValue;
+}
+
 export async function getTomorrowsEventsAndFunds() {
   try {
     const events = await getTomorrowsPickupEvents();
     const eventsWithFundsAndUser = await Promise.all(
       events.map(async (event) => {
-        // Fetch both funds and user in parallel for each event
         const [funds, user] = await Promise.all([
           getFundsByRequestId(event.RequestId),
           getUserByUserId(event.UserId),
         ]);
-        // Combine event data with funds and user
         return { ...event, funds, user };
       }),
     );
