@@ -38,6 +38,7 @@ import {
   isAdminOneNull,
   isAdminTwoNull,
 } from "@/server/supabase/functions/read";
+import RollbackButton from "@/components/admin/request/rollback-button";
 import { getFundsSumByRequestId } from "@/server/actions/request/actions";
 import AgreeButton from "@/components/admin/request/agree-button";
 
@@ -191,6 +192,11 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         <ApproveButton requestId={requestId} />
                       )}
                     </>
+                  ) : (
+                    <></>
+                  )}
+                  {request.denied ? (
+                    <RollbackButton requestId={requestId} />
                   ) : (
                     <></>
                   )}

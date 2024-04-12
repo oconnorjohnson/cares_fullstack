@@ -8,6 +8,27 @@ export type updateRequestAdminColumnData = {
   columnName: string;
 };
 
+export async function rollbackRequestDenialByRequestId(
+  requestId: number,
+): Promise<boolean> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Request")
+      .update({ denied: false, pendingApproval: true })
+      .eq("id", requestId);
+    if (error) {
+      console.error("Error in rollbackRequestDenialByRequestId:", error);
+      return false;
+    } else {
+      return true;
+    }
+  } catch (error) {
+    console.error("Error in rollbackRequestDenialByRequestId:", error);
+    throw error;
+  }
+}
+
 export async function updatePickupEvent(
   pickupEventData: TablesUpdate<"PickupEvents">,
 ): Promise<boolean> {
@@ -23,6 +44,7 @@ export async function updatePickupEvent(
     }
     return true;
   } catch (error) {
+    console.error("Error in updatePickupEvent:", error);
     throw error;
   }
 }
