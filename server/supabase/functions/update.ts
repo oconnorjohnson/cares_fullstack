@@ -1,6 +1,6 @@
 import { createClient as createSupabaseClient } from "@/server/supabase/server";
 import { TablesUpdate, Tables } from "@/types_db";
-import type { WebhookEvent } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 
 export type updateRequestAdminColumnData = {
   requestId: number;
@@ -21,6 +21,7 @@ export async function rollbackRequestDenialByRequestId(
       console.error("Error in rollbackRequestDenialByRequestId:", error);
       return false;
     } else {
+      revalidatePath(`/admin/request/${requestId}/page`);
       return true;
     }
   } catch (error) {
