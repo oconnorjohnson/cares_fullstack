@@ -15,6 +15,7 @@ import {
   updateFundWithAssets,
   updateRFFBalance,
   approveRequestById,
+  markRequestHasInvoice,
 } from "@/server/supabase/functions/update";
 import { createTransaction } from "@/server/supabase/functions/create";
 import { GetFundsByRequestId } from "@/server/actions/request/actions";
@@ -261,6 +262,9 @@ export default async function ApproveRFFRequest(
     AssetIds: AssetIds,
   }));
   console.log(modifiedFunds);
+  if (modifiedFunds.some((fund) => fund.fundTypeId === 5)) {
+    await markRequestHasInvoice(requestId);
+  }
   const processFund = async (
     fund: FundDetail,
     requestId: number,

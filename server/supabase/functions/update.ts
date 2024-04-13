@@ -8,6 +8,26 @@ export type updateRequestAdminColumnData = {
   columnName: string;
 };
 
+export async function markRequestHasInvoice(
+  requestId: number,
+): Promise<boolean> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Request")
+      .update({ hasInvoice: true })
+      .eq("id", requestId);
+    if (error) {
+      console.log("Error in markRequestHasInvoice:", error);
+      return false;
+    }
+    return true;
+  } catch (error) {
+    console.log("Unexpected error in markRequestHasInvoice:", error);
+    throw error;
+  }
+}
+
 export async function rollbackRequestDenialByRequestId(
   requestId: number,
 ): Promise<boolean> {

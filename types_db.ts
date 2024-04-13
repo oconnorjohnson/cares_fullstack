@@ -600,7 +600,7 @@ export type Database = {
           agreementUrl: string | null;
           approved: boolean;
           clientId: number;
-          Completed: boolean;
+          completed: boolean;
           created_at: string;
           denied: boolean;
           details: string;
@@ -632,7 +632,7 @@ export type Database = {
           agreementUrl?: string | null;
           approved?: boolean;
           clientId: number;
-          Completed?: boolean;
+          completed?: boolean;
           created_at?: string;
           denied?: boolean;
           details: string;
@@ -664,7 +664,7 @@ export type Database = {
           agreementUrl?: string | null;
           approved?: boolean;
           clientId?: number;
-          Completed?: boolean;
+          completed?: boolean;
           created_at?: string;
           denied?: boolean;
           details?: string;
