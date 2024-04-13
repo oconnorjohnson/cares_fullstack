@@ -600,9 +600,11 @@ export type Database = {
           agreementUrl: string | null;
           approved: boolean;
           clientId: number;
+          Completed: boolean;
           created_at: string;
           denied: boolean;
           details: string;
+          hasInvoice: boolean;
           hasPostScreen: boolean;
           hasPreScreen: boolean;
           hasReceipts: boolean;
@@ -630,9 +632,11 @@ export type Database = {
           agreementUrl?: string | null;
           approved?: boolean;
           clientId: number;
+          Completed?: boolean;
           created_at?: string;
           denied?: boolean;
           details: string;
+          hasInvoice?: boolean;
           hasPostScreen?: boolean;
           hasPreScreen?: boolean;
           hasReceipts?: boolean;
@@ -660,9 +664,11 @@ export type Database = {
           agreementUrl?: string | null;
           approved?: boolean;
           clientId?: number;
+          Completed?: boolean;
           created_at?: string;
           denied?: boolean;
           details?: string;
+          hasInvoice?: boolean;
           hasPostScreen?: boolean;
           hasPreScreen?: boolean;
           hasReceipts?: boolean;
