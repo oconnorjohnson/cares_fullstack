@@ -10,6 +10,32 @@ type id = {
   id: number;
 };
 
+export async function doesRequestHaveInvoice(
+  requestId: number,
+): Promise<boolean> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Request")
+      .select("hasInvoice")
+      .eq("id", requestId)
+      .single();
+    if (error) {
+      console.log("Error in doesRequestHaveInvoice:", error);
+      throw error;
+    } else if (data?.hasInvoice === true) {
+      return true;
+    } else if (data?.hasInvoice === false) {
+      return false;
+    } else {
+      throw new Error("Unexpected error in doesRequestHaveInvoice");
+    }
+  } catch (error) {
+    console.log("Unexpected error in doesRequestHaveInvoice:", error);
+    throw error;
+  }
+}
+
 export async function getAdminWithPickupEventScheduledPreference() {
   const supabase = createSupabaseClient();
   try {

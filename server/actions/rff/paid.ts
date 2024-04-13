@@ -5,9 +5,13 @@ import {
   markAssetAsExpended,
   updateRFFBalance,
   markRequestPaidById,
+  updateRequestCompleted,
 } from "@/server/supabase/functions/update";
 import { createTransaction } from "@/server/supabase/functions/create";
-import { getRFFBalance } from "@/server/supabase/functions/read";
+import {
+  getRFFBalance,
+  doesRequestHaveInvoice,
+} from "@/server/supabase/functions/read";
 import { GetFundsByRequestId } from "@/server/actions/request/actions";
 import {
   markRequestAsNeedingReceipt,
@@ -191,7 +195,7 @@ const expendHandlers: ExpendTypeHandlers = {
   2: expendArcoGiftCard,
   3: expendBusPass,
   4: expendFunds,
-  5: expendFunds,
+  // removed fund type 5 from handling in paid flow
   6: expendFunds,
 };
 
@@ -200,7 +204,7 @@ const transactionHandlers: FundTypeTransactionHandlers = {
   2: createArcoDisbursementTransaction,
   3: createBusPassDisbursementTransaction,
   4: createFundDisbursementTransaction,
-  5: createFundDisbursementTransaction,
+  // removed fund type 5 from handling in paid flow
   6: createFundDisbursementTransaction,
 };
 
@@ -208,12 +212,15 @@ export default async function MarkPaid(requestId: number, UserId: string) {
   let modifiedFunds: FundDetail[] = [];
   try {
     const funds = await GetFundsByRequestId(requestId);
-    modifiedFunds = funds.map(({ id, fundTypeId, amount, AssetIds }) => ({
-      id: id,
-      fundTypeId,
-      amount,
-      AssetIds: AssetIds,
-    }));
+    // Filter out funds with fundTypeId of 5
+    modifiedFunds = funds
+      .filter(({ fundTypeId }) => fundTypeId !== 5)
+      .map(({ id, fundTypeId, amount, AssetIds }) => ({
+        id: id,
+        fundTypeId,
+        amount,
+        AssetIds: AssetIds,
+      }));
     try {
       for (const fund of modifiedFunds) {
         const expendHandler = expendHandlers[fund.fundTypeId];
@@ -227,7 +234,7 @@ export default async function MarkPaid(requestId: number, UserId: string) {
             await expendHandler(asset, fund.id, fund);
             console.log(`Processed fund ID ${fund.id} successfully.`);
           }
-        } else if ([4, 5, 6].includes(fund.fundTypeId)) {
+        } else if ([4, 6].includes(fund.fundTypeId)) {
           await expendHandler(null, fund.id, fund);
           console.log(`Processed fund ID ${fund.id} successfully.`);
         }
@@ -250,6 +257,10 @@ export default async function MarkPaid(requestId: number, UserId: string) {
         await markRequestAsNeedingReceipt(requestId);
       } else {
         await markRequestAsNotNeedingReceipt(requestId);
+      }
+      const hasInvoice = await doesRequestHaveInvoice(requestId);
+      if (!hasInvoice) {
+        await updateRequestCompleted(requestId);
       }
       revalidatePath("/admin/requests/[requestid]");
     } catch (error) {
