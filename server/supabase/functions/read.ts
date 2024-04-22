@@ -10,31 +10,6 @@ type id = {
   id: number;
 };
 
-export async function getInvoiceFundsByRequestId(requestId: number) {
-  const supabase = createSupabaseClient();
-  try {
-    const { data, error } = await supabase
-      .from("Fund")
-      .select("*")
-      .eq("requestId", requestId)
-      .eq("FundTypeId", 5);
-    if (error) {
-      console.error(
-        "Error fetching invoice funds by request ID:",
-        error.message,
-      );
-      throw error;
-    }
-    return data;
-  } catch (error) {
-    console.error(
-      "Unexpected error fetching invoice funds by request ID:",
-      error,
-    );
-    throw error;
-  }
-}
-
 export async function doesRequestHaveInvoice(
   requestId: number,
 ): Promise<boolean> {

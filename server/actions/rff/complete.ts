@@ -10,7 +10,6 @@ import { createTransaction } from "@/server/supabase/functions/create";
 import {
   getRFFBalance,
   doesRequestHaveInvoice,
-  getInvoiceFundsByRequestId,
 } from "@/server/supabase/functions/read";
 import { GetFundsByRequestId } from "@/server/actions/request/actions";
 import {
