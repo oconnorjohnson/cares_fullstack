@@ -18,3 +18,8 @@ import type {
   ExpendTypeHandlers,
   FundTypeTransactionHandlers,
 } from "@/server/actions/rff/types";
+
+// mark request completed
+// update balance with expended invoice (money out of total and reserved, available remains the same)
+// expend the asset (reserved => expended)
+// create transaction to reflect the change in balance ( like createFundDisubrsementTransaction on actions/rff/paid.ts)
