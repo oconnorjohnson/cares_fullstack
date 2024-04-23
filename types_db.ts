@@ -610,6 +610,7 @@ export type Database = {
           hasReceipts: boolean;
           id: number;
           implementation: string;
+          invoiceUrl: string | null;
           isPickupScheduled: boolean;
           needsReceipts: boolean | null;
           paid: boolean;
@@ -642,6 +643,7 @@ export type Database = {
           hasReceipts?: boolean;
           id?: number;
           implementation: string;
+          invoiceUrl?: string | null;
           isPickupScheduled?: boolean;
           needsReceipts?: boolean | null;
           paid?: boolean;
@@ -674,6 +676,7 @@ export type Database = {
           hasReceipts?: boolean;
           id?: number;
           implementation?: string;
+          invoiceUrl?: string | null;
           isPickupScheduled?: boolean;
           needsReceipts?: boolean | null;
           paid?: boolean;

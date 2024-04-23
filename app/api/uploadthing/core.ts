@@ -3,7 +3,10 @@ import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { createNewReceiptRecord } from "@/server/supabase/functions/create";
-import { addAgreementToRequest } from "@/server/supabase/functions/update";
+import {
+  addAgreementToRequest,
+  addInvoiceToRequest,
+} from "@/server/supabase/functions/update";
 import {
   revalidateDashboard,
   revalidateUserRequests,
@@ -115,13 +118,13 @@ export const ourFileRouter = {
       console.log("Request ID:", metadata.requestId);
       // rewrite the try block to match invoice rather than agreement
       try {
-        // const addAgreement = await addAgreementToRequest(
-        //   metadata.requestId,
-        //   file.url,
-        // );
-        // console.log("Agreement added successfully:", addAgreement);
-        // revalidatePath("/user/requests");
-        // revalidatePath("/dashboard");
+        const addInvoice = await addInvoiceToRequest(
+          metadata.requestId,
+          file.url,
+        );
+        console.log("Added invoice to request:", addInvoice);
+        revalidatePath(`/user/requests`);
+        revalidatePath(`dashboard`);
         // await sendAgreementUploadedAdminEmails();
         // return {
         //   uploadedBy: metadata.userId,

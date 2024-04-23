@@ -505,6 +505,29 @@ export async function updateUser(
   return true;
 }
 
+export async function addInvoiceToRequest(
+  requestId: number,
+  invoiceUrl: string,
+) {
+  const supabase = createSupabaseClient();
+  try {
+    const addedInvoice = await supabase
+      .from("Request")
+      .update({ invoiceUrl: invoiceUrl })
+      .eq("id", requestId);
+    if (addedInvoice.error) {
+      console.error("Error adding invoice to request:", addedInvoice.error);
+      return false;
+    } else {
+      console.log("Invoice added successfully to request:", addedInvoice.data);
+      return true;
+    }
+  } catch (error) {
+    console.log("error adding invoice to request:", error);
+    throw error;
+  }
+}
+
 export async function addAgreementToRequest(
   requestId: number,
   agreementUrl: string,
