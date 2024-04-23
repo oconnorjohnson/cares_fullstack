@@ -195,7 +195,6 @@ const expendHandlers: ExpendTypeHandlers = {
   2: expendArcoGiftCard,
   3: expendBusPass,
   4: expendFunds,
-  // removed fund type 5 from handling in paid flow
   6: expendFunds,
 };
 
@@ -204,7 +203,6 @@ const transactionHandlers: FundTypeTransactionHandlers = {
   2: createArcoDisbursementTransaction,
   3: createBusPassDisbursementTransaction,
   4: createFundDisbursementTransaction,
-  // removed fund type 5 from handling in paid flow
   6: createFundDisbursementTransaction,
 };
 

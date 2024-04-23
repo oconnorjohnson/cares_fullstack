@@ -41,6 +41,7 @@ import {
 import RollbackButton from "@/components/admin/request/rollback-button";
 import { getFundsSumByRequestId } from "@/server/actions/request/actions";
 import AgreeButton from "@/components/admin/request/agree-button";
+import CompleteRequestButton from "@/components/admin/request/complete-request";
 
 const RequestPage = async ({ requestid }: { requestid: string }) => {
   const { userId: currentAdminUserId } = await auth();
@@ -197,6 +198,16 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                   )}
                   {request.denied ? (
                     <RollbackButton requestId={requestId} />
+                  ) : (
+                    <></>
+                  )}
+                  {request.paid && !request.completed ? (
+                    <>
+                      <CompleteRequestButton
+                        requestId={requestId}
+                        UserId={currentAdminUserId!}
+                      />
+                    </>
                   ) : (
                     <></>
                   )}
