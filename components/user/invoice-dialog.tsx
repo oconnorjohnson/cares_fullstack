@@ -30,7 +30,7 @@ export default function ReceiptDialog({ requestId }: { requestId: number }) {
   const handleUploadComplete = (requestId: number) => {
     setIsSubmitting(true);
     try {
-      // submit functionality
+      toast.success("Upload completed successfully");
     } catch (error) {
       console.error("Error submitting form:", error);
       throw error;
