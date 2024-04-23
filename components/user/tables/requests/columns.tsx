@@ -19,6 +19,7 @@ import SchedulePickup from "@/components/forms/pickup-scheduler";
 import ReceiptDialog from "@/components/user/receipt-dialog";
 import AgreementDialog from "@/components/user/agreement-dialog";
 import PickupRescheduler from "@/components/forms/pickup-rescheduler";
+import InvoiceDialog from "@/components/user/invoice-dialog";
 
 export type Request = {
   id: number;
@@ -50,6 +51,7 @@ export type Request = {
   pendingPayout: boolean;
   paid: boolean;
   agreementUrl: string | null;
+  completed: boolean;
   hasPreScreen: boolean;
   hasPostScreen: boolean;
   needsReceipts: boolean;
@@ -142,6 +144,7 @@ export const columns: ColumnDef<Request>[] = [
         needsReceipts,
         hasReceipts,
         agreementUrl,
+        completed,
         id: requestId,
         isPickupScheduled,
         pickup_date,
@@ -165,6 +168,15 @@ export const columns: ColumnDef<Request>[] = [
         approved &&
         paid &&
         isPickupScheduled &&
+        !completed
+      ) {
+        return <InvoiceDialog requestId={requestId} />;
+      } else if (
+        hasPreScreen &&
+        approved &&
+        paid &&
+        completed &&
+        isPickupScheduled &&
         !agreementUrl
       ) {
         return <AgreementDialog requestId={requestId} />;
@@ -172,6 +184,7 @@ export const columns: ColumnDef<Request>[] = [
         hasPreScreen &&
         approved &&
         paid &&
+        completed &&
         agreementUrl &&
         !hasPostScreen &&
         !needsReceipts
@@ -180,6 +193,7 @@ export const columns: ColumnDef<Request>[] = [
       } else if (
         hasPreScreen &&
         paid &&
+        completed &&
         agreementUrl &&
         needsReceipts &&
         !hasReceipts
@@ -188,6 +202,7 @@ export const columns: ColumnDef<Request>[] = [
       } else if (
         hasPreScreen &&
         paid &&
+        completed &&
         agreementUrl &&
         needsReceipts &&
         hasReceipts &&
@@ -198,6 +213,7 @@ export const columns: ColumnDef<Request>[] = [
         approved &&
         hasPreScreen &&
         paid &&
+        completed &&
         agreementUrl &&
         hasPostScreen
       ) {

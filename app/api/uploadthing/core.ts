@@ -26,6 +26,9 @@ const uploadInputSchema = z.object({
 const uploadAgreementInputSchema = z.object({
   requestId: z.number(),
 });
+const uploadInvoiceInputSchema = z.object({
+  requestId: z.number(),
+});
 
 export const ourFileRouter = {
   agreementUploader: f({ pdf: { maxFileSize: "16MB", maxFileCount: 1 } })
@@ -94,6 +97,40 @@ export const ourFileRouter = {
         };
       } catch (error) {
         console.error("Error creating new receipt record:", error);
+      }
+    }),
+  invoiceUploader: f({ pdf: { maxFileSize: "16MB", maxFileCount: 1 } })
+    .input(uploadInvoiceInputSchema)
+    .middleware(async ({ files, input }) => {
+      const user = await auth();
+      if (!user) throw new Error("Unauthorized");
+      const { requestId } = input;
+      return { userId: user?.id, requestId };
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      console.log("Invoice upload complete for userId:", metadata.userId);
+      revalidateDashboard();
+      revalidateUserRequests();
+      console.log("Invoice file url", file.url);
+      console.log("Request ID:", metadata.requestId);
+      // rewrite the try block to match invoice rather than agreement
+      try {
+        // const addAgreement = await addAgreementToRequest(
+        //   metadata.requestId,
+        //   file.url,
+        // );
+        // console.log("Agreement added successfully:", addAgreement);
+        // revalidatePath("/user/requests");
+        // revalidatePath("/dashboard");
+        // await sendAgreementUploadedAdminEmails();
+        // return {
+        //   uploadedBy: metadata.userId,
+        //   agreementUrl: file.url,
+        //   requestId: metadata.requestId,
+        // };
+      } catch (error) {
+        console.error("Error creating new agreement record:", error);
+        throw error;
       }
     }),
 } satisfies FileRouter;
