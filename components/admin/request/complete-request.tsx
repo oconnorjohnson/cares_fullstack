@@ -31,11 +31,13 @@ export default function CompleteRequestButton({
   return (
     <>
       {isLoading ? (
-        <Button onClick={CompleteRequest} type="button" disabled>
+        <Button type="button" disabled>
           Loading <LoadingSpinner className="pl-2 w-4 h-4" />
         </Button>
       ) : (
-        <Button type="button">Complete Request</Button>
+        <Button onClick={CompleteRequest} type="button">
+          Complete Request
+        </Button>
       )}
     </>
   );
