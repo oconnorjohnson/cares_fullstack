@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { addAdminAgreementToRequest } from "@/server/actions/update/actions";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { CheckIcon } from "lucide-react";
 
 export default function AgreeButton({
   userId,
@@ -25,14 +26,21 @@ export default function AgreeButton({
   };
   return (
     <>
-      {isSubmitting ? (
-        <Button disabled>
-          {" "}
-          <LoadingSpinner className="w-4 h-4 text-white" />
-        </Button>
-      ) : (
-        <Button onClick={handleAgree}>Agree</Button>
-      )}
+      <Button
+        onClick={handleAgree}
+        variant="confirmation"
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? (
+          <LoadingSpinner className="w=4 h-4 text-white" />
+        ) : (
+          <>
+            Agree
+            <div className="px-1" />
+            <CheckIcon className="h-4 w-4 text-white" />
+          </>
+        )}
+      </Button>
     </>
   );
 }

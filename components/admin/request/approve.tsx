@@ -48,7 +48,11 @@ export default function Approve({ requestId }: { requestId: number }) {
   };
 
   return (
-    <Button onClick={handleApprove} variant="confirmation">
+    <Button
+      onClick={handleApprove}
+      variant="confirmation"
+      disabled={isDataLoading}
+    >
       {isDataLoading ? (
         <LoadingSpinner className="w-4 h-4 text-white" />
       ) : (
