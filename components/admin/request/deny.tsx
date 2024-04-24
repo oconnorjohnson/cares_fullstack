@@ -18,12 +18,8 @@ export default function Deny({ requestId }: { requestId: number }) {
     trpc.getUserDetailsByRequestId.useQuery(requestId);
 
   const handleDeny = async () => {
-    if (isUserDetailsLoading) {
-      // Optionally handle the loading state here, e.g., by showing a loading indicator or disabling the button
-      return;
-    }
-
     setIsLoading(true);
+    console.log("Attempting to deny request with ID:", requestId);
     try {
       // Assuming DenyRequest takes requestId, firstName, and email as arguments
       await DenyRequest(
@@ -31,12 +27,14 @@ export default function Deny({ requestId }: { requestId: number }) {
         userDetails?.first_name!,
         userDetails?.EmailAddress[0].email!,
       );
+      console.log("Request denied successfully.");
       toast.success("Request denied successfully.");
     } catch (error) {
       console.error("Error denying request:", error);
       toast.error("Error denying request.");
     } finally {
       setIsLoading(false);
+      console.log("Request denied successfully.");
       // Invalidate specific queries or all as needed
       trpcContext.invalidate();
     }
