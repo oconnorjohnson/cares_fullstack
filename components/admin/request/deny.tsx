@@ -11,7 +11,7 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 export default function Deny({ requestId }: { requestId: number }) {
   const [isLoading, setIsLoading] = useState(false);
-  const trpcContext = trpc.useContext(); // Adjusted to useContext based on standard tRPC hook usage
+  const trpcContext = trpc.useUtils(); // Adjusted to useContext based on standard tRPC hook usage
 
   // Use the new tRPC function to fetch user details by request ID
   const { data: userDetails, isLoading: isUserDetailsLoading } =
