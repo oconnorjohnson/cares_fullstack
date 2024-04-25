@@ -231,7 +231,7 @@ export async function DenyRequest(
   requestId: number,
   firstName: string,
   email: string,
-): Promise<RequestData> {
+): Promise<boolean> {
   const resend = new Resend(process.env.RESEND_API_KEY);
   try {
     const response = await denyRequestById(requestId);
@@ -246,7 +246,7 @@ export async function DenyRequest(
         firstName: firstName,
       }) as React.ReactElement,
     });
-    return updatedRequest as unknown as RequestData;
+    return true;
   } catch (error) {
     console.error(`Failed to deny request with ID ${requestId}:`, error);
     throw error;
