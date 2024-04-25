@@ -16,7 +16,7 @@ import { formatDateWithSuffix } from "@/server/utils";
 import { XIcon, CheckIcon, ArrowLeftIcon, ArrowDownIcon } from "lucide-react";
 import FundAction from "@/components/admin/fund-actions";
 import Link from "next/link";
-// import DenyButton from "@/components/admin/request/deny";
+import DenyButton from "@/components/admin/request/deny";
 import ApproveButton from "@/components/admin/request/approve";
 import AddFundToRequestById from "@/components/admin/request/add-fund";
 import MarkPaidButton from "@/components/admin/request/mark-paid";
@@ -42,10 +42,10 @@ import RollbackButton from "@/components/admin/request/rollback-button";
 import { getFundsSumByRequestId } from "@/server/actions/request/actions";
 import AgreeButton from "@/components/admin/request/agree-button";
 import CompleteRequestButton from "@/components/admin/request/complete-request";
-import dynamic from "next/dynamic";
-const DenyButton = dynamic(() => import("@/components/admin/request/deny"), {
-  ssr: false,
-});
+// import dynamic from "next/dynamic";
+// const DenyButton = dynamic(() => import("@/components/admin/request/deny"), {
+//   ssr: false,
+// });
 const RequestPage = async ({ requestid }: { requestid: string }) => {
   const { userId: currentAdminUserId } = await auth();
   const rffWalmartCards = await GetRFFWalmartCards();

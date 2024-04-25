@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { rollbackRequestDenialByRequestId } from "@/server/supabase/functions/update";
 
