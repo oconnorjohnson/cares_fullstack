@@ -14,19 +14,16 @@ export default function Deny({ requestId }: { requestId: number }) {
   const trpcContext = trpc.useUtils(); // Adjusted to useContext based on standard tRPC hook usage
 
   // Use the new tRPC function to fetch user details by request ID
-  const { data: userDetails, isLoading: isUserDetailsLoading } =
+  const { data: user, isLoading: isUserDetailsLoading } =
     trpc.getUserDetailsByRequestId.useQuery(requestId);
-
+  const email = user?.EmailAddress[0]?.email || "";
+  const firstName = user?.first_name || "";
   const handleDeny = async () => {
     setIsLoading(true);
     console.log("Attempting to deny request with ID:", requestId);
     try {
       // Assuming DenyRequest takes requestId, firstName, and email as arguments
-      await DenyRequest(
-        requestId,
-        userDetails?.first_name!,
-        userDetails?.EmailAddress[0].email!,
-      );
+      await DenyRequest(requestId, firstName, email);
       console.log("Request denied successfully.");
       toast.success("Request denied successfully.");
     } catch (error) {
