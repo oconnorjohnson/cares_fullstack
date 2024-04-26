@@ -72,36 +72,36 @@ export default function FundSelect({
     onChange(newFunds);
   };
 
-  const handleAmountChange = (index: number, newValue: string) => {
-    const newAmount = parseFloat(newValue);
-    const fund = value[index];
-    const fundType = fundTypesData.find((ft) => ft.id === fund.fundTypeId);
-
-    if (fundType && fundType.id === 3) {
-      if (newAmount % 10 !== 0) {
-        toast.error("Bus Pass amount must be a multiple of 10.");
-        return;
-      }
-    }
-
-    const newFunds = value.map((fund, idx) => {
-      if (idx === index) {
-        return { ...fund, aount: newAmount };
-      }
-      return fund;
-    });
-    onChange(newFunds);
-  };
-
   // const handleAmountChange = (index: number, newValue: string) => {
+  //   const newAmount = parseFloat(newValue);
+  //   const fund = value[index];
+  //   const fundType = fundTypesData.find((ft) => ft.id === fund.fundTypeId);
+
+  //   if (fundType && fundType.id === 3) {
+  //     if (newAmount % 10 !== 0) {
+  //       toast.error("Bus Pass amount must be a multiple of 10.");
+  //       return;
+  //     }
+  //   }
+
   //   const newFunds = value.map((fund, idx) => {
   //     if (idx === index) {
-  //       return { ...fund, amount: parseFloat(newValue) || 0 };
+  //       return { ...fund, aount: newAmount };
   //     }
   //     return fund;
   //   });
   //   onChange(newFunds);
   // };
+
+  const handleAmountChange = (index: number, newValue: string) => {
+    const newFunds = value.map((fund, idx) => {
+      if (idx === index) {
+        return { ...fund, amount: parseFloat(newValue) || 0 };
+      }
+      return fund;
+    });
+    onChange(newFunds);
+  };
 
   return (
     <>
