@@ -103,6 +103,15 @@ export default function FundSelect({
     onChange(newFunds);
   };
 
+  const validateAmount = (index: number) => {
+    const fund = value[index];
+    const fundType = fundTypesData.find((ft) => ft.id === fund.fundTypeId);
+    if (fundType && fundType.id === 3 && fund.amount % 10 !== 0) {
+      toast.error("Bus Pass amount must be a multiple of 10.");
+      handleAmountChange(index, "0"); // Reset to 0 or the nearest valid multiple
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col pb-1">
@@ -145,6 +154,7 @@ export default function FundSelect({
                 type="number"
                 value={fund.amount.toString()}
                 onChange={(e) => handleAmountChange(index, e.target.value)}
+                onBlur={() => validateAmount(index)}
               />
               <Button
                 variant="destructive"
