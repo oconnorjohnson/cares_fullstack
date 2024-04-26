@@ -464,7 +464,9 @@ export default function NewRequest({ userId }: { userId: string }) {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>
-                          Select requested funds and note fund amounts.
+                          Select requested funds and note fund amounts. When
+                          selecting bus passes, please add them to your request
+                          in multiples of ten.
                         </FormLabel>
                         <FormControl>
                           <FundSelect
