@@ -176,71 +176,6 @@ export default async function Dashboard() {
                   <NewClient userId={userId} />
                 </div>
               </div>
-              <div className="flex space-x-8 h-[400px]">
-                <div className="flex flex-col w-1/8 h-full">
-                  <Card className="h-full">
-                    <CardHeader>
-                      <CardTitle>Pending</CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex flex-row justify-start space-x-4 items-center">
-                      <ClockIcon />
-                      <div className="text-4xl font-black">{openRequests}</div>
-                    </CardContent>
-                    <CardHeader>
-                      <CardTitle>Approved</CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex flex-row justify-start space-x-4 items-center">
-                      <ClockIcon />
-                      <div className="text-4xl font-black">
-                        {approvedRequests}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-                <div className="flex flex-col flex-grow h-full">
-                  <Card className="h-full flex flex-row justify-evenly align-center space-x-4 items-center py-8">
-                    {/* Update Card #1 */}
-                    <Card className="w-[275px] h-full">
-                      <CardHeader>
-                        <CardTitle>{newsCardOne?.card_title}</CardTitle>
-                        <CardDescription>
-                          {newsCardOne?.card_description}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent className="text-sm font-light">
-                        {newsCardOne?.card_content}
-                      </CardContent>
-                    </Card>
-                    {/* Update Card #2 */}
-                    <Card className="w-[275px] h-full">
-                      <CardHeader>
-                        <CardTitle>{newsCardTwo?.card_title}</CardTitle>
-                        <CardDescription>
-                          {newsCardTwo?.card_description}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent className="text-sm font-light">
-                        {newsCardTwo?.card_content}
-                      </CardContent>
-                    </Card>
-                    {/* Update Card #3 */}
-                    <Card className="w-[275px] h-full">
-                      <CardHeader>
-                        <CardTitle>{newsCardThree?.card_title}</CardTitle>
-                        <CardDescription>
-                          {newsCardThree?.card_description}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent className="text-sm font-light">
-                        {newsCardThree?.card_content}
-                      </CardContent>
-                    </Card>
-                  </Card>
-                </div>
-              </div>
-              <div>
-                <PickupScheduler userId={userId} requestId={1} />
-              </div>
               <div className="flex flex-col flex-grow">
                 <Card className="">
                   <CardHeader>
@@ -406,6 +341,69 @@ export default async function Dashboard() {
                   </CardContent>
                 </Card>
               </div>
+              <div className="flex space-x-8 h-[400px]">
+                <div className="flex flex-col w-1/8 h-full">
+                  <Card className="h-full">
+                    <CardHeader>
+                      <CardTitle>Pending</CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex flex-row justify-start space-x-4 items-center">
+                      <ClockIcon />
+                      <div className="text-4xl font-black">{openRequests}</div>
+                    </CardContent>
+                    <CardHeader>
+                      <CardTitle>Approved</CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex flex-row justify-start space-x-4 items-center">
+                      <ClockIcon />
+                      <div className="text-4xl font-black">
+                        {approvedRequests}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+                <div className="flex flex-col flex-grow h-full">
+                  <Card className="h-full flex flex-row justify-evenly align-center space-x-4 items-center py-8">
+                    {/* Update Card #1 */}
+                    <Card className="w-[275px] h-full">
+                      <CardHeader>
+                        <CardTitle>{newsCardOne?.card_title}</CardTitle>
+                        <CardDescription>
+                          {newsCardOne?.card_description}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="text-sm font-light">
+                        {newsCardOne?.card_content}
+                      </CardContent>
+                    </Card>
+                    {/* Update Card #2 */}
+                    <Card className="w-[275px] h-full">
+                      <CardHeader>
+                        <CardTitle>{newsCardTwo?.card_title}</CardTitle>
+                        <CardDescription>
+                          {newsCardTwo?.card_description}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="text-sm font-light">
+                        {newsCardTwo?.card_content}
+                      </CardContent>
+                    </Card>
+                    {/* Update Card #3 */}
+                    <Card className="w-[275px] h-full">
+                      <CardHeader>
+                        <CardTitle>{newsCardThree?.card_title}</CardTitle>
+                        <CardDescription>
+                          {newsCardThree?.card_description}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="text-sm font-light">
+                        {newsCardThree?.card_content}
+                      </CardContent>
+                    </Card>
+                  </Card>
+                </div>
+              </div>
+
               <div className="flex flex-col flex-grow">
                 <Card className="mb-8">
                   <CardHeader>
