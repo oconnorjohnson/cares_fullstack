@@ -30,7 +30,7 @@ export default function Approve({ requestId }: { requestId: number }) {
   const [isDataLoading, setIsDataLoading] = useState(false);
   const trpcContext = trpc.useUtils();
   const { data: user } = trpc.getUserDetailsByRequestId.useQuery(requestId);
-  const email = user?.EmailAddress[0]?.email || "";
+  const email = user?.email || "";
   const firstName = user?.first_name || "";
   const UserId = user?.userId || "";
   const handleApprove = async () => {

@@ -16,7 +16,7 @@ export default function Deny({ requestId }: { requestId: number }) {
   // Use the new tRPC function to fetch user details by request ID
   const { data: user, isLoading: isUserDetailsLoading } =
     trpc.getUserDetailsByRequestId.useQuery(requestId);
-  const email = user?.EmailAddress[0]?.email || "";
+  const email = user?.email || "";
   const firstName = user?.first_name || "";
   const handleDeny = async () => {
     setIsLoading(true);
