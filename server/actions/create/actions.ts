@@ -678,7 +678,13 @@ export async function newRequest(requestState: RequestData) {
         firstName: requestState.firstName,
       }) as React.ReactElement,
     });
-    await sendNewRequestAdminEmails();
+    try {
+      console.log("sending new request admin emails from create/actions.ts");
+      await sendNewRequestAdminEmails();
+    } catch (error) {
+      throw error;
+    }
+
     revalidatePath(`/dashboard/page`);
     return { requestId, fundsRecords };
   } catch (error) {

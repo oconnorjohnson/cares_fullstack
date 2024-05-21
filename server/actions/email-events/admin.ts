@@ -194,8 +194,13 @@ export async function sendCARESAssetsAddedAdminEmails() {
 }
 
 export async function sendPickupEventScheduledAdminEmails() {
+  console.log("sending pickup event scheduled admin emails from admin.ts");
   const adminWithPickupEventScheduledPreference =
     await getAdminWithPickupEventScheduledPreference();
+  console.log(
+    "adminWithPickupEventScheduledPreference:",
+    adminWithPickupEventScheduledPreference,
+  );
   await Promise.all(
     adminWithPickupEventScheduledPreference.map(async (admin) => {
       try {

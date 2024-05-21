@@ -1074,7 +1074,7 @@ export async function getUserByUserId(userId: string) {
       ...userData,
       email: emailData?.email,
     };
-
+    console.log("combinedData", combinedData);
     return combinedData;
   } catch (error) {
     console.log("Unexpected error fetching user by user ID:", error);
