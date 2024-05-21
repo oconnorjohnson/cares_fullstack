@@ -21,7 +21,7 @@ export const RequestReceived: React.FC<Readonly<EmailTemplateProps>> = ({
   firstName,
 }) => (
   <Html lang="en">
-    <Preview>Request Approved!</Preview>
+    <Preview>New Request Received!</Preview>
     <Tailwind
       config={{
         theme: {
