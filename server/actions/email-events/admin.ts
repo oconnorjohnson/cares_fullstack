@@ -23,15 +23,21 @@ import {
 } from "@/server/actions/email-events/admin/actions";
 
 export async function sendNewRequestAdminEmails() {
+  console.log("sending new request admin emails from admin.ts");
   const adminWithRequestReceivedPreference =
     await getAdminWithRequestReceivedPreference();
+  console.log(
+    "adminWithRequestReceivedPreference:",
+    adminWithRequestReceivedPreference,
+  );
   await Promise.all(
     adminWithRequestReceivedPreference.map(async (admin) => {
       try {
         const user = await getUserByUserId(admin.UserId!);
         const firstName = user?.first_name || "";
         const email = user?.email || "";
-
+        console.log("email:", email);
+        console.log("firstName:", firstName);
         await sendRequestReceivedEmail({
           email: email,
           firstName: firstName,
@@ -206,7 +212,7 @@ export async function sendPickupEventScheduledAdminEmails() {
       try {
         const user = await getUserByUserId(admin.UserId!);
         const firstName = user?.first_name || "";
-        const email = user?.email || "";
+        const email = user.email!;
 
         await sendPickupEventScheduledEmail({
           email: email,
