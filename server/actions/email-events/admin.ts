@@ -30,7 +30,7 @@ export async function sendNewRequestAdminEmails() {
       try {
         const user = await getUserByUserId(admin.UserId!);
         const firstName = user?.first_name || "";
-        const email = user?.EmailAddress[0]?.email || "";
+        const email = user?.email || "";
 
         await sendRequestReceivedEmail({
           email: email,
@@ -51,7 +51,7 @@ export async function sendNewPostScreenAdminEmails() {
       try {
         const user = await getUserByUserId(admin.UserId!);
         const firstName = user?.first_name || "";
-        const email = user?.EmailAddress[0]?.email || "";
+        const email = user?.email || "";
 
         await sendPostScreenCompletedEmail({
           email: email,
@@ -72,7 +72,7 @@ export async function sendReceiptUploadedAdminEmails() {
       try {
         const user = await getUserByUserId(admin.UserId!);
         const firstName = user?.first_name || "";
-        const email = user?.EmailAddress[0]?.email || "";
+        const email = user?.email || "";
 
         await sendReceiptUploadedEmail({
           email: email,
@@ -93,7 +93,7 @@ export async function sendAgreementUploadedAdminEmails() {
       try {
         const user = await getUserByUserId(admin.UserId!);
         const firstName = user?.first_name || "";
-        const email = user?.EmailAddress[0]?.email || "";
+        const email = user?.email || "";
 
         await sendAgreementUploadedEmail({
           email: email,
@@ -114,7 +114,7 @@ export async function sendRFFBalanceUpdatedAdminEmails() {
       try {
         const user = await getUserByUserId(admin.UserId!);
         const firstName = user?.first_name || "";
-        const email = user?.EmailAddress[0]?.email || "";
+        const email = user?.email || "";
 
         await sendRFFBalanceUpdatedEmail({
           email: email,
@@ -135,7 +135,7 @@ export async function sendCARESBalanceUpdatedAdminEmails() {
       try {
         const user = await getUserByUserId(admin.UserId!);
         const firstName = user?.first_name || "";
-        const email = user?.EmailAddress[0]?.email || "";
+        const email = user?.email || "";
 
         await sendCARESBalanceUpdatedEmail({
           email: email,
@@ -159,7 +159,7 @@ export async function sendRFFAssetsAddedAdminEmails() {
       try {
         const user = await getUserByUserId(admin.UserId!);
         const firstName = user?.first_name || "";
-        const email = user?.EmailAddress[0]?.email || "";
+        const email = user?.email || "";
 
         await sendRFFAssetsAddedEmail({
           email: email,
@@ -180,7 +180,7 @@ export async function sendCARESAssetsAddedAdminEmails() {
       try {
         const user = await getUserByUserId(admin.UserId!);
         const firstName = user?.first_name || "";
-        const email = user?.EmailAddress[0]?.email || "";
+        const email = user?.email || "";
 
         await sendCARESAssetsAddedEmail({
           email: email,
@@ -201,7 +201,7 @@ export async function sendPickupEventScheduledAdminEmails() {
       try {
         const user = await getUserByUserId(admin.UserId!);
         const firstName = user?.first_name || "";
-        const email = user?.EmailAddress[0]?.email || "";
+        const email = user?.email || "";
 
         await sendPickupEventScheduledEmail({
           email: email,

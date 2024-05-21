@@ -168,7 +168,6 @@ export async function getAllPickupEvents(): Promise<Tables<"PickupEvents">[]> {
     throw error;
   }
 }
-
 // get all admins who want to receive emails regarding new requests received
 export async function getAdminWithRequestReceivedPreference() {
   const supabase = createSupabaseClient();
@@ -178,18 +177,10 @@ export async function getAdminWithRequestReceivedPreference() {
       .select("UserId")
       .eq("requestReceived", true);
     if (error) {
-      console.error(
-        "Error fetching admin with request received preference:",
-        error,
-      );
       throw error;
     }
     return data;
   } catch (error) {
-    console.error(
-      "Error fetching admin with request received preference:",
-      error,
-    );
     throw error;
   }
 }
@@ -1056,16 +1047,35 @@ export async function getAllAgencies() {
 export async function getUserByUserId(userId: string) {
   const supabase = createSupabaseClient();
   try {
-    const { data, error } = await supabase
+    // Fetch user details
+    const { data: userData, error: userError } = await supabase
       .from("User")
-      .select(`*, EmailAddress ( email )`)
+      .select("*")
       .eq("userId", userId)
       .single();
-    if (error) {
-      console.error("Error fetching user by user ID:", error.message);
-      throw error;
+    if (userError) {
+      console.error("Error fetching user by user ID:", userError.message);
+      throw userError;
     }
-    return data;
+
+    // Fetch email address
+    const { data: emailData, error: emailError } = await supabase
+      .from("EmailAddress")
+      .select("email")
+      .eq("userId", userId)
+      .single();
+    if (emailError) {
+      console.error("Error fetching email by user ID:", emailError.message);
+      throw emailError;
+    }
+
+    // Combine user details with email
+    const combinedData = {
+      ...userData,
+      email: emailData?.email,
+    };
+
+    return combinedData;
   } catch (error) {
     console.log("Unexpected error fetching user by user ID:", error);
     throw error;
