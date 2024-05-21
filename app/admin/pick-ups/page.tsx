@@ -55,11 +55,9 @@ export default async function PickUps() {
                     <AccordionItem key={index} value={`item-${index}`}>
                       <AccordionTrigger>{`${event.user.first_name} ${event.user.last_name}`}</AccordionTrigger>
                       <AccordionContent>
-                        <Link
-                          href={`mailto:${event.user.EmailAddress[0].email}`}
-                        >
+                        <Link href={`mailto:${event.user.email}`}>
                           <div className="underline text-green-600">
-                            {event.user.EmailAddress[0].email}
+                            {event.user.email}
                           </div>
                         </Link>
                         <div>{event.pickup_date}</div>
@@ -133,11 +131,9 @@ export default async function PickUps() {
                     <AccordionItem key={index} value={`item-${index}`}>
                       <AccordionTrigger>{`${event.user.first_name} ${event.user.last_name}`}</AccordionTrigger>
                       <AccordionContent>
-                        <Link
-                          href={`mailto:${event.user.EmailAddress[0].email}`}
-                        >
+                        <Link href={`mailto:${event.user.email}`}>
                           <div className="underline text-green-600">
-                            {event.user.EmailAddress[0].email}
+                            {event.user.email}
                           </div>
                         </Link>
                         <div>{event.pickup_date}</div>
