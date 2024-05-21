@@ -22,7 +22,7 @@ export async function sendRequestReceivedEmail({
 }) {
   const resend = new Resend(process.env.RESEND_API_KEY);
   await resend.emails.send({
-    from: "CARES <info@yolocountycares.com>",
+    from: "CARES <help@yolopublicdefendercares.org>",
     to: [email],
     subject: "Your request has been received!",
     react: RecquestReceivedTemplate({
@@ -40,7 +40,7 @@ export async function sendPostScreenCompletedEmail({
 }) {
   const resend = new Resend(process.env.RESEND_API_KEY);
   await resend.emails.send({
-    from: "CARES <info@yolocountycares.com>",
+    from: "CARES <help@yolopublicdefendercares.org>",
     to: [email],
     subject: "Post-Screen Completed!",
     react: PostScreenCompletedTemplate({
@@ -58,7 +58,7 @@ export async function sendReceiptUploadedEmail({
 }) {
   const resend = new Resend(process.env.RESEND_API_KEY);
   await resend.emails.send({
-    from: "CARES <info@yolocountycares.com>",
+    from: "CARES <help@yolopublicdefendercares.org>",
     to: [email],
     subject: "Receipt Uploaded!",
     react: ReceiptUploadedTemplate({
@@ -76,7 +76,7 @@ export async function sendAgreementUploadedEmail({
 }) {
   const resend = new Resend(process.env.RESEND_API_KEY);
   await resend.emails.send({
-    from: "CARES <info@yolocountycares.com>",
+    from: "CARES <help@yolopublicdefendercares.org>",
     to: [email],
     subject: "Agreement Uploaded!",
     react: AgreementUploadedTemplate({
@@ -94,7 +94,7 @@ export async function sendRFFBalanceUpdatedEmail({
 }) {
   const resend = new Resend(process.env.RESEND_API_KEY);
   await resend.emails.send({
-    from: "CARES <info@yolocountycares.com>",
+    from: "CARES <help@yolopublicdefendercares.org>",
     to: [email],
     subject: "RFF Balance Updated!",
     react: RFFBalanceUpdatedTemplate({
@@ -112,7 +112,7 @@ export async function sendCARESBalanceUpdatedEmail({
 }) {
   const resend = new Resend(process.env.RESEND_API_KEY);
   await resend.emails.send({
-    from: "CARES <info@yolocountycares.com>",
+    from: "CARES <help@yolopublicdefendercares.org>",
     to: [email],
     subject: "CARES Balance Updated!",
     react: CARESBalanceUpdatedTemplate({
@@ -130,7 +130,7 @@ export async function sendRFFAssetsAddedEmail({
 }) {
   const resend = new Resend(process.env.RESEND_API_KEY);
   await resend.emails.send({
-    from: "CARES <info@yolocountycares.com>",
+    from: "CARES <help@yolopublicdefendercares.org>",
     to: [email],
     subject: "RFF Assets Added!",
     react: RFFAssetsAddedTemplate({
@@ -148,7 +148,7 @@ export async function sendCARESAssetsAddedEmail({
 }) {
   const resend = new Resend(process.env.RESEND_API_KEY);
   await resend.emails.send({
-    from: "CARES <info@yolocountycares.com>",
+    from: "CARES <help@yolopublicdefendercares.org>",
     to: [email],
     subject: "CARES Assets Added!",
     react: CARESAssetsAddedTemplate({
@@ -166,7 +166,7 @@ export async function sendPickupEventScheduledEmail({
 }) {
   const resend = new Resend(process.env.RESEND_API_KEY);
   await resend.emails.send({
-    from: "CARES <info@yolocountycares.com>",
+    from: "CARES <help@yolopublicdefendercares.org>",
     to: [email],
     subject: "Pickup Event Scheduled!",
     react: PickupEventScheduledTemplate({
