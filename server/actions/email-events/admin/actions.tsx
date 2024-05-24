@@ -2,7 +2,7 @@
 import { Resend } from "resend";
 
 import {
-  RequestReceived as RecquestReceivedTemplate,
+  RequestReceived as RequestReceivedTemplate,
   PostScreenCompleted as PostScreenCompletedTemplate,
   ReceiptUploaded as ReceiptUploadedTemplate,
   AgreementUploaded as AgreementUploadedTemplate,
@@ -25,7 +25,7 @@ export async function sendRequestReceivedEmail({
     from: "CARES <help@yolopublicdefendercares.org>",
     to: [email],
     subject: "Your request has been received!",
-    react: RecquestReceivedTemplate({
+    react: RequestReceivedTemplate({
       firstName: firstName,
     }) as React.ReactElement,
   });

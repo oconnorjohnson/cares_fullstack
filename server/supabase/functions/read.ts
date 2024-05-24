@@ -1,3 +1,4 @@
+"use server";
 import { createClient as createSupabaseClient } from "@/server/supabase/server";
 import { Tables } from "@/types_db";
 import type { Request } from "@/server/actions/request/actions";
@@ -9,6 +10,28 @@ type totalValue = {
 type id = {
   id: number;
 };
+
+export async function isUserBanned(userId: string): Promise<boolean> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("User")
+      .select("isBanned")
+      .eq("userId", userId);
+    if (error) {
+      throw error;
+    }
+    if (data?.[0]?.isBanned === true) {
+      return true;
+    } else if (data?.[0]?.isBanned === false) {
+      return false;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    throw error;
+  }
+}
 
 export async function doesRequestHaveInvoice(
   requestId: number,

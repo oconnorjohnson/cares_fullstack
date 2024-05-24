@@ -10,6 +10,7 @@ import { newRequest } from "@/server/actions/create/actions";
 import { Submitted } from "@/server/actions/resend/actions";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useRouter } from "next/navigation";
+import { isUserBanned } from "@/server/supabase/functions/read";
 import { LoadingSpinner } from "@/components/admin/request/approve";
 import {
   Dialog,
@@ -113,6 +114,15 @@ export default function NewRequest({ userId }: { userId: string }) {
   const [activeTab, setActiveTab] = useState("tab1");
   const [progress, setProgress] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isBanned, setIsBanned] = useState<boolean | null>(false);
+
+  useEffect(() => {
+    const checkIfBanned = async () => {
+      const bannedStatus = await isUserBanned(userId);
+      setIsBanned(bannedStatus);
+    };
+    checkIfBanned();
+  }, [userId]);
   useEffect(() => {
     switch (activeTab) {
       case "tab1":
@@ -230,11 +240,17 @@ export default function NewRequest({ userId }: { userId: string }) {
   return (
     <>
       <Dialog>
-        <DialogTrigger asChild>
-          <Button className="py-10 text-2xl" variant="default">
-            Submit New Request
-          </Button>
-        </DialogTrigger>
+        {isBanned === null ? (
+          "error"
+        ) : isBanned ? (
+          <Button disabled>You are banned</Button>
+        ) : (
+          <DialogTrigger asChild>
+            <Button className="py-10 text-2xl" variant="default">
+              Submit New Request
+            </Button>
+          </DialogTrigger>
+        )}
         <DialogContent className="h-2/3">
           <Progress value={progress} className="w-full mt-4" />
           <DialogTitle>New Request</DialogTitle>
