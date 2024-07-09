@@ -1,7 +1,14 @@
 "use client";
 
-import { ChartConfig, ChartContainer } from "@/components/ui/chart";
-import { Bar, BarChart } from "recharts";
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
+} from "@/components/ui/chart";
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
 import { AgChartsReact } from "ag-charts-react";
 import { AgChartOptions } from "ag-charts-community";
@@ -73,15 +80,24 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
           in said category.
         </CardDescription>
       </CardHeader>
-      <div style={{ width: "100%", height: "300px" }}>
-        <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
-          <BarChart accessibilityLayer data={chartData}>
-            <Bar dataKey="preValue" fill="var(--color-desktop)" radius={4} />
-            <Bar dataKey="postValue" fill="var(--color-mobile)" radius={4} />
-          </BarChart>
-        </ChartContainer>
-        {/* <AgChartsReact options={options} /> */}
-      </div>
+
+      <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+        <BarChart accessibilityLayer data={chartData}>
+          <CartesianGrid vertical={false} />
+          <XAxis
+            dataKey="category"
+            tickLine={false}
+            tickMargin={10}
+            axisLine={false}
+            tickFormatter={(value) => value.slice(0, 3)}
+          />
+          <ChartTooltip content={<ChartTooltipContent />} />
+          <ChartLegend content={<ChartLegendContent />} />
+          <Bar dataKey="preValue" fill="var(--color-desktop)" radius={4} />
+          <Bar dataKey="postValue" fill="var(--color-mobile)" radius={4} />
+        </BarChart>
+      </ChartContainer>
+      {/* <AgChartsReact options={options} /> */}
     </Card>
   );
 }
