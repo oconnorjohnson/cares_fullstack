@@ -62,25 +62,25 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
   };
 
   return (
-    <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
-      <BarChart accessibilityLayer data={chartData}>
-        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-        <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
-      </BarChart>
-    </ChartContainer>
-    // <Card className="p-8">
-    //   <CardHeader>
-    //     <CardTitle>Pre-Screen to Post-Screen Analysis</CardTitle>
-    //     <CardDescription className="text-md">
-    //       This chart shows the average number of each category for pre-screen
-    //       answers and the average number of each category for post-screen
-    //       answers. Higher values indicate a higher level of stress or difficulty
-    //       in said category.
-    //     </CardDescription>
-    //   </CardHeader>
-    //   <div style={{ width: "100%", height: "300px" }}>
-    //     <AgChartsReact options={options} />
-    //   </div>
-    // </Card>
+    <Card className="p-8">
+      <CardHeader>
+        <CardTitle>Pre-Screen to Post-Screen Analysis</CardTitle>
+        <CardDescription className="text-md">
+          This chart shows the average number of each category for pre-screen
+          answers and the average number of each category for post-screen
+          answers. Higher values indicate a higher level of stress or difficulty
+          in said category.
+        </CardDescription>
+      </CardHeader>
+      <div style={{ width: "100%", height: "300px" }}>
+        <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+          <BarChart accessibilityLayer data={chartData}>
+            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
+            <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+          </BarChart>
+        </ChartContainer>
+        {/* <AgChartsReact options={options} /> */}
+      </div>
+    </Card>
   );
 }
