@@ -44,6 +44,7 @@ import { Resend } from "resend";
 import { revalidatePath } from "next/cache";
 import { TablesInsert } from "@/types_db";
 import { sendPickupEventScheduledAdminEmails } from "@/server/actions/email-events/admin";
+import { auth } from "@clerk/nextjs/server";
 
 interface RequestInsert {
   agencyId: number;
@@ -139,6 +140,10 @@ type DepositData = {
 export async function createNewPickupEvent(
   pickupEventData: TablesInsert<"PickupEvents">,
 ) {
+  const { userId } = auth();
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
   try {
     const didSet = await createPickupEvent(pickupEventData);
     if (didSet) {
@@ -160,6 +165,10 @@ export async function createNewPickupEvent(
 export async function updateThePickupEvent(
   pickupEventData: TablesInsert<"PickupEvents">,
 ) {
+  const { userId } = auth();
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
   try {
     const didSet = await updatePickupEvent(pickupEventData);
     if (didSet) {
@@ -181,6 +190,10 @@ export async function updateThePickupEvent(
 export async function createOperatingDeposit(
   OperatingDepositData: DepositData,
 ) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const { userId, details, totalValue, lastVersion } = OperatingDepositData;
   const transactionData: TablesInsert<"Transaction"> = {
     UserId: userId,
@@ -211,6 +224,10 @@ export async function createOperatingDeposit(
 }
 
 export async function createRFFDeposit(RFFDepositData: DepositData) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const { userId, details, totalValue, lastVersion } = RFFDepositData;
   const transactionData: TablesInsert<"Transaction"> = {
     UserId: userId,
@@ -243,6 +260,10 @@ export async function createRFFDeposit(RFFDepositData: DepositData) {
 export async function createTransaction(
   transactionData: TablesInsert<"Transaction">,
 ) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const transaction = await createNewTransaction(transactionData);
   return transaction;
 }
@@ -256,6 +277,10 @@ export async function addBusPasses({
   UserId: string;
   balanceSource: string;
 }) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const unitValue = 2.5;
   const totalValue = amount * unitValue;
   let transactionId: number | undefined;
@@ -379,6 +404,10 @@ export async function addGiftCard({
   lastFour: string;
   fundType: string;
 }) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const unitValue = amount;
   const totalValue = amount;
   let transactionId: number | undefined;
@@ -493,6 +522,10 @@ export async function addGiftCard({
 export async function createBusPassAssets(
   assetData: TablesInsert<"Asset"> & { amount: number },
 ) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const { amount, ...dataWithoutAmount } = assetData;
   const totalValue = 2.5;
   const insertPromises = [];
@@ -515,6 +548,10 @@ export async function createBusPassAssets(
 }
 
 export async function newAgency(agencyState: AgencyData) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   if (!agencyState.userId) {
     throw new Error("User not authenticated");
   }
@@ -524,6 +561,10 @@ export async function newAgency(agencyState: AgencyData) {
 }
 
 export async function newFund(fundState: NewFundData) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   console.log(fundState);
   if (!fundState.requestId || !fundState.amount || !fundState.fundTypeId) {
     throw new Error("Data incomplete");
@@ -542,6 +583,10 @@ export async function newPreScreen(
   preScreenState: PreScreenData,
   requestId: number,
 ) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   if (!requestId) {
     throw new Error(
       "Request ID is required to tie your prescreen to your request",
@@ -574,6 +619,10 @@ export async function newPostScreen(
   firstName: string,
   email: string,
 ) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const resend = new Resend(process.env.RESEND_API_KEY);
   if (!requestId) {
     throw new Error(
@@ -612,6 +661,10 @@ export async function newPostScreen(
 }
 
 export async function newFundType(fundState: FundTypeData) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   if (!fundState.userId) {
     throw new Error("User not authenticated");
   }
@@ -623,6 +676,10 @@ export async function newFundType(fundState: FundTypeData) {
 }
 
 export async function newClient(clientState: TablesInsert<"Client">) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   if (!clientState.userId) {
     throw new Error("User not authenticated");
   }
@@ -634,6 +691,10 @@ export async function newClient(clientState: TablesInsert<"Client">) {
 }
 
 export async function newRequest(requestState: RequestData) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const resend = new Resend(process.env.RESEND_API_KEY);
   if (!requestState.userId) {
     throw new Error("User not authenticated");
