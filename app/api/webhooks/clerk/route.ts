@@ -1,5 +1,6 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
+import { auth } from "@clerk/nextjs/server";
 import { WebhookEvent } from "@clerk/nextjs/server";
 import {
   createUser,
@@ -49,6 +50,7 @@ async function sendWelcomeEmail(firstName: string, email: string) {
 }
 
 export async function POST(req: Request) {
+  auth().protect();
   console.log("Starting POST function");
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
 
