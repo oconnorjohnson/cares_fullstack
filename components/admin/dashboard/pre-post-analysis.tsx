@@ -23,12 +23,12 @@ interface PrePostAnalysisProps {
 }
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  preValue: {
+    label: "preValue",
     color: "#2563eb",
   },
-  mobile: {
-    label: "Mobile",
+  postValue: {
+    label: "postValue",
     color: "#60a5fa",
   },
 } satisfies ChartConfig;
