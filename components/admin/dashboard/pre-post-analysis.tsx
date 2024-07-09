@@ -81,20 +81,20 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
         </CardDescription>
       </CardHeader>
 
-      <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+      <ChartContainer config={chartConfig} className="min-h-[100px] w-full">
         <BarChart accessibilityLayer data={chartData}>
           <CartesianGrid vertical={false} />
           <XAxis
             dataKey="category"
             tickLine={false}
-            tickMargin={5}
+            tickMargin={10}
             axisLine={false}
             tickFormatter={(value) => value.slice(0, 3)}
           />
           <ChartTooltip content={<ChartTooltipContent />} />
           <ChartLegend content={<ChartLegendContent />} />
-          <Bar dataKey="preValue" fill="var(--color-desktop)" radius={4} />
-          <Bar dataKey="postValue" fill="var(--color-mobile)" radius={4} />
+          <Bar dataKey="preValue" fill="var(--color-preValue)" radius={4} />
+          <Bar dataKey="postValue" fill="var(--color-postValue)" radius={4} />
         </BarChart>
       </ChartContainer>
       {/* <AgChartsReact options={options} /> */}
