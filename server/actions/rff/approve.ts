@@ -1,6 +1,7 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { Resend } from "resend";
+import { auth } from "@clerk/nextjs/server";
 
 import { EmailTemplate as ApprovedEmailTemplate } from "@/components/emails/approved";
 
@@ -249,6 +250,10 @@ export default async function ApproveRFFRequest(
   email: string,
   UserId: string,
 ) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   console.log("ApproveRFFRequest function called");
   const resend = new Resend(process.env.RESEND_API_KEY);
 

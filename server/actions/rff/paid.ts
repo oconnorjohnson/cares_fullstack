@@ -1,6 +1,6 @@
 "use server";
 import { revalidatePath } from "next/cache";
-
+import { auth } from "@clerk/nextjs/server";
 import {
   markAssetAsExpended,
   updateRFFBalance,
@@ -207,6 +207,10 @@ const transactionHandlers: FundTypeTransactionHandlers = {
 };
 
 export default async function MarkPaid(requestId: number, UserId: string) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   let modifiedFunds: FundDetail[] = [];
   try {
     const funds = await GetFundsByRequestId(requestId);

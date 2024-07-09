@@ -24,7 +24,7 @@ import {
 } from "@/server/actions/email-events/admin";
 import { revalidatePath } from "next/cache";
 import { Resend } from "resend";
-
+import { auth } from "@clerk/nextjs/server";
 import { EmailTemplate as ReceiptUploadedEmailTemplate } from "@/components/emails/receipt-uploaded";
 import { EmailTemplate as BannedEmailTemplate } from "@/components/emails/banned";
 import { EmailTemplate as DeniedEmailTemplate } from "@/components/emails/denied";
@@ -86,6 +86,10 @@ export async function updateNewsCards(
   cardDescription: string,
   cardContent: string,
 ) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const updateSuccess = await updateNewsCard(
     NewsCardId,
     cardTitle,
@@ -99,6 +103,10 @@ export async function updateNewsCards(
 export async function updateAdminEmailPrefs(
   emailPreference: AdminEmailPreference,
 ) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const updateSuccess = await updateAdminEmailPreference(emailPreference);
   return updateSuccess;
 }
@@ -118,6 +126,10 @@ export async function addAdminAgreementToRequest({
   requestId: number;
   userId: string;
 }) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   try {
     if (await isAdminOneNull(requestId)) {
       const updateData = { columnName: "adminOne", userId, requestId };
@@ -143,6 +155,10 @@ export async function updateOperatingBalance(
   lastVersion: number,
   operatingBalanceData: TablesUpdate<"OperatingBalance">,
 ) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const operatingBalance = await updateTheOperatingBalance(
     lastVersion,
     operatingBalanceData,
@@ -155,12 +171,20 @@ export async function updateRFFBalance(
   lastVersion: number,
   rffBalanceData: TablesUpdate<"RFFBalance">,
 ) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const rffBalance = await updateTheRFFBalance(lastVersion, rffBalanceData);
   await sendRFFBalanceUpdatedAdminEmails();
   return rffBalance;
 }
 
 export async function sendReceiptEmail(firstname: string, email: string) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const resend = new Resend(process.env.RESEND_API_KEY);
   await resend.emails.send({
     from: "CARES <info@yolopublicdefendercares.org>",
@@ -174,6 +198,10 @@ export async function sendReceiptEmail(firstname: string, email: string) {
   revalidatePath("/user/requests");
 }
 export async function markRequestAsNeedingReceipt(requestId: number) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   try {
     await requestNeedsReceipt(requestId);
     revalidatePath("/dashboard");
@@ -185,6 +213,10 @@ export async function markRequestAsNeedingReceipt(requestId: number) {
   }
 }
 export async function markRequestAsNotNeedingReceipt(requestId: number) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   try {
     await requestDoesNotNeedReceipt(requestId);
     revalidatePath("/dashboard");
@@ -200,6 +232,10 @@ export async function BanUser(
   firstName: string,
   email: string,
 ): Promise<UserData> {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const resend = new Resend(process.env.RESEND_API_KEY);
   try {
     const response = await banUserById(userId);
@@ -232,6 +268,10 @@ export async function DenyRequest(
   firstName: string,
   email: string,
 ): Promise<boolean> {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const resend = new Resend(process.env.RESEND_API_KEY);
   try {
     const response = await denyRequestById(requestId);
@@ -260,6 +300,10 @@ export async function UpdateFund(
   requestId: number,
   needsReceipt: boolean,
 ): Promise<TablesUpdate<"Fund">> {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const fundData = {
     id: fundId,
     amount: amount,

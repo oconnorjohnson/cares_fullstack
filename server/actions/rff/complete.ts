@@ -16,6 +16,7 @@ import {
   markRequestAsNeedingReceipt,
   markRequestAsNotNeedingReceipt,
 } from "@/server/actions/update/actions";
+import { auth } from "@clerk/nextjs/server";
 
 import type {
   FundDetail,
@@ -76,6 +77,10 @@ export async function completeRequest(
   requestId: number,
   UserId: string,
 ): Promise<boolean> {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   let modifiedFunds: FundDetail[] = [];
   const funds = await GetFundsByRequestId(requestId);
   modifiedFunds = funds
