@@ -11,6 +11,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+
 interface CategoryData {
   category: string;
   preValue: number;
@@ -33,33 +34,33 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
-  const options: AgChartOptions = {
-    data: chartData,
-    series: [
-      {
-        type: "bar",
-        xKey: "category",
-        yKey: "preValue",
-        yName: "Pre-Screen",
-        cornerRadius: 10,
-      },
-      {
-        type: "bar",
-        xKey: "category",
-        yKey: "postValue",
-        yName: "Post-Screen",
-        cornerRadius: 10,
-      },
-    ],
-    axes: [
-      { type: "category", position: "bottom" },
-      {
-        type: "number",
-        position: "left",
-        title: { text: "Average Responses" },
-      },
-    ],
-  };
+  // const options: AgChartOptions = {
+  //   data: chartData,
+  //   series: [
+  //     {
+  //       type: "bar",
+  //       xKey: "category",
+  //       yKey: "preValue",
+  //       yName: "Pre-Screen",
+  //       cornerRadius: 10,
+  //     },
+  //     {
+  //       type: "bar",
+  //       xKey: "category",
+  //       yKey: "postValue",
+  //       yName: "Post-Screen",
+  //       cornerRadius: 10,
+  //     },
+  //   ],
+  //   axes: [
+  //     { type: "category", position: "bottom" },
+  //     {
+  //       type: "number",
+  //       position: "left",
+  //       title: { text: "Average Responses" },
+  //     },
+  //   ],
+  // };
 
   return (
     <Card className="p-8">
@@ -75,8 +76,8 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
       <div style={{ width: "100%", height: "300px" }}>
         <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
           <BarChart accessibilityLayer data={chartData}>
-            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-            <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+            <Bar dataKey="preValue" fill="var(--color-desktop)" radius={4} />
+            <Bar dataKey="postValue" fill="var(--color-mobile)" radius={4} />
           </BarChart>
         </ChartContainer>
         {/* <AgChartsReact options={options} /> */}
