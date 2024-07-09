@@ -21,13 +21,20 @@ import {
   getOperatingBalance,
   getRFFBalance,
   getTransactions,
-  getRFFWalmartCards,
   getRFFArcoCards,
   getAdminEmailPreferenceByUserId,
   getAdminEmailPreferenceById,
   getTomorrowsPickupEvents,
   getTodaysPickupEvents,
   getUserByUserId,
+  getRFFWalmartCards,
+  getNewsCardOne as getNewsCardOneFromSupabase,
+  getNewsCardTwo as getNewsCardTwoFromSupabase,
+  getNewsCardThree as getNewsCardThreeFromSupabase,
+  hasAdminAgreed as hasAdminAgreedFromSupabase,
+  isAdminOneNull as isAdminOneNullFromSupabase,
+  isAdminTwoNull as isAdminTwoNullFromSupabase,
+  isAnyNull as isAnyNullFromSupabase,
 } from "@/server/supabase/functions/read";
 import { Tables } from "@/types_db";
 import { PostgrestError } from "@supabase/supabase-js";
@@ -168,6 +175,78 @@ type AdminEmailPreference = {
   rffBalanceUpdated: boolean;
   pickupEventScheduled: boolean;
 };
+
+export async function isAnyNull(requestId: number) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
+  const isAnyNull = await isAnyNullFromSupabase(requestId);
+  return isAnyNull;
+}
+
+export async function isAdminOneNull(requestId: number) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
+  const isAdminOneNull = await isAdminOneNullFromSupabase(requestId);
+  return isAdminOneNull;
+}
+
+export async function isAdminTwoNull(requestId: number) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
+  const isAdminTwoNull = await isAdminTwoNullFromSupabase(requestId);
+  return isAdminTwoNull;
+}
+
+export async function hasAdminAgreed({
+  requestId,
+  userId,
+}: {
+  requestId: number;
+  userId: string;
+}) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
+  const hasAdminAgreed = await hasAdminAgreedFromSupabase({
+    requestId,
+    userId,
+  });
+  return hasAdminAgreed;
+}
+
+export async function getNewsCardOne() {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
+  const newsCardOne = await getNewsCardOneFromSupabase();
+  return newsCardOne;
+}
+
+export async function getNewsCardTwo() {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
+  const newsCardTwo = await getNewsCardTwoFromSupabase();
+  return newsCardTwo;
+}
+
+export async function getNewsCardThree() {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
+  const newsCardThree = await getNewsCardThreeFromSupabase();
+  return newsCardThree;
+}
 
 export async function getFundsSumByRequestId(
   requestId: number,

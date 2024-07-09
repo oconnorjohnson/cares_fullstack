@@ -14,7 +14,7 @@ import {
   getNewsCardOne,
   getNewsCardTwo,
   getNewsCardThree,
-} from "@/server/supabase/functions/read";
+} from "@/server/actions/request/actions";
 
 export type NewsCard = {
   card_title: string;

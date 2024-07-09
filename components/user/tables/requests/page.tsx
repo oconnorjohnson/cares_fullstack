@@ -10,7 +10,7 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { getPickupEventByRequestId } from "@/server/supabase/functions/read";
+import { getPickupEventByRequestId } from "@/server/actions/create/actions";
 
 type RequestStatus = "Pending" | "Approved" | "Denied" | "Error";
 

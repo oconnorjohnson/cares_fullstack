@@ -16,6 +16,9 @@ import {
   getFundTypeNeedsReceiptById,
   getOperatingBalance,
   getRFFBalance,
+  isUserBanned as isUserBannedFromClerk,
+  getPickupEventByRequestId as getPickupEvents,
+  getAllFuturePickupEvents as getFuturePickups,
 } from "@/server/supabase/functions/read";
 import {
   updateOperatingBalance,
@@ -136,6 +139,33 @@ type DepositData = {
   lastVersion: number;
   userId: string;
 };
+
+export async function getAllFuturePickupEvents() {
+  const { userId: clerkUserId } = auth();
+  if (!clerkUserId) {
+    throw new Error("User not authenticated");
+  }
+  const pickupEvents = await getFuturePickups();
+  return pickupEvents;
+}
+
+export async function isUserBanned(userId: string) {
+  const { userId: clerkUserId } = auth();
+  if (!clerkUserId) {
+    throw new Error("User not authenticated");
+  }
+  const isBanned = await isUserBannedFromClerk(userId);
+  return isBanned;
+}
+
+export async function getPickupEventByRequestId(requestId: number) {
+  const { userId: clerkUserId } = auth();
+  if (!clerkUserId) {
+    throw new Error("User not authenticated");
+  }
+  const pickupEvents = await getPickupEvents(requestId);
+  return pickupEvents;
+}
 
 export async function createNewPickupEvent(
   pickupEventData: TablesInsert<"PickupEvents">,

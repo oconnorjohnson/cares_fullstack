@@ -55,7 +55,7 @@ import {
   getNewsCardOne,
   getNewsCardTwo,
   getNewsCardThree,
-} from "@/server/supabase/functions/read";
+} from "@/server/actions/request/actions";
 import PickupScheduler from "@/components/forms/pickup-scheduler";
 async function fetchNewsCards() {
   const newsCardOne = await getNewsCardOne();

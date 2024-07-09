@@ -10,7 +10,7 @@ import { newRequest } from "@/server/actions/create/actions";
 import { Submitted } from "@/server/actions/resend/actions";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useRouter } from "next/navigation";
-import { isUserBanned } from "@/server/supabase/functions/read";
+import { isUserBanned } from "@/server/actions/create/actions";
 import { LoadingSpinner } from "@/components/admin/request/approve";
 import {
   Dialog,

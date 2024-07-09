@@ -4,7 +4,7 @@ import {
   columns,
 } from "@/components/admin/tables/pickup-events/columns";
 import { DataTable } from "@/components/ui/data-table";
-import { getAllFuturePickupEvents } from "@/server/supabase/functions/read";
+import { getAllFuturePickupEvents } from "@/server/actions/create/actions";
 import { format } from "date-fns";
 import { Card, CardHeader } from "@/components/ui/card";
 

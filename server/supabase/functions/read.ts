@@ -1,6 +1,6 @@
-"use server";
 import { createClient as createSupabaseClient } from "@/server/supabase/server";
 import { Tables } from "@/types_db";
+import { auth } from "@clerk/nextjs/server";
 import type { Request } from "@/server/actions/request/actions";
 type totalValue = {
   id: number;

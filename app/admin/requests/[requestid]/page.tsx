@@ -20,7 +20,7 @@ import DenyButton from "@/components/admin/request/deny";
 import ApproveButton from "@/components/admin/request/approve";
 import AddFundToRequestById from "@/components/admin/request/add-fund";
 import MarkPaidButton from "@/components/admin/request/mark-paid";
-import { isAnyNull } from "@/server/supabase/functions/read";
+import { isAnyNull } from "@/server/actions/request/actions";
 import { format } from "date-fns";
 import type { RequestData } from "@/server/actions/request/actions";
 import {
@@ -37,7 +37,7 @@ import {
   hasAdminAgreed,
   isAdminOneNull,
   isAdminTwoNull,
-} from "@/server/supabase/functions/read";
+} from "@/server/actions/request/actions";
 import RollbackButton from "@/components/admin/request/rollback-button";
 import { getFundsSumByRequestId } from "@/server/actions/request/actions";
 import AgreeButton from "@/components/admin/request/agree-button";
