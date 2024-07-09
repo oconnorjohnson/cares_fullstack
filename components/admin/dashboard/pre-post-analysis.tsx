@@ -87,7 +87,7 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
           <XAxis
             dataKey="category"
             tickLine={false}
-            tickMargin={10}
+            tickMargin={5}
             axisLine={false}
             tickFormatter={(value) => value.slice(0, 3)}
           />
