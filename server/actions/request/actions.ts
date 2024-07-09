@@ -1,5 +1,6 @@
 "use server";
 
+import { auth } from "@clerk/nextjs/server";
 import {
   getClientsByUserId,
   getAdminRequests,
@@ -171,6 +172,10 @@ type AdminEmailPreference = {
 export async function getFundsSumByRequestId(
   requestId: number,
 ): Promise<number> {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const funds = await getFundsByRequestId(requestId);
   let totalValue = 0;
   for (const fund of funds) {
@@ -184,6 +189,10 @@ export async function getFundsSumByRequestId(
 }
 
 export async function getTomorrowsEventsAndFunds() {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   try {
     const events = await getTomorrowsPickupEvents();
     const eventsWithFundsAndUser = await Promise.all(
@@ -203,6 +212,10 @@ export async function getTomorrowsEventsAndFunds() {
 }
 
 export async function getTodaysEventsAndFunds() {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   try {
     const events = await getTodaysPickupEvents();
     const eventsWithFundsAndUser = await Promise.all(
@@ -224,61 +237,109 @@ export async function getTodaysEventsAndFunds() {
 export async function GetAdminEmailPreferenceByUserId(
   userId: string,
 ): Promise<AdminEmailPreference> {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const adminEmailPreference = await getAdminEmailPreferenceByUserId(userId);
   return adminEmailPreference;
 }
 
 export async function GetFundsByRequestId(requestId: number) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const funds = await getFundsByRequestId(requestId);
   return funds;
 }
 
 export async function GetRFFWalmartCards(): Promise<totalValue[]> {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const rffWalmartCards = await getRFFWalmartCards();
   return rffWalmartCards;
 }
 
 export async function GetRFFArcoCards(): Promise<totalValue[]> {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const rffArcoCards = await getRFFArcoCards();
   return rffArcoCards;
 }
 
 export async function requestAllTransactions() {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const requests = await getTransactions();
   return requests;
 }
 
 export async function readOperatingBalance() {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const operatingBalance = await getOperatingBalance();
   return operatingBalance;
 }
 
 export async function readRFFBalance() {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const rffBalance = await getRFFBalance();
   return rffBalance;
 }
 
 export async function giveUserIdGetRequestsNeedingPreScreen(userId: string) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const requests = await getRequestsNeedingPreScreenByUserId(userId);
   return requests;
 }
 
 export async function getClientById(clientId: number) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const client = await getClientByClientId(clientId);
   return client;
 }
 
 export async function giveUserIdGetRequestsNeedingReceipts(userId: string) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const requests = await getRequestsNeedingReceiptsByUserId(userId);
   return requests;
 }
 
 export async function giveUserIdGetRequestsNeedingAgreements(userId: string) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const requests = await getRequestsThatNeedAgreementsByUserId(userId);
   return requests;
 }
 
 export async function giveUserIdGetRequestsNeedingPostScreen(userId: string) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const requests = await getRequestsNeedingPostScreenByUserId(userId);
   return requests;
 }
@@ -289,6 +350,10 @@ export async function requestUsersRequests(userId: string): Promise<
     Client: { clientID: string; sex: string; race: string } | null;
   })[]
 > {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   try {
     const response = await getRequestsByUserId(userId);
     console.log(response);
@@ -306,6 +371,10 @@ export async function requestUsersRequests(userId: string): Promise<
 export async function requestUsersClients(
   userId: string,
 ): Promise<Tables<"Client">[]> {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   try {
     const allUserClients = await getClientsByUserId(userId);
     return allUserClients;
@@ -319,6 +388,10 @@ export async function requestUsersClients(
 }
 
 export async function requestAllFundTypes(): Promise<Tables<"FundType">[]> {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   try {
     const response = await getFundTypes();
 
@@ -330,6 +403,10 @@ export async function requestAllFundTypes(): Promise<Tables<"FundType">[]> {
 }
 
 export async function requestAllRequests(): Promise<Request[]> {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   console.log("requestAllRequests server action running");
   try {
     const response = await getAllRequests();
@@ -349,6 +426,10 @@ export async function requestAllRequests(): Promise<Request[]> {
 export async function getPaidFunds(): Promise<
   (Tables<"Fund"> & { FundType: Tables<"FundType"> })[]
 > {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   try {
     const response = await getFunds(); // Assuming this calls the getFunds function from @read.ts
     if (!response.data) {
@@ -384,6 +465,10 @@ export async function requestRequestByRequestId(requestId: number): Promise<
     Receipt: Tables<"Receipt">;
   }
 > {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   console.log(requestId);
   if (!requestId) {
     throw new Error("Request ID is required.");
@@ -419,16 +504,28 @@ export async function requestRequestByRequestId(requestId: number): Promise<
 }
 
 export async function requestAllAgencies(): Promise<Tables<"Agency">[]> {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const agencies = await getAllAgencies();
   return agencies;
 }
 
 export async function AgencyById(agencyId: number) {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   const agencyName = await getAgencyNameById(agencyId);
   return agencyName;
 }
 
 export async function GetAllUsers() {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
   try {
     const response = await getUsers();
     const users = response.data;
