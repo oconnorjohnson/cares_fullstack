@@ -81,7 +81,7 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
         </CardDescription>
       </CardHeader>
 
-      <ChartContainer config={chartConfig} className="min-h-[100px] w-full">
+      <ChartContainer config={chartConfig} className="w-full">
         <BarChart accessibilityLayer data={chartData}>
           <CartesianGrid vertical={false} />
           <XAxis
