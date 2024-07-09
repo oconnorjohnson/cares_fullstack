@@ -32,11 +32,11 @@ interface PrePostAnalysisProps {
 const chartConfig = {
   preValue: {
     label: "preValue",
-    color: "#2563eb",
+    color: "hsl(var(--chart-1))",
   },
   postValue: {
     label: "postValue",
-    color: "#60a5fa",
+    color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig;
 
@@ -81,7 +81,7 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
         </CardDescription>
       </CardHeader>
 
-      <ChartContainer config={chartConfig} className="h-[200px] w-full">
+      <ChartContainer config={chartConfig} className="h-[200px] w-1/2">
         <BarChart accessibilityLayer data={chartData}>
           <CartesianGrid vertical={false} />
           <XAxis
