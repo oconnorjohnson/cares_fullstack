@@ -3,6 +3,7 @@ import {
   getAllPreScreenAnswers,
   getAllPostScreenAnswers,
 } from "@/server/supabase/functions/read";
+import { auth } from "@clerk/nextjs/server";
 import {
   countTotalRequests,
   countRequestsByAgency,
@@ -25,6 +26,10 @@ interface AgencyData {
 }
 
 export async function getAgencyRequestPercentages(): Promise<AgencyData[]> {
+  const { userId } = auth();
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
   const agencyIds = [1, 3, 4, 5, 6, 7, 8];
   const agencyCounts = await Promise.all(
     agencyIds.map(async (agencyId) => {
@@ -46,6 +51,10 @@ export async function getAgencyRequestPercentages(): Promise<AgencyData[]> {
 }
 
 export async function getPreScreenAverages() {
+  const { userId } = auth();
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
   const preScreenAnswers = await getAllPreScreenAnswers();
   const categories: AnswerCategories = {
     housingSituation: 0,
@@ -83,6 +92,10 @@ export async function getPreScreenAverages() {
 }
 
 export async function getPostScreenAverages() {
+  const { userId } = auth();
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
   const postScreenAnswers = await getAllPostScreenAnswers();
   const categories: AnswerCategories = {
     housingSituation: 0,
