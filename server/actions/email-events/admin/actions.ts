@@ -24,7 +24,7 @@ export async function sendRequestReceivedEmail({
   await resend.emails.send({
     from: "CARES <help@yolopublicdefendercares.org>",
     to: [email],
-    subject: "Your request has been received!",
+    subject: "A new request has been received!",
     react: RequestReceivedTemplate({
       firstName: firstName,
     }) as React.ReactElement,
@@ -42,7 +42,7 @@ export async function sendPostScreenCompletedEmail({
   await resend.emails.send({
     from: "CARES <help@yolopublicdefendercares.org>",
     to: [email],
-    subject: "Post-Screen Completed!",
+    subject: "A new post-screen form has been completed!",
     react: PostScreenCompletedTemplate({
       firstName: firstName,
     }) as React.ReactElement,
@@ -60,7 +60,7 @@ export async function sendReceiptUploadedEmail({
   await resend.emails.send({
     from: "CARES <help@yolopublicdefendercares.org>",
     to: [email],
-    subject: "Receipt Uploaded!",
+    subject: "A new receipt has been uploaded!",
     react: ReceiptUploadedTemplate({
       firstName: firstName,
     }) as React.ReactElement,
@@ -78,7 +78,7 @@ export async function sendAgreementUploadedEmail({
   await resend.emails.send({
     from: "CARES <help@yolopublicdefendercares.org>",
     to: [email],
-    subject: "Agreement Uploaded!",
+    subject: "A new agreement has been uploaded!",
     react: AgreementUploadedTemplate({
       firstName: firstName,
     }) as React.ReactElement,
@@ -96,7 +96,7 @@ export async function sendRFFBalanceUpdatedEmail({
   await resend.emails.send({
     from: "CARES <help@yolopublicdefendercares.org>",
     to: [email],
-    subject: "RFF Balance Updated!",
+    subject: "The RFF balance has been updated!",
     react: RFFBalanceUpdatedTemplate({
       firstName: firstName,
     }) as React.ReactElement,
@@ -114,7 +114,7 @@ export async function sendCARESBalanceUpdatedEmail({
   await resend.emails.send({
     from: "CARES <help@yolopublicdefendercares.org>",
     to: [email],
-    subject: "CARES Balance Updated!",
+    subject: "The CARES balance has been updated!",
     react: CARESBalanceUpdatedTemplate({
       firstName: firstName,
     }) as React.ReactElement,
@@ -132,7 +132,7 @@ export async function sendRFFAssetsAddedEmail({
   await resend.emails.send({
     from: "CARES <help@yolopublicdefendercares.org>",
     to: [email],
-    subject: "RFF Assets Added!",
+    subject: "New RFF assets have been added!",
     react: RFFAssetsAddedTemplate({
       firstName: firstName,
     }) as React.ReactElement,
@@ -150,7 +150,7 @@ export async function sendCARESAssetsAddedEmail({
   await resend.emails.send({
     from: "CARES <help@yolopublicdefendercares.org>",
     to: [email],
-    subject: "CARES Assets Added!",
+    subject: "New CARES assets have been added!",
     react: CARESAssetsAddedTemplate({
       firstName: firstName,
     }) as React.ReactElement,
@@ -168,7 +168,7 @@ export async function sendPickupEventScheduledEmail({
   await resend.emails.send({
     from: "CARES <help@yolopublicdefendercares.org>",
     to: [email],
-    subject: "Pickup Event Scheduled!",
+    subject: "A new pickup event has been scheduled!",
     react: PickupEventScheduledTemplate({
       firstName: firstName,
     }) as React.ReactElement,
