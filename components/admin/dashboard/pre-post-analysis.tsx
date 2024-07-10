@@ -72,10 +72,10 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
               tickFormatter={(value) => value.slice(0, 6)}
             />
 
+            <Tooltip content={<CustomTooltip />} />
             <ChartTooltip
               content={<ChartTooltipContent indicator="dashed" />}
             />
-
             <Bar dataKey="preValue" fill="var(--color-preValue)" radius={4} />
             <Bar dataKey="postValue" fill="var(--color-postValue)" radius={4} />
           </BarChart>
