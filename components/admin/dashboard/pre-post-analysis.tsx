@@ -1,5 +1,4 @@
 "use client";
-
 import {
   ChartConfig,
   ChartContainer,
@@ -9,9 +8,6 @@ import {
   ChartLegendContent,
 } from "@/components/ui/chart";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
-
-import { AgChartsReact } from "ag-charts-react";
-import { AgChartOptions } from "ag-charts-community";
 import {
   Card,
   CardHeader,
@@ -41,34 +37,6 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
-  const options: AgChartOptions = {
-    data: chartData,
-    series: [
-      {
-        type: "bar",
-        xKey: "category",
-        yKey: "preValue",
-        yName: "Pre-Screen",
-        cornerRadius: 10,
-      },
-      {
-        type: "bar",
-        xKey: "category",
-        yKey: "postValue",
-        yName: "Post-Screen",
-        cornerRadius: 10,
-      },
-    ],
-    axes: [
-      { type: "category", position: "bottom" },
-      {
-        type: "number",
-        position: "left",
-        title: { text: "Average Responses" },
-      },
-    ],
-  };
-
   return (
     <Card className="p-8">
       <CardHeader>
@@ -98,7 +66,6 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
           <Bar dataKey="postValue" fill="var(--color-postValue)" radius={4} />
         </BarChart>
       </ChartContainer>
-      {/* <AgChartsReact options={options} /> */}
     </Card>
   );
 }

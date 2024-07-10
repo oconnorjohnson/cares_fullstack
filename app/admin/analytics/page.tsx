@@ -66,9 +66,9 @@ export default async function Analytics() {
         <div className="flex flex-row">
           <SideNavBar />
           <div className="flex border-t flex-col w-5/6">
-            <div className="flex flex-col pb-10 w-full px-10">
+            <div className="flex flex-row pb-10 w-full px-10 ">
               <PrePostAnalysis chartData={prePostChartData} />
-              <div className="py-4" />
+              <div className="px-4" />
               <RequestsByAgency chartData={agencyPercentages} />
             </div>
           </div>

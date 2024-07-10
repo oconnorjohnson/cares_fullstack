@@ -1,4 +1,13 @@
 "use client";
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
+} from "@/components/ui/chart";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { AgChartsReact } from "ag-charts-react";
 import { AgChartOptions } from "ag-charts-community";
 import {
@@ -17,27 +26,34 @@ interface RequestsByAgencyProps {
   chartData: AgencyData[];
 }
 
+const chartConfig = {
+  agencyName: {
+    label: "agencyName",
+    color: "hsl(var(--chart-1))",
+  },
+} satisfies ChartConfig;
+
 export default function RequestsByAgency({ chartData }: RequestsByAgencyProps) {
-  const options: AgChartOptions = {
-    data: chartData,
-    series: [
-      {
-        type: "bar",
-        xKey: "agencyName",
-        yKey: "percentage",
-        yName: "Requests",
-        cornerRadius: 10,
-      },
-    ],
-    axes: [
-      { type: "category", position: "bottom" },
-      {
-        type: "number",
-        position: "left",
-        title: { text: "Requests" },
-      },
-    ],
-  };
+  // const options: AgChartOptions = {
+  //   data: chartData,
+  //   series: [
+  //     {
+  //       type: "bar",
+  //       xKey: "agencyName",
+  //       yKey: "percentage",
+  //       yName: "Requests",
+  //       cornerRadius: 10,
+  //     },
+  //   ],
+  //   axes: [
+  //     { type: "category", position: "bottom" },
+  //     {
+  //       type: "number",
+  //       position: "left",
+  //       title: { text: "Requests" },
+  //     },
+  //   ],
+  // };
 
   return (
     <Card className="w-full h-full py-4">
@@ -47,9 +63,22 @@ export default function RequestsByAgency({ chartData }: RequestsByAgencyProps) {
           This chart shows the percentage of total requests made by each agency.
         </CardDescription>
       </CardHeader>
-      <div style={{ width: "100%", height: "300px" }}>
-        <AgChartsReact options={options} />
-      </div>
+      <ChartContainer config={chartConfig} className="h-[200px] w-full">
+        <BarChart accessibilityLayer data={chartData}>
+          <CartesianGrid vertical={false} />
+          <XAxis
+            dataKey="agencyName"
+            tickLine={false}
+            tickMargin={10}
+            axisLine={false}
+            tickFormatter={(value) => value.slice(0, 6)}
+          />
+          <YAxis domain={[0, "dataMax"]} tick={false} axisLine={false} />
+          <ChartTooltip content={<ChartTooltipContent />} />
+          <ChartLegend content={<ChartLegendContent />} />
+          <Bar dataKey="agencyName" fill="var(--color-preValue)" radius={4} />
+        </BarChart>
+      </ChartContainer>
     </Card>
   );
 }
