@@ -43,7 +43,7 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
   return (
     <Card className="w-1/3 h-[400px] pb-8">
       <CardHeader>
-        <CardTitle>Pre and Post Screen Analysis</CardTitle>
+        <CardTitle>Pre/Post Screen Analysis</CardTitle>
         <CardDescription>Averages per category.</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col justify-end">
