@@ -14,7 +14,9 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
+  CardFooter,
 } from "@/components/ui/card";
+import { TrendingUp } from "lucide-react";
 
 interface CategoryData {
   category: string;
@@ -39,18 +41,13 @@ const chartConfig = {
 
 export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
   return (
-    <Card className="w-1/2 p-4">
+    <Card>
       <CardHeader>
-        <CardTitle>Pre-Screen to Post-Screen Analysis</CardTitle>
-        {/* <CardDescription className="text-md">
-          This chart shows the average number of each category for pre-screen
-          answers and the average number of each category for post-screen
-          answers. Higher values indicate a higher level of stress or difficulty
-          in said category.
-        </CardDescription> */}
+        <CardTitle>Pre and Post Screen Analysis</CardTitle>
+        <CardDescription>Averages per category.</CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col justify-center items-center">
-        <ChartContainer config={chartConfig} className="">
+      <CardContent>
+        <ChartContainer config={chartConfig}>
           <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis
@@ -61,13 +58,23 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
               tickFormatter={(value) => value.slice(0, 6)}
             />
             <YAxis domain={[0, "dataMax"]} tick={false} axisLine={false} />
-            <ChartTooltip content={<ChartTooltipContent />} />
-            <ChartLegend content={<ChartLegendContent />} />
+            <ChartTooltip
+              content={<ChartTooltipContent indicator="dashed" />}
+            />
+
             <Bar dataKey="preValue" fill="var(--color-preValue)" radius={4} />
             <Bar dataKey="postValue" fill="var(--color-postValue)" radius={4} />
           </BarChart>
         </ChartContainer>
       </CardContent>
+      <CardFooter className="flex-col items-start gap-2 text-sm">
+        <div className="flex gap-2 font-medium leading-none">
+          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+        </div>
+        <div className="leading-none text-muted-foreground">
+          Showing total visitors for the last 6 months
+        </div>
+      </CardFooter>
     </Card>
   );
 }

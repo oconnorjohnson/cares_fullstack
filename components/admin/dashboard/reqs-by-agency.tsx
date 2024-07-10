@@ -14,7 +14,9 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
+  CardFooter,
 } from "@/components/ui/card";
+import { TrendingUp } from "lucide-react";
 
 interface AgencyData {
   agencyName: string;
@@ -34,15 +36,13 @@ const chartConfig = {
 
 export default function RequestsByAgency({ chartData }: RequestsByAgencyProps) {
   return (
-    <Card className="w-1/2 p-4">
+    <Card>
       <CardHeader>
-        <CardTitle>Percentage of Total Requests by Agency</CardTitle>
-        {/* <CardDescription className="text-md">
-          This chart shows the percentage of total requests made by each agency.
-        </CardDescription> */}
+        <CardTitle>Requests Per Agency</CardTitle>
+        <CardDescription>Percentage of total requests.</CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col justify-center items-center">
-        <ChartContainer config={chartConfig} className="h-[300px] w-full">
+      <CardContent>
+        <ChartContainer config={chartConfig}>
           <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis
@@ -53,8 +53,10 @@ export default function RequestsByAgency({ chartData }: RequestsByAgencyProps) {
               tickFormatter={(value) => value.slice(0, 6)}
             />
             <YAxis domain={[0, "dataMax"]} tick={false} axisLine={false} />
-            <ChartTooltip content={<ChartTooltipContent />} />
-            <ChartLegend content={<ChartLegendContent />} />
+            <ChartTooltip
+              content={<ChartTooltipContent indicator="dashed" />}
+            />
+
             <Bar
               dataKey="percentage"
               fill="var(--color-agencyName)"
@@ -63,6 +65,14 @@ export default function RequestsByAgency({ chartData }: RequestsByAgencyProps) {
           </BarChart>
         </ChartContainer>
       </CardContent>
+      <CardFooter className="flex-col items-start gap-2 text-sm">
+        <div className="flex gap-2 font-medium leading-none">
+          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+        </div>
+        <div className="leading-none text-muted-foreground">
+          Showing total visitors for the last 6 months
+        </div>
+      </CardFooter>
     </Card>
   );
 }
