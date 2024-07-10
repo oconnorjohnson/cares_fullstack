@@ -84,9 +84,8 @@ export async function getPreScreenAverages() {
   });
   const averages = Object.keys(categories).reduce((acc, key) => {
     acc[key as keyof AnswerCategories] =
-      (categories[key as keyof AnswerCategories] /
-        categoryCounts[key as keyof AnswerCategories]) *
-      100; // Multiply by 100
+      categories[key as keyof AnswerCategories] /
+      categoryCounts[key as keyof AnswerCategories];
     return acc;
   }, {} as AnswerCategories);
   return averages;
@@ -126,9 +125,8 @@ export async function getPostScreenAverages() {
   });
   const averages = Object.keys(categories).reduce((acc, key) => {
     acc[key as keyof AnswerCategories] =
-      (categories[key as keyof AnswerCategories] /
-        categoryCounts[key as keyof AnswerCategories]) *
-      100; // Multiply by 100
+      categories[key as keyof AnswerCategories] /
+      categoryCounts[key as keyof AnswerCategories];
     return acc;
   }, {} as AnswerCategories);
   return averages;

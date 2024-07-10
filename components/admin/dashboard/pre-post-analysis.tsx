@@ -39,20 +39,6 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const CustomTooltip = ({ active, payload }: any) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="grid min-w-[8rem] items-start gap-1.5 rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl">
-        <p className="">{`${payload[0].payload.category}`}</p>
-        <p className="text-muted-foreground">{`Pre-Screen ${(payload[0].value / 100).toFixed(2)}`}</p>
-        <p className="">{`Post-Screen ${(payload[1].value / 100).toFixed(2)}`}</p>
-      </div>
-    );
-  }
-
-  return null;
-};
-
 export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
   return (
     <Card className="w-1/2">
@@ -72,7 +58,6 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
               tickFormatter={(value) => value.slice(0, 6)}
             />
 
-            <Tooltip content={<CustomTooltip />} />
             <ChartTooltip
               content={<ChartTooltipContent indicator="dashed" />}
             />
