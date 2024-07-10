@@ -52,7 +52,7 @@ export default function RequestsByAgency({ chartData }: RequestsByAgencyProps) {
               axisLine={false}
               tickFormatter={(value) => value.slice(0, 6)}
             />
-            <YAxis domain={[0, "dataMax"]} tick={false} axisLine={false} />
+            {/* <YAxis domain={[0, "dataMax"]} tick={false} axisLine={false} /> */}
             <ChartTooltip
               content={<ChartTooltipContent indicator="dashed" />}
             />
