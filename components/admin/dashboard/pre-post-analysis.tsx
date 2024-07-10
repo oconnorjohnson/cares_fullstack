@@ -40,43 +40,34 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const CHART_DATA = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-];
-
 export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
-  // const options: AgChartOptions = {
-  //   data: chartData,
-  //   series: [
-  //     {
-  //       type: "bar",
-  //       xKey: "category",
-  //       yKey: "preValue",
-  //       yName: "Pre-Screen",
-  //       cornerRadius: 10,
-  //     },
-  //     {
-  //       type: "bar",
-  //       xKey: "category",
-  //       yKey: "postValue",
-  //       yName: "Post-Screen",
-  //       cornerRadius: 10,
-  //     },
-  //   ],
-  //   axes: [
-  //     { type: "category", position: "bottom" },
-  //     {
-  //       type: "number",
-  //       position: "left",
-  //       title: { text: "Average Responses" },
-  //     },
-  //   ],
-  // };
+  const options: AgChartOptions = {
+    data: chartData,
+    series: [
+      {
+        type: "bar",
+        xKey: "category",
+        yKey: "preValue",
+        yName: "Pre-Screen",
+        cornerRadius: 10,
+      },
+      {
+        type: "bar",
+        xKey: "category",
+        yKey: "postValue",
+        yName: "Post-Screen",
+        cornerRadius: 10,
+      },
+    ],
+    axes: [
+      { type: "category", position: "bottom" },
+      {
+        type: "number",
+        position: "left",
+        title: { text: "Average Responses" },
+      },
+    ],
+  };
 
   return (
     <Card className="p-8">
@@ -91,10 +82,10 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
       </CardHeader>
 
       <ChartContainer config={chartConfig} className="h-[200px] w-1/2">
-        <BarChart accessibilityLayer data={CHART_DATA}>
+        <BarChart accessibilityLayer data={chartData}>
           <CartesianGrid vertical={false} />
           <XAxis
-            dataKey="month"
+            dataKey="category"
             tickLine={false}
             tickMargin={10}
             axisLine={false}
@@ -102,8 +93,8 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
           />
           <ChartTooltip content={<ChartTooltipContent />} />
           <ChartLegend content={<ChartLegendContent />} />
-          <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-          <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+          <Bar dataKey="preValue" fill="var(--color-preValue)" radius={4} />
+          <Bar dataKey="postValue" fill="var(--color-postValue)" radius={4} />
         </BarChart>
       </ChartContainer>
       {/* <AgChartsReact options={options} /> */}
