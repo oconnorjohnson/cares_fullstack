@@ -7,7 +7,7 @@ import {
   ChartLegend,
   ChartLegendContent,
 } from "@/components/ui/chart";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip } from "recharts";
 import {
   Card,
   CardHeader,
@@ -39,6 +39,20 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
+const CustomTooltip = ({ active, payload }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="custom-tooltip">
+        <p className="label">{`${payload[0].payload.category}`}</p>
+        <p className="intro">{`Pre: ${(payload[0].value / 100).toFixed(2)}`}</p>
+        <p className="intro">{`Post: ${(payload[1].value / 100).toFixed(2)}`}</p>
+      </div>
+    );
+  }
+
+  return null;
+};
+
 export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
   return (
     <Card className="w-1/2">
@@ -57,11 +71,11 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
               axisLine={false}
               tickFormatter={(value) => value.slice(0, 6)}
             />
-            {/* <YAxis domain={[0, "dataMax"]} tick={false} axisLine={false} /> */}
+            <YAxis domain={[0, "dataMax"]} tick={false} axisLine={false} />
+            <Tooltip content={<CustomTooltip />} />
             <ChartTooltip
               content={<ChartTooltipContent indicator="dashed" />}
             />
-
             <Bar dataKey="preValue" fill="var(--color-preValue)" radius={4} />
             <Bar dataKey="postValue" fill="var(--color-postValue)" radius={4} />
           </BarChart>
