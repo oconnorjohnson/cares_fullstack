@@ -40,6 +40,15 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
+const CHART_DATA = [
+  { month: "January", desktop: 186, mobile: 80 },
+  { month: "February", desktop: 305, mobile: 200 },
+  { month: "March", desktop: 237, mobile: 120 },
+  { month: "April", desktop: 73, mobile: 190 },
+  { month: "May", desktop: 209, mobile: 130 },
+  { month: "June", desktop: 214, mobile: 140 },
+];
+
 export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
   // const options: AgChartOptions = {
   //   data: chartData,
@@ -82,14 +91,14 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
       </CardHeader>
 
       <ChartContainer config={chartConfig} className="h-[200px] w-1/2">
-        <BarChart accessibilityLayer data={chartData}>
+        <BarChart accessibilityLayer data={CHART_DATA}>
           <CartesianGrid vertical={false} />
           <XAxis
             dataKey="category"
             tickLine={false}
-            tickMargin={5}
+            tickMargin={10}
             axisLine={false}
-            tickFormatter={(value) => value.slice(0, 3)}
+            tickFormatter={(value) => value.slice(0, 10)}
           />
           <ChartTooltip content={<ChartTooltipContent />} />
           <ChartLegend content={<ChartLegendContent />} />
