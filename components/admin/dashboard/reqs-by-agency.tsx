@@ -52,9 +52,7 @@ export default function RequestsByAgency({ chartData }: RequestsByAgencyProps) {
               axisLine={false}
               tickFormatter={(value) => value.slice(0, 6)}
             />
-            <ChartTooltip
-              content={<ChartTooltipContent indicator="dashed" />}
-            />
+            <ChartTooltip content={<ChartTooltipContent hideIndicator />} />
 
             <Bar
               dataKey="percentage"
