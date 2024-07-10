@@ -14,8 +14,6 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { TrendingUp } from "lucide-react";
-
 interface AgencyData {
   agencyName: string;
   percentage: number;
