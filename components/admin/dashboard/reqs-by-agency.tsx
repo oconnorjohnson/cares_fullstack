@@ -42,7 +42,7 @@ export default function RequestsByAgency({ chartData }: RequestsByAgencyProps) {
         </CardDescription> */}
       </CardHeader>
       <CardContent className="flex flex-col justify-center items-center">
-        <ChartContainer config={chartConfig} className="h-[200px] w-full">
+        <ChartContainer config={chartConfig} className="">
           <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis
