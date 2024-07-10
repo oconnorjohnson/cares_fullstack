@@ -13,6 +13,7 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
+  CardContent,
 } from "@/components/ui/card";
 
 interface AgencyData {
@@ -40,22 +41,28 @@ export default function RequestsByAgency({ chartData }: RequestsByAgencyProps) {
           This chart shows the percentage of total requests made by each agency.
         </CardDescription>
       </CardHeader>
-      <ChartContainer config={chartConfig} className="h-[200px] w-full">
-        <BarChart accessibilityLayer data={chartData}>
-          <CartesianGrid vertical={false} />
-          <XAxis
-            dataKey="agencyName"
-            tickLine={false}
-            tickMargin={10}
-            axisLine={false}
-            tickFormatter={(value) => value.slice(0, 6)}
-          />
-          <YAxis domain={[0, "dataMax"]} tick={false} axisLine={false} />
-          <ChartTooltip content={<ChartTooltipContent />} />
-          <ChartLegend content={<ChartLegendContent />} />
-          <Bar dataKey="percentage" fill="var(--color-preValue)" radius={4} />
-        </BarChart>
-      </ChartContainer>
+      <CardContent>
+        <ChartContainer config={chartConfig} className="h-[200px] w-full">
+          <BarChart accessibilityLayer data={chartData}>
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="agencyName"
+              tickLine={false}
+              tickMargin={10}
+              axisLine={false}
+              tickFormatter={(value) => value.slice(0, 6)}
+            />
+            <YAxis domain={[0, "dataMax"]} tick={false} axisLine={false} />
+            <ChartTooltip content={<ChartTooltipContent />} />
+            <ChartLegend content={<ChartLegendContent />} />
+            <Bar
+              dataKey="percentage"
+              fill="var(--color-agencyName)"
+              radius={4}
+            />
+          </BarChart>
+        </ChartContainer>
+      </CardContent>
     </Card>
   );
 }
