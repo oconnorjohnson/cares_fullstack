@@ -37,11 +37,11 @@ export default function RequestsByAgency({ chartData }: RequestsByAgencyProps) {
     <Card className="w-1/2 p-4">
       <CardHeader>
         <CardTitle>Percentage of Total Requests by Agency</CardTitle>
-        <CardDescription className="text-md">
+        {/* <CardDescription className="text-md">
           This chart shows the percentage of total requests made by each agency.
-        </CardDescription>
+        </CardDescription> */}
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex flex-col justify-center items-center">
         <ChartContainer config={chartConfig} className="h-[200px] w-full">
           <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
