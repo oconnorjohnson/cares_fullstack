@@ -8,7 +8,7 @@ import {
   ChartLegend,
   ChartLegendContent,
 } from "@/components/ui/chart";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 import { AgChartsReact } from "ag-charts-react";
 import { AgChartOptions } from "ag-charts-community";
@@ -91,6 +91,7 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
             axisLine={false}
             tickFormatter={(value) => value.slice(0, 10)}
           />
+          <YAxis domain={[0, "dataMax"]} />
           <ChartTooltip content={<ChartTooltipContent />} />
           <ChartLegend content={<ChartLegendContent />} />
           <Bar dataKey="preValue" fill="var(--color-preValue)" radius={4} />
