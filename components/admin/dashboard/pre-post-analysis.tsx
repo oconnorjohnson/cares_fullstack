@@ -81,7 +81,7 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
         </CardDescription>
       </CardHeader>
 
-      <ChartContainer config={chartConfig} className="h-[200px] w-1/2">
+      <ChartContainer config={chartConfig} className="h-[200px] w-full">
         <BarChart accessibilityLayer data={chartData}>
           <CartesianGrid vertical={false} />
           <XAxis
@@ -89,9 +89,9 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
             tickLine={false}
             tickMargin={10}
             axisLine={false}
-            tickFormatter={(value) => value.slice(0, 10)}
+            tickFormatter={(value) => value.slice(0, 6)}
           />
-          <YAxis domain={[0, "dataMax"]} />
+          <YAxis domain={[0, "dataMax"]} tick={false} axisLine={false} />
           <ChartTooltip content={<ChartTooltipContent />} />
           <ChartLegend content={<ChartLegendContent />} />
           <Bar dataKey="preValue" fill="var(--color-preValue)" radius={4} />
