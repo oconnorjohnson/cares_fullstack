@@ -70,6 +70,8 @@ export default async function Analytics() {
               <PrePostAnalysis chartData={prePostChartData} />
               <div className="px-4" />
               <RequestsByAgency chartData={agencyPercentages} />
+              <div className="px-4" />
+              <PrePostAnalysis chartData={prePostChartData} />
             </div>
           </div>
         </div>

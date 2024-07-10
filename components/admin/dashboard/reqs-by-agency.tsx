@@ -36,7 +36,7 @@ const chartConfig = {
 
 export default function RequestsByAgency({ chartData }: RequestsByAgencyProps) {
   return (
-    <Card className="w-1/2 h-[400px]">
+    <Card className="w-1/3 h-[400px] pb-8">
       <CardHeader>
         <CardTitle>Requests Per Agency</CardTitle>
         <CardDescription>Percentage of total requests.</CardDescription>
