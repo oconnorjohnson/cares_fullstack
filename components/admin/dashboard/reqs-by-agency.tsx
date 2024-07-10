@@ -8,8 +8,6 @@ import {
   ChartLegendContent,
 } from "@/components/ui/chart";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
-import { AgChartsReact } from "ag-charts-react";
-import { AgChartOptions } from "ag-charts-community";
 import {
   Card,
   CardHeader,
@@ -34,29 +32,8 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export default function RequestsByAgency({ chartData }: RequestsByAgencyProps) {
-  // const options: AgChartOptions = {
-  //   data: chartData,
-  //   series: [
-  //     {
-  //       type: "bar",
-  //       xKey: "agencyName",
-  //       yKey: "percentage",
-  //       yName: "Requests",
-  //       cornerRadius: 10,
-  //     },
-  //   ],
-  //   axes: [
-  //     { type: "category", position: "bottom" },
-  //     {
-  //       type: "number",
-  //       position: "left",
-  //       title: { text: "Requests" },
-  //     },
-  //   ],
-  // };
-
   return (
-    <Card className="w-full h-full py-4">
+    <Card className="w-1/2 p-4">
       <CardHeader>
         <CardTitle>Percentage of Total Requests by Agency</CardTitle>
         <CardDescription className="text-md">
@@ -76,7 +53,7 @@ export default function RequestsByAgency({ chartData }: RequestsByAgencyProps) {
           <YAxis domain={[0, "dataMax"]} tick={false} axisLine={false} />
           <ChartTooltip content={<ChartTooltipContent />} />
           <ChartLegend content={<ChartLegendContent />} />
-          <Bar dataKey="agencyName" fill="var(--color-preValue)" radius={4} />
+          <Bar dataKey="percentage" fill="var(--color-preValue)" radius={4} />
         </BarChart>
       </ChartContainer>
     </Card>

@@ -38,7 +38,7 @@ const chartConfig = {
 
 export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
   return (
-    <Card className="p-8">
+    <Card className="w-1/2 p-4">
       <CardHeader>
         <CardTitle>Pre-Screen to Post-Screen Analysis</CardTitle>
         <CardDescription className="text-md">
