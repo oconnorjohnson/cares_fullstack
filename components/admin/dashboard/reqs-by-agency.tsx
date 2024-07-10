@@ -36,12 +36,12 @@ const chartConfig = {
 
 export default function RequestsByAgency({ chartData }: RequestsByAgencyProps) {
   return (
-    <Card>
+    <Card className="w-1/2">
       <CardHeader>
         <CardTitle>Requests Per Agency</CardTitle>
         <CardDescription>Percentage of total requests.</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-4">
         <ChartContainer config={chartConfig}>
           <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
