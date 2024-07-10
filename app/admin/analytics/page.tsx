@@ -7,6 +7,7 @@ import {
   getPostScreenAverages,
   getAgencyRequestPercentages,
 } from "@/server/actions/calculations/actions";
+import { CountRequestsCompleted } from "@/server/actions/count/actions";
 import type { AnswerCategories } from "@/server/actions/calculations/actions";
 function getCategoryValue(
   prePostCategories: keyof AnswerCategories,
@@ -37,6 +38,7 @@ function convertAgencyData(agencyData: AgencyPercentageData[]) {
 export default async function Analytics() {
   const { sessionClaims } = auth();
   const isAdmin = (sessionClaims?.publicMetadata as any)?.admin;
+  const totalRequests = await CountRequestsCompleted();
   const preAnswers: AnswerCategories = await getPreScreenAverages();
   const postAnswers: AnswerCategories = await getPostScreenAverages();
   const prePostCategories: (keyof AnswerCategories)[] = [
@@ -69,14 +71,20 @@ export default async function Analytics() {
             <div className="flex flex-row py-10 w-full px-10 ">
               <PrePostAnalysis chartData={prePostChartData} />
               <div className="px-4" />
-              <RequestsByAgency chartData={agencyPercentages} />
+              <RequestsByAgency
+                totalRequests={totalRequests!}
+                chartData={agencyPercentages}
+              />
               <div className="px-4" />
               <PrePostAnalysis chartData={prePostChartData} />
             </div>
             <div className="flex flex-row pb-10 w-full px-10 ">
               <PrePostAnalysis chartData={prePostChartData} />
               <div className="px-4" />
-              <RequestsByAgency chartData={agencyPercentages} />
+              <RequestsByAgency
+                totalRequests={totalRequests!}
+                chartData={agencyPercentages}
+              />
               <div className="px-4" />
               <PrePostAnalysis chartData={prePostChartData} />
             </div>

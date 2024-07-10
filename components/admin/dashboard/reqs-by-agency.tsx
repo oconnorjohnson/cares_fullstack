@@ -21,6 +21,7 @@ interface AgencyData {
 
 interface RequestsByAgencyProps {
   chartData: AgencyData[];
+  totalRequests: number;
 }
 
 const chartConfig = {
@@ -30,7 +31,10 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export default function RequestsByAgency({ chartData }: RequestsByAgencyProps) {
+export default function RequestsByAgency({
+  chartData,
+  totalRequests,
+}: RequestsByAgencyProps) {
   return (
     <Card className="w-1/3 h-[400px] pb-8">
       <CardHeader>
