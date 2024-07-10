@@ -52,7 +52,6 @@ export default function RequestsByAgency({ chartData }: RequestsByAgencyProps) {
               axisLine={false}
               tickFormatter={(value) => value.slice(0, 6)}
             />
-            {/* <YAxis domain={[0, "dataMax"]} tick={false} axisLine={false} /> */}
             <ChartTooltip
               content={<ChartTooltipContent indicator="dashed" />}
             />
@@ -65,14 +64,14 @@ export default function RequestsByAgency({ chartData }: RequestsByAgencyProps) {
           </BarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col items-start gap-2 text-sm">
+      {/* <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
           Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
           Showing total visitors for the last 6 months
         </div>
-      </CardFooter>
+      </CardFooter> */}
     </Card>
   );
 }
