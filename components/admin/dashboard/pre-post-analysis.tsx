@@ -46,7 +46,7 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
         <CardTitle>Pre and Post Screen Analysis</CardTitle>
         <CardDescription>Averages per category.</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex flex-col justify-end">
         <ChartContainer config={chartConfig}>
           <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
