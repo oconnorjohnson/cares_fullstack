@@ -94,7 +94,7 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
         <BarChart accessibilityLayer data={CHART_DATA}>
           <CartesianGrid vertical={false} />
           <XAxis
-            dataKey="category"
+            dataKey="month"
             tickLine={false}
             tickMargin={10}
             axisLine={false}
@@ -102,8 +102,8 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
           />
           <ChartTooltip content={<ChartTooltipContent />} />
           <ChartLegend content={<ChartLegendContent />} />
-          <Bar dataKey="preValue" fill="var(--color-preValue)" radius={4} />
-          <Bar dataKey="postValue" fill="var(--color-postValue)" radius={4} />
+          <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
+          <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
         </BarChart>
       </ChartContainer>
       {/* <AgChartsReact options={options} /> */}
