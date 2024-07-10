@@ -41,7 +41,7 @@ const chartConfig = {
 
 export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
   return (
-    <Card className="w-1/2">
+    <Card className="w-1/2 h-[400px]">
       <CardHeader>
         <CardTitle>Pre and Post Screen Analysis</CardTitle>
         <CardDescription>Averages per category.</CardDescription>
