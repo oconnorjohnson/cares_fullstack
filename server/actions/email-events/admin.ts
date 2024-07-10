@@ -24,10 +24,10 @@ import {
 import { auth } from "@clerk/nextjs";
 
 export async function sendNewRequestAdminEmails() {
-  const { userId: clerkuserId } = auth();
-  if (!clerkuserId) {
-    throw new Error("User not authenticated");
-  }
+  // const { userId: clerkuserId } = auth();
+  // if (!clerkuserId) {
+  //   throw new Error("User not authenticated");
+  // }
   console.log("sending new request admin emails from admin.ts");
   const adminWithRequestReceivedPreference =
     await getAdminWithRequestReceivedPreference();
@@ -55,10 +55,10 @@ export async function sendNewRequestAdminEmails() {
 }
 
 export async function sendNewPostScreenAdminEmails() {
-  const { userId: clerkuserId } = auth();
-  if (!clerkuserId) {
-    throw new Error("User not authenticated");
-  }
+  // const { userId: clerkuserId } = auth();
+  // if (!clerkuserId) {
+  //   throw new Error("User not authenticated");
+  // }
   const adminWithPostScreenPreference =
     await getAdminWithPostScreenPreference();
   await Promise.all(
@@ -80,10 +80,10 @@ export async function sendNewPostScreenAdminEmails() {
 }
 
 export async function sendReceiptUploadedAdminEmails() {
-  const { userId: clerkuserId } = auth();
-  if (!clerkuserId) {
-    throw new Error("User not authenticated");
-  }
+  // const { userId: clerkuserId } = auth();
+  // if (!clerkuserId) {
+  //   throw new Error("User not authenticated");
+  // }
   const adminWithReceiptUploadedPreference =
     await getAdminWithReceiptUploadedPreference();
   await Promise.all(
@@ -105,10 +105,10 @@ export async function sendReceiptUploadedAdminEmails() {
 }
 
 export async function sendAgreementUploadedAdminEmails() {
-  const { userId: clerkuserId } = auth();
-  if (!clerkuserId) {
-    throw new Error("User not authenticated");
-  }
+  // const { userId: clerkuserId } = auth();
+  // if (!clerkuserId) {
+  //   throw new Error("User not authenticated");
+  // }
   const adminWithAgreementUploadedPreference =
     await getAdminWithAgreementUploadedPreference();
   await Promise.all(
@@ -130,10 +130,10 @@ export async function sendAgreementUploadedAdminEmails() {
 }
 
 export async function sendRFFBalanceUpdatedAdminEmails() {
-  const { userId: clerkuserId } = auth();
-  if (!clerkuserId) {
-    throw new Error("User not authenticated");
-  }
+  // const { userId: clerkuserId } = auth();
+  // if (!clerkuserId) {
+  //   throw new Error("User not authenticated");
+  // }
   const adminWithRFFBalanceUpdatedPreference =
     await getAdminWithRFFBalanceUpdatedPreference();
   await Promise.all(
@@ -155,10 +155,10 @@ export async function sendRFFBalanceUpdatedAdminEmails() {
 }
 
 export async function sendCARESBalanceUpdatedAdminEmails() {
-  const { userId: clerkuserId } = auth();
-  if (!clerkuserId) {
-    throw new Error("User not authenticated");
-  }
+  // const { userId: clerkuserId } = auth();
+  // if (!clerkuserId) {
+  //   throw new Error("User not authenticated");
+  // }
   const adminWithCaresBalanceUpdatedPreference =
     await getAdminWithCaresBalanceUpdatedPreference();
   await Promise.all(
@@ -183,10 +183,10 @@ export async function sendCARESBalanceUpdatedAdminEmails() {
 }
 
 export async function sendRFFAssetsAddedAdminEmails() {
-  const { userId: clerkuserId } = auth();
-  if (!clerkuserId) {
-    throw new Error("User not authenticated");
-  }
+  // const { userId: clerkuserId } = auth();
+  // if (!clerkuserId) {
+  //   throw new Error("User not authenticated");
+  // }
   const adminWithRffAssetsAddedPreference =
     await getAdminWithRffAssetsAddedPreference();
   await Promise.all(
@@ -208,10 +208,10 @@ export async function sendRFFAssetsAddedAdminEmails() {
 }
 
 export async function sendCARESAssetsAddedAdminEmails() {
-  const { userId: clerkuserId } = auth();
-  if (!clerkuserId) {
-    throw new Error("User not authenticated");
-  }
+  // const { userId: clerkuserId } = auth();
+  // if (!clerkuserId) {
+  //   throw new Error("User not authenticated");
+  // }
   const adminWithCaresAssetsAddedPreference =
     await getAdminWithCaresAssetsAddedPreference();
   await Promise.all(
@@ -233,10 +233,10 @@ export async function sendCARESAssetsAddedAdminEmails() {
 }
 
 export async function sendPickupEventScheduledAdminEmails() {
-  const { userId: clerkuserId } = auth();
-  if (!clerkuserId) {
-    throw new Error("User not authenticated");
-  }
+  // const { userId: clerkuserId } = auth();
+  // if (!clerkuserId) {
+  //   throw new Error("User not authenticated");
+  // }
   console.log("sending pickup event scheduled admin emails from admin.ts");
   const adminWithPickupEventScheduledPreference =
     await getAdminWithPickupEventScheduledPreference();

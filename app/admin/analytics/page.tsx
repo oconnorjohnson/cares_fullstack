@@ -73,7 +73,7 @@ export default async function Analytics() {
               <div className="px-4" />
               <PrePostAnalysis chartData={prePostChartData} />
             </div>
-            <div className="flex flex-row py-10 w-full px-10 ">
+            <div className="flex flex-row pb-10 w-full px-10 ">
               <PrePostAnalysis chartData={prePostChartData} />
               <div className="px-4" />
               <RequestsByAgency chartData={agencyPercentages} />
