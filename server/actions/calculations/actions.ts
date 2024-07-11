@@ -22,6 +22,11 @@ export type AnswerCategories = {
 };
 
 interface AgencyData {
+  agencyId: bigint;
+  percentage: number;
+}
+
+interface AgencyDatas {
   agencyId: number;
   percentage: number;
 }
@@ -35,7 +40,7 @@ export async function GetPercentageOfRequestsByAgency(): Promise<AgencyData[]> {
   return percentages;
 }
 
-export async function getAgencyRequestPercentages(): Promise<AgencyData[]> {
+export async function getAgencyRequestPercentages(): Promise<AgencyDatas[]> {
   const { userId } = auth();
   if (!userId) {
     throw new Error("User not authenticated");

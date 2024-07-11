@@ -17,7 +17,7 @@ type RequestByAgency = {
 };
 
 export async function getPercentageOfRequestsByAgency(): Promise<
-  { agencyId: number; percentage: number }[]
+  { agencyId: bigint; percentage: number }[]
 > {
   const supabase = createSupabaseClient();
   try {
@@ -34,9 +34,8 @@ export async function getPercentageOfRequestsByAgency(): Promise<
 
     // Call the stored procedure to get requests grouped by agencyId
     const { data: requestsByAgencyData, error: requestsByAgencyError } =
-      await supabase
-        // @ts-ignore
-        .rpc("get_requests_by_agency", {});
+      // @ts-ignore
+      await supabase.rpc("get_requests_by_agency", {});
 
     if (requestsByAgencyError) {
       console.error(
