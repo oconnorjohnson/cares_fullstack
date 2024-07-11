@@ -53,6 +53,18 @@ const chartConfig = {
     label: "Other",
     color: "hsl(var(--chart-4))",
   },
+  AIC: {
+    label: "AIC",
+    color: "hsl(var(--chart-5))",
+  },
+  "District Attorney": {
+    label: "District Attorney",
+    color: "hsl(var(--chart-2))",
+  },
+  "Conflict Panel": {
+    label: "Conflict Panel",
+    color: "hsl(var(--chart-4))",
+  },
 } satisfies ChartConfig;
 
 export default function RequestsByAgency({
