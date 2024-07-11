@@ -28,18 +28,33 @@ interface PrePostAnalysisProps {
   chartData: CategoryData[];
 }
 
+const categoryMapping: Record<string, string> = {
+  housingSituation: "Housing Situation",
+  housingQuality: "Housing Quality",
+  utilityStress: "Utility Stress",
+  foodInsecurityStress: "Food Insecurity Stress",
+  foodMoneyStress: "Food Money Stress",
+  transpoConfidence: "Transportation Confidence",
+  transpoStress: "Transportation Stress",
+  financialDifficulties: "Financial Difficulties",
+};
+
 const chartConfig = {
   preValue: {
-    label: "preValue",
+    label: "Average Pre-Screen Answer",
     color: "hsl(var(--chart-1))",
   },
   postValue: {
-    label: "postValue",
+    label: "Average Post-Screen Answer",
     color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig;
 
 export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
+  const transformedChartData = chartData.map((data) => ({
+    ...data,
+    category: categoryMapping[data.category] || data.category,
+  }));
   return (
     <Card className="w-1/3 h-[400px] pb-8">
       <CardHeader>
@@ -48,7 +63,7 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
       </CardHeader>
       <CardContent className="flex flex-col justify-end">
         <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData}>
+          <BarChart accessibilityLayer data={transformedChartData}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="category"
