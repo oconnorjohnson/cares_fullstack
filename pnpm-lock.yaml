@@ -116,6 +116,9 @@ dependencies:
   "@uploadthing/react":
     specifier: ^6.2.1
     version: 6.4.1(next@14.2.0-canary.56)(react@18.2.0)(uploadthing@6.7.0)
+  "@vercel/speed-insights":
+    specifier: ^1.0.12
+    version: 1.0.12(next@14.2.0-canary.56)(react@18.2.0)
   ag-charts-community:
     specifier: ^9.2.0
     version: 9.2.0
@@ -4508,6 +4511,37 @@ packages:
     dependencies:
       "@uploadthing/mime-types": 0.2.6
       std-env: 3.7.0
+    dev: false
+
+  /@vercel/speed-insights@1.0.12(next@14.2.0-canary.56)(react@18.2.0):
+    resolution:
+      {
+        integrity: sha512-ZGQ+a7bcfWJD2VYEp2R1LHvRAMyyaFBYytZXsfnbOMkeOvzGNVxUL7aVUvisIrTZjXTSsxG45DKX7yiw6nq2Jw==,
+      }
+    requiresBuild: true
+    peerDependencies:
+      "@sveltejs/kit": ^1 || ^2
+      next: ">= 13"
+      react: ^18 || ^19
+      svelte: ^4
+      vue: ^3
+      vue-router: ^4
+    peerDependenciesMeta:
+      "@sveltejs/kit":
+        optional: true
+      next:
+        optional: true
+      react:
+        optional: true
+      svelte:
+        optional: true
+      vue:
+        optional: true
+      vue-router:
+        optional: true
+    dependencies:
+      next: 14.2.0-canary.56(react-dom@18.2.0)(react@18.2.0)
+      react: 18.2.0
     dev: false
 
   /@webassemblyjs/ast@1.12.1:

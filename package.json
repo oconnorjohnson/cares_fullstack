@@ -47,6 +47,7 @@
     "@trpc/react-query": "10.45.0",
     "@trpc/server": "10.45.0",
     "@uploadthing/react": "^6.2.1",
+    "@vercel/speed-insights": "^1.0.12",
     "ag-charts-community": "^9.2.0",
     "ag-charts-react": "^9.2.0",
     "class-variance-authority": "^0.7.0",

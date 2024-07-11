@@ -10,6 +10,7 @@ import NavBar from "@/components/root/navbar";
 import { Toaster } from "@/components/ui/sonner";
 import { ourFileRouter } from "@/app/api/uploadthing/core";
 import { CSPostHogProvider } from "@/app/_trpc/Provider";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -41,6 +42,7 @@ export default function RootLayout({
                 <main>
                   <NavBar />
                   {children}
+                  <SpeedInsights />
                 </main>
                 <Toaster />
               </Providers>
