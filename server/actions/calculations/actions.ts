@@ -22,7 +22,7 @@ export type AnswerCategories = {
 };
 
 interface AgencyData {
-  agencyId: bigint;
+  agencyId: number;
   percentage: number;
 }
 

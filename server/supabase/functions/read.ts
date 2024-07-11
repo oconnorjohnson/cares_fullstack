@@ -17,45 +17,46 @@ type RequestByAgency = {
 };
 
 export async function getPercentageOfRequestsByAgency(): Promise<
-  { agencyId: bigint; percentage: number }[]
+  { agencyId: number; percentage: number }[]
 > {
   const supabase = createSupabaseClient();
   try {
-    // Get the total number of requests
-    const { data: totalRequestsData, error: totalRequestsError } =
-      await supabase.from("Request").select("id", { count: "exact" });
+    // Fetch all requests
+    const { data: requestsData, error: requestsError } = await supabase
+      .from("Request")
+      .select("agencyId");
 
-    if (totalRequestsError) {
-      console.error("Error fetching total requests:", totalRequestsError);
-      throw totalRequestsError;
+    if (requestsError) {
+      console.error("Error fetching requests:", requestsError);
+      throw requestsError;
     }
 
-    const totalRequests = totalRequestsData.length;
-
-    // Call the stored procedure to get requests grouped by agencyId
-    const { data: requestsByAgencyData, error: requestsByAgencyError } =
-      // @ts-ignore
-      await supabase.rpc("get_requests_by_agency", {});
-
-    if (requestsByAgencyError) {
-      console.error(
-        "Error fetching requests by agency:",
-        requestsByAgencyError,
-      );
-      throw requestsByAgencyError;
+    if (!requestsData) {
+      throw new Error("No data returned from Request table");
     }
 
-    // Ensure requestsByAgencyData is not null or undefined
-    if (!requestsByAgencyData) {
-      throw new Error("No data returned from get_requests_by_agency");
-    }
+    const totalRequests = requestsData.length;
+
+    // Group and count requests by agencyId
+    const requestsByAgency = requestsData.reduce(
+      (acc: Record<number, number>, request: { agencyId: number }) => {
+        if (acc[request.agencyId]) {
+          acc[request.agencyId]++;
+        } else {
+          acc[request.agencyId] = 1;
+        }
+        return acc;
+      },
+      {},
+    );
 
     // Calculate the percentage of total requests for each agency
-    // @ts-ignore
-    const result = requestsByAgencyData.map((item: RequestByAgency) => ({
-      agencyId: item.agencyId,
-      percentage: (item.count / totalRequests) * 100,
-    }));
+    const result = Object.entries(requestsByAgency).map(
+      ([agencyId, count]) => ({
+        agencyId: Number(agencyId),
+        percentage: (count / totalRequests) * 100,
+      }),
+    );
 
     return result;
   } catch (error) {
