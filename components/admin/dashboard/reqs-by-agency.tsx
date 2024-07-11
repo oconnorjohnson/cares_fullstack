@@ -37,6 +37,9 @@ const chartConfig = {
   totalRequests: {
     label: "Total Requests",
   },
+  toolLabel: {
+    label: "% of Total Requests",
+  },
   "Public Defender": {
     label: "Public Defender",
     color: "hsl(var(--chart-1))",
@@ -88,7 +91,9 @@ export default function RequestsByAgency({
           <PieChart>
             <ChartTooltip
               cursor={false}
-              content={<ChartTooltipContent label="% of total requests" />}
+              content={
+                <ChartTooltipContent labelKey="toolLabel" indicator="dashed" />
+              }
             />
             <Pie
               data={dataWithColors}
