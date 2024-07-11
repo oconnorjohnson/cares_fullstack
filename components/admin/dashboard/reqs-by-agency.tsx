@@ -79,7 +79,7 @@ export default function RequestsByAgency({
               content={<ChartTooltipContent hideLabel />}
             />
             <Pie
-              data={chartData}
+              data={dataWithColors}
               dataKey="percentage"
               nameKey="agencyName"
               innerRadius={60}
@@ -107,7 +107,7 @@ export default function RequestsByAgency({
                           y={(viewBox.cy || 0) + 24}
                           className="fill-muted-foreground"
                         >
-                          Total Requests Fulfilled
+                          Total Requests
                         </tspan>
                       </text>
                     );
