@@ -88,7 +88,7 @@ export default function RequestsByAgency({
           <PieChart>
             <ChartTooltip
               cursor={false}
-              content={<ChartTooltipContent hideLabel />}
+              content={<ChartTooltipContent label="% of total requests" />}
             />
             <Pie
               data={dataWithColors}
