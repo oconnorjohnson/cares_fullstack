@@ -8,7 +8,7 @@
 - [ ] Requests submitted per week per agency (multi area chart)
 - [ ] pre/post question category by change in avg (radar chart multiple)
 
-## % of Total Requests by Agency - pie chart
+## % of Total Requests Containing Each Asset Type Agency - pie chart
 
 1. Database Query: Group requests by agencyId and count the number of requests for each agency.
 2. Mapping: Calculate the percentage of total requests for each agency by dividing the count of requests for each agency by the total number of requests.

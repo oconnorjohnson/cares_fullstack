@@ -54,7 +54,7 @@ export async function getPercentageOfRequestsByAgency(): Promise<
     const result = Object.entries(requestsByAgency).map(
       ([agencyId, count]) => ({
         agencyId: Number(agencyId),
-        percentage: (count / totalRequests) * 100,
+        percentage: parseFloat(((count / totalRequests) * 100).toFixed(2)),
       }),
     );
 
