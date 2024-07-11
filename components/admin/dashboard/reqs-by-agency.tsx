@@ -14,6 +14,7 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
+import { Label, Pie, PieChart } from "recharts";
 interface AgencyData {
   agencyName: string;
   percentage: number;
@@ -24,10 +25,32 @@ interface RequestsByAgencyProps {
   totalRequests: number;
 }
 
+// const chartConfig = {
+//   agencyName: {
+//     label: "agencyName",
+//     color: "hsl(var(--chart-1))",
+//   },
+// } satisfies ChartConfig;
+
 const chartConfig = {
-  agencyName: {
-    label: "agencyName",
+  totalRequests: {
+    label: "Total Requests",
+  },
+  publicDefender: {
+    label: "Public Defender",
     color: "hsl(var(--chart-1))",
+  },
+  probation: {
+    label: "Probation",
+    color: "hsl(var(--chart-2))",
+  },
+  rjp: {
+    label: "RJP",
+    color: "hsl(var(--chart-3))",
+  },
+  other: {
+    label: "Other",
+    color: "hsl(var(--chart-4))",
   },
 } satisfies ChartConfig;
 
@@ -43,7 +66,51 @@ export default function RequestsByAgency({
       </CardHeader>
       <CardContent className="flex flex-col justify-end">
         <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData}>
+          <PieChart>
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent hideLabel />}
+            />
+            <Pie
+              data={chartData}
+              dataKey="percentage"
+              nameKey="agencyName"
+              innerRadius={60}
+              strokeWidth={5}
+            >
+              <Label
+                content={({ viewBox }) => {
+                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                    return (
+                      <text
+                        x={viewBox.cx}
+                        y={viewBox.cy}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                      >
+                        <tspan
+                          x={viewBox.cx}
+                          y={viewBox.cy}
+                          className="fill-foreground text-3xl font-bold"
+                        >
+                          {totalRequests.toLocaleString()}
+                        </tspan>
+                        <tspan
+                          x={viewBox.cx}
+                          y={(viewBox.cy || 0) + 24}
+                          className="fill-muted-foreground"
+                        >
+                          Visitors
+                        </tspan>
+                      </text>
+                    );
+                  }
+                }}
+              />
+            </Pie>
+          </PieChart>
+
+          {/* <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="agencyName"
@@ -61,7 +128,7 @@ export default function RequestsByAgency({
               fill="var(--color-agencyName)"
               radius={4}
             />
-          </BarChart>
+          </BarChart> */}
         </ChartContainer>
       </CardContent>
       {/* <CardFooter className="flex-col items-start gap-2 text-sm">
