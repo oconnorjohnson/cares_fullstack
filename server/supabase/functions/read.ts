@@ -24,7 +24,8 @@ export async function getPercentageOfRequestsByAgency(): Promise<
     // Fetch all requests
     const { data: requestsData, error: requestsError } = await supabase
       .from("Request")
-      .select("agencyId");
+      .select("agencyId")
+      .eq("approved", true);
 
     if (requestsError) {
       console.error("Error fetching requests:", requestsError);

@@ -57,7 +57,8 @@ export default async function Analytics() {
     "transpoStress",
     "financialDifficulties",
   ];
-  const agencyPercentagesRaw = await getAgencyRequestPercentages();
+  // const agencyPercentagesRaw = await getAgencyRequestPercentages();
+  const agencyPercentagesRaw = await GetPercentageOfRequestsByAgency();
   const agencyPercentages = convertAgencyData(agencyPercentagesRaw);
 
   const prePostChartData = prePostCategories.map((category) => ({
