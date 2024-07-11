@@ -18,6 +18,7 @@ import { Label, Pie, PieChart } from "recharts";
 interface AgencyData {
   agencyName: string;
   percentage: number;
+  fill?: string;
 }
 
 interface RequestsByAgencyProps {
@@ -36,19 +37,19 @@ const chartConfig = {
   totalRequests: {
     label: "Total Requests",
   },
-  publicDefender: {
+  "Public Defender": {
     label: "Public Defender",
     color: "hsl(var(--chart-1))",
   },
-  probation: {
+  Probation: {
     label: "Probation",
     color: "hsl(var(--chart-2))",
   },
-  rjp: {
+  RJP: {
     label: "RJP",
     color: "hsl(var(--chart-3))",
   },
-  other: {
+  Other: {
     label: "Other",
     color: "hsl(var(--chart-4))",
   },
@@ -58,6 +59,12 @@ export default function RequestsByAgency({
   chartData,
   totalRequests,
 }: RequestsByAgencyProps) {
+  const dataWithColors = chartData.map((data) => ({
+    ...data,
+    fill: (chartConfig as Record<string, { color?: string }>)[data.agencyName]
+      ?.color,
+  }));
+
   return (
     <Card className="w-1/3 h-[400px] pb-8">
       <CardHeader>
@@ -100,7 +107,7 @@ export default function RequestsByAgency({
                           y={(viewBox.cy || 0) + 24}
                           className="fill-muted-foreground"
                         >
-                          Visitors
+                          Total Requests Fulfilled
                         </tspan>
                       </text>
                     );
