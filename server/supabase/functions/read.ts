@@ -11,6 +11,63 @@ type id = {
   id: number;
 };
 
+type RequestByAgency = {
+  agencyId: number;
+  count: number;
+};
+
+export async function getPercentageOfRequestsByAgency(): Promise<
+  { agencyId: number; percentage: number }[]
+> {
+  const supabase = createSupabaseClient();
+  try {
+    // Get the total number of requests
+    const { data: totalRequestsData, error: totalRequestsError } =
+      await supabase.from("Request").select("id", { count: "exact" });
+
+    if (totalRequestsError) {
+      console.error("Error fetching total requests:", totalRequestsError);
+      throw totalRequestsError;
+    }
+
+    const totalRequests = totalRequestsData.length;
+
+    // Call the stored procedure to get requests grouped by agencyId
+    const { data: requestsByAgencyData, error: requestsByAgencyError } =
+      await supabase
+        // @ts-ignore
+        .rpc("get_requests_by_agency", {});
+
+    if (requestsByAgencyError) {
+      console.error(
+        "Error fetching requests by agency:",
+        requestsByAgencyError,
+      );
+      throw requestsByAgencyError;
+    }
+
+    // Ensure requestsByAgencyData is not null or undefined
+    if (!requestsByAgencyData) {
+      throw new Error("No data returned from get_requests_by_agency");
+    }
+
+    // Calculate the percentage of total requests for each agency
+    // @ts-ignore
+    const result = requestsByAgencyData.map((item: RequestByAgency) => ({
+      agencyId: item.agencyId,
+      percentage: (item.count / totalRequests) * 100,
+    }));
+
+    return result;
+  } catch (error) {
+    console.error(
+      "Unexpected error in getPercentageOfRequestsByAgency:",
+      error,
+    );
+    throw error;
+  }
+}
+
 export async function isUserBanned(userId: string): Promise<boolean> {
   const supabase = createSupabaseClient();
   try {
