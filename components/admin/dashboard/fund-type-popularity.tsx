@@ -47,8 +47,8 @@ import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
 // } satisfies ChartConfig;
 
 const chartConfig = {
-  fundTypeName: {
-    label: "fundTypeName",
+  percentage: {
+    label: "percentage",
     color: "hsl(var(--chart-3))",
   },
 } satisfies ChartConfig;
