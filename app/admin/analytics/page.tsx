@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs";
 import SideNavBar from "@/components/admin/dashboard/side-nav";
 import PrePostAnalysis from "@/components/admin/dashboard/pre-post-analysis";
 import RequestsByAgency from "@/components/admin/dashboard/reqs-by-agency";
+import FundTypePopularity from "@/components/admin/dashboard/fund-type-popularity";
 import {
   getPreScreenAverages,
   getPostScreenAverages,
@@ -28,6 +29,15 @@ const agencyIdToNameMap: { [key: number]: string } = {
   8: "Conflict Panel",
 };
 
+const fundTypeIdToNameMap: { [key: number]: string } = {
+  1: "Walmart Gift Card",
+  2: "Arco Gift Card",
+  3: "Bus Pass",
+  4: "Cash",
+  5: "Invoice",
+  6: "Check",
+};
+
 interface AgencyPercentageData {
   agencyId: number;
   percentage: number;
@@ -45,10 +55,8 @@ export default async function Analytics() {
   const isAdmin = (sessionClaims?.publicMetadata as any)?.admin;
   const totalRequests = await CountRequestsCompleted();
   const percentages = await GetPercentageOfRequestsByAgency();
-  console.log(percentages);
   const percentagesByAssetTypeAndAgency =
     await GetPercentageOfRequestsByFundType();
-  console.log(percentagesByAssetTypeAndAgency);
   const preAnswers: AnswerCategories = await getPreScreenAverages();
   const postAnswers: AnswerCategories = await getPostScreenAverages();
   const prePostCategories: (keyof AnswerCategories)[] = [
@@ -71,6 +79,14 @@ export default async function Analytics() {
     postValue: getCategoryValue(category, postAnswers),
   }));
 
+  const fundPopChartData = percentagesByAssetTypeAndAgency.map(
+    ({ fundTypeId, percentage }) => ({
+      fundTypeId,
+      percentage,
+      fundTypeName: fundTypeIdToNameMap[fundTypeId],
+    }),
+  );
+
   if (!isAdmin) {
     return <div>Not authenticated</div>;
   } else {
@@ -87,7 +103,7 @@ export default async function Analytics() {
                 chartData={agencyPercentages}
               />
               <div className="px-4" />
-              <PrePostAnalysis chartData={prePostChartData} />
+              <FundTypePopularity chartData={fundPopChartData} />
             </div>
             <div className="flex flex-row pb-10 w-full px-10 ">
               <PrePostAnalysis chartData={prePostChartData} />
