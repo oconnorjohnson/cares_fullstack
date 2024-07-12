@@ -20,6 +20,9 @@ const chartConfig = {
     label: "Percentage",
     color: "hsl(var(--chart-2))",
   },
+  fundTypeName: {
+    label: "fundTypeName",
+  },
 } satisfies ChartConfig;
 
 type FundPopChartData = {
@@ -54,7 +57,7 @@ export default function FundTypePopularity({
               cursor={false}
               content={
                 <ChartTooltipContent
-                  labelKey="% of Total Requests"
+                  labelKey="fundTypeName"
                   indicator="dashed"
                 />
               }
