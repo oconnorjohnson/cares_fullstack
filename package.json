@@ -77,7 +77,9 @@
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
     "uploadthing": "^6.3.0",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "ws": "^8.17.1",
+    "braces": "^3.0.3"
   },
   "devDependencies": {
     "@types/node": "^20",
