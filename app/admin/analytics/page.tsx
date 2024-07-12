@@ -94,7 +94,7 @@ export default async function Analytics() {
       <>
         <div className="flex flex-row sm:h-screen">
           <SideNavBar />
-          <div className="flex flex-col sm:grid sm:grid-cols-3 border-t flex-col w-5/6 gap-4">
+          <div className="flex flex-col sm:grid sm:grid-cols-3 border-t flex-col w-5/6 gap-4 py-8 px-8">
             <PrePostAnalysis chartData={prePostChartData} />
 
             <RequestsByAgency
