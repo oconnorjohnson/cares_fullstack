@@ -33,7 +33,7 @@ interface AgencyDatas {
 }
 
 export async function GetPercentageOfRequestsByAssetTypeAndAgency(): Promise<
-  { assetTypeId: number; agencyId: number; percentage: number }[]
+  { fundTypeId: number; agencyId: number; percentage: number }[]
 > {
   const { userId } = auth();
   if (!userId) {

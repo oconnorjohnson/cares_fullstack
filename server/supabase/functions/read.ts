@@ -17,19 +17,29 @@ type RequestByAgency = {
 };
 
 type RequestData = {
-  assetTypeId: number;
+  fundTypeId: number;
   agencyId: number;
 };
 
 export async function getPercentageOfRequestsByAssetTypeAndAgency(): Promise<
-  { assetTypeId: number; agencyId: number; percentage: number }[]
+  { fundTypeId: number; agencyId: number; percentage: number }[]
 > {
   const supabase = createSupabaseClient();
   try {
-    // Fetch all requests with assetTypeId and agencyId
+    // Fetch all approved requests with their associated funds and fund types
     const { data: requestsData, error: requestsError } = await supabase
       .from("Request")
-      .select("assetTypeId, agencyId")
+      .select(
+        `
+        id,
+        agencyId,
+        Fund (
+          fundTypeId,
+          amount,
+          paid
+        )
+      `,
+      )
       .eq("approved", true);
 
     if (requestsError) {
@@ -41,14 +51,27 @@ export async function getPercentageOfRequestsByAssetTypeAndAgency(): Promise<
       throw new Error("No data returned from Request table");
     }
 
-    const typedRequestsData = requestsData as unknown as RequestData[];
+    // Flatten the data to get the necessary fields
+    const flattenedData: RequestData[] = [];
+    requestsData.forEach((request: any) => {
+      if (request.Fund) {
+        request.Fund.forEach((fund: any) => {
+          if (fund.paid) {
+            flattenedData.push({
+              fundTypeId: fund.fundTypeId,
+              agencyId: request.agencyId,
+            });
+          }
+        });
+      }
+    });
 
-    const totalRequests = typedRequestsData.length;
+    const totalRequests = flattenedData.length;
 
-    // Group and count requests by assetTypeId and agencyId
-    const requestsByAssetTypeAndAgency = typedRequestsData.reduce(
+    // Group and count requests by fundTypeId and agencyId
+    const requestsByAssetTypeAndAgency = flattenedData.reduce(
       (acc: Record<string, number>, request: RequestData) => {
-        const key = `${request.assetTypeId}-${request.agencyId}`;
+        const key = `${request.fundTypeId}-${request.agencyId}`;
         if (acc[key]) {
           acc[key]++;
         } else {
@@ -59,12 +82,12 @@ export async function getPercentageOfRequestsByAssetTypeAndAgency(): Promise<
       {} as Record<string, number>,
     );
 
-    // Calculate the percentage of total requests for each asset type and agency
+    // Calculate the percentage of total requests for each fund type and agency
     const result = Object.entries(requestsByAssetTypeAndAgency).map(
       ([key, count]) => {
-        const [assetTypeId, agencyId] = key.split("-").map(Number);
+        const [fundTypeId, agencyId] = key.split("-").map(Number);
         return {
-          assetTypeId,
+          fundTypeId,
           agencyId,
           percentage: parseFloat(((count / totalRequests) * 100).toFixed(2)),
         };
