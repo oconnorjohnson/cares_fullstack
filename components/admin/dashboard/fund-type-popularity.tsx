@@ -43,7 +43,10 @@ export default function FundTypePopularity({
         <CardDescription>Frequency of fund types.</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col justify-end min-h-[200px]">
-        <ChartContainer config={chartConfig}>
+        <ChartContainer
+          className="mx-auto aspect-square max-h-[250px]"
+          config={chartConfig}
+        >
           <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis

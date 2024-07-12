@@ -87,7 +87,10 @@ export default function RequestsByAgency({
         <CardDescription>Percentage of total requests.</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col justify-end min-h-[200px]">
-        <ChartContainer config={chartConfig}>
+        <ChartContainer
+          className="mx-auto aspect-square max-h-[250px]"
+          config={chartConfig}
+        >
           <PieChart>
             <ChartTooltip
               cursor={false}

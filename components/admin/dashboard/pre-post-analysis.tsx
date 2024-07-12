@@ -62,7 +62,10 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
         <CardDescription>Averages per category.</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col justify-end min-h-[200px]">
-        <ChartContainer config={chartConfig}>
+        <ChartContainer
+          className="mx-auto aspect-square max-h-[250px]"
+          config={chartConfig}
+        >
           <BarChart accessibilityLayer data={transformedChartData}>
             <CartesianGrid vertical={false} />
             <XAxis
