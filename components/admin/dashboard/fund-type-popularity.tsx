@@ -68,7 +68,7 @@ export default function FundTypePopularity({
         <CardTitle>Fund Type Popularity</CardTitle>
         <CardDescription>Frequency of fund types.</CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col justify-end">
+      <CardContent className="flex flex-col justify-end min-h-[200px]">
         <ChartContainer config={chartConfig}>
           <PieChart>
             <ChartTooltip
