@@ -98,7 +98,7 @@ export default function FundTypePopularity({
                 />
               }
             />
-            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={8}>
+            <Bar dataKey="percentage" fill="var(--color-percentage)" radius={8}>
               <LabelList
                 position="top"
                 offset={12}
