@@ -3,7 +3,7 @@ import {
   getAllPreScreenAnswers,
   getAllPostScreenAnswers,
   getPercentageOfRequestsByAgency,
-  getPercentageOfRequestsByAssetTypeAndAgency,
+  getPercentageOfRequestsByFundType,
 } from "@/server/supabase/functions/read";
 import { auth } from "@clerk/nextjs/server";
 import {
@@ -32,14 +32,19 @@ interface AgencyDatas {
   percentage: number;
 }
 
-export async function GetPercentageOfRequestsByAssetTypeAndAgency(): Promise<
-  { fundTypeId: number; agencyId: number; percentage: number }[]
+interface FundTypeData {
+  fundTypeId: number;
+  percentage: number;
+}
+
+export async function GetPercentageOfRequestsByFundType(): Promise<
+  FundTypeData[]
 > {
   const { userId } = auth();
   if (!userId) {
     throw new Error("User not authenticated");
   }
-  const percentages = await getPercentageOfRequestsByAssetTypeAndAgency();
+  const percentages = await GetPercentageOfRequestsByFundType();
   return percentages;
 }
 
