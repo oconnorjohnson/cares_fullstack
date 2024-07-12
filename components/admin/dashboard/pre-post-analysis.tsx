@@ -85,10 +85,10 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          What effect are RFF dollars having on our clients?
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+          Showing average answer per category before and after receiving aid.
         </div>
       </CardFooter>
     </Card>
