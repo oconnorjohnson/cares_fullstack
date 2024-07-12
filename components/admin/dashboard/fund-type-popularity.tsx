@@ -37,7 +37,7 @@ export default function FundTypePopularity({
   chartData: FundPopChartData;
 }) {
   return (
-    <Card className="w-1/3 h-full pb-8">
+    <Card className="w-full sm:w-1/3 h-full pb-8">
       <CardHeader>
         <CardTitle>Fund Type Popularity</CardTitle>
         <CardDescription>Frequency of fund types.</CardDescription>

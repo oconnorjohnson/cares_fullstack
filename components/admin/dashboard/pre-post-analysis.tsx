@@ -56,7 +56,7 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
     category: categoryMapping[data.category] || data.category,
   }));
   return (
-    <Card className="w-1/3 h-full pb-8">
+    <Card className="w-full sm:w-1/3 h-full pb-8">
       <CardHeader>
         <CardTitle>Pre/Post Screen Analysis</CardTitle>
         <CardDescription>Averages per category.</CardDescription>
