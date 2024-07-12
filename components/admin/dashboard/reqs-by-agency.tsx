@@ -81,7 +81,7 @@ export default function RequestsByAgency({
   }));
 
   return (
-    <Card className="w-1/3 h-1/3 pb-8">
+    <Card className="w-1/3 h-full pb-8">
       <CardHeader>
         <CardTitle>Requests Per Agency</CardTitle>
         <CardDescription>Percentage of total requests.</CardDescription>
