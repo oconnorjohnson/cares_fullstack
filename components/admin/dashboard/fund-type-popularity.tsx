@@ -14,32 +14,41 @@ import {
 } from "@/components/ui/card";
 import { Label, Pie, PieChart } from "recharts";
 
+import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
+
+// const chartConfig = {
+//   toolLabel: {
+//     label: "% of Total Requests",
+//   },
+//   "Walmart Gift Card": {
+//     label: "Walmart Gift Card",
+//     color: "hsl(var(--chart-1))",
+//   },
+//   "Arco Gift Card": {
+//     label: "Arco Gift Card",
+//     color: "hsl(var(--chart-2))",
+//   },
+//   "Bus Pass": {
+//     label: "Bus Pass",
+//     color: "hsl(var(--chart-3))",
+//   },
+//   Cash: {
+//     label: "Cash",
+//     color: "hsl(var(--chart-4))",
+//   },
+//   Invoice: {
+//     label: "Invoice",
+//     color: "hsl(var(--chart-5))",
+//   },
+//   Check: {
+//     label: "Check",
+//     color: "hsl(var(--chart-3))",
+//   },
+// } satisfies ChartConfig;
+
 const chartConfig = {
-  toolLabel: {
-    label: "% of Total Requests",
-  },
-  "Walmart Gift Card": {
-    label: "Walmart Gift Card",
-    color: "hsl(var(--chart-1))",
-  },
-  "Arco Gift Card": {
-    label: "Arco Gift Card",
-    color: "hsl(var(--chart-2))",
-  },
-  "Bus Pass": {
-    label: "Bus Pass",
-    color: "hsl(var(--chart-3))",
-  },
-  Cash: {
-    label: "Cash",
-    color: "hsl(var(--chart-4))",
-  },
-  Invoice: {
-    label: "Invoice",
-    color: "hsl(var(--chart-5))",
-  },
-  Check: {
-    label: "Check",
+  fundTypeName: {
+    label: "fundTypeName",
     color: "hsl(var(--chart-3))",
   },
 } satisfies ChartConfig;
@@ -70,71 +79,39 @@ export default function FundTypePopularity({
       </CardHeader>
       <CardContent className="flex flex-col justify-end min-h-[200px]">
         <ChartContainer config={chartConfig}>
-          <PieChart>
-            <ChartTooltip
-              cursor={false}
-              content={
-                <ChartTooltipContent labelKey="toolLabel" indicator="dashed" />
-              }
-            />
-            <Pie
-              data={dataWithColors}
-              dataKey="percentage"
-              nameKey="fundTypeName"
-              innerRadius={60}
-              strokeWidth={5}
-            >
-              <Label
-                content={({ viewBox }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                    return (
-                      <text
-                        x={viewBox.cx}
-                        y={viewBox.cy}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                      >
-                        {/* <tspan
-                          x={viewBox.cx}
-                          y={viewBox.cy}
-                          className="fill-foreground text-3xl font-bold"
-                        >
-                          {totalRequests.toLocaleString()}
-                        </tspan> */}
-                        <tspan
-                          x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 24}
-                          className="fill-muted-foreground"
-                        >
-                          Most Requested
-                        </tspan>
-                      </text>
-                    );
-                  }
-                }}
-              />
-            </Pie>
-          </PieChart>
-
-          {/* <BarChart accessibilityLayer data={chartData}>
+          <BarChart
+            accessibilityLayer
+            data={chartData}
+            margin={{
+              top: 20,
+            }}
+          >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="agencyName"
+              dataKey="fundTypeName"
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 6)}
+              tickFormatter={(value) => value.slice(0, 3)}
             />
             <ChartTooltip
-              content={<ChartTooltipContent indicator="dashed" />}
+              cursor={false}
+              content={
+                <ChartTooltipContent
+                  labelKey="% of Total Requests"
+                  indicator="dashed"
+                />
+              }
             />
-
-            <Bar
-              dataKey="percentage"
-              fill="var(--color-agencyName)"
-              radius={4}
-            />
-          </BarChart> */}
+            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={8}>
+              <LabelList
+                position="top"
+                offset={12}
+                className="fill-foreground"
+                fontSize={12}
+              />
+            </Bar>
+          </BarChart>
         </ChartContainer>
       </CardContent>
       {/* <CardFooter className="flex-col items-start gap-2 text-sm">
