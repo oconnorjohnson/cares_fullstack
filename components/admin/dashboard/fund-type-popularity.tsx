@@ -48,7 +48,7 @@ import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
 
 const chartConfig = {
   percentage: {
-    label: "percentage",
+    label: "Percentage",
     color: "hsl(var(--chart-3))",
   },
 } satisfies ChartConfig;
@@ -81,7 +81,7 @@ export default function FundTypePopularity({
         <ChartContainer config={chartConfig}>
           <BarChart
             accessibilityLayer
-            data={chartData}
+            data={dataWithColors}
             margin={{
               top: 20,
             }}
