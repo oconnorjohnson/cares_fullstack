@@ -2,9 +2,9 @@
 
 - [x] % of Total Requests by Agency (bar)
 - [x] Pre/Post Screen Analysis (bar)
-- [x] convert % of total reqs from bar to area chart
+- [x] convert % of total reqs from bar to pie chart
 - [x] % of Total Requests Containing Each Asset Type (pie)
-- [ ] convert % of total requests containing each asset type from pie to bar
+- [x] convert % of total requests containing each asset type from pie to bar
 - [ ] Dollars spent per asset category (pie)
 - [ ] Requests submitted per week per agency (multi area chart)
 - [ ] pre/post question category by change in avg (radar chart multiple)

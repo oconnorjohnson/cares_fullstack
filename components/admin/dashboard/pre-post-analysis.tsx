@@ -83,7 +83,7 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
           </BarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col items-start gap-2 text-sm">
+      <CardFooter className="flex-col items-start gap-2 text-sm pt-4">
         <div className="flex gap-2 font-medium leading-none">
           What effect are RFF dollars having on our clients?
         </div>

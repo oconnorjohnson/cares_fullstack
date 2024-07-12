@@ -71,7 +71,7 @@ export default function FundTypePopularity({
           </BarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col items-start gap-2 text-sm">
+      <CardFooter className="flex-col items-start gap-2 text-sm pt-4">
         <div className="flex gap-2 font-medium leading-none">
           Popularity of fund types across all requests.
         </div>
