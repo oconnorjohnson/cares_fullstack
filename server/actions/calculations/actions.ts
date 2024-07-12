@@ -44,7 +44,7 @@ export async function GetPercentageOfRequestsByFundType(): Promise<
   if (!userId) {
     throw new Error("User not authenticated");
   }
-  const percentages = await GetPercentageOfRequestsByFundType();
+  const percentages = await getPercentageOfRequestsByFundType();
   return percentages;
 }
 
