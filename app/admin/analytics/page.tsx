@@ -95,7 +95,7 @@ export default async function Analytics() {
         <div className="flex flex-row">
           <SideNavBar />
           <div className="flex flex-col border-t flex-col w-5/6">
-            <div className="flex flex-row py-10 w-full px-10 ">
+            <div className="flex flex-col sm:flex-row py-10 w-full px-10 ">
               <PrePostAnalysis chartData={prePostChartData} />
               <div className="px-4" />
               <RequestsByAgency
@@ -105,7 +105,7 @@ export default async function Analytics() {
               <div className="px-4" />
               <FundTypePopularity chartData={fundPopChartData} />
             </div>
-            <div className="flex flex-row pb-10 w-full px-10 ">
+            <div className="flex flex-col sm:flex-row pb-10 w-full px-10 ">
               <PrePostAnalysis chartData={prePostChartData} />
               <div className="px-4" />
               <RequestsByAgency
