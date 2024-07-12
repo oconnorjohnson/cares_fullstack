@@ -63,7 +63,7 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
-          className="mx-auto aspect-square max-h-[400px]"
+          className="mx-auto aspect-square max-h-[300px]"
           config={chartConfig}
         >
           <BarChart accessibilityLayer data={transformedChartData}>
