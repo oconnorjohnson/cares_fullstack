@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-* Daylight */ @layer base {
+@layer base {
   :root {
     --background: 36 39% 88%;
     --foreground: 36 45% 15%;
