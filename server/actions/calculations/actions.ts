@@ -3,6 +3,7 @@ import {
   getAllPreScreenAnswers,
   getAllPostScreenAnswers,
   getPercentageOfRequestsByAgency,
+  getPercentageOfRequestsByAssetTypeAndAgency,
 } from "@/server/supabase/functions/read";
 import { auth } from "@clerk/nextjs/server";
 import {
@@ -29,6 +30,17 @@ interface AgencyData {
 interface AgencyDatas {
   agencyId: number;
   percentage: number;
+}
+
+export async function GetPercentageOfRequestsByAssetTypeAndAgency(): Promise<
+  { assetTypeId: number; agencyId: number; percentage: number }[]
+> {
+  const { userId } = auth();
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
+  const percentages = await getPercentageOfRequestsByAssetTypeAndAgency();
+  return percentages;
 }
 
 export async function GetPercentageOfRequestsByAgency(): Promise<AgencyData[]> {

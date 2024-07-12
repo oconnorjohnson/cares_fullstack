@@ -2,7 +2,7 @@
 
 - [x] % of Total Requests by Agency (bar)
 - [x] Pre/Post Screen Analysis (bar)
-- [ ] convert % of total reqs from bar to area chart
+- [x] convert % of total reqs from bar to area chart
 - [ ] % of Total Requests Containing Each Asset Type (pie)
 - [ ] Dollars spent per asset category (pie)
 - [ ] Requests submitted per week per agency (multi area chart)
@@ -10,8 +10,15 @@
 
 ## % of Total Requests Containing Each Asset Type Agency - pie chart
 
-1. Database Query: Group requests by agencyId and count the number of requests for each agency.
-2. Mapping: Calculate the percentage of total requests for each agency by dividing the count of requests for each agency by the total number of requests.
+1. Database Query:
+   Group requests by assetTypeId and agencyId.
+   Count the number of requests for each combination.
+   Calculate the percentage of total requests for each asset type within each agency.
+2. Mapping:
+   Map the result to get the asset type names and their corresponding percentage values for each agency.
+   Ensure that each data point includes the color information for the pie chart.
+3. Structure:
+   Format the data to be suitable for a pie chart, showing the percentage of total requests containing each asset type for each agency.
 
 ## Dollars spent per asset category - pie chart
 
