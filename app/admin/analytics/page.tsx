@@ -94,27 +94,24 @@ export default async function Analytics() {
       <>
         <div className="flex flex-row">
           <SideNavBar />
-          <div className="flex flex-col border-t flex-col w-5/6">
-            <div className="flex flex-col sm:flex-row py-8 w-full px-10 ">
-              <PrePostAnalysis chartData={prePostChartData} />
-              <div className="px-4" />
-              <RequestsByAgency
-                totalRequests={totalRequests!}
-                chartData={agencyPercentages}
-              />
-              <div className="px-4" />
-              <FundTypePopularity chartData={fundPopChartData} />
-            </div>
-            <div className="flex flex-col sm:flex-row pb-4 w-full px-10 ">
-              <PrePostAnalysis chartData={prePostChartData} />
-              <div className="px-4" />
-              <RequestsByAgency
-                totalRequests={totalRequests!}
-                chartData={agencyPercentages}
-              />
-              <div className="px-4" />
-              <PrePostAnalysis chartData={prePostChartData} />
-            </div>
+          <div className="flex flex-col sm:grid sm:grid-cols-3 border-t flex-col w-5/6">
+            <PrePostAnalysis chartData={prePostChartData} />
+
+            <RequestsByAgency
+              totalRequests={totalRequests!}
+              chartData={agencyPercentages}
+            />
+
+            <FundTypePopularity chartData={fundPopChartData} />
+
+            <PrePostAnalysis chartData={prePostChartData} />
+
+            <RequestsByAgency
+              totalRequests={totalRequests!}
+              chartData={agencyPercentages}
+            />
+
+            <PrePostAnalysis chartData={prePostChartData} />
           </div>
         </div>
       </>
