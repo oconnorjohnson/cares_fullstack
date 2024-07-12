@@ -92,9 +92,9 @@ export default async function Analytics() {
   } else {
     return (
       <>
-        <div className="flex flex-row">
+        <div className="flex flex-row sm:h-screen">
           <SideNavBar />
-          <div className="flex flex-col sm:grid sm:grid-cols-3 border-t flex-col w-5/6">
+          <div className="flex flex-col sm:grid sm:grid-cols-3 border-t flex-col w-5/6 gap-4">
             <PrePostAnalysis chartData={prePostChartData} />
 
             <RequestsByAgency
