@@ -65,12 +65,13 @@ export default function FundTypePopularity({
 }: {
   chartData: FundPopChartData;
 }) {
+  console.log(chartData);
   const dataWithColors = chartData.map((data) => ({
     ...data,
     fill: (chartConfig as Record<string, { color?: string }>)[data.fundTypeName]
       ?.color,
   }));
-
+  console.log(dataWithColors);
   return (
     <Card className="w-1/3 h-full pb-8">
       <CardHeader>
