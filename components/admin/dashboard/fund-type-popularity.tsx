@@ -12,44 +12,13 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { Label, Pie, PieChart } from "recharts";
 
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
-
-// const chartConfig = {
-//   toolLabel: {
-//     label: "% of Total Requests",
-//   },
-//   "Walmart Gift Card": {
-//     label: "Walmart Gift Card",
-//     color: "hsl(var(--chart-1))",
-//   },
-//   "Arco Gift Card": {
-//     label: "Arco Gift Card",
-//     color: "hsl(var(--chart-2))",
-//   },
-//   "Bus Pass": {
-//     label: "Bus Pass",
-//     color: "hsl(var(--chart-3))",
-//   },
-//   Cash: {
-//     label: "Cash",
-//     color: "hsl(var(--chart-4))",
-//   },
-//   Invoice: {
-//     label: "Invoice",
-//     color: "hsl(var(--chart-5))",
-//   },
-//   Check: {
-//     label: "Check",
-//     color: "hsl(var(--chart-3))",
-//   },
-// } satisfies ChartConfig;
 
 const chartConfig = {
   percentage: {
     label: "Percentage",
-    color: "hsl(var(--chart-1))",
+    color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig;
 
@@ -57,7 +26,6 @@ type FundPopChartData = {
   fundTypeId: number;
   percentage: number;
   fundTypeName: string;
-  fill?: string;
 }[];
 
 export default function FundTypePopularity({
@@ -65,13 +33,6 @@ export default function FundTypePopularity({
 }: {
   chartData: FundPopChartData;
 }) {
-  console.log(chartData);
-  const dataWithColors = chartData.map((data) => ({
-    ...data,
-    fill: (chartConfig as Record<string, { color?: string }>)[data.fundTypeName]
-      ?.color,
-  }));
-  console.log(dataWithColors);
   return (
     <Card className="w-1/3 h-full pb-8">
       <CardHeader>
@@ -80,7 +41,7 @@ export default function FundTypePopularity({
       </CardHeader>
       <CardContent className="flex flex-col justify-end min-h-[200px]">
         <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={dataWithColors}>
+          <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="fundTypeName"
