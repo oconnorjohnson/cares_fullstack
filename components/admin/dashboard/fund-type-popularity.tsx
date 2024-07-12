@@ -54,13 +54,7 @@ export default function FundTypePopularity({
               tickFormatter={(value) => value.slice(0, 3)}
             />
             <ChartTooltip
-              cursor={false}
-              content={
-                <ChartTooltipContent
-                  labelKey="fundTypeName"
-                  indicator="dashed"
-                />
-              }
+              content={<ChartTooltipContent indicator="dashed" />}
             />
             <Bar dataKey="percentage" fill="var(--color-percentage)" radius={8}>
               <LabelList
