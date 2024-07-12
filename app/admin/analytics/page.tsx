@@ -7,7 +7,7 @@ import {
   getPostScreenAverages,
   getAgencyRequestPercentages,
   GetPercentageOfRequestsByAgency,
-  GetPercentageOfRequestsByAssetTypeAndAgency,
+  GetPercentageOfRequestsByFundType,
 } from "@/server/actions/calculations/actions";
 import { CountRequestsCompleted } from "@/server/actions/count/actions";
 import type { AnswerCategories } from "@/server/actions/calculations/actions";
@@ -47,7 +47,7 @@ export default async function Analytics() {
   const percentages = await GetPercentageOfRequestsByAgency();
   console.log(percentages);
   const percentagesByAssetTypeAndAgency =
-    await GetPercentageOfRequestsByAssetTypeAndAgency();
+    await GetPercentageOfRequestsByFundType();
   console.log(percentagesByAssetTypeAndAgency);
   const preAnswers: AnswerCategories = await getPreScreenAverages();
   const postAnswers: AnswerCategories = await getPostScreenAverages();
