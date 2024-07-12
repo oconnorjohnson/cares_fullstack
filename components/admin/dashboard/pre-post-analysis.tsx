@@ -56,12 +56,12 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
     category: categoryMapping[data.category] || data.category,
   }));
   return (
-    <Card className="w-full sm:w-1/3 h-full pb-8">
+    <Card className="flex flex-col">
       <CardHeader>
         <CardTitle>Pre/Post Screen Analysis</CardTitle>
         <CardDescription>Averages per category.</CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col justify-end min-h-[200px]">
+      <CardContent className="flex-1 pb-0">
         <ChartContainer
           className="mx-auto aspect-square max-h-[250px]"
           config={chartConfig}

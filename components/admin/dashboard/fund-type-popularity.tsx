@@ -37,12 +37,12 @@ export default function FundTypePopularity({
   chartData: FundPopChartData;
 }) {
   return (
-    <Card className="w-full sm:w-1/3 h-full pb-8">
+    <Card className="flex flex-col">
       <CardHeader>
         <CardTitle>Fund Type Popularity</CardTitle>
         <CardDescription>Frequency of fund types.</CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col justify-end min-h-[200px]">
+      <CardContent className="flex-1 pb-0">
         <ChartContainer
           className="mx-auto aspect-square max-h-[250px]"
           config={chartConfig}
