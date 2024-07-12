@@ -80,13 +80,7 @@ export default function FundTypePopularity({
       </CardHeader>
       <CardContent className="flex flex-col justify-end min-h-[200px]">
         <ChartContainer config={chartConfig}>
-          <BarChart
-            accessibilityLayer
-            data={dataWithColors}
-            margin={{
-              top: 20,
-            }}
-          >
+          <BarChart accessibilityLayer data={dataWithColors}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="fundTypeName"
