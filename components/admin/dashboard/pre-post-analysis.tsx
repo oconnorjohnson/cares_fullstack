@@ -56,7 +56,7 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
     category: categoryMapping[data.category] || data.category,
   }));
   return (
-    <Card className="w-1/3 h-[400px] pb-8">
+    <Card className="w-1/3 h-1/3 pb-8">
       <CardHeader>
         <CardTitle>Pre/Post Screen Analysis</CardTitle>
         <CardDescription>Averages per category.</CardDescription>
@@ -72,7 +72,6 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
               axisLine={false}
               tickFormatter={(value) => value.slice(0, 6)}
             />
-
             <ChartTooltip
               content={<ChartTooltipContent indicator="dashed" />}
             />
