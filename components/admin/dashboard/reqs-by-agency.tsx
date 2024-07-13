@@ -159,7 +159,7 @@ export default function RequestsByAgency({
           </BarChart> */}
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col items-start gap-2 text-sm pt-4">
+      <CardFooter className="flex-col items-start gap-2 text-sm pt-8">
         <div className="flex gap-2 font-medium leading-none">
           What agency requests the most?
         </div>
