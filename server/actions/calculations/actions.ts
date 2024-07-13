@@ -4,6 +4,7 @@ import {
   getAllPostScreenAnswers,
   getPercentageOfRequestsByAgency,
   getPercentageOfRequestsByFundType,
+  dollarsSpentByFundType,
 } from "@/server/supabase/functions/read";
 import { auth } from "@clerk/nextjs/server";
 import {
@@ -35,6 +36,20 @@ interface AgencyDatas {
 interface FundTypeData {
   fundTypeId: number;
   percentage: number;
+}
+
+interface DollarsSpendData {
+  fundTypeId: number;
+  dollars: number;
+}
+
+export async function GetDollarsSpentByFundType(): Promise<DollarsSpendData[]> {
+  const { userId } = auth();
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
+  const dollars = await dollarsSpentByFundType();
+  return dollars;
 }
 
 export async function GetPercentageOfRequestsByFundType(): Promise<

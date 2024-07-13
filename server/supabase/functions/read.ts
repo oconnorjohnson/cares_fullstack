@@ -20,6 +20,57 @@ type RequestData = {
   fundTypeId: number;
 };
 
+export async function dollarsSpentByFundType(): Promise<
+  { fundTypeId: number; dollars: number }[]
+> {
+  const supabase = createSupabaseClient();
+  try {
+    // Fetch all funds where paid is true
+    const { data: fundsData, error: fundsError } = await supabase
+      .from("Fund")
+      .select("fundTypeId, amount")
+      .eq("paid", true);
+
+    if (fundsError) {
+      console.error("Error fetching funds:", fundsError);
+      throw fundsError;
+    }
+
+    if (!fundsData) {
+      throw new Error("No data returned from Fund table");
+    }
+
+    // Group and sum amounts by fundTypeId
+    const dollarsByFundType = fundsData.reduce(
+      (
+        acc: Record<number, number>,
+        fund: { fundTypeId: number; amount: number },
+      ) => {
+        if (acc[fund.fundTypeId]) {
+          acc[fund.fundTypeId] += fund.amount;
+        } else {
+          acc[fund.fundTypeId] = fund.amount;
+        }
+        return acc;
+      },
+      {} as Record<number, number>,
+    );
+
+    // Convert the result to the desired format
+    const result = Object.entries(dollarsByFundType).map(
+      ([fundTypeId, dollars]) => ({
+        fundTypeId: Number(fundTypeId),
+        dollars,
+      }),
+    );
+
+    return result;
+  } catch (error) {
+    console.error("Unexpected error in dollarsSpentByFundType:", error);
+    throw error;
+  }
+}
+
 export async function getPercentageOfRequestsByFundType(): Promise<
   { fundTypeId: number; percentage: number }[]
 > {
