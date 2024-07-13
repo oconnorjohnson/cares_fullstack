@@ -46,10 +46,11 @@ export async function dollarsSpentByFundType(): Promise<
         acc: Record<number, number>,
         fund: { fundTypeId: number; amount: number },
       ) => {
+        const amount = fund.fundTypeId === 3 ? fund.amount * 2.5 : fund.amount;
         if (acc[fund.fundTypeId]) {
-          acc[fund.fundTypeId] += fund.amount;
+          acc[fund.fundTypeId] += amount;
         } else {
-          acc[fund.fundTypeId] = fund.amount;
+          acc[fund.fundTypeId] = amount;
         }
         return acc;
       },
