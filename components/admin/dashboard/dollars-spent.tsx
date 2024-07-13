@@ -82,8 +82,8 @@ export default function DollarsSpent({
   return (
     <Card className="flex flex-col">
       <CardHeader>
-        <CardTitle>Requests Per Agency</CardTitle>
-        <CardDescription>Percentage of total requests.</CardDescription>
+        <CardTitle>RFF Dollars Spent</CardTitle>
+        <CardDescription>Per category of fund type.</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
@@ -135,35 +135,14 @@ export default function DollarsSpent({
               />
             </Pie>
           </PieChart>
-
-          {/* <BarChart accessibilityLayer data={chartData}>
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="agencyName"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-              tickFormatter={(value) => value.slice(0, 6)}
-            />
-            <ChartTooltip
-              content={<ChartTooltipContent indicator="dashed" />}
-            />
-
-            <Bar
-              dataKey="percentage"
-              fill="var(--color-agencyName)"
-              radius={4}
-            />
-          </BarChart> */}
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm pt-8">
         <div className="flex gap-2 font-medium leading-none">
-          What agency requests the most?
+          Where are our dollars going?
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing percentage of total requests submitted on behalf of each
-          agency.
+          Showing total dollars spent by each fund type.
         </div>
       </CardFooter>
     </Card>
