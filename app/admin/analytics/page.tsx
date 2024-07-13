@@ -3,6 +3,7 @@ import SideNavBar from "@/components/admin/dashboard/side-nav";
 import PrePostAnalysis from "@/components/admin/dashboard/pre-post-analysis";
 import RequestsByAgency from "@/components/admin/dashboard/reqs-by-agency";
 import FundTypePopularity from "@/components/admin/dashboard/fund-type-popularity";
+import DollarsSpent from "@/components/admin/dashboard/dollars-spent";
 import {
   getPreScreenAverages,
   getPostScreenAverages,
@@ -54,14 +55,25 @@ function convertAgencyData(agencyData: AgencyPercentageData[]) {
 export default async function Analytics() {
   const { sessionClaims } = auth();
   const isAdmin = (sessionClaims?.publicMetadata as any)?.admin;
-  const totalRequests = await CountRequestsCompleted();
-  const percentages = await GetPercentageOfRequestsByAgency();
-  const percentagesByAssetTypeAndAgency =
-    await GetPercentageOfRequestsByFundType();
-  const preAnswers: AnswerCategories = await getPreScreenAverages();
-  const postAnswers: AnswerCategories = await getPostScreenAverages();
-  const dollarsSpentByFundType = await GetDollarsSpentByFundType();
-  console.log(dollarsSpentByFundType);
+
+  const [
+    totalRequests,
+    percentages,
+    percentagesByAssetTypeAndAgency,
+    preAnswers,
+    postAnswers,
+    dollarsSpentByFundType,
+    agencyPercentagesRaw,
+  ] = await Promise.all([
+    CountRequestsCompleted(),
+    GetPercentageOfRequestsByAgency(),
+    GetPercentageOfRequestsByFundType(),
+    getPreScreenAverages(),
+    getPostScreenAverages(),
+    GetDollarsSpentByFundType(),
+    GetPercentageOfRequestsByAgency(),
+  ]);
+
   const prePostCategories: (keyof AnswerCategories)[] = [
     "housingSituation",
     "housingQuality",
@@ -73,7 +85,7 @@ export default async function Analytics() {
     "financialDifficulties",
   ];
   // const agencyPercentagesRaw = await getAgencyRequestPercentages();
-  const agencyPercentagesRaw = await GetPercentageOfRequestsByAgency();
+
   const agencyPercentages = convertAgencyData(agencyPercentagesRaw);
 
   const prePostChartData = prePostCategories.map((category) => ({
@@ -86,6 +98,14 @@ export default async function Analytics() {
     ({ fundTypeId, percentage }) => ({
       fundTypeId,
       percentage,
+      fundTypeName: fundTypeIdToNameMap[fundTypeId],
+    }),
+  );
+
+  const dollarsSpentChartData = dollarsSpentByFundType.map(
+    ({ fundTypeId, dollars }) => ({
+      fundTypeId,
+      dollars,
       fundTypeName: fundTypeIdToNameMap[fundTypeId],
     }),
   );
@@ -107,7 +127,10 @@ export default async function Analytics() {
 
             <FundTypePopularity chartData={fundPopChartData} />
 
-            <PrePostAnalysis chartData={prePostChartData} />
+            <DollarsSpent
+              totalSpent={25000}
+              chartData={dollarsSpentChartData}
+            />
 
             <RequestsByAgency
               totalRequests={totalRequests!}
