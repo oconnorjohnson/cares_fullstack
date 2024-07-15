@@ -1,6 +1,6 @@
 # Request Status Overview
 
-- [] Pie chart showing the distribution of requests by status (approved, denied, pending approval, completed)
+- [x] Pie chart showing the distribution of requests by status (approved, denied, pending approval, completed)
 
 # Fund Type Distribution
 
@@ -21,6 +21,8 @@
 # SDOH Categories Distribution
 
 - [] Stacked bar chart showing the distribution of Social Determinants of Health (SDOH) categories across all requests
+
+we need to get a percentage of total requests containing x category for each category where item of category is x
 
 # RFF vs CARES Fund Usage
 

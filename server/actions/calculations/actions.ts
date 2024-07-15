@@ -7,13 +7,17 @@ import {
   dollarsSpentByFundType,
   getTotalRFFDollarsSpent,
   getPercentageOfRequestsByStatus,
+  getSDOHPercentages,
 } from "@/server/supabase/functions/read";
 import { auth } from "@clerk/nextjs/server";
 import {
   countTotalRequests,
   countRequestsByAgency,
 } from "@/server/supabase/functions/count";
-import type { PercentRequestStatusReturn } from "@/server/supabase/functions/read";
+import type {
+  PercentRequestStatusReturn,
+  SDOHPercentages,
+} from "@/server/supabase/functions/read";
 export type AnswerCategories = {
   housingSituation: number;
   housingQuality: number;
@@ -45,7 +49,20 @@ interface DollarsSpendData {
   dollars: number;
 }
 
+export async function GetSDOHPercentages(): Promise<SDOHPercentages> {
+  const { userId } = auth();
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
+  const percentages = await getSDOHPercentages();
+  return percentages;
+}
+
 export async function GetPercentageOfRequestsByStatus(): Promise<PercentRequestStatusReturn> {
+  const { userId } = auth();
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
   const percentages = await getPercentageOfRequestsByStatus();
   return percentages;
 }

@@ -19,10 +19,66 @@ type RequestData = {
   fundTypeId: number;
 };
 
-export type PercentRequestStatusReturn = {
-  RequestStatusOptions: RequestStatusOptions;
+const SDOHCategoriesSchema = z.enum([
+  "Education Access",
+  "Health Care",
+  "Neighborhood Safety",
+  "Social & Community",
+  "Economic Instability",
+]);
+export type SDOHCategories = z.infer<typeof SDOHCategoriesSchema>;
+export type SDOHPercentages = {
+  SDOHCategory: SDOHCategories;
   percentage: number;
 }[];
+
+export async function getSDOHPercentages(): Promise<SDOHPercentages> {
+  const supabase = createSupabaseClient();
+  try {
+    // Fetch all requests with their SDOH data
+    const { data: requests, error } = await supabase
+      .from("Request")
+      .select("SDOH")
+      .not("SDOH", "is", null);
+
+    if (error) throw error;
+    if (!requests || requests.length === 0) return [];
+
+    // Count occurrences of each SDOH category
+    const categoryCount: Record<SDOHCategories, number> = {
+      "Education Access": 0,
+      "Health Care": 0,
+      "Neighborhood Safety": 0,
+      "Social & Community": 0,
+      "Economic Instability": 0,
+    };
+
+    const totalRequests = requests.length;
+
+    requests.forEach((request) => {
+      if (Array.isArray(request.SDOH)) {
+        request.SDOH.forEach((category) => {
+          if (SDOHCategoriesSchema.safeParse(category).success) {
+            categoryCount[category as SDOHCategories]++;
+          }
+        });
+      }
+    });
+
+    // Calculate percentages
+    const result: SDOHPercentages = Object.entries(categoryCount).map(
+      ([category, count]) => ({
+        SDOHCategory: category as SDOHCategories,
+        percentage: parseFloat(((count / totalRequests) * 100).toFixed(2)),
+      }),
+    );
+
+    return result;
+  } catch (error) {
+    console.error("Error in getSDOHPercentages:", error);
+    throw error;
+  }
+}
 
 const RequestStatusSchema = z.enum([
   "paid",
@@ -30,8 +86,11 @@ const RequestStatusSchema = z.enum([
   "denied",
   "pendingApproval",
 ]);
-
 export type RequestStatusOptions = z.infer<typeof RequestStatusSchema>;
+export type PercentRequestStatusReturn = {
+  RequestStatusOptions: RequestStatusOptions;
+  percentage: number;
+}[];
 
 export async function getPercentageOfRequestsByStatus(): Promise<PercentRequestStatusReturn> {
   const supabase = createSupabaseClient();

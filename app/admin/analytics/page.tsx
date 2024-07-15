@@ -14,9 +14,12 @@ import {
   GetDollarsSpentByFundType,
   GetTotalRFFDollarsSpent,
   GetPercentageOfRequestsByStatus,
+  GetSDOHPercentages,
 } from "@/server/actions/calculations/actions";
 import { CountRequestsCompleted } from "@/server/actions/count/actions";
 import type { AnswerCategories } from "@/server/actions/calculations/actions";
+import SDOHCategoryDistribution from "@/components/admin/dashboard/sdoh-category-distribution";
+
 function getCategoryValue(
   prePostCategories: keyof AnswerCategories,
   data: AnswerCategories,
@@ -61,7 +64,6 @@ export default async function Analytics() {
 
   const [
     totalRequests,
-    // percentages,
     percentagesByAssetTypeAndAgency,
     preAnswers,
     postAnswers,
@@ -69,9 +71,9 @@ export default async function Analytics() {
     agencyPercentagesRaw,
     totalRFFDollarsSpent,
     percentagesByStatus,
+    sdohPercentages,
   ] = await Promise.all([
     CountRequestsCompleted(),
-    // GetPercentageOfRequestsByAgency(),
     GetPercentageOfRequestsByFundType(),
     getPreScreenAverages(),
     getPostScreenAverages(),
@@ -79,6 +81,7 @@ export default async function Analytics() {
     GetPercentageOfRequestsByAgency(),
     GetTotalRFFDollarsSpent(),
     GetPercentageOfRequestsByStatus(),
+    GetSDOHPercentages(),
   ]);
 
   const prePostCategories: (keyof AnswerCategories)[] = [
@@ -91,7 +94,6 @@ export default async function Analytics() {
     "transpoStress",
     "financialDifficulties",
   ];
-  // const agencyPercentagesRaw = await getAgencyRequestPercentages();
 
   const agencyPercentages = convertAgencyData(agencyPercentagesRaw);
 
@@ -136,11 +138,7 @@ export default async function Analytics() {
               chartData={dollarsSpentChartData}
             />
             <PercentRequestStatus chartData={percentagesByStatus} />
-            <RequestsByAgency
-              totalRequests={totalRequests!}
-              chartData={agencyPercentages}
-            />
-            <PrePostAnalysis chartData={prePostChartData} />
+            <SDOHCategoryDistribution chartData={sdohPercentages} />
             <div className="py-2" />
           </div>
         </div>
