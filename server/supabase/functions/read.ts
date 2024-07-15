@@ -98,8 +98,9 @@ export async function getPercentageOfRequestsByStatus(): Promise<PercentRequestS
     const { data, error } = await supabase
       .from("Request")
       .select("approved, denied, pendingApproval, paid")
-      .eq("approved", true)
-      .or("denied.eq.true,pendingApproval.eq.true,paid.eq.true");
+      .or(
+        "approved.eq.true,denied.eq.true,pendingApproval.eq.true,paid.eq.true",
+      );
 
     if (error) throw error;
     if (!data) return [];
