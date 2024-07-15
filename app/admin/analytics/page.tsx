@@ -125,9 +125,9 @@ export default async function Analytics() {
   } else {
     return (
       <>
-        <ScrollArea className="flex flex-row sm:h-screen w-screen">
+        <div className="flex flex-row sm:h-screen w-screen">
           <SideNavBar />
-          <div className="flex flex-col sm:grid sm:grid-cols-3 border-t flex-col w-full h-full gap-4 py-4 px-4">
+          <ScrollArea className="flex flex-col sm:grid sm:grid-cols-3 border-t flex-col w-full h-full gap-4 py-4 px-4">
             <PrePostAnalysis chartData={prePostChartData} />
             <RequestsByAgency
               totalRequests={totalRequests!}
@@ -141,8 +141,8 @@ export default async function Analytics() {
             <PercentRequestStatus chartData={percentagesByStatus} />
             <SDOHCategoryDistribution chartData={sdohPercentages} />
             <div className="py-2" />
-          </div>
-        </ScrollArea>
+          </ScrollArea>
+        </div>
       </>
     );
   }
