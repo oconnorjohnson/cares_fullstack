@@ -4,6 +4,7 @@ import PrePostAnalysis from "@/components/admin/dashboard/pre-post-analysis";
 import RequestsByAgency from "@/components/admin/dashboard/reqs-by-agency";
 import FundTypePopularity from "@/components/admin/dashboard/fund-type-popularity";
 import DollarsSpent from "@/components/admin/dashboard/dollars-spent";
+import PercentRequestStatus from "@/components/admin/dashboard/percent-request-status";
 import {
   getPreScreenAverages,
   getPostScreenAverages,
