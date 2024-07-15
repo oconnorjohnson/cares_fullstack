@@ -5,7 +5,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
   Card,
   CardHeader,
@@ -14,7 +13,6 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { TrendingUp } from "lucide-react";
 import { Label, Pie, PieChart } from "recharts";
 interface AgencyData {
   agencyName: string;
@@ -26,13 +24,6 @@ interface RequestsByAgencyProps {
   chartData: AgencyData[];
   totalRequests: number;
 }
-
-// const chartConfig = {
-//   agencyName: {
-//     label: "agencyName",
-//     color: "hsl(var(--chart-1))",
-//   },
-// } satisfies ChartConfig;
 
 const chartConfig = {
   totalRequests: {
@@ -137,26 +128,6 @@ export default function RequestsByAgency({
               />
             </Pie>
           </PieChart>
-
-          {/* <BarChart accessibilityLayer data={chartData}>
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="agencyName"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-              tickFormatter={(value) => value.slice(0, 6)}
-            />
-            <ChartTooltip
-              content={<ChartTooltipContent indicator="dashed" />}
-            />
-
-            <Bar
-              dataKey="percentage"
-              fill="var(--color-agencyName)"
-              radius={4}
-            />
-          </BarChart> */}
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm pt-8">

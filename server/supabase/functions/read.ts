@@ -10,10 +10,10 @@ type id = {
   id: number;
 };
 
-type RequestByAgency = {
-  agencyId: number;
-  count: number;
-};
+// type RequestByAgency = {
+//   agencyId: number;
+//   count: number;
+// };
 
 type RequestData = {
   fundTypeId: number;

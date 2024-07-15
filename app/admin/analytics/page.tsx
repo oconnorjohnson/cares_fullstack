@@ -61,7 +61,7 @@ export default async function Analytics() {
 
   const [
     totalRequests,
-    percentages,
+    // percentages,
     percentagesByAssetTypeAndAgency,
     preAnswers,
     postAnswers,
@@ -71,7 +71,7 @@ export default async function Analytics() {
     percentagesByStatus,
   ] = await Promise.all([
     CountRequestsCompleted(),
-    GetPercentageOfRequestsByAgency(),
+    // GetPercentageOfRequestsByAgency(),
     GetPercentageOfRequestsByFundType(),
     getPreScreenAverages(),
     getPostScreenAverages(),
@@ -141,7 +141,7 @@ export default async function Analytics() {
               chartData={agencyPercentages}
             />
             <PrePostAnalysis chartData={prePostChartData} />
-            <div className="py-4" />
+            <div className="py-2" />
           </div>
         </div>
       </>
