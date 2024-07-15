@@ -20,6 +20,25 @@ type RequestData = {
   fundTypeId: number;
 };
 
+export async function getTotalRFFDollarsSpent() {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Fund")
+      .select("amount")
+      .eq("isRFF", true)
+      .eq("paid", true);
+    if (error) throw error;
+    if (!data) return 0;
+
+    const totalAmount = data.reduce((sum, fund) => sum + (fund.amount || 0), 0);
+    return totalAmount;
+  } catch (error) {
+    console.error("Error in getTotalRFFDollarsSpent:", error);
+    throw error;
+  }
+}
+
 export async function dollarsSpentByFundType(): Promise<
   { fundTypeId: number; dollars: number }[]
 > {

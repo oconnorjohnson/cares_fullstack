@@ -5,6 +5,7 @@ import {
   getPercentageOfRequestsByAgency,
   getPercentageOfRequestsByFundType,
   dollarsSpentByFundType,
+  getTotalRFFDollarsSpent,
 } from "@/server/supabase/functions/read";
 import { auth } from "@clerk/nextjs/server";
 import {
@@ -41,6 +42,15 @@ interface FundTypeData {
 interface DollarsSpendData {
   fundTypeId: number;
   dollars: number;
+}
+
+export async function GetTotalRFFDollarsSpent() {
+  const { userId } = auth();
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
+  const totalDollars = await getTotalRFFDollarsSpent();
+  return totalDollars;
 }
 
 export async function GetDollarsSpentByFundType(): Promise<DollarsSpendData[]> {

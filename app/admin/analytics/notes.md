@@ -5,7 +5,7 @@
 - [x] convert % of total reqs from bar to pie chart
 - [x] % of Total Requests Containing Each Asset Type (pie)
 - [x] convert % of total requests containing each asset type from pie to bar
-- [ ] Dollars spent per asset category (pie)
+- [...] Dollars spent per asset category with total dollars spent in middle(pie)
 - [ ] Requests submitted per week per agency (multi area chart)
 - [ ] pre/post question category by change in avg (radar chart multiple)
 
