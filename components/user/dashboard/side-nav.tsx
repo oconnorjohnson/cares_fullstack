@@ -26,8 +26,8 @@ export default function SideNavBar() {
           <div
             className={`rounded-xl hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 py-2 px-6 mx-2 text-md font-semibold flex flex-row justify-between items-center ${pathname === "/dashboard" ? "bg-zinc-200 dark:bg-zinc-800" : ""}`}
           >
-            <span className="hidden lg:block">Dashboard</span>
             <HomeIcon className="w-5 h-5" />
+            <span className="hidden lg:block">Dashboard</span>
           </div>
         </Link>
 
@@ -35,8 +35,8 @@ export default function SideNavBar() {
           <div
             className={`rounded-xl hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 py-2 px-6 mx-2 text-md font-semibold flex flex-row justify-between items-center ${pathname === "/user/requests" ? "bg-zinc-200 dark:bg-zinc-800" : ""}`}
           >
-            <span className="hidden lg:block">Requests</span>
             <GitPullRequestIcon className="w-5 h-5" />
+            <span className="hidden lg:block">Requests</span>
           </div>
         </Link>
 
@@ -44,8 +44,8 @@ export default function SideNavBar() {
           <div
             className={`rounded-xl hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 py-2 px-6 mx-2 text-md font-semibold flex flex-row justify-between items-center ${pathname === "/user/clients" ? "bg-zinc-200 dark:bg-zinc-800" : ""}`}
           >
-            <span className="hidden lg:block">Clients</span>{" "}
             <UsersIcon className="w-5 h-5" />
+            <span className="hidden lg:block">Clients</span>{" "}
           </div>
         </Link>
 
@@ -53,8 +53,8 @@ export default function SideNavBar() {
 
         <SignOutButton signOutCallback={() => router.push("/")}>
           <div className="rounded-xl hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 py-2 px-6 mx-2 text-md font-semibold flex flex-row justify-between items-center hover:bg-zinc-200 dark:hover:bg-zinc-800">
-            <span className="hidden lg:block">Sign Out</span>{" "}
             <LogOutIcon className="w-5 h-5" />
+            <span className="hidden lg:block">Sign Out</span>{" "}
           </div>
         </SignOutButton>
       </div>
