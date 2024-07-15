@@ -46,7 +46,7 @@ export default function SDOHCategoryDistribution({
             <PolarGrid gridType="circle" />
             <PolarAngleAxis dataKey="SDOHCategory" />
             <Radar
-              dataKey="month"
+              dataKey="percentage"
               fill="var(--color-percentage)"
               fillOpacity={0.6}
               dot={{
