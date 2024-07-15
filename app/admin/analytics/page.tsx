@@ -83,7 +83,7 @@ export default async function Analytics() {
     GetPercentageOfRequestsByStatus(),
     GetSDOHPercentages(),
   ]);
-
+  console.log(sdohPercentages);
   const prePostCategories: (keyof AnswerCategories)[] = [
     "housingSituation",
     "housingQuality",
