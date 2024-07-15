@@ -1,7 +1,6 @@
 import { createClient as createSupabaseClient } from "@/server/supabase/server";
 import { Tables } from "@/types_db";
-import { auth } from "@clerk/nextjs/server";
-import type { Request } from "@/server/actions/request/actions";
+import { z } from "zod";
 type totalValue = {
   id: number;
   totalValue: number;
@@ -19,6 +18,54 @@ type RequestByAgency = {
 type RequestData = {
   fundTypeId: number;
 };
+
+export type PercentRequestStatusReturn = {
+  RequestStatusOptions: RequestStatusOptions;
+  percentage: number;
+}[];
+
+const RequestStatusSchema = z.enum([
+  "paid",
+  "approved",
+  "denied",
+  "pendingApproval",
+]);
+
+export type RequestStatusOptions = z.infer<typeof RequestStatusSchema>;
+
+export async function getPercentageOfRequestsByStatus(): Promise<PercentRequestStatusReturn> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Request")
+      .select("approved, denied, pendingApproval, paid")
+      .eq("approved", true)
+      .or("denied.eq.true,pendingApproval.eq.true,paid.eq.true");
+
+    if (error) throw error;
+    if (!data) return [];
+
+    const total = data.length;
+    const counts = {
+      approved: data.filter((item) => item.approved).length,
+      denied: data.filter((item) => item.denied).length,
+      pendingApproval: data.filter((item) => item.pendingApproval).length,
+      paid: data.filter((item) => item.paid).length,
+    };
+
+    const percentages: PercentRequestStatusReturn = Object.entries(counts).map(
+      ([status, count]) => ({
+        RequestStatusOptions: status as RequestStatusOptions,
+        percentage: (count / total) * 100,
+      }),
+    );
+
+    return percentages;
+  } catch (error) {
+    console.error("Error in getPercentageOfRequestsByStatus:", error);
+    throw error;
+  }
+}
 
 export async function getTotalRFFDollarsSpent() {
   const supabase = createSupabaseClient();

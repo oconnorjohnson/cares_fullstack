@@ -6,13 +6,14 @@ import {
   getPercentageOfRequestsByFundType,
   dollarsSpentByFundType,
   getTotalRFFDollarsSpent,
+  getPercentageOfRequestsByStatus,
 } from "@/server/supabase/functions/read";
 import { auth } from "@clerk/nextjs/server";
 import {
   countTotalRequests,
   countRequestsByAgency,
 } from "@/server/supabase/functions/count";
-
+import type { PercentRequestStatusReturn } from "@/server/supabase/functions/read";
 export type AnswerCategories = {
   housingSituation: number;
   housingQuality: number;
@@ -42,6 +43,11 @@ interface FundTypeData {
 interface DollarsSpendData {
   fundTypeId: number;
   dollars: number;
+}
+
+export async function GetPercentageOfRequestsByStatus(): Promise<PercentRequestStatusReturn> {
+  const percentages = await getPercentageOfRequestsByStatus();
+  return percentages;
 }
 
 export async function GetTotalRFFDollarsSpent() {

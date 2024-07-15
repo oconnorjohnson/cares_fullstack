@@ -12,6 +12,7 @@ import {
   GetPercentageOfRequestsByFundType,
   GetDollarsSpentByFundType,
   GetTotalRFFDollarsSpent,
+  GetPercentageOfRequestsByStatus,
 } from "@/server/actions/calculations/actions";
 import { CountRequestsCompleted } from "@/server/actions/count/actions";
 import type { AnswerCategories } from "@/server/actions/calculations/actions";
@@ -66,6 +67,7 @@ export default async function Analytics() {
     dollarsSpentByFundType,
     agencyPercentagesRaw,
     totalRFFDollarsSpent,
+    percentagesByStatus,
   ] = await Promise.all([
     CountRequestsCompleted(),
     GetPercentageOfRequestsByAgency(),
@@ -75,6 +77,7 @@ export default async function Analytics() {
     GetDollarsSpentByFundType(),
     GetPercentageOfRequestsByAgency(),
     GetTotalRFFDollarsSpent(),
+    GetPercentageOfRequestsByStatus(),
   ]);
 
   const prePostCategories: (keyof AnswerCategories)[] = [
@@ -131,6 +134,7 @@ export default async function Analytics() {
               totalSpent={totalRFFDollarsSpent}
               chartData={dollarsSpentChartData}
             />
+            <PercentRequestStatus chartData={percentagesByStatus} />
             <RequestsByAgency
               totalRequests={totalRequests!}
               chartData={agencyPercentages}
