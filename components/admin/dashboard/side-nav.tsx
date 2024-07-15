@@ -24,7 +24,7 @@ export default function SideNavBar() {
   const router = useRouter();
   return (
     <>
-      <div className="flex flex-col min-h-screen justify-start border-t border-r lg:w-1/6 pt-6 space-y-1">
+      <div className="flex flex-col min-h-screen justify-start border-t border-r lg:w-[12.5%] pt-6 space-y-1">
         <Link href="/dashboard">
           <div
             className={`rounded-xl hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 py-2 px-2 lg:px-6 mx-1 lg:mx-2 text-sm lg:text-md font-semibold flex flex-row justify-between items-center ${pathname === "/dashboard" ? "bg-zinc-200 dark:bg-zinc-800" : ""}`}

@@ -122,24 +122,19 @@ export default async function Analytics() {
           <SideNavBar />
           <div className="flex flex-col sm:grid sm:grid-cols-3 border-t flex-col w-5/6 gap-4 py-4 px-4">
             <PrePostAnalysis chartData={prePostChartData} />
-
             <RequestsByAgency
               totalRequests={totalRequests!}
               chartData={agencyPercentages}
             />
-
             <FundTypePopularity chartData={fundPopChartData} />
-
             <DollarsSpent
               totalSpent={totalRFFDollarsSpent}
               chartData={dollarsSpentChartData}
             />
-
             <RequestsByAgency
               totalRequests={totalRequests!}
               chartData={agencyPercentages}
             />
-
             <PrePostAnalysis chartData={prePostChartData} />
             <div className="py-4" />
           </div>
