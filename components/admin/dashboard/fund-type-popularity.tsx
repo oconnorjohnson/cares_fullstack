@@ -76,7 +76,8 @@ export default function FundTypePopularity({
           Popularity of fund types across all requests.
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing percentage of requests containing each fund type.
+          Showing percentage of funds containing each fund type. Funds have a
+          many-to-one relationship with requests.
         </div>
       </CardFooter>
     </Card>

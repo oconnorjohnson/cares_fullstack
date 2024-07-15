@@ -126,7 +126,7 @@ export default function DollarsSpent({
                           y={(viewBox.cy || 0) + 24}
                           className="fill-muted-foreground"
                         >
-                          Total Requests
+                          Total RFF $ Spent
                         </tspan>
                       </text>
                     );

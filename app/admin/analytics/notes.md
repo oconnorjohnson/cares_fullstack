@@ -1,38 +1,79 @@
-# Charts
+# Request Status Overview
 
-- [x] % of Total Requests by Agency (bar)
-- [x] Pre/Post Screen Analysis (bar)
-- [x] convert % of total reqs from bar to pie chart
-- [x] % of Total Requests Containing Each Asset Type (pie)
-- [x] convert % of total requests containing each asset type from pie to bar
-- [...] Dollars spent per asset category with total dollars spent in middle(pie)
-- [ ] Requests submitted per week per agency (multi area chart)
-- [ ] pre/post question category by change in avg (radar chart multiple)
+- [] Pie chart showing the distribution of requests by status (approved, denied, pending approval, completed)
 
-## % of Total Requests Containing Each Asset Type Agency - pie chart
+# Fund Type Distribution
 
-- [x] 1. Database Query:
-     Group requests by assetTypeId and agencyId.
-     Count the number of requests for each combination.
-     Calculate the percentage of total requests for each asset type within each agency.
-- [x] 2. Mapping:
-     Map the result to get the asset type names and their corresponding percentage values for each agency.
-     Ensure that each data point includes the color information for the pie chart.
-- [x] 3. Structure:
-     Format the data to be suitable for a pie chart, showing the percentage of total requests containing each asset type for each agency.
+- [] Bar chart showing the number of requests for each fund type
 
-## Dollars spent per asset category - pie chart
+# Agency Request Volume
 
-- [ ] 1. Database Query: The groupBy query groups funds by fundTypeId and sums their values where paid is true.
-- [ ] 2. Mapping: The result is then mapped to get the fund type names and their corresponding total values.
+- [] Bar chart showing the number of requests submitted by each agency
 
-## Requests submitted per week per agency - multi area chart
+# Monthly Request Trends
 
-- [ ] 1. Database Query: Group requests by agencyId and week (derived from the request date) and count the number of requests for each combination.
-- [ ] 2. Mapping: Structure the data to show the number of requests per week for each agency, suitable for a multi-area chart.
+- [] Line chart showing the number of requests over time (by month)
 
-## pre/post question category by change in avg - radar chart multiple
+# Average Request Processing Time
 
-- [ ] 1. Database Query: Group responses by questionCategoryId and calculate the average score for pre and post responses separately.
-- [ ] 2. Mapping: Calculate the change in average score for each question category by subtracting the pre average from the post average.
-- [ ] 3. Structure: Format the data to be suitable for a radar chart, showing the change in average score for each question category.
+- [] Bar chart showing the average time from request creation to approval/denial for each agency
+
+# SDOH Categories Distribution
+
+- [] Stacked bar chart showing the distribution of Social Determinants of Health (SDOH) categories across all requests
+
+# RFF vs CARES Fund Usage
+
+- [] Pie chart comparing the total amount of RFF funds used vs CARES funds used
+
+# Client Demographics
+
+- [] Pie charts showing the distribution of clients by race and sex
+
+# Fund Type Expenditure
+
+- [] Bar chart showing the total amount spent for each fund type
+
+# Pre vs Post Screening Comparison
+
+- [] Radar chart comparing average scores for each screening question (pre vs post)
+
+# Transaction Type Distribution
+
+- [] Pie chart showing the distribution of transaction types (deposits, disbursements, purchases, reversals)
+
+# Balance Trends
+
+- [] Line chart showing the trends of available, reserved, and total balances for both operating and RFF funds over time
+
+# Receipt Compliance
+
+- [] Bar chart showing the percentage of requests with required receipts uploaded vs those still pending
+
+# Pickup Event Scheduling
+
+- [] Line chart showing the number of pickup events scheduled over time
+
+# User Activity
+
+- [] Bar chart showing the number of requests submitted by each user (excluding admins)
+
+# Average Fund Amount per Request
+
+- [] Box plot showing the distribution of fund amounts requested, grouped by fund type
+
+# Request Approval Rate by Agency
+
+- [] Bar chart showing the percentage of approved requests for each agency
+
+# Implementation Methods
+
+- [] Pie chart showing the distribution of different implementation methods used in requests
+
+# Sustainability Strategies
+
+- [] Word cloud or bar chart showing the frequency of different sustainability strategies mentioned in requests
+
+# Admin Workload Distribution
+
+- [] Stacked bar chart showing the number of requests handled by each admin

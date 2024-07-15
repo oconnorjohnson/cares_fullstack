@@ -141,6 +141,7 @@ export default async function Analytics() {
             />
 
             <PrePostAnalysis chartData={prePostChartData} />
+            <div className="py-4" />
           </div>
         </div>
       </>
