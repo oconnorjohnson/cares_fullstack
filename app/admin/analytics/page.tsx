@@ -127,20 +127,22 @@ export default async function Analytics() {
       <>
         <div className="flex flex-row sm:h-screen w-screen">
           <SideNavBar />
-          <ScrollArea className="flex flex-col sm:grid sm:grid-cols-3 border-t flex-col w-full h-full gap-4 py-4 px-4">
-            <PrePostAnalysis chartData={prePostChartData} />
-            <RequestsByAgency
-              totalRequests={totalRequests!}
-              chartData={agencyPercentages}
-            />
-            <FundTypePopularity chartData={fundPopChartData} />
-            <DollarsSpent
-              totalSpent={totalRFFDollarsSpent}
-              chartData={dollarsSpentChartData}
-            />
-            <PercentRequestStatus chartData={percentagesByStatus} />
-            <SDOHCategoryDistribution chartData={sdohPercentages} />
-            <div className="py-2" />
+          <ScrollArea className="w-full h-full">
+            <div className="flex flex-col sm:grid sm:grid-cols-3 border-t w-full gap-4 py-4 px-4">
+              <PrePostAnalysis chartData={prePostChartData} />
+              <RequestsByAgency
+                totalRequests={totalRequests!}
+                chartData={agencyPercentages}
+              />
+              <FundTypePopularity chartData={fundPopChartData} />
+              <DollarsSpent
+                totalSpent={totalRFFDollarsSpent}
+                chartData={dollarsSpentChartData}
+              />
+              <PercentRequestStatus chartData={percentagesByStatus} />
+              <SDOHCategoryDistribution chartData={sdohPercentages} />
+              <div className="py-2" />
+            </div>
           </ScrollArea>
         </div>
       </>
