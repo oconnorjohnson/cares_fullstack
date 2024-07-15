@@ -19,6 +19,7 @@ import {
 import { CountRequestsCompleted } from "@/server/actions/count/actions";
 import type { AnswerCategories } from "@/server/actions/calculations/actions";
 import SDOHCategoryDistribution from "@/components/admin/dashboard/sdoh-category-distribution";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 function getCategoryValue(
   prePostCategories: keyof AnswerCategories,
@@ -124,9 +125,9 @@ export default async function Analytics() {
   } else {
     return (
       <>
-        <div className="flex flex-row sm:h-screen">
+        <ScrollArea className="flex flex-row sm:h-screen w-screen">
           <SideNavBar />
-          <div className="flex flex-col sm:grid sm:grid-cols-3 border-t flex-col w-full gap-4 py-4 px-4">
+          <div className="flex flex-col sm:grid sm:grid-cols-3 border-t flex-col w-full h-full gap-4 py-4 px-4">
             <PrePostAnalysis chartData={prePostChartData} />
             <RequestsByAgency
               totalRequests={totalRequests!}
@@ -141,7 +142,7 @@ export default async function Analytics() {
             <SDOHCategoryDistribution chartData={sdohPercentages} />
             <div className="py-2" />
           </div>
-        </div>
+        </ScrollArea>
       </>
     );
   }
