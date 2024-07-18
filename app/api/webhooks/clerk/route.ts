@@ -50,7 +50,6 @@ async function sendWelcomeEmail(firstName: string, email: string) {
 }
 
 export async function POST(req: Request) {
-  auth().protect();
   console.log("Starting POST function");
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
 

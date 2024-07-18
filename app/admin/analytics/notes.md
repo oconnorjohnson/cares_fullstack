@@ -4,11 +4,15 @@
 
 # Fund Type Distribution
 
-- [] Bar chart showing the number of requests for each fund type
+- [x] Bar chart showing the number of requests for each fund type
+
+# Weekly RFF Spending
+
+- [] interactive (zoomable) bar chart showing the total RFF dollars spent by week
 
 # Agency Request Volume
 
-- [] Bar chart showing the number of requests submitted by each agency
+- [x] Bar chart showing the number of requests submitted by each agency
 
 # Monthly Request Trends
 
@@ -20,13 +24,9 @@
 
 # SDOH Categories Distribution
 
-- [] Stacked bar chart showing the distribution of Social Determinants of Health (SDOH) categories across all requests
+- [x] Stacked bar chart showing the distribution of Social Determinants of Health (SDOH) categories across all requests
 
 we need to get a percentage of total requests containing x category for each category where item of category is x
-
-# RFF vs CARES Fund Usage
-
-- [] Pie chart comparing the total amount of RFF funds used vs CARES funds used
 
 # Client Demographics
 
@@ -34,11 +34,11 @@ we need to get a percentage of total requests containing x category for each cat
 
 # Fund Type Expenditure
 
-- [] Bar chart showing the total amount spent for each fund type
+- [x] Bar chart showing the total amount spent for each fund type
 
 # Pre vs Post Screening Comparison
 
-- [] Radar chart comparing average scores for each screening question (pre vs post)
+- [x] multi bar chart comparing average scores for each screening question (pre vs post)
 
 # Transaction Type Distribution
 
@@ -52,30 +52,10 @@ we need to get a percentage of total requests containing x category for each cat
 
 - [] Bar chart showing the percentage of requests with required receipts uploaded vs those still pending
 
-# Pickup Event Scheduling
-
-- [] Line chart showing the number of pickup events scheduled over time
-
 # User Activity
 
 - [] Bar chart showing the number of requests submitted by each user (excluding admins)
 
-# Average Fund Amount per Request
-
-- [] Box plot showing the distribution of fund amounts requested, grouped by fund type
-
 # Request Approval Rate by Agency
 
 - [] Bar chart showing the percentage of approved requests for each agency
-
-# Implementation Methods
-
-- [] Pie chart showing the distribution of different implementation methods used in requests
-
-# Sustainability Strategies
-
-- [] Word cloud or bar chart showing the frequency of different sustainability strategies mentioned in requests
-
-# Admin Workload Distribution
-
-- [] Stacked bar chart showing the number of requests handled by each admin
