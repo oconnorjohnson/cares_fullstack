@@ -13,7 +13,7 @@ async function getRequests(): Promise<Request[]> {
     ...request,
     id: request.id,
     user: request.User
-      ? `${request.User.first_name} ${request.User.last_name}`
+      ? `${request.User.first_name} ${request.User.last_name?.charAt(0)}`
       : "N/A",
     agency: request.Agency ? request.Agency.name : "N/A",
     client: request.Client ? `${request.Client.clientID}` : "N/A",
@@ -26,7 +26,7 @@ async function getRequests(): Promise<Request[]> {
           ? "Denied"
           : "Error",
     pendingPayout: request.pendingPayout ? "True" : "False",
-    paid: request.paid ? "True" : "False",
+    paid: request.paid ? "Paid" : "False",
     hasPreScreen: request.hasPreScreen ? "Complete" : "Incomplete",
     hasPostScreen: request.hasPostScreen ? "Complete" : "Incomplete",
     isHighlighted: request.pendingApproval,
