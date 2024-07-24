@@ -532,7 +532,7 @@ export async function requestAllRequests(): Promise<Requests[]> {
         const funds = await getFundsByRequestId(request.id);
         const formattedFunds = funds.map((fund) => ({
           typeName: fundTypesMap.get(fund.fundTypeId) || "Unknown",
-          amount: fund.amount,
+          amount: fund.fundTypeId === 3 ? fund.amount * 2.5 : fund.amount,
         }));
         return { ...request, funds: formattedFunds };
       }),
