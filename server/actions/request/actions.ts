@@ -105,7 +105,7 @@ export type Requests = {
   adminOne: string | null;
   adminTwo: string | null;
   adminThree: string | null;
-  funds: { typeName: string; amount: number }[];
+  funds: { id: number; typeName: string; amount: number }[];
 };
 export type RequestData = {
   id: number;
@@ -531,6 +531,7 @@ export async function requestAllRequests(): Promise<Requests[]> {
       requests.map(async (request) => {
         const funds = await getFundsByRequestId(request.id);
         const formattedFunds = funds.map((fund) => ({
+          id: fund.id,
           typeName: fundTypesMap.get(fund.fundTypeId) || "Unknown",
           amount: fund.fundTypeId === 3 ? fund.amount * 2.5 : fund.amount,
         }));

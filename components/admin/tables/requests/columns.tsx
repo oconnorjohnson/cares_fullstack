@@ -46,7 +46,7 @@ export type Request = {
   adminOne: string | null;
   adminTwo: string | null;
   adminThree: string | null;
-  funds: { typeName: string; amount: number }[];
+  funds: { id: number; typeName: string; amount: number }[];
 };
 export const columns: ColumnDef<Request>[] = [
   // checkboxes
@@ -144,9 +144,9 @@ export const columns: ColumnDef<Request>[] = [
       const funds = row.original.funds;
       return (
         <div className="max-w-[200px] overflow-auto">
-          {funds.map((fund, index) => (
-            <div key={index} className="text-sm">
-              {fund.typeName}: ${fund.amount}
+          {funds.map((fund) => (
+            <div key={fund.id} className="text-sm">
+              ID: {fund.id}, {fund.typeName}: ${fund.amount}
             </div>
           ))}
         </div>
