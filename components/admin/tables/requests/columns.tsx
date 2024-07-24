@@ -46,6 +46,7 @@ export type Request = {
   adminOne: string | null;
   adminTwo: string | null;
   adminThree: string | null;
+  funds: { typeName: string; amount: number }[];
 };
 export const columns: ColumnDef<Request>[] = [
   // checkboxes
@@ -136,6 +137,22 @@ export const columns: ColumnDef<Request>[] = [
   //   },
   // },
   // status: complex conditional render;
+  {
+    accessorKey: "funds",
+    header: "Funds",
+    cell: ({ row }) => {
+      const funds = row.original.funds;
+      return (
+        <div className="max-w-[200px] overflow-auto">
+          {funds.map((fund, index) => (
+            <div key={index} className="text-sm">
+              {fund.typeName}: ${fund.amount}
+            </div>
+          ))}
+        </div>
+      );
+    },
+  },
   {
     accessorKey: "combinedStatus",
     header: "Status",

@@ -77,6 +77,36 @@ export type Request = {
   adminTwo: string | null;
   adminThree: string | null;
 };
+export type Requests = {
+  id: number;
+  userId: string;
+  Client: {
+    sex: string;
+    race: string;
+    clientID: string;
+  } | null;
+  User: {
+    first_name: string | null;
+    last_name: string | null;
+  } | null;
+  Agency: {
+    name: string;
+  } | null;
+  details: string;
+  pendingApproval: boolean;
+  approved: boolean;
+  denied: boolean;
+  pendingPayout: boolean;
+  paid: boolean;
+  hasPreScreen: boolean;
+  hasPostScreen: boolean;
+  created_at: string;
+  isHighlighted?: boolean;
+  adminOne: string | null;
+  adminTwo: string | null;
+  adminThree: string | null;
+  funds: { typeName: string; amount: number }[];
+};
 export type RequestData = {
   id: number;
   user: {
@@ -481,7 +511,7 @@ export async function requestAllFundTypes(): Promise<Tables<"FundType">[]> {
   }
 }
 
-export async function requestAllRequests(): Promise<Request[]> {
+export async function requestAllRequests(): Promise<Requests[]> {
   const { userId: clerkuserId } = auth();
   if (!clerkuserId) {
     throw new Error("User not authenticated");
@@ -491,13 +521,26 @@ export async function requestAllRequests(): Promise<Request[]> {
     const response = await getAllRequests();
     const requests = response;
     if (!requests) {
-      // Ensure an empty array is returned if there are no requests
       return [];
     }
-    return requests as unknown as Request[];
+
+    const fundTypes = await requestAllFundTypes();
+    const fundTypesMap = new Map(fundTypes.map((ft) => [ft.id, ft.typeName]));
+
+    const requestsWithFunds = await Promise.all(
+      requests.map(async (request) => {
+        const funds = await getFundsByRequestId(request.id);
+        const formattedFunds = funds.map((fund) => ({
+          typeName: fundTypesMap.get(fund.fundTypeId) || "Unknown",
+          amount: fund.amount,
+        }));
+        return { ...request, funds: formattedFunds };
+      }),
+    );
+
+    return requestsWithFunds as unknown as Requests[];
   } catch (error) {
     console.error(`Failed to fetch requests:`, error);
-    // Return an empty array in case of an error to prevent .map() from failing
     return [];
   }
 }

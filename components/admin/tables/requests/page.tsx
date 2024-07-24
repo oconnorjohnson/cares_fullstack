@@ -30,6 +30,7 @@ async function getRequests(): Promise<Request[]> {
     hasPreScreen: request.hasPreScreen ? "Complete" : "Incomplete",
     hasPostScreen: request.hasPostScreen ? "Complete" : "Incomplete",
     isHighlighted: request.pendingApproval,
+    funds: request.funds,
   }));
   const statusPriority: { [key in RequestStatus]: number } = {
     Pending: 1,
