@@ -239,22 +239,22 @@ export const columns: ColumnDef<Request>[] = [
   //     );
   //   },
   // },
-  //   hasPostScreen: boolean;
-  // {
-  //   accessorKey: "hasPostScreen",
-  //   header: ({ column }) => {
-  //     return (
-  //       <Button
-  //         variant="ghost"
-  //         size="sm"
-  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-  //       >
-  //         Post-Screen
-  //         <ArrowUpDown className="ml-2 h-4 w-4" />
-  //       </Button>
-  //     );
-  //   },
-  // },
+  // hasPostScreen: boolean;
+  {
+    accessorKey: "hasPostScreen",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Post-Screen
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+  },
   // actions
   {
     id: "actions",
