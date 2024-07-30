@@ -93,6 +93,7 @@ export async function countPaidFundsByRace(): Promise<{
       Other: { count: 0, totalAmount: 0 },
       "Native Hawaiian / Other Pacific Islander": { count: 0, totalAmount: 0 },
       Unknown: { count: 0, totalAmount: 0 },
+      Unavailable: { count: 0, totalAmount: 0 },
     };
 
     data.forEach((fund) => {
