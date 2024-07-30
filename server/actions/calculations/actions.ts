@@ -13,6 +13,8 @@ import { auth } from "@clerk/nextjs/server";
 import {
   countTotalRequests,
   countRequestsByAgency,
+  countPaidFundsByRace,
+  countPrePostScreenChanges,
 } from "@/server/supabase/functions/count";
 import type {
   PercentRequestStatusReturn,
@@ -47,6 +49,60 @@ interface FundTypeData {
 interface DollarsSpendData {
   fundTypeId: number;
   dollars: number;
+}
+
+export async function GetPrePostScreenChanges(): Promise<{
+  decreased: number;
+  increased: number;
+}> {
+  const { userId } = auth();
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
+
+  try {
+    const changes = await countPrePostScreenChanges();
+    return changes;
+  } catch (error) {
+    console.error(
+      "Error in actions/calculations/actions.ts GetPrePostScreenChanges:",
+      error,
+    );
+    throw error;
+  }
+}
+
+export async function GetPaidFundPercentagesByRace(): Promise<{
+  [key: string]: { percentage: number; totalAmount: number };
+}> {
+  const { userId } = auth();
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
+
+  try {
+    const raceCounts = await countPaidFundsByRace();
+    const totalAmount = Object.values(raceCounts).reduce(
+      (sum, { totalAmount }) => sum + totalAmount,
+      0,
+    );
+
+    const percentages: {
+      [key: string]: { percentage: number; totalAmount: number };
+    } = {};
+
+    for (const [race, { count, totalAmount }] of Object.entries(raceCounts)) {
+      percentages[race] = {
+        percentage: (totalAmount / totalAmount) * 100,
+        totalAmount,
+      };
+    }
+
+    return percentages;
+  } catch (error) {
+    console.error("Error in getPaidFundPercentagesByRace:", error);
+    throw error;
+  }
 }
 
 export async function GetSDOHPercentages(): Promise<SDOHPercentages> {

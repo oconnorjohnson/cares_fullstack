@@ -15,6 +15,8 @@ import {
   GetTotalRFFDollarsSpent,
   GetPercentageOfRequestsByStatus,
   GetSDOHPercentages,
+  GetPaidFundPercentagesByRace,
+  GetPrePostScreenChanges,
 } from "@/server/actions/calculations/actions";
 import { CountRequestsCompleted } from "@/server/actions/count/actions";
 import type { AnswerCategories } from "@/server/actions/calculations/actions";
@@ -73,6 +75,8 @@ export default async function Analytics() {
     totalRFFDollarsSpent,
     percentagesByStatus,
     sdohPercentages,
+    prePostChanges,
+    paidFundsByRace,
   ] = await Promise.all([
     CountRequestsCompleted(),
     GetPercentageOfRequestsByFundType(),
@@ -83,6 +87,8 @@ export default async function Analytics() {
     GetTotalRFFDollarsSpent(),
     GetPercentageOfRequestsByStatus(),
     GetSDOHPercentages(),
+    GetPrePostScreenChanges(),
+    GetPaidFundPercentagesByRace(),
   ]);
   console.log(sdohPercentages);
   const prePostCategories: (keyof AnswerCategories)[] = [
@@ -95,7 +101,8 @@ export default async function Analytics() {
     "transpoStress",
     "financialDifficulties",
   ];
-
+  console.log("prePostChanges", prePostChanges);
+  console.log("paidFundsByRace", paidFundsByRace);
   const agencyPercentages = convertAgencyData(agencyPercentagesRaw);
 
   const prePostChartData = prePostCategories.map((category) => ({

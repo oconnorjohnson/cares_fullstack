@@ -1,5 +1,116 @@
 import { createClient as createSupabaseClient } from "@/server/supabase/server";
 
+export async function countPrePostScreenChanges(): Promise<{
+  decreased: number;
+  increased: number;
+}> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Request")
+      .select(
+        `
+        id,
+        PreScreenAnswers (
+          housingSituation, housingQuality, utilityStress, foodInsecurityStress,
+          foodMoneyStress, transpoConfidence, transpoStress, financialDifficulties
+        ),
+        PostScreenAnswers (
+          housingSituation, housingQuality, utilityStress, foodInsecurityStress,
+          foodMoneyStress, transpoConfidence, transpoStress, financialDifficulties
+        )
+      `,
+      )
+      .eq("paid", true)
+      .eq("hasPreScreen", true)
+      .eq("hasPostScreen", true);
+
+    if (error) throw error;
+
+    let decreased = 0;
+    let increased = 0;
+
+    data.forEach((request) => {
+      const preScreen = request.PreScreenAnswers[0];
+      const postScreen = request.PostScreenAnswers[0];
+
+      if (!preScreen || !postScreen) return;
+
+      const preSum = Object.values(preScreen).reduce(
+        (sum, val) => sum + (val as number),
+        0,
+      );
+      const postSum = Object.values(postScreen).reduce(
+        (sum, val) => sum + (val as number),
+        0,
+      );
+
+      if (postSum < preSum) {
+        decreased++;
+      } else if (postSum > preSum) {
+        increased++;
+      }
+      // If postSum === preSum, we don't count it as either increased or decreased
+    });
+
+    return { decreased, increased };
+  } catch (error) {
+    console.error("Error in countPrePostScreenChanges:", error);
+    throw error;
+  }
+}
+
+export async function countPaidFundsByRace(): Promise<{
+  [key: string]: { count: number; totalAmount: number };
+}> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Fund")
+      .select(
+        `
+        amount,
+        Request (
+        Client (
+          race
+        )
+      )
+    `,
+      )
+      .eq("paid", true);
+
+    if (error) throw error;
+
+    const raceCounts: {
+      [key: string]: { count: number; totalAmount: number };
+    } = {
+      White: { count: 0, totalAmount: 0 },
+      Asian: { count: 0, totalAmount: 0 },
+      "African American / Black": { count: 0, totalAmount: 0 },
+      "Hispanic / Latino": { count: 0, totalAmount: 0 },
+      "Middle Eastern / North African": { count: 0, totalAmount: 0 },
+      "American Indian / Alaska Native": { count: 0, totalAmount: 0 },
+      Other: { count: 0, totalAmount: 0 },
+      "Native Hawaiian / Other Pacific Islander": { count: 0, totalAmount: 0 },
+      Unknown: { count: 0, totalAmount: 0 },
+    };
+
+    data.forEach((fund) => {
+      const race = fund.Request?.Client?.race || "Unavailable";
+      raceCounts[race].count++;
+      raceCounts[race].totalAmount += fund.amount;
+    });
+
+    return raceCounts;
+  } catch (error) {
+    console.error(
+      "Error in countPaidFundsByRace supabase/functions/count.ts:",
+      error,
+    );
+    throw error;
+  }
+}
+
 export async function countRFFWalmartCards(): Promise<{
   count: number | null;
   totalSum: number | null;
