@@ -73,7 +73,7 @@ export async function GetPrePostScreenChanges(): Promise<{
 }
 
 export async function GetPaidFundPercentagesByRace(): Promise<{
-  [key: string]: { percentage: number; totalAmount: number };
+  [key: string]: { percentage: number; count: number };
 }> {
   const { userId } = auth();
   if (!userId) {
@@ -82,25 +82,25 @@ export async function GetPaidFundPercentagesByRace(): Promise<{
 
   try {
     const raceCounts = await countPaidFundsByRace();
-    const totalAmount = Object.values(raceCounts).reduce(
-      (sum, { totalAmount }) => sum + totalAmount,
+    const totalCount = Object.values(raceCounts).reduce(
+      (sum, { count }) => sum + count,
       0,
     );
 
     const percentages: {
-      [key: string]: { percentage: number; totalAmount: number };
+      [key: string]: { percentage: number; count: number };
     } = {};
 
-    for (const [race, { count, totalAmount }] of Object.entries(raceCounts)) {
+    for (const [race, { count }] of Object.entries(raceCounts)) {
       percentages[race] = {
-        percentage: (totalAmount / totalAmount) * 100,
-        totalAmount,
+        percentage: totalCount > 0 ? (count / totalCount) * 100 : 0,
+        count: count,
       };
     }
 
     return percentages;
   } catch (error) {
-    console.error("Error in getPaidFundPercentagesByRace:", error);
+    console.error("Error in GetPaidFundPercentagesByRace:", error);
     throw error;
   }
 }

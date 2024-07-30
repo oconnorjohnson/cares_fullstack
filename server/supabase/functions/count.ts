@@ -71,11 +71,11 @@ export async function countPaidFundsByRace(): Promise<{
         `
         amount,
         Request (
-        Client (
-          race
+          Client (
+            race
+          )
         )
-      )
-    `,
+      `,
       )
       .eq("paid", true);
 
@@ -98,6 +98,9 @@ export async function countPaidFundsByRace(): Promise<{
 
     data.forEach((fund) => {
       const race = fund.Request?.Client?.race || "Unavailable";
+      if (!raceCounts[race]) {
+        raceCounts[race] = { count: 0, totalAmount: 0 };
+      }
       raceCounts[race].count++;
       raceCounts[race].totalAmount += fund.amount;
     });
