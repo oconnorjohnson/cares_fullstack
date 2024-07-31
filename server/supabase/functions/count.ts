@@ -31,7 +31,7 @@ export async function analyzeIncreasedScores(): Promise<{
         agencyId,
         userId,
         created_at,
-        Fund:fundId (
+        Fund (
           id,
           fundTypeId
         ),
