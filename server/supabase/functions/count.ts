@@ -1,4 +1,132 @@
 import { createClient as createSupabaseClient } from "@/server/supabase/server";
+import { Database } from "@/types_db";
+
+type ScreenAnswer = Database["public"]["Tables"]["PreScreenAnswers"]["Row"];
+type Fund = Database["public"]["Tables"]["Fund"]["Row"];
+
+type RequestWithScreens = {
+  id: number;
+  agencyId: number;
+  userId: string;
+  created_at: string;
+  Fund: Fund | null;
+  PreScreenAnswers: ScreenAnswer[];
+  PostScreenAnswers: ScreenAnswer[];
+};
+
+export async function analyzeIncreasedScores(): Promise<{
+  byAgency: { [key: string]: number };
+  byUser: { [key: string]: number };
+  byCategory: { [key: string]: number };
+  byFundType: { [key: string]: number };
+  averageTimeBetweenScreens: number;
+}> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = (await supabase
+      .from("Request")
+      .select(
+        `
+        id,
+        agencyId,
+        userId,
+        created_at,
+        Fund:fundId (
+          id,
+          fundTypeId
+        ),
+        PreScreenAnswers (
+          housingSituation, housingQuality, utilityStress, foodInsecurityStress,
+          foodMoneyStress, transpoConfidence, transpoStress, financialDifficulties,
+          created_at
+        ),
+        PostScreenAnswers (
+          housingSituation, housingQuality, utilityStress, foodInsecurityStress,
+          foodMoneyStress, transpoConfidence, transpoStress, financialDifficulties,
+          created_at
+        )
+      `,
+      )
+      .eq("hasPreScreen", true)
+      .eq("hasPostScreen", true)
+      .eq("paid", true)) as { data: RequestWithScreens[] | null; error: any };
+
+    if (error) throw error;
+
+    const byAgency: { [key: string]: number } = {};
+    const byUser: { [key: string]: number } = {};
+    const byCategory: { [key: string]: number } = {};
+    const byFundType: { [key: string]: number } = {};
+    let totalTimeBetweenScreens = 0;
+    let increasedCount = 0;
+
+    const categories: (keyof Omit<
+      ScreenAnswer,
+      "id" | "requestId" | "created_at" | "additionalInformation"
+    >)[] = [
+      "housingSituation",
+      "housingQuality",
+      "utilityStress",
+      "foodInsecurityStress",
+      "foodMoneyStress",
+      "transpoConfidence",
+      "transpoStress",
+      "financialDifficulties",
+    ];
+
+    data?.forEach((request) => {
+      const preScreen = request.PreScreenAnswers[0];
+      const postScreen = request.PostScreenAnswers[0];
+
+      if (!preScreen || !postScreen) return;
+
+      const preSum = categories.reduce(
+        (sum, cat) => sum + (preScreen[cat] || 0),
+        0,
+      );
+      const postSum = categories.reduce(
+        (sum, cat) => sum + (postScreen[cat] || 0),
+        0,
+      );
+
+      if (postSum > preSum) {
+        increasedCount++;
+        byAgency[request.agencyId] = (byAgency[request.agencyId] || 0) + 1;
+        byUser[request.userId] = (byUser[request.userId] || 0) + 1;
+
+        categories.forEach((cat) => {
+          if ((postScreen[cat] || 0) > (preScreen[cat] || 0)) {
+            byCategory[cat] = (byCategory[cat] || 0) + 1;
+          }
+        });
+
+        if (request.Fund && request.Fund.fundTypeId) {
+          byFundType[request.Fund.fundTypeId] =
+            (byFundType[request.Fund.fundTypeId] || 0) + 1;
+        }
+
+        const preScreenDate = new Date(preScreen.created_at);
+        const postScreenDate = new Date(postScreen.created_at);
+        totalTimeBetweenScreens +=
+          postScreenDate.getTime() - preScreenDate.getTime();
+      }
+    });
+
+    const averageTimeBetweenScreens =
+      increasedCount > 0 ? totalTimeBetweenScreens / increasedCount : 0;
+
+    return {
+      byAgency,
+      byUser,
+      byCategory,
+      byFundType,
+      averageTimeBetweenScreens,
+    };
+  } catch (error) {
+    console.error("Error in analyzeIncreasedScores:", error);
+    throw error;
+  }
+}
 
 export async function countPrePostScreenChanges(): Promise<{
   decreased: number;

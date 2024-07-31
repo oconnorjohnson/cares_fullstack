@@ -17,6 +17,7 @@ import {
   GetSDOHPercentages,
   GetPaidFundPercentagesByRace,
   GetPrePostScreenChanges,
+  GetIncreasedScoresAnalysis,
 } from "@/server/actions/calculations/actions";
 import { CountRequestsCompleted } from "@/server/actions/count/actions";
 import type { AnswerCategories } from "@/server/actions/calculations/actions";
@@ -77,6 +78,7 @@ export default async function Analytics() {
     sdohPercentages,
     prePostChanges,
     paidFundsByRace,
+    scoreAnalysis,
   ] = await Promise.all([
     CountRequestsCompleted(),
     GetPercentageOfRequestsByFundType(),
@@ -89,6 +91,7 @@ export default async function Analytics() {
     GetSDOHPercentages(),
     GetPrePostScreenChanges(),
     GetPaidFundPercentagesByRace(),
+    GetIncreasedScoresAnalysis(),
   ]);
   console.log(sdohPercentages);
   const prePostCategories: (keyof AnswerCategories)[] = [
@@ -104,7 +107,7 @@ export default async function Analytics() {
   console.log("prePostChanges", prePostChanges);
   console.log("paidFundsByRace", paidFundsByRace);
   const agencyPercentages = convertAgencyData(agencyPercentagesRaw);
-
+  console.log("scoreAnalysis", scoreAnalysis);
   const prePostChartData = prePostCategories.map((category) => ({
     category,
     preValue: getCategoryValue(category, preAnswers),

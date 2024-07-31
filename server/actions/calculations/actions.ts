@@ -15,6 +15,7 @@ import {
   countRequestsByAgency,
   countPaidFundsByRace,
   countPrePostScreenChanges,
+  analyzeIncreasedScores,
 } from "@/server/supabase/functions/count";
 import type {
   PercentRequestStatusReturn,
@@ -49,6 +50,27 @@ interface FundTypeData {
 interface DollarsSpendData {
   fundTypeId: number;
   dollars: number;
+}
+
+export async function GetIncreasedScoresAnalysis(): Promise<{
+  byAgency: { [key: string]: number };
+  byUser: { [key: string]: number };
+  byCategory: { [key: string]: number };
+  byFundType: { [key: string]: number };
+  averageTimeBetweenScreens: number;
+}> {
+  const { userId } = auth();
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
+
+  try {
+    const analysis = await analyzeIncreasedScores();
+    return analysis;
+  } catch (error) {
+    console.error("Error in GetIncreasedScoresAnalysis:", error);
+    throw error;
+  }
 }
 
 export async function GetPrePostScreenChanges(): Promise<{
