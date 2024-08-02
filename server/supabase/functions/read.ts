@@ -1178,35 +1178,76 @@ export async function getRequestsThatNeedAgreementsByUserId(userId: string) {
   }
 }
 
+// export async function getAllRequests() {
+//   console.log("getAllRequests supabase function running");
+//   const supabase = createSupabaseClient();
+//   try {
+//     const { data, error, status } = await supabase
+//       .from("Request")
+//       .select(
+//         `*, User ( first_name, last_name ), Client ( clientID, sex, race ), Agency ( name )`,
+//       );
+
+//     if (error) {
+//       console.error(
+//         "Error fetching all requests:",
+//         error,
+//         "Status code:",
+//         status,
+//       );
+//       throw error;
+//     }
+
+//     if (!data) {
+//       console.log("No data returned", "Status code:", status);
+//       return [];
+//     }
+
+//     console.log("Fetched requests data:", data);
+//     return data;
+//   } catch (error) {
+//     console.error("Unexpected error in getAllRequests:", error);
+//     throw error;
+//   }
+// }
+
 export async function getAllRequests() {
-  console.log("getAllRequests supabase function running");
   const supabase = createSupabaseClient();
   try {
-    const { data, error, status } = await supabase
-      .from("Request")
-      .select(
-        `*, User ( first_name, last_name ), Client ( clientID, sex, race ), Agency ( name )`,
-      );
-
-    if (error) {
-      console.error(
-        "Error fetching all requests:",
-        error,
-        "Status code:",
-        status,
-      );
-      throw error;
-    }
-
-    if (!data) {
-      console.log("No data returned", "Status code:", status);
-      return [];
-    }
-
-    console.log("Fetched requests data:", data);
-    return data;
+    const { data, error } = await supabase.from("Request").select(`
+        *,
+        User (first_name, last_name),
+        Client (clientID, sex, race),
+        Agency (name)
+      `);
+    if (error) throw error;
+    return data || [];
   } catch (error) {
     console.error("Unexpected error in getAllRequests:", error);
+    throw error;
+  }
+}
+
+export async function getAllFundTypes() {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase.from("FundType").select("*");
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error("Unexpected error in getAllFundTypes:", error);
+    throw error;
+  }
+}
+
+export async function getAllFunds() {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase.from("Fund").select("*");
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error("Unexpected error in getAllFunds:", error);
     throw error;
   }
 }

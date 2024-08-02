@@ -35,6 +35,8 @@ import {
   isAdminOneNull as isAdminOneNullFromSupabase,
   isAdminTwoNull as isAdminTwoNullFromSupabase,
   isAnyNull as isAnyNullFromSupabase,
+  getAllFundTypes,
+  getAllFunds,
 } from "@/server/supabase/functions/read";
 import { Tables } from "@/types_db";
 import { PostgrestError } from "@supabase/supabase-js";
@@ -511,40 +513,82 @@ export async function requestAllFundTypes(): Promise<Tables<"FundType">[]> {
   }
 }
 
-export async function requestAllRequests(): Promise<Requests[]> {
+export async function fetchAllRequests() {
   const { userId: clerkuserId } = auth();
   if (!clerkuserId) {
     throw new Error("User not authenticated");
   }
-  console.log("requestAllRequests server action running");
   try {
-    const response = await getAllRequests();
-    const requests = response;
-    if (!requests) {
-      return [];
-    }
-
-    const fundTypes = await requestAllFundTypes();
-    const fundTypesMap = new Map(fundTypes.map((ft) => [ft.id, ft.typeName]));
-
-    const requestsWithFunds = await Promise.all(
-      requests.map(async (request) => {
-        const funds = await getFundsByRequestId(request.id);
-        const formattedFunds = funds.map((fund) => ({
-          id: fund.id,
-          typeName: fundTypesMap.get(fund.fundTypeId) || "Unknown",
-          amount: fund.fundTypeId === 3 ? fund.amount * 2.5 : fund.amount,
-        }));
-        return { ...request, funds: formattedFunds };
-      }),
-    );
-
-    return requestsWithFunds as unknown as Requests[];
+    const requests = await getAllRequests();
+    return requests;
   } catch (error) {
     console.error(`Failed to fetch requests:`, error);
     return [];
   }
 }
+
+export async function fetchAllFundTypes() {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
+  try {
+    const fundTypes = await getAllFundTypes();
+    return fundTypes;
+  } catch (error) {
+    console.error(`Failed to fetch fund types:`, error);
+    return [];
+  }
+}
+
+export async function fetchAllFunds() {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
+  try {
+    const funds = await getAllFunds();
+    return funds;
+  } catch (error) {
+    console.error(`Failed to fetch funds:`, error);
+    return [];
+  }
+}
+
+// export async function requestAllRequests(): Promise<Requests[]> {
+//   const { userId: clerkuserId } = auth();
+//   if (!clerkuserId) {
+//     throw new Error("User not authenticated");
+//   }
+//   console.log("requestAllRequests server action running");
+//   try {
+//     const response = await getAllRequests();
+//     const requests = response;
+//     if (!requests) {
+//       return [];
+//     }
+
+//     const fundTypes = await requestAllFundTypes();
+//     const fundTypesMap = new Map(fundTypes.map((ft) => [ft.id, ft.typeName]));
+
+//     const requestsWithFunds = await Promise.all(
+//       requests.map(async (request) => {
+//         const funds = await getFundsByRequestId(request.id);
+//         const formattedFunds = funds.map((fund) => ({
+//           id: fund.id,
+//           typeName: fundTypesMap.get(fund.fundTypeId) || "Unknown",
+//           amount: fund.fundTypeId === 3 ? fund.amount * 2.5 : fund.amount,
+//         }));
+//         return { ...request, funds: formattedFunds };
+//       }),
+//     );
+
+//     return requestsWithFunds as unknown as Requests[];
+//   } catch (error) {
+//     console.error(`Failed to fetch requests:`, error);
+//     return [];
+//   }
+// }
 
 export async function getPaidFunds(): Promise<
   (Tables<"Fund"> & { FundType: Tables<"FundType"> })[]
