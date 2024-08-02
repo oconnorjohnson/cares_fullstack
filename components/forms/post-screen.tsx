@@ -292,9 +292,8 @@ export default function PostScreen({ requestId }: { requestId: number }) {
                       <FormItem>
                         <FormLabel>Transportation Confidence</FormLabel>
                         <FormDescription>
-                          How unconfident are you that you can make it to
-                          important medical appointments, legal hearings, work,
-                          etc...?
+                          How stressed are you about getting to important
+                          medical appointments, legal hearings, work, etc...?
                         </FormDescription>
                         <Select
                           onValueChange={(value) =>

@@ -291,9 +291,8 @@ export default function PreScreen({ requestId }: { requestId: number }) {
                       <FormItem>
                         <FormLabel>Transportation Confidence</FormLabel>
                         <FormDescription>
-                          How confident are you that you can make it to
-                          important medical appointments, legal hearings, work,
-                          etc...?
+                          How stressed are you about getting to important
+                          medical appointments, legal hearings, work, etc...?
                         </FormDescription>
                         <Select
                           onValueChange={(value) =>
