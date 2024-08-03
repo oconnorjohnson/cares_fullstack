@@ -124,7 +124,7 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() ? "selected" : undefined}
-                  className={row.original ? "bg-zinc-300 dark:bg-zinc-700" : ""}
+                  className={row.original ? "bg-zinc-300 " : ""}
                 >
                   {row.getVisibleCells().map((cell) => {
                     // Ensure cell value is treated as a string before performing operations
