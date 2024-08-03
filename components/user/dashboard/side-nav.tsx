@@ -24,7 +24,7 @@ export default function SideNavBar() {
       <div className="flex flex-col min-h-screen justify-start border-t border-r lg:w-[12.5%] pt-6 space-y-1">
         <Link href="/dashboard">
           <div
-            className={`rounded-xl hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 py-2 px-6 mx-2 text-md font-semibold flex flex-row justify-start gap-2 items-center ${pathname === "/dashboard" ? "bg-zinc-200 " : ""}`}
+            className={`rounded-xl hover:cursor-pointer hover:bg-zinc-200  py-2 px-6 mx-2 text-md font-semibold flex flex-row justify-start gap-2 items-center ${pathname === "/dashboard" ? "bg-zinc-200 " : ""}`}
           >
             <HomeIcon className="w-5 h-5" />
             <span className="hidden lg:block">Dashboard</span>
@@ -33,7 +33,7 @@ export default function SideNavBar() {
 
         <Link href="/user/requests">
           <div
-            className={`rounded-xl hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 py-2 px-6 mx-2 text-md font-semibold flex flex-row justify-start gap-2 items-center ${pathname === "/user/requests" ? "bg-zinc-200 " : ""}`}
+            className={`rounded-xl hover:cursor-pointer hover:bg-zinc-200  py-2 px-6 mx-2 text-md font-semibold flex flex-row justify-start gap-2 items-center ${pathname === "/user/requests" ? "bg-zinc-200 " : ""}`}
           >
             <GitPullRequestIcon className="w-5 h-5" />
             <span className="hidden lg:block">Requests</span>
@@ -42,7 +42,7 @@ export default function SideNavBar() {
 
         <Link href="/user/clients">
           <div
-            className={`rounded-xl hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 py-2 px-6 mx-2 text-md font-semibold flex flex-row justify-start gap-2 items-center ${pathname === "/user/clients" ? "bg-zinc-200 " : ""}`}
+            className={`rounded-xl hover:cursor-pointer hover:bg-zinc-200  py-2 px-6 mx-2 text-md font-semibold flex flex-row justify-start gap-2 items-center ${pathname === "/user/clients" ? "bg-zinc-200 " : ""}`}
           >
             <UsersIcon className="w-5 h-5" />
             <span className="hidden lg:block">Clients</span>{" "}
@@ -52,7 +52,7 @@ export default function SideNavBar() {
         <Separator />
 
         <SignOutButton signOutCallback={() => router.push("/")}>
-          <div className="rounded-xl hover:cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 py-2 px-6 mx-2 text-md font-semibold flex flex-row justify-start gap-2 items-center hover:bg-zinc-200 dark:hover:bg-zinc-800">
+          <div className="rounded-xl hover:cursor-pointer hover:bg-zinc-200  py-2 px-6 mx-2 text-md font-semibold flex flex-row justify-start gap-2 items-center ">
             <LogOutIcon className="w-5 h-5" />
             <span className="hidden lg:block">Sign Out</span>{" "}
           </div>
