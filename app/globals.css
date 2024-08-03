@@ -106,7 +106,7 @@
     --chart-4: 31 41% 48%;
     --chart-5: 35 43% 53%;
   }
-  .dark {
+  /* .dark {
     --background: 36 39% 88%;
     --foreground: 36 45% 15%;
     --primary: 36 45% 70%;
@@ -131,7 +131,7 @@
     --chart-3: 28 40% 40%;
     --chart-4: 31 41% 48%;
     --chart-5: 35 43% 53%;
-  }
+  } */
 }
 
 @layer base {
