@@ -1214,12 +1214,17 @@ export async function getRequestsThatNeedAgreementsByUserId(userId: string) {
 export async function getAllRequests() {
   const supabase = createSupabaseClient();
   try {
-    const { data, error } = await supabase.from("Request").select(`
+    const { data, error } = await supabase
+      .from("Request")
+      .select(
+        `
         *,
         User (first_name, last_name),
         Client (clientID, sex, race),
         Agency (name)
-      `);
+      `,
+      )
+      .eq("hasPreScreen", true);
     if (error) throw error;
     return data || [];
   } catch (error) {

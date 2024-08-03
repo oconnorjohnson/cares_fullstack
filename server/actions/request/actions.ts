@@ -520,7 +520,7 @@ export async function fetchAllRequests() {
   }
   try {
     const requests = await getAllRequests();
-    return requests;
+    return requests.filter((request) => request.hasPreScreen);
   } catch (error) {
     console.error(`Failed to fetch requests:`, error);
     return [];
