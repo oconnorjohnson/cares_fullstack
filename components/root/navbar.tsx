@@ -5,7 +5,7 @@ import { useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ModeToggle } from "@/components/root/mode-toggle";
+// import { ModeToggle } from "@/components/root/mode-toggle";
 import { LoadingSpinner } from "@/components/admin/request/approve";
 import { cn } from "@/server/utils";
 import {
@@ -88,7 +88,7 @@ export default function SignedInNavBar() {
             </NavigationMenuList>
           </NavigationMenu>
           <div className="flex flex-row justify-center items-center">
-            <ModeToggle />
+            {/* <ModeToggle /> */}
           </div>
         </div>
       </SignedIn>
@@ -145,7 +145,7 @@ export default function SignedInNavBar() {
             </NavigationMenuList>
           </NavigationMenu>
           <div className="flex flex-row justify-center items-center">
-            <ModeToggle />
+            {/* <ModeToggle /> */}
             <div className="px-2" />
 
             <SignInButton mode="modal" afterSignInUrl="/dashboard">
