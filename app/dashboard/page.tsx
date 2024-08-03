@@ -21,8 +21,8 @@ export default function Home() {
   const { sessionClaims } = auth();
   const isAdmin = (sessionClaims?.publicMetadata as any)?.admin;
   return (
-    <>
+    <Suspense fallback={<LoadingFallback />}>
       <div>{isAdmin ? <AdminDashboard /> : <UserDashboard />}</div>
-    </>
+    </Suspense>
   );
 }
