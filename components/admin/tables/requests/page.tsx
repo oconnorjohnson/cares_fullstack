@@ -98,7 +98,7 @@ export default async function AdminRequestsTable() {
         </CardHeader>
         <DataTable
           columns={columns}
-          data={requests}
+          data={processedRequests}
           defaultSorting={[
             {
               id: "pendingApproval",
