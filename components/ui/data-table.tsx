@@ -42,6 +42,10 @@ interface DataTableProps<TData = {}, TValue = unknown> {
   defaultSorting?: SortingState;
   searchColumn?: string;
   searchPlaceholder: string;
+  customFilter?: {
+    label: string;
+    filterFn: (data: TData[]) => TData[];
+  };
 }
 
 export function DataTable<TData, TValue>({
@@ -50,6 +54,7 @@ export function DataTable<TData, TValue>({
   defaultSorting = [],
   searchColumn,
   searchPlaceholder = "Search...",
+  customFilter,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>(defaultSorting);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -58,8 +63,12 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const [useCustomFilter, setUseCustomFilter] = React.useState(false);
+  const filteredData = React.useMemo(() => {
+    return useCustomFilter && customFilter ? customFilter.filterFn(data) : data;
+  }, [data, useCustomFilter, customFilter]);
   const table = useReactTable({
-    data,
+    data: filteredData,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -96,6 +105,14 @@ export function DataTable<TData, TValue>({
             }
             className="max-w-sm"
           />
+        )}
+        {customFilter && (
+          <Button
+            onClick={() => setUseCustomFilter(!useCustomFilter)}
+            variant={useCustomFilter ? "default" : "outline"}
+          >
+            {useCustomFilter ? "Show All" : customFilter.label}
+          </Button>
         )}
       </div>
       <div className="rounded-md border p-3">
