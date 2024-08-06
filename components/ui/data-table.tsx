@@ -44,7 +44,8 @@ interface DataTableProps<TData = {}, TValue = unknown> {
   searchPlaceholder: string;
   customFilter?: {
     label: string;
-    filterFn: (data: TData[]) => TData[];
+    key: string;
+    value: any;
   };
 }
 
@@ -64,9 +65,16 @@ export function DataTable<TData, TValue>({
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
   const [useCustomFilter, setUseCustomFilter] = React.useState(false);
+
   const filteredData = React.useMemo(() => {
-    return useCustomFilter && customFilter ? customFilter.filterFn(data) : data;
+    if (useCustomFilter && customFilter) {
+      return data.filter(
+        (item: any) => item[customFilter.key] === customFilter.value,
+      );
+    }
+    return data;
   }, [data, useCustomFilter, customFilter]);
+
   const table = useReactTable({
     data: filteredData,
     columns,

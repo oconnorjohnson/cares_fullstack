@@ -78,11 +78,18 @@ async function getRequests(): Promise<Request[]> {
 
 export default async function AdminRequestsTable() {
   const requests = await getRequests();
+
   const customFilter = {
     label: "Show Pending Pre-Screened Only",
-    filterFn: (data: Request[]) =>
-      data.filter((request) => request.hasPreScreen && request.pendingApproval),
+    key: "isPendingPreScreened",
+    value: true,
   };
+
+  const processedRequests = requests.map((request) => ({
+    ...request,
+    isPendingPreScreened: request.hasPreScreen && request.pendingApproval,
+  }));
+
   return (
     <div className="container mx-auto">
       <Card className="p-8">
