@@ -415,7 +415,9 @@ export async function giveUserIdGetRequestsNeedingPreScreen(userId: string) {
   if (!clerkuserId) {
     throw new Error("User not authenticated");
   }
-  const requests = await getRequestsNeedingPreScreenByUserId(userId);
+  const { data: requests, error } =
+    await getRequestsNeedingPreScreenByUserId(userId);
+  if (error) throw error;
   return requests;
 }
 

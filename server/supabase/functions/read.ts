@@ -1260,14 +1260,29 @@ export async function getAllFunds() {
 export async function getRequestsNeedingPreScreenByUserId(userId: string) {
   const supabase = createSupabaseClient();
   try {
-    const requests = await supabase
+    const { data: requests, error } = await supabase
       .from("Request")
-      .select("*")
+      .select(
+        `
+        *,
+        Client (clientID)
+      `,
+      )
       .eq("userId", userId)
       .eq("hasPreScreen", false);
-    return requests;
+
+    if (error) throw error;
+
+    // Transform the result to include clientID at the top level
+    const transformedRequests = requests.map((request) => ({
+      ...request,
+      clientID: request.Client?.clientID,
+    }));
+
+    return { data: transformedRequests, error: null };
   } catch (error) {
-    throw error;
+    console.error("Error in getRequestsNeedingPreScreenByUserId:", error);
+    return { data: null, error };
   }
 }
 

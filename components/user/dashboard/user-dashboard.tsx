@@ -57,6 +57,17 @@ import {
   getNewsCardThree,
 } from "@/server/actions/request/actions";
 import PickupScheduler from "@/components/forms/pickup-scheduler";
+
+// Add this type definition at the top of the file
+type RequestWithClientID = {
+  id: number;
+  clientId: number;
+  agencyId: number;
+  created_at: string;
+  clientID?: string;
+  // Add other properties as needed
+};
+
 async function fetchNewsCards() {
   const newsCardOne = await getNewsCardOne();
   const newsCardTwo = await getNewsCardTwo();
@@ -71,19 +82,24 @@ async function fetchCounts(userId: string) {
   const deniedRequests = await CountDeniedRequestsByUserId(userId);
   return { openRequests, approvedRequests, deniedRequests, clientCount };
 }
-async function fetchRequestsNeedingPreScreen(userId: string) {
+
+async function fetchRequestsNeedingPreScreen(
+  userId: string,
+): Promise<RequestWithClientID[]> {
   const response = await giveUserIdGetRequestsNeedingPreScreen(userId);
-  // Check if the response contains an error
-  if (response.error) {
+
+  if (!response || "error" in response) {
     console.error(
       "Failed to fetch requests needing pre-screen:",
-      response.error,
+      response?.error || "Unknown error",
     );
     return []; // Return an empty array in case of error
   }
-  // Ensure the data is treated as an array
-  return response.data ?? []; // Use the data if available, otherwise default to an empty array
+
+  // Ensure the response is treated as an array of RequestWithClientID
+  return response as RequestWithClientID[];
 }
+
 async function fetchRequestsNeedingReceipts(userId: string) {
   try {
     const response = await giveUserIdGetRequestsNeedingReceipts(userId);
@@ -137,6 +153,7 @@ async function fetchRequestsNeedingAgreements(userId: string) {
     return []; // Return an empty array in case of error
   }
 }
+
 export default async function Dashboard() {
   const { userId } = auth();
   console.log(userId);
@@ -203,20 +220,21 @@ export default async function Dashboard() {
                               </TableRow>
                             </TableHeader>
                             <TableBody>
-                              {requestsNeedPreScreen.map((request) => (
-                                <TableRow key={request.id}>
-                                  <TableCell>
-                                    {request.clientId
-                                      ? `${request.clientId}`
-                                      : "'ClientID' not found."}
-                                  </TableCell>
-                                  <TableCell>{request.agencyId}</TableCell>
-                                  <TableCell>{request.created_at}</TableCell>
-                                  <TableCell>
-                                    <PreScreen requestId={request.id} />
-                                  </TableCell>
-                                </TableRow>
-                              ))}
+                              {requestsNeedPreScreen.map(
+                                (request: RequestWithClientID) => (
+                                  <TableRow key={request.id}>
+                                    <TableCell>
+                                      {request.clientID ||
+                                        request.clientId.toString()}
+                                    </TableCell>
+                                    <TableCell>{request.agencyId}</TableCell>
+                                    <TableCell>{request.created_at}</TableCell>
+                                    <TableCell>
+                                      <PreScreen requestId={request.id} />
+                                    </TableCell>
+                                  </TableRow>
+                                ),
+                              )}
                             </TableBody>
                           </Table>
                         </AccordionContent>
