@@ -224,8 +224,7 @@ export default async function Dashboard() {
                                 (request: RequestWithClientID) => (
                                   <TableRow key={request.id}>
                                     <TableCell>
-                                      {request.clientID ||
-                                        request.clientId.toString()}
+                                      {request.clientID ? request.clientID : ""}
                                     </TableCell>
                                     <TableCell>{request.agencyId}</TableCell>
                                     <TableCell>{request.created_at}</TableCell>
@@ -262,8 +261,8 @@ export default async function Dashboard() {
                               {requestsNeedReceipts.map((request) => (
                                 <TableRow key={request.id}>
                                   <TableCell>
-                                    {request.clientId
-                                      ? `${request.clientId}`
+                                    {request.clientID
+                                      ? `${request.clientID}`
                                       : "'ClientID' not found."}
                                   </TableCell>
                                   <TableCell>{request.agencyId}</TableCell>
@@ -300,8 +299,8 @@ export default async function Dashboard() {
                               {requestsNeedPostScreen.map((request) => (
                                 <TableRow key={request.id}>
                                   <TableCell>
-                                    {request.clientId
-                                      ? `${request.clientId}`
+                                    {request.clientID
+                                      ? `${request.clientID}`
                                       : "'ClientID' not found."}
                                   </TableCell>
                                   <TableCell>{request.agencyId}</TableCell>
@@ -339,8 +338,8 @@ export default async function Dashboard() {
                               {requestsNeedAgreements.map((request) => (
                                 <TableRow key={request.id}>
                                   <TableCell>
-                                    {request.clientId
-                                      ? `${request.clientId}`
+                                    {request.clientID
+                                      ? `${request.clientID}`
                                       : "'ClientID' not found."}
                                   </TableCell>
                                   <TableCell>{request.agencyId}</TableCell>

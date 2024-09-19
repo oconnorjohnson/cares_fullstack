@@ -1166,13 +1166,25 @@ export async function getAgencyNameById(agencyId: number) {
 export async function getRequestsThatNeedAgreementsByUserId(userId: string) {
   const supabase = createSupabaseClient();
   try {
-    const requests = await supabase
+    const { data: requests, error } = await supabase
       .from("Request")
-      .select("*")
+      .select(
+        `
+        *,
+        Client (clientID)
+      `,
+      )
       .eq("userId", userId)
       .eq("paid", true)
       .is("agreementUrl", null);
-    return requests;
+    // Transform the result to include clientID at the top level
+    const transformedRequests = requests!.map((request) => ({
+      ...request,
+      clientID: request.Client?.clientID,
+      Client: undefined, // Remove the nested Client object
+    }));
+
+    return { data: transformedRequests, error: null };
   } catch (error) {
     throw error;
   }
@@ -1566,31 +1578,63 @@ export async function getRequestById(requestId: number) {
 export async function getRequestsNeedingReceiptsByUserId(userId: string) {
   const supabase = createSupabaseClient();
   try {
-    const requests = await supabase
+    const { data: requests, error } = await supabase
       .from("Request")
-      .select("*")
+      .select(
+        `
+        *,
+        Client (clientID)
+      `,
+      )
       .eq("userId", userId)
       .eq("paid", true)
       .eq("needsReceipts", true)
       .eq("hasReceipts", false);
-    return requests;
+
+    if (error) throw error;
+
+    // Transform the result to include clientID at the top level
+    const transformedRequests = requests.map((request) => ({
+      ...request,
+      clientID: request.Client?.clientID,
+      Client: undefined, // Remove the nested Client object
+    }));
+
+    return { data: transformedRequests, error: null };
   } catch (error) {
-    throw error;
+    console.error("Error in getRequestsNeedingReceiptsByUserId:", error);
+    return { data: null, error };
   }
 }
 
 export async function getRequestsNeedingPostScreenByUserId(userId: string) {
   const supabase = createSupabaseClient();
   try {
-    const requests = await supabase
+    const { data: requests, error } = await supabase
       .from("Request")
-      .select("*")
+      .select(
+        `
+        *,
+        Client (clientID)
+      `,
+      )
       .eq("userId", userId)
       .eq("hasPreScreen", true)
       .eq("paid", true)
       .eq("hasPostScreen", false);
-    return requests;
+
+    if (error) throw error;
+
+    // Transform the result to include clientID at the top level
+    const transformedRequests = requests.map((request) => ({
+      ...request,
+      clientID: request.Client?.clientID,
+      Client: undefined, // Remove the nested Client object
+    }));
+
+    return { data: transformedRequests, error: null };
   } catch (error) {
-    throw error;
+    console.error("Error in getRequestsNeedingPostScreenByUserId:", error);
+    return { data: null, error };
   }
 }

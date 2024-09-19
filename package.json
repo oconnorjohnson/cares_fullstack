@@ -50,6 +50,7 @@
     "@vercel/speed-insights": "^1.0.12",
     "ag-charts-community": "^9.2.0",
     "ag-charts-react": "^9.2.0",
+    "braces": "^3.0.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "cmdk": "^0.2.1",
@@ -58,7 +59,7 @@
     "embla-carousel-react": "8.0.0-rc19",
     "framer-motion": "^11.0.8",
     "lucide-react": "^0.314.0",
-    "next": "14.2.0-canary.56",
+    "next": "14.2.8",
     "next-themes": "^0.2.1",
     "posthog-js": "^1.109.0",
     "prettier-plugin-tailwindcss": "^0.5.11",
@@ -77,9 +78,8 @@
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
     "uploadthing": "^6.3.0",
-    "zod": "^3.22.4",
     "ws": "^8.17.1",
-    "braces": "^3.0.3"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/node": "^20",
