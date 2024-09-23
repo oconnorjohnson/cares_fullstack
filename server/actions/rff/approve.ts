@@ -267,9 +267,11 @@ export default async function ApproveRFFRequest(
     AssetIds: AssetIds,
   }));
   console.log(modifiedFunds);
+
   if (modifiedFunds.some((fund) => fund.fundTypeId === 5)) {
     await markRequestHasInvoice(requestId);
   }
+
   const processFund = async (
     fund: FundDetail,
     requestId: number,
@@ -285,17 +287,24 @@ export default async function ApproveRFFRequest(
     await transactionHandler(fund, requestId, UserId);
     console.log(`Transaction successful for fund ID ${fund.id}`);
   };
+
   try {
+    // Approve the request first
+    await approveRequestById(requestId);
+    console.log("Request approved successfully");
+
+    // Then process the funds and reserve assets
     for (const fund of modifiedFunds) {
       await processFund(fund, requestId, UserId);
     }
+    console.log("Successfully processed funds");
   } catch (error) {
     console.error("Error processing funds:", error);
     throw error;
   }
-  console.log("Successfully processed funds");
+
   try {
-    await approveRequestById(requestId);
+    // Handle receipts if needed
     if (funds.some((fund) => fund.needsReceipt === true)) {
       await markRequestAsNeedingReceipt(requestId);
     }
@@ -308,7 +317,8 @@ export default async function ApproveRFFRequest(
         firstName: firstName,
       }) as React.ReactElement,
     });
+    console.log("Approval email sent successfully");
   } catch (error) {
-    console.error("Error from Resend API:", error);
+    console.error("Error sending approval email:", error);
   }
 }
