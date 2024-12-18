@@ -31,7 +31,7 @@ export default async function FundsTable() {
           data={funds}
           defaultSorting={[
             {
-              id: "amount",
+              id: "requestId",
               desc: true,
             },
           ]}
