@@ -21,6 +21,8 @@ import type {
   PercentRequestStatusReturn,
   SDOHPercentages,
 } from "@/server/supabase/functions/read";
+import { createClient } from "@/server/supabase/client";
+
 export type AnswerCategories = {
   housingSituation: number;
   housingQuality: number;
@@ -50,6 +52,87 @@ interface FundTypeData {
 interface DollarsSpendData {
   fundTypeId: number;
   dollars: number;
+}
+
+export async function GetPrePostPostChangeClientCount(): Promise<number> {
+  const { userId } = auth();
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
+
+  try {
+    // Get all pre and post screen answers
+    const preScreenAnswers = await getAllPreScreenAnswers();
+    const postScreenAnswers = await getAllPostScreenAnswers();
+
+    // Create maps to store total scores by request
+    const preScoresByRequest = new Map<number, number>();
+    const postScoresByRequest = new Map<number, number>();
+
+    // Calculate total scores for pre-screens
+    preScreenAnswers.forEach((answer) => {
+      const totalScore =
+        answer.housingSituation +
+        answer.housingQuality +
+        answer.utilityStress +
+        answer.foodInsecurityStress +
+        answer.foodMoneyStress +
+        answer.transpoConfidence +
+        answer.transpoStress +
+        answer.financialDifficulties;
+      preScoresByRequest.set(answer.requestId, totalScore);
+    });
+
+    // Calculate total scores for post-screens
+    postScreenAnswers.forEach((answer) => {
+      const totalScore =
+        answer.housingSituation +
+        answer.housingQuality +
+        answer.utilityStress +
+        answer.foodInsecurityStress +
+        answer.foodMoneyStress +
+        answer.transpoConfidence +
+        answer.transpoStress +
+        answer.financialDifficulties;
+      postScoresByRequest.set(answer.requestId, totalScore);
+    });
+
+    // Get all requests to map to clients
+    const supabase = createClient();
+    const { data: requests } = await supabase
+      .from("Request")
+      .select("id, clientId")
+      .in("id", [...preScoresByRequest.keys()]);
+
+    if (!requests) return 0;
+
+    // Map to store average score change by client
+    const clientScoreChanges = new Map<number, number[]>();
+
+    // Calculate score changes for each request and group by client
+    requests.forEach((request) => {
+      const preScore = preScoresByRequest.get(request.id) || 0;
+      const postScore = postScoresByRequest.get(request.id) || 0;
+      const change = postScore - preScore;
+
+      if (!clientScoreChanges.has(request.clientId)) {
+        clientScoreChanges.set(request.clientId, []);
+      }
+      clientScoreChanges.get(request.clientId)?.push(change);
+    });
+
+    // Count clients with average negative change (improvement)
+    let improvedClientCount = 0;
+    clientScoreChanges.forEach((changes) => {
+      const avgChange = changes.reduce((a, b) => a + b, 0) / changes.length;
+      if (avgChange < 0) improvedClientCount++;
+    });
+
+    return improvedClientCount;
+  } catch (error) {
+    console.error("Error in GetPrePostPosChangeClientCount:", error);
+    throw error;
+  }
 }
 
 export async function GetIncreasedScoresAnalysis(): Promise<{

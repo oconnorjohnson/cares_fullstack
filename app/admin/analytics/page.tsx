@@ -18,6 +18,7 @@ import {
   GetPaidFundPercentagesByRace,
   GetPrePostScreenChanges,
   GetIncreasedScoresAnalysis,
+  GetPrePostPostChangeClientCount,
 } from "@/server/actions/calculations/actions";
 import { CountRequestsCompleted } from "@/server/actions/count/actions";
 import type { AnswerCategories } from "@/server/actions/calculations/actions";
@@ -79,6 +80,7 @@ export default async function Analytics() {
     prePostChanges,
     paidFundsByRace,
     scoreAnalysis,
+    prePostPostChangeClientCount,
   ] = await Promise.all([
     CountRequestsCompleted(),
     GetPercentageOfRequestsByFundType(),
@@ -92,8 +94,13 @@ export default async function Analytics() {
     GetPrePostScreenChanges(),
     GetPaidFundPercentagesByRace(),
     GetIncreasedScoresAnalysis(),
+    GetPrePostPostChangeClientCount(),
   ]);
   console.log(sdohPercentages);
+  console.log(
+    "total clients who saw a decrease in their scores:",
+    prePostPostChangeClientCount,
+  );
   const prePostCategories: (keyof AnswerCategories)[] = [
     "housingSituation",
     "housingQuality",
