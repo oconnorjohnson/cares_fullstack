@@ -43,7 +43,7 @@ async function getRequests(): Promise<Request[]> {
         : "N/A",
       agency: request.Agency ? request.Agency.name : "N/A",
       client: request.Client ? `${request.Client.clientID}` : "N/A",
-      createdAt: format(new Date(request.created_at), "MMddyyyy"),
+      createdAt: format(new Date(request.created_at), "yyyy-MM-dd"),
       combinedStatus: request.pendingApproval
         ? "Pending"
         : request.approved
