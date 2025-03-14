@@ -57,6 +57,9 @@ async function getRequests(): Promise<Request[]> {
       hasPostScreen: request.hasPostScreen ? "Complete" : "Incomplete",
       isHighlighted: request.pendingApproval,
       funds: formattedFunds,
+      hasInvoice: request.hasInvoice || false,
+      completed: request.completed || false,
+      isIncompleteInvoice: request.hasInvoice && !request.completed,
     };
   });
 
@@ -79,15 +82,23 @@ async function getRequests(): Promise<Request[]> {
 export default async function AdminRequestsTable() {
   const requests = await getRequests();
 
-  const customFilter = {
-    label: "Show Pending Pre-Screened Only",
-    key: "isPendingPreScreened",
-    value: true,
-  };
+  const customFilters = [
+    {
+      label: "Incomplete Invoices",
+      key: "isIncompleteInvoice",
+      value: true,
+    },
+    {
+      label: "Pending Pre-Screened",
+      key: "isPendingPreScreened",
+      value: true,
+    },
+  ];
 
   const processedRequests = requests.map((request) => ({
     ...request,
     isPendingPreScreened: request.hasPreScreen && request.pendingApproval,
+    isIncompleteInvoice: request.hasInvoice && !request.completed,
   }));
 
   return (
@@ -107,7 +118,7 @@ export default async function AdminRequestsTable() {
           ]}
           searchColumn="client"
           searchPlaceholder="Filter clients..."
-          customFilter={customFilter}
+          customFilters={customFilters}
         />
       </Card>
     </div>

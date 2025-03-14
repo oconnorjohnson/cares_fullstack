@@ -47,6 +47,11 @@ interface DataTableProps<TData = {}, TValue = unknown> {
     key: string;
     value: any;
   };
+  customFilters?: Array<{
+    label: string;
+    key: string;
+    value: any;
+  }>;
 }
 
 export function DataTable<TData, TValue>({
@@ -56,6 +61,7 @@ export function DataTable<TData, TValue>({
   searchColumn,
   searchPlaceholder = "Search...",
   customFilter,
+  customFilters,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>(defaultSorting);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -64,16 +70,53 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-  const [useCustomFilter, setUseCustomFilter] = React.useState(false);
+  const [activeFilters, setActiveFilters] = React.useState<
+    Record<string, boolean>
+  >({});
+
+  // Initialize active filters
+  React.useEffect(() => {
+    if (customFilters) {
+      const initialFilters = Object.fromEntries(
+        customFilters.map((filter) => [filter.key, false]),
+      );
+      setActiveFilters(initialFilters);
+    }
+  }, [customFilters]);
 
   const filteredData = React.useMemo(() => {
-    if (useCustomFilter && customFilter) {
-      return data.filter(
+    let result = data;
+
+    // Handle legacy single filter
+    if (customFilter && activeFilters[customFilter.key]) {
+      result = result.filter(
         (item: any) => item[customFilter.key] === customFilter.value,
       );
     }
-    return data;
-  }, [data, useCustomFilter, customFilter]);
+
+    // Handle multiple filters
+    if (customFilters) {
+      Object.entries(activeFilters).forEach(([key, isActive]) => {
+        if (isActive) {
+          const filterConfig = customFilters.find((f) => f.key === key);
+          if (filterConfig) {
+            result = result.filter(
+              (item: any) => item[key] === filterConfig.value,
+            );
+          }
+        }
+      });
+    }
+
+    return result;
+  }, [data, customFilter, customFilters, activeFilters]);
+
+  const toggleFilter = (key: string) => {
+    setActiveFilters((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
 
   const table = useReactTable({
     data: filteredData,
@@ -114,13 +157,30 @@ export function DataTable<TData, TValue>({
             className="max-w-sm"
           />
         )}
-        {customFilter && (
+        {/* Render legacy single filter if no multiple filters */}
+        {customFilter && !customFilters && (
           <Button
-            onClick={() => setUseCustomFilter(!useCustomFilter)}
-            variant={useCustomFilter ? "default" : "outline"}
+            onClick={() => toggleFilter(customFilter.key)}
+            variant={activeFilters[customFilter.key] ? "default" : "outline"}
           >
-            {useCustomFilter ? "Show All" : customFilter.label}
+            {activeFilters[customFilter.key] ? "Show All" : customFilter.label}
           </Button>
+        )}
+        {/* Render multiple filters */}
+        {customFilters && (
+          <div className="flex gap-2">
+            {customFilters.map((filter) => (
+              <Button
+                key={filter.key}
+                onClick={() => toggleFilter(filter.key)}
+                variant={activeFilters[filter.key] ? "default" : "outline"}
+              >
+                {activeFilters[filter.key]
+                  ? `Hide ${filter.label}`
+                  : filter.label}
+              </Button>
+            ))}
+          </div>
         )}
       </div>
       <div className="rounded-md border p-3">

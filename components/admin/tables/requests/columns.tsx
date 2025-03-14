@@ -47,6 +47,8 @@ export type Request = {
   adminTwo: string | null;
   adminThree: string | null;
   funds: { id: number; typeName: string; amount: number }[];
+  hasInvoice: boolean;
+  completed: boolean;
 };
 export const columns: ColumnDef<Request>[] = [
   // checkboxes
