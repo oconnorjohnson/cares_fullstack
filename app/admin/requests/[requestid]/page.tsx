@@ -41,11 +41,17 @@ import {
 import RollbackButton from "@/components/admin/request/rollback-button";
 import { getFundsSumByRequestId } from "@/server/actions/request/actions";
 import AgreeButton from "@/components/admin/request/agree-button";
-import CompleteRequestButton from "@/components/admin/request/complete-request";
+import CompleteRequestDialog from "@/components/admin/request/complete-request-dialog";
 // import dynamic from "next/dynamic";
 // const DenyButton = dynamic(() => import("@/components/admin/request/deny"), {
 //   ssr: false,
 // });
+
+interface Fund {
+  fundTypeId: number;
+  amount: number;
+}
+
 const RequestPage = async ({ requestid }: { requestid: string }) => {
   const { userId: currentAdminUserId } = await auth();
   const rffWalmartCards = await GetRFFWalmartCards();
@@ -206,9 +212,13 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                   )}
                   {request.paid && !request.completed ? (
                     <>
-                      <CompleteRequestButton
+                      <CompleteRequestDialog
                         requestId={requestId}
                         UserId={currentAdminUserId!}
+                        originalAmount={
+                          request.funds.find((f: Fund) => f.fundTypeId === 5)
+                            ?.amount || 0
+                        }
                       />
                     </>
                   ) : (
