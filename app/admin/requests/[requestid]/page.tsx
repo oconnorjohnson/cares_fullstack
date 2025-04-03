@@ -48,8 +48,13 @@ import CompleteRequestDialog from "@/components/admin/request/complete-request-d
 // });
 
 interface Fund {
+  id: number;
   fundTypeId: number;
   amount: number;
+  FundType: {
+    typeName: string;
+    id: number;
+  };
 }
 
 const RequestPage = async ({ requestid }: { requestid: string }) => {
@@ -216,7 +221,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
                         requestId={requestId}
                         UserId={currentAdminUserId!}
                         originalAmount={
-                          request.funds.find((f: Fund) => f.fundTypeId === 5)
+                          request.Fund?.find((f: Fund) => f.fundTypeId === 5)
                             ?.amount || 0
                         }
                       />
