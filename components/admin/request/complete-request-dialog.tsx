@@ -90,8 +90,9 @@ export default function CompleteRequestDialog({
                       step="0.01"
                       placeholder="Enter final amount"
                       {...field}
+                      value={field.value}
                       onChange={(e) =>
-                        field.onChange(parseFloat(e.target.value))
+                        field.onChange(Math.ceil(parseFloat(e.target.value)))
                       }
                     />
                   </FormControl>
