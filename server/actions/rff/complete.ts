@@ -15,6 +15,7 @@ import { GetFundsByRequestId } from "@/server/actions/request/actions";
 import {
   markRequestAsNeedingReceipt,
   markRequestAsNotNeedingReceipt,
+  UpdateFund,
 } from "@/server/actions/update/actions";
 import { auth } from "@clerk/nextjs/server";
 import { CompleteRequestFormData } from "@/server/schemas/complete-request";
@@ -121,6 +122,15 @@ export async function completeRequest(
 
   try {
     for (const fund of modifiedFunds) {
+      // Update the Fund record with the new amount
+      await UpdateFund(
+        fund.id,
+        fund.fundTypeId,
+        adjustedAmount,
+        requestId,
+        false,
+      );
+
       // Expend the adjusted amount from the balance
       const expendInvoice = await expendInvoiceFromRFFBalance(fund.id, {
         ...fund,
