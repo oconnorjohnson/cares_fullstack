@@ -311,8 +311,9 @@ export default function NewRequest({ userId }: { userId: string }) {
                           </FormControl>
                           <div className="space-y-1 leading-none">
                             <FormLabel className="font-normal">
-                              I confirm that the client has no known ties to any
-                              of the organizations listed on the State
+                              I confirm, to the best of my knowledge, that the
+                              client has no known ties to any of the
+                              organizations listed on the State
                               Department&apos;s Foreign Terrorist Organizations
                               list
                             </FormLabel>
