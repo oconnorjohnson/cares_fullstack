@@ -313,7 +313,8 @@ export default function NewRequest({ userId }: { userId: string }) {
                             <FormLabel className="font-normal">
                               I confirm that the client has no known ties to any
                               of the organizations listed on the State
-                              Department's Foreign Terrorist Organizations list
+                              Department&apos;s Foreign Terrorist Organizations
+                              list
                             </FormLabel>
                             <FormMessage />
                           </div>
