@@ -63,6 +63,7 @@ interface RequestInsert {
   id?: number;
   implementation: string;
   needsReceipts?: boolean;
+  non_terrorist?: boolean;
   paid?: boolean;
   pendingApproval?: boolean;
   pendingPayout?: boolean;
@@ -85,6 +86,7 @@ interface RequestData {
   RFF: string[];
   implementation: string;
   sustainability: string;
+  non_terrorist: boolean;
   funds: { amount: number; fundTypeId: number; needsReceipt: boolean }[];
 }
 
@@ -739,6 +741,7 @@ export async function newRequest(requestState: RequestData) {
     RFF: requestState.RFF,
     SDOH: requestState.SDOH,
     userId: requestState.userId,
+    non_terrorist: requestState.non_terrorist,
   };
   try {
     const newRequestRecord = await createRequest(requestData);

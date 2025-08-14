@@ -42,6 +42,7 @@ import RFFSelect from "@/components/forms/sub-components/rff-assist-multi";
 import { Progress } from "@/components/ui/progress";
 import { Option } from "@/components/ui/multiple-selector";
 import { useUser } from "@clerk/nextjs";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface Client {
   id: number;
@@ -63,6 +64,9 @@ interface FundInput {
 }
 
 const formSchema = z.object({
+  non_terrorist: z.boolean().refine((val) => val === true, {
+    message: "You must confirm the client has no terrorist organization ties",
+  }),
   userId: z.string().min(1),
   clientId: z.number().min(1, "clientId is required"),
   agencyId: z.number().min(1, "agencyId is required"),
@@ -129,15 +133,18 @@ export default function NewRequest({ userId }: { userId: string }) {
         setProgress(0);
         break;
       case "tab2":
-        setProgress(25);
+        setProgress(20);
         break;
       case "tab3":
-        setProgress(60);
+        setProgress(40);
         break;
       case "tab4":
-        setProgress(95);
+        setProgress(60);
         break;
       case "tab5":
+        setProgress(80);
+        break;
+      case "tab6":
         setProgress(100);
         break;
       default:
@@ -147,7 +154,7 @@ export default function NewRequest({ userId }: { userId: string }) {
 
   const goToNextTab = () => {
     let currentTabIndex = parseInt(activeTab.substring(3));
-    if (currentTabIndex < 5) {
+    if (currentTabIndex < 6) {
       const nextTab = `tab${currentTabIndex + 1}`;
       setActiveTab(nextTab);
     }
@@ -167,6 +174,7 @@ export default function NewRequest({ userId }: { userId: string }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      non_terrorist: false,
       userId: userId,
       clientId: undefined,
       agencyId: undefined,
@@ -213,7 +221,7 @@ export default function NewRequest({ userId }: { userId: string }) {
         } catch (error) {}
         toast.success("Request submitted successfully");
         TRPCContext.getRequests.invalidate();
-        setActiveTab("tab5");
+        setActiveTab("tab6");
         form.reset();
       } catch (error) {
         toast.error("Failed to submit request");
@@ -265,6 +273,67 @@ export default function NewRequest({ userId }: { userId: string }) {
                   className="flex flex-col justify-between"
                   value="tab1"
                   hidden={activeTab !== "tab1"}
+                >
+                  <div className="space-y-4">
+                    <div className="rounded-lg border p-4 bg-amber-50 dark:bg-amber-950">
+                      <p className="text-sm font-medium mb-2">
+                        Important Notice:
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        18 U.S.C. § 2339A/B prohibits providing material support
+                        to anyone in a designated terrorist organization. Courts
+                        have yet to determine the exact contours of what
+                        constitutes material support. Until clarification is
+                        provided, we are not able to provide any support or
+                        assistance to known members or associates of any of the
+                        organizations listed{" "}
+                        <a
+                          href="https://www.state.gov/foreign-terrorist-organizations/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:underline"
+                        >
+                          here
+                        </a>
+                        .
+                      </p>
+                    </div>
+                    <FormField
+                      control={control}
+                      name="non_terrorist"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <div className="space-y-1 leading-none">
+                            <FormLabel className="font-normal">
+                              I confirm that the client has no known ties to any
+                              of the organizations listed on the State
+                              Department's Foreign Terrorist Organizations list
+                            </FormLabel>
+                            <FormMessage />
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="flex flex-row justify-end">
+                    <Button
+                      onClick={goToNextTab}
+                      disabled={!form.watch("non_terrorist")}
+                    >
+                      Next
+                    </Button>
+                  </div>
+                </TabsContent>
+                <TabsContent
+                  className="flex flex-col justify-between"
+                  value="tab2"
+                  hidden={activeTab !== "tab2"}
                 >
                   {!isLoading && clients && (
                     <FormField
@@ -369,14 +438,15 @@ export default function NewRequest({ userId }: { userId: string }) {
                     )}
                   />
                   <div className="p-2" />
-                  <div className="flex flex-row justify-end">
+                  <div className="flex flex-row justify-between">
+                    <Button onClick={goToLastTab}>Last</Button>
                     <Button onClick={goToNextTab}>Next</Button>
                   </div>
                 </TabsContent>
                 <TabsContent
                   className="flex flex-col justify-between"
-                  value="tab2"
-                  hidden={activeTab !== "tab2"}
+                  value="tab3"
+                  hidden={activeTab !== "tab3"}
                 >
                   <FormField
                     control={control}
@@ -423,8 +493,8 @@ export default function NewRequest({ userId }: { userId: string }) {
                 </TabsContent>
                 <TabsContent
                   className="flex flex-col justify-between"
-                  value="tab3"
-                  hidden={activeTab !== "tab3"}
+                  value="tab4"
+                  hidden={activeTab !== "tab4"}
                 >
                   <div className="flex flex-col justify-between">
                     <FormField
@@ -471,8 +541,8 @@ export default function NewRequest({ userId }: { userId: string }) {
                 </TabsContent>
                 <TabsContent
                   className="flex flex-col justify-between"
-                  value="tab4"
-                  hidden={activeTab !== "tab4"}
+                  value="tab5"
+                  hidden={activeTab !== "tab5"}
                 >
                   <FormField
                     control={control}
@@ -513,8 +583,8 @@ export default function NewRequest({ userId }: { userId: string }) {
                 </TabsContent>
                 <TabsContent
                   className="flex flex-col justify-between"
-                  value="tab5"
-                  hidden={activeTab !== "tab5"}
+                  value="tab6"
+                  hidden={activeTab !== "tab6"}
                 >
                   <FormItem>
                     <FormLabel>
