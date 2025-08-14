@@ -275,11 +275,11 @@ export default function NewRequest({ userId }: { userId: string }) {
                   hidden={activeTab !== "tab1"}
                 >
                   <div className="space-y-4">
-                    <div className="rounded-lg border p-4 bg-amber-50 dark:bg-amber-950">
+                    <div className="rounded-lg border p-4">
                       <p className="text-sm font-medium mb-2">
                         Important Notice:
                       </p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm">
                         18 U.S.C. § 2339A/B prohibits providing material support
                         to anyone in a designated terrorist organization. Courts
                         have yet to determine the exact contours of what
