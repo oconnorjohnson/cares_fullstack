@@ -48,6 +48,16 @@ const formSchema = z.object({
   }),
   race: z.string().min(1, { message: "Race must be selected." }),
   sex: z.string().min(1, { message: "Sex must be selected." }),
+  age: z.coerce
+    .number()
+    .int({ message: "Age must be a whole number." })
+    .min(0, { message: "Age must be 0 or greater." })
+    .max(120, { message: "Age must be 120 or less." }),
+  zip: z.coerce
+    .number()
+    .int({ message: "ZIP code must be a number." })
+    .min(10000, { message: "ZIP code must be 5 digits." })
+    .max(99999, { message: "ZIP code must be 5 digits." }),
 });
 
 export default function NewClient({ userId }: { userId: string | null }) {
@@ -58,6 +68,8 @@ export default function NewClient({ userId }: { userId: string | null }) {
       clientID: "",
       race: "",
       sex: "",
+      age: undefined,
+      zip: undefined,
     },
   });
   const { reset } = form;
@@ -114,6 +126,50 @@ export default function NewClient({ userId }: { userId: string | null }) {
                     Client&apos;s first and last initial combined w/ last 4
                     digits of case number.
                   </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="age"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Age"
+                      {...field}
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value === "" ? undefined : e.target.value,
+                        )
+                      }
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="zip"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="ZIP Code"
+                      {...field}
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value === "" ? undefined : e.target.value,
+                        )
+                      }
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
