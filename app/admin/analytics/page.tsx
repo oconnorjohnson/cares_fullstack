@@ -5,6 +5,7 @@ import RequestsByAgency from "@/components/admin/dashboard/reqs-by-agency";
 import FundTypePopularity from "@/components/admin/dashboard/fund-type-popularity";
 import DollarsSpent from "@/components/admin/dashboard/dollars-spent";
 import PercentRequestStatus from "@/components/admin/dashboard/percent-request-status";
+import AnalyticsDateFilter from "@/components/admin/dashboard/analytics-date-filter";
 import {
   getPreScreenAverages,
   getPostScreenAverages,
@@ -63,9 +64,17 @@ function convertAgencyData(agencyData: AgencyPercentageData[]) {
   }));
 }
 
-export default async function Analytics() {
+export default async function Analytics({
+  searchParams,
+}: {
+  searchParams: { startDate?: string; endDate?: string };
+}) {
   const { sessionClaims } = auth();
   const isAdmin = (sessionClaims?.publicMetadata as any)?.admin;
+
+  // Extract date params from URL
+  const startDate = searchParams.startDate || null;
+  const endDate = searchParams.endDate || null;
 
   const [
     totalRequests,
@@ -84,8 +93,8 @@ export default async function Analytics() {
   ] = await Promise.all([
     CountRequestsCompleted(),
     GetPercentageOfRequestsByFundType(),
-    getPreScreenAverages(),
-    getPostScreenAverages(),
+    getPreScreenAverages(startDate, endDate),
+    getPostScreenAverages(startDate, endDate),
     GetDollarsSpentByFundType(),
     GetPercentageOfRequestsByAgency(),
     GetTotalRFFDollarsSpent(),
@@ -145,7 +154,8 @@ export default async function Analytics() {
         <div className="flex flex-row sm:h-screen w-screen">
           <SideNavBar />
           <ScrollArea className="w-full h-full">
-            <div className="flex flex-col sm:grid sm:grid-cols-3 border-t w-full gap-4 py-4 px-4">
+            <AnalyticsDateFilter />
+            <div className="flex flex-col sm:grid sm:grid-cols-3 w-full gap-4 py-4 px-4">
               <DollarsSpent
                 totalSpent={totalRFFDollarsSpent}
                 chartData={dollarsSpentChartData}
