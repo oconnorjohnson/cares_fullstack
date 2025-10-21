@@ -2,6 +2,59 @@
 
 ## Recent Changes
 
+### Add Improved Outcomes Count to Pre/Post Chart - Tue Oct 21 16:14:24 PDT 2025
+
+**What changed:**
+
+- Enhanced Pre/Post Screen Analysis chart to show count of requests with improved outcomes
+- Added date range filtering to the decreased/increased scores calculation
+- Displays the number of requests where post-survey scores were lower than pre-survey scores (indicating improvement)
+
+**Why this matters:**
+
+- Lower scores = better outcomes (less stress, better situation)
+- This metric shows how many clients actually improved after receiving aid
+- Now respects the date range filter to show improvements within selected timeframe
+
+**Implementation details:**
+
+- **Supabase function** (`server/supabase/functions/count.ts`):
+  - Updated `countPrePostScreenChanges(startDate?, endDate?)` to accept date parameters
+  - Filters Request table by `created_at` if dates provided
+  - Calculates sum of pre-survey scores vs sum of post-survey scores
+  - Returns count of decreased (improved) and increased scores
+- **Server action** (`server/actions/calculations/actions.ts`):
+  - Updated `GetPrePostScreenChanges(startDate?, endDate?)` to pass date parameters
+- **Analytics page** (`app/admin/analytics/page.tsx`):
+  - Pass date parameters to `GetPrePostScreenChanges(startDate, endDate)`
+  - Pass `decreasedCount` prop to PrePostAnalysis component
+- **Chart component** (`components/admin/dashboard/pre-post-analysis.tsx`):
+  - Added optional `decreasedCount` prop
+  - Display count in CardFooter description
+  - Shows "[N] requests saw improved outcomes (decreased scores)"
+  - Adds TrendingUp icon when count is available
+
+**Files modified:**
+
+- `server/supabase/functions/count.ts` - Added date filtering to countPrePostScreenChanges
+- `server/actions/calculations/actions.ts` - Pass date params through server action
+- `app/admin/analytics/page.tsx` - Pass dates and decreasedCount
+- `components/admin/dashboard/pre-post-analysis.tsx` - Display the count
+
+**Score logic:**
+
+- Sum of 8 categories: housing (2), food (2), transportation (2), utility, financial
+- Lower scores = better situation (less stress/difficulties)
+- Decreased score = improved outcome = success
+
+**Result:**
+
+- Chart now shows both average scores AND count of improved clients
+- Filters by date range automatically
+- Provides concrete success metric for the program
+
+---
+
 ### Convert Race Chart to Pie Chart - Tue Oct 21 14:58:18 PDT 2025
 
 **What changed:**

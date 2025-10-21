@@ -102,7 +102,7 @@ export default async function Analytics({
     GetTotalRFFDollarsSpent(),
     GetPercentageOfRequestsByStatus(),
     GetSDOHPercentages(),
-    GetPrePostScreenChanges(),
+    GetPrePostScreenChanges(startDate, endDate),
     GetPaidFundPercentagesByRace(),
     GetIncreasedScoresAnalysis(),
     GetPrePostPostChangeClientCount(),
@@ -165,7 +165,10 @@ export default async function Analytics({
               />
               <RequestsByRace chartData={requestsByRace} />
               <SDOHCategoryDistribution chartData={sdohPercentages} />
-              <PrePostAnalysis chartData={prePostChartData} />
+              <PrePostAnalysis
+                chartData={prePostChartData}
+                decreasedCount={prePostChanges.decreased}
+              />
               <RequestsByAgency
                 totalRequests={totalRequests!}
                 chartData={agencyPercentages}

@@ -26,6 +26,7 @@ interface CategoryData {
 
 interface PrePostAnalysisProps {
   chartData: CategoryData[];
+  decreasedCount?: number;
 }
 
 const categoryMapping: Record<string, string> = {
@@ -50,7 +51,10 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
+export default function PrePostAnalysis({
+  chartData,
+  decreasedCount,
+}: PrePostAnalysisProps) {
   const transformedChartData = chartData.map((data) => ({
     ...data,
     category: categoryMapping[data.category] || data.category,
@@ -86,9 +90,20 @@ export default function PrePostAnalysis({ chartData }: PrePostAnalysisProps) {
       <CardFooter className="flex-col items-start gap-2 text-sm pt-8">
         <div className="flex gap-2 font-medium leading-none">
           What effect are RFF dollars having on our clients?
+          {decreasedCount !== undefined && <TrendingUp className="h-4 w-4" />}
         </div>
         <div className="leading-none text-muted-foreground">
           Showing average answer per category before and after receiving aid.
+          {decreasedCount !== undefined && (
+            <>
+              {" "}
+              <span className="font-medium text-foreground">
+                {decreasedCount}
+              </span>{" "}
+              {decreasedCount === 1 ? "request" : "requests"} saw improved
+              outcomes (decreased scores).
+            </>
+          )}
         </div>
       </CardFooter>
     </Card>

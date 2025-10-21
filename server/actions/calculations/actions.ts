@@ -157,7 +157,10 @@ export async function GetIncreasedScoresAnalysis(): Promise<{
   }
 }
 
-export async function GetPrePostScreenChanges(): Promise<{
+export async function GetPrePostScreenChanges(
+  startDate?: string | null,
+  endDate?: string | null,
+): Promise<{
   decreased: number;
   increased: number;
 }> {
@@ -167,7 +170,7 @@ export async function GetPrePostScreenChanges(): Promise<{
   }
 
   try {
-    const changes = await countPrePostScreenChanges();
+    const changes = await countPrePostScreenChanges(startDate, endDate);
     return changes;
   } catch (error) {
     console.error(

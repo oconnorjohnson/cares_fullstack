@@ -128,17 +128,21 @@ export async function analyzeIncreasedScores(): Promise<{
   }
 }
 
-export async function countPrePostScreenChanges(): Promise<{
+export async function countPrePostScreenChanges(
+  startDate?: string | null,
+  endDate?: string | null,
+): Promise<{
   decreased: number;
   increased: number;
 }> {
   const supabase = createSupabaseClient();
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from("Request")
       .select(
         `
         id,
+        created_at,
         PreScreenAnswers (
           housingSituation, housingQuality, utilityStress, foodInsecurityStress,
           foodMoneyStress, transpoConfidence, transpoStress, financialDifficulties
@@ -152,6 +156,21 @@ export async function countPrePostScreenChanges(): Promise<{
       .eq("paid", true)
       .eq("hasPreScreen", true)
       .eq("hasPostScreen", true);
+
+    // Apply date filters if provided
+    if (startDate) {
+      query = query.gte("created_at", startDate);
+    }
+    if (endDate) {
+      const endDateInclusive = new Date(endDate);
+      endDateInclusive.setDate(endDateInclusive.getDate() + 1);
+      query = query.lt(
+        "created_at",
+        endDateInclusive.toISOString().split("T")[0],
+      );
+    }
+
+    const { data, error } = await query;
 
     if (error) throw error;
 
