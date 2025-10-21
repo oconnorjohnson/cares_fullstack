@@ -176,6 +176,8 @@ export type Database = {
           race: string;
           sex: string;
           userId: string;
+          age: number;
+          zip: number;
         };
         Insert: {
           clientID: string;
@@ -184,6 +186,8 @@ export type Database = {
           race: string;
           sex: string;
           userId: string;
+          age: number;
+          zip: number;
         };
         Update: {
           clientID?: string;
@@ -192,6 +196,8 @@ export type Database = {
           race?: string;
           sex?: string;
           userId?: string;
+          age: number;
+          zip: number;
         };
         Relationships: [
           {
