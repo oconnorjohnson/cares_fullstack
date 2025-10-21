@@ -42,6 +42,11 @@ import RollbackButton from "@/components/admin/request/rollback-button";
 import { getFundsSumByRequestId } from "@/server/actions/request/actions";
 import AgreeButton from "@/components/admin/request/agree-button";
 import CompleteRequestDialog from "@/components/admin/request/complete-request-dialog";
+import EditableTextField from "@/components/admin/request/editable-text-field";
+import {
+  updateRequestImplementation,
+  updateRequestSustainability,
+} from "@/server/actions/update/actions";
 // import dynamic from "next/dynamic";
 // const DenyButton = dynamic(() => import("@/components/admin/request/deny"), {
 //   ssr: false,
@@ -400,11 +405,12 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
               </CardDescription>
             </CardHeader>
             <CardContent className="border py-4 mx-4 rounded-lg">
-              <div className="flex flex-col">
-                <div className="flex flex-cols-2 justify-between">
-                  {request.implementation}
-                </div>
-              </div>
+              <EditableTextField
+                initialValue={request.implementation}
+                requestId={requestId}
+                fieldName="implementation"
+                onUpdate={updateRequestImplementation}
+              />
             </CardContent>
             <CardFooter></CardFooter>
           </Card>
@@ -419,11 +425,12 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
               </CardDescription>
             </CardHeader>
             <CardContent className="border py-4 mx-4 rounded-lg">
-              <div className="flex flex-col">
-                <div className="flex flex-cols-2 justify-between">
-                  {request.sustainability}
-                </div>
-              </div>
+              <EditableTextField
+                initialValue={request.sustainability}
+                requestId={requestId}
+                fieldName="sustainability"
+                onUpdate={updateRequestSustainability}
+              />
             </CardContent>
             <CardFooter></CardFooter>
           </Card>
