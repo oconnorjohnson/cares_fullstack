@@ -2,6 +2,33 @@
 
 ## Recent Changes
 
+### Date Range Selector Simplification - Tue Oct 21 13:35:10 PDT 2025
+
+**What changed:**
+
+- Simplified DateRangeSelector UI by removing Quick Select presets and all labels
+- Cleaner, more minimalist interface with just two calendars and action buttons
+
+**Changes made:**
+
+1. **Removed Quick Select sidebar** - Deleted all preset buttons (Last 7/30/90 days, This Year, All Time)
+2. **Removed calendar labels** - Removed "Start Date" and "End Date" text above calendars
+3. **Hidden calendar title** - Set `caption_label: "hidden"` in Calendar component to hide "October 2025" text
+4. **Removed unused code** - Cleaned up unused imports (subDays, startOfYear, endOfDay) and preset-related functions
+
+**Files modified:**
+
+- `components/admin/dashboard/date-range-selector.tsx` - Removed presets and labels
+- `components/ui/calendar.tsx` - Hidden caption label
+
+**Result:**
+
+- Users now see only the month/year dropdowns and calendar grids
+- Apply, Cancel, and Clear buttons remain at the bottom
+- Much cleaner, less cluttered interface
+
+---
+
 ### Date Range Selector UI Fixes - Tue Oct 21 13:14:47 PDT 2025
 
 **What changed:**
