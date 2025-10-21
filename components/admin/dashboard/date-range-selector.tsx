@@ -66,6 +66,9 @@ export default function DateRangeSelector({
   const handlePresetClick = (preset: { start: Date; end: Date }) => {
     setTempStartDate(preset.start);
     setTempEndDate(preset.end);
+    // Auto-apply preset selections
+    onDateChange(preset.start, preset.end);
+    setIsOpen(false);
   };
 
   const handleApply = () => {
@@ -118,10 +121,13 @@ export default function DateRangeSelector({
           {getDisplayText()}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="end">
+      <PopoverContent
+        className="w-auto p-0 max-h-[600px] overflow-y-auto"
+        align="end"
+      >
         <div className="flex">
           {/* Preset buttons column */}
-          <div className="flex flex-col gap-2 p-4 border-r">
+          <div className="flex flex-col gap-2 p-4 border-r min-w-[140px]">
             <div className="text-sm font-semibold mb-2">Quick Select</div>
             {presets.map((preset) => (
               <Button
@@ -149,9 +155,9 @@ export default function DateRangeSelector({
 
           {/* Calendars column */}
           <div className="p-4">
-            <div className="space-y-4">
+            <div className="flex gap-4">
               {/* Start Date Calendar */}
-              <div>
+              <div className="flex flex-col">
                 <div className="text-sm font-semibold mb-2">Start Date</div>
                 <Calendar
                   mode="single"
@@ -168,7 +174,7 @@ export default function DateRangeSelector({
               </div>
 
               {/* End Date Calendar */}
-              <div>
+              <div className="flex flex-col">
                 <div className="text-sm font-semibold mb-2">End Date</div>
                 <Calendar
                   mode="single"

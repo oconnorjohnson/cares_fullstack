@@ -2,6 +2,38 @@
 
 ## Recent Changes
 
+### Date Range Selector UI Fixes - Tue Oct 21 13:14:47 PDT 2025
+
+**What changed:**
+
+- Fixed multiple UX issues with DateRangeSelector component
+- Quick select buttons now work properly
+- Reduced component height and improved layout
+- Fixed month/year dropdown contrast issues
+
+**Issues fixed:**
+
+1. **Quick select buttons** - Now auto-apply and close popover immediately when clicked
+2. **Height issue** - Changed layout from vertical to horizontal (side-by-side calendars), added max-height and scrolling
+3. **Dropdown contrast** - Added custom styling to month/year select dropdowns for better readability
+
+**Implementation details:**
+
+- Updated `handlePresetClick` to call `onDateChange` and close popover immediately
+- Changed calendar layout from `space-y-4` (vertical) to `flex gap-4` (horizontal)
+- Added `max-h-[600px] overflow-y-auto` to PopoverContent for scrollability
+- Added custom classNames to Calendar component for dropdown styling:
+  - `caption_dropdowns`: flex layout with gap
+  - `dropdown`: proper background, text color, border, and focus states
+  - `dropdown_month` and `dropdown_year`: ensure foreground text color
+
+**Files modified:**
+
+- `components/admin/dashboard/date-range-selector.tsx`
+- `components/ui/calendar.tsx`
+
+---
+
 ### Analytics Date Filtering for Pre/Post Chart - Tue Oct 21 13:08:13 PDT 2025
 
 **What changed:**
