@@ -12,6 +12,8 @@ import {
   updateRequestAdminColumn,
   setAllAdminColumnsNull,
   updateNewsCard,
+  updateRequestImplementation as updateImplementation,
+  updateRequestSustainability as updateSustainability,
 } from "@/server/supabase/functions/update";
 import {
   isAdminOneNull,
@@ -329,6 +331,42 @@ export async function UpdateFund(
     return updatedFund as unknown as TablesUpdate<"Fund">;
   } catch (error) {
     console.error(`Failed to update fund with ID ${fundId}:`, error);
+    throw error;
+  }
+}
+
+export async function updateRequestImplementation(
+  requestId: number,
+  implementation: string,
+): Promise<boolean> {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
+  try {
+    const success = await updateImplementation(requestId, implementation);
+    revalidatePath(`/admin/requests/${requestId}`);
+    return success;
+  } catch (error) {
+    console.error("Error updating request implementation:", error);
+    throw error;
+  }
+}
+
+export async function updateRequestSustainability(
+  requestId: number,
+  sustainability: string,
+): Promise<boolean> {
+  const { userId: clerkuserId } = auth();
+  if (!clerkuserId) {
+    throw new Error("User not authenticated");
+  }
+  try {
+    const success = await updateSustainability(requestId, sustainability);
+    revalidatePath(`/admin/requests/${requestId}`);
+    return success;
+  } catch (error) {
+    console.error("Error updating request sustainability:", error);
     throw error;
   }
 }

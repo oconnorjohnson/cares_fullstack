@@ -671,3 +671,45 @@ export async function requestDoesNotNeedReceipt(requestId: number) {
     throw error;
   }
 }
+
+export async function updateRequestImplementation(
+  requestId: number,
+  implementation: string,
+): Promise<boolean> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Request")
+      .update({ implementation })
+      .eq("id", requestId);
+    if (error) {
+      console.error("Error in updateRequestImplementation:", error);
+      throw error;
+    }
+    return true;
+  } catch (error) {
+    console.error("Error updating request implementation:", error);
+    throw error;
+  }
+}
+
+export async function updateRequestSustainability(
+  requestId: number,
+  sustainability: string,
+): Promise<boolean> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Request")
+      .update({ sustainability })
+      .eq("id", requestId);
+    if (error) {
+      console.error("Error in updateRequestSustainability:", error);
+      throw error;
+    }
+    return true;
+  } catch (error) {
+    console.error("Error updating request sustainability:", error);
+    throw error;
+  }
+}
