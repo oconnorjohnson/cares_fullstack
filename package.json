@@ -2,6 +2,9 @@
   "name": "cares_fullstack",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">22.0.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -82,7 +85,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@types/node": "^20",
+    "@types/node": "^22",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
