@@ -1670,3 +1670,69 @@ export async function getRequestsNeedingPostScreenByUserId(userId: string) {
     return { data: null, error };
   }
 }
+
+export type RequestsByRaceData = {
+  race: string;
+  count: number;
+  percentage: number;
+}[];
+
+/**
+ * Gets the breakdown of requests by client race with optional date filtering
+ * Returns array of race categories with count and percentage
+ */
+export async function getRequestsByClientRace(
+  startDate?: string | null,
+  endDate?: string | null,
+): Promise<RequestsByRaceData> {
+  const supabase = createSupabaseClient();
+  try {
+    // Build query with Client join to get race
+    let query = supabase.from("Request").select("clientId, Client!inner(race)");
+
+    // Apply date filters if provided
+    if (startDate) {
+      query = query.gte("created_at", startDate);
+    }
+    if (endDate) {
+      const endDateInclusive = new Date(endDate);
+      endDateInclusive.setDate(endDateInclusive.getDate() + 1);
+      query = query.lt(
+        "created_at",
+        endDateInclusive.toISOString().split("T")[0],
+      );
+    }
+
+    const { data: requests, error } = await query;
+
+    if (error) throw error;
+    if (!requests || requests.length === 0) return [];
+
+    // Count requests by race
+    const raceCounts: Record<string, number> = {};
+    let totalRequests = 0;
+
+    requests.forEach((request: any) => {
+      const race = request.Client?.race || "Unknown";
+      raceCounts[race] = (raceCounts[race] || 0) + 1;
+      totalRequests++;
+    });
+
+    // Convert to array with percentages
+    const result: RequestsByRaceData = Object.entries(raceCounts).map(
+      ([race, count]) => ({
+        race,
+        count,
+        percentage: Math.round((count / totalRequests) * 100 * 10) / 10, // Round to 1 decimal
+      }),
+    );
+
+    // Sort by count descending
+    result.sort((a, b) => b.count - a.count);
+
+    return result;
+  } catch (error) {
+    console.error("Error in getRequestsByClientRace:", error);
+    throw error;
+  }
+}

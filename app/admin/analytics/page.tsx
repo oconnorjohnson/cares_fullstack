@@ -4,7 +4,7 @@ import PrePostAnalysis from "@/components/admin/dashboard/pre-post-analysis";
 import RequestsByAgency from "@/components/admin/dashboard/reqs-by-agency";
 import FundTypePopularity from "@/components/admin/dashboard/fund-type-popularity";
 import DollarsSpent from "@/components/admin/dashboard/dollars-spent";
-import PercentRequestStatus from "@/components/admin/dashboard/percent-request-status";
+import RequestsByRace from "@/components/admin/dashboard/requests-by-race";
 import AnalyticsDateFilter from "@/components/admin/dashboard/analytics-date-filter";
 import {
   getPreScreenAverages,
@@ -20,6 +20,7 @@ import {
   GetPrePostScreenChanges,
   GetIncreasedScoresAnalysis,
   GetPrePostPostChangeClientCount,
+  GetRequestsByClientRace,
 } from "@/server/actions/calculations/actions";
 import { CountRequestsCompleted } from "@/server/actions/count/actions";
 import type { AnswerCategories } from "@/server/actions/calculations/actions";
@@ -90,6 +91,7 @@ export default async function Analytics({
     paidFundsByRace,
     scoreAnalysis,
     prePostPostChangeClientCount,
+    requestsByRace,
   ] = await Promise.all([
     CountRequestsCompleted(),
     GetPercentageOfRequestsByFundType(),
@@ -104,6 +106,7 @@ export default async function Analytics({
     GetPaidFundPercentagesByRace(),
     GetIncreasedScoresAnalysis(),
     GetPrePostPostChangeClientCount(),
+    GetRequestsByClientRace(startDate, endDate),
   ]);
   console.log(sdohPercentages);
   console.log(
@@ -160,7 +163,7 @@ export default async function Analytics({
                 totalSpent={totalRFFDollarsSpent}
                 chartData={dollarsSpentChartData}
               />
-              <PercentRequestStatus chartData={percentagesByStatus} />
+              <RequestsByRace chartData={requestsByRace} />
               <SDOHCategoryDistribution chartData={sdohPercentages} />
               <PrePostAnalysis chartData={prePostChartData} />
               <RequestsByAgency

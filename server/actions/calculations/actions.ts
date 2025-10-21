@@ -8,6 +8,7 @@ import {
   getTotalRFFDollarsSpent,
   getPercentageOfRequestsByStatus,
   getSDOHPercentages,
+  getRequestsByClientRace,
 } from "@/server/supabase/functions/read";
 import { auth } from "@clerk/nextjs/server";
 import {
@@ -383,4 +384,20 @@ export async function getPostScreenAverages(
     return acc;
   }, {} as AnswerCategories);
   return averages;
+}
+
+/**
+ * Server action to get requests breakdown by client race
+ * Includes authentication check and optional date filtering
+ */
+export async function GetRequestsByClientRace(
+  startDate?: string | null,
+  endDate?: string | null,
+) {
+  const { userId } = auth();
+  if (!userId) {
+    throw new Error("User not authenticated");
+  }
+
+  return await getRequestsByClientRace(startDate, endDate);
 }

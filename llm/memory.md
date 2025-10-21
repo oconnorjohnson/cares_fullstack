@@ -2,6 +2,61 @@
 
 ## Recent Changes
 
+### New Requests by Client Race Chart - Tue Oct 21 14:50:16 PDT 2025
+
+**What changed:**
+
+- Replaced "Requests Per Process Stage" chart with new "Requests by Client Race" chart
+- Shows breakdown of requests by client demographics (race column from Client table)
+- Includes date range filtering from the start
+- Built across the full stack following established patterns
+
+**Implementation details:**
+
+- **Supabase function** (`server/supabase/functions/read.ts`):
+  - Added `getRequestsByClientRace(startDate?, endDate?)` function
+  - Joins Request and Client tables using `Client!inner(race)`
+  - Filters by created_at date range if provided
+  - Returns array with race, count, and percentage
+  - Sorts by count descending
+- **Server action** (`server/actions/calculations/actions.ts`):
+  - Added `GetRequestsByClientRace(startDate?, endDate?)` action
+  - Includes authentication check
+  - Wraps Supabase function
+- **Chart component** (`components/admin/dashboard/requests-by-race.tsx`):
+  - Created new client component
+  - Uses horizontal bar chart (BarChart from recharts)
+  - Shows count and percentage in tooltip
+  - Y-axis displays race categories
+  - X-axis shows request counts
+- **Analytics page** (`app/admin/analytics/page.tsx`):
+  - Added `GetRequestsByClientRace` to imports
+  - Added to Promise.all with date parameters
+  - Replaced `<PercentRequestStatus>` with `<RequestsByRace>`
+  - Removed unused PercentRequestStatus import
+
+**Files modified:**
+
+- `server/supabase/functions/read.ts` - Added getRequestsByClientRace function
+- `server/actions/calculations/actions.ts` - Added GetRequestsByClientRace action
+- `components/admin/dashboard/requests-by-race.tsx` (NEW) - Chart component
+- `app/admin/analytics/page.tsx` - Integrated new chart with date filtering
+
+**Database schema:**
+
+- Request table has `clientId` foreign key to Client table
+- Client table has `race: string` column
+- Join performed using `Client!inner(race)` syntax
+
+**Result:**
+
+- New chart shows demographic breakdown of all requests
+- Date filtering works out of the box (uses same date range selector)
+- Follows same pattern as Pre/Post Analysis chart
+- Backward compatible with optional date parameters
+
+---
+
 ### Date Range Selector Simplification - Tue Oct 21 13:35:10 PDT 2025
 
 **What changed:**
