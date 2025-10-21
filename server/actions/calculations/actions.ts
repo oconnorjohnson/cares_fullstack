@@ -291,12 +291,15 @@ export async function getAgencyRequestPercentages(): Promise<AgencyDatas[]> {
   return percentages;
 }
 
-export async function getPreScreenAverages() {
+export async function getPreScreenAverages(
+  startDate?: string | null,
+  endDate?: string | null,
+) {
   const { userId } = auth();
   if (!userId) {
     throw new Error("User not authenticated");
   }
-  const preScreenAnswers = await getAllPreScreenAnswers();
+  const preScreenAnswers = await getAllPreScreenAnswers(startDate, endDate);
   const categories: AnswerCategories = {
     housingSituation: 0,
     housingQuality: 0,
@@ -335,12 +338,15 @@ export async function getPreScreenAverages() {
   return averages;
 }
 
-export async function getPostScreenAverages() {
+export async function getPostScreenAverages(
+  startDate?: string | null,
+  endDate?: string | null,
+) {
   const { userId } = auth();
   if (!userId) {
     throw new Error("User not authenticated");
   }
-  const postScreenAnswers = await getAllPostScreenAnswers();
+  const postScreenAnswers = await getAllPostScreenAnswers(startDate, endDate);
   const categories: AnswerCategories = {
     housingSituation: 0,
     housingQuality: 0,

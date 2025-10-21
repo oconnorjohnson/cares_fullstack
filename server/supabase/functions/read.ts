@@ -913,12 +913,29 @@ export async function getAdminEmailPreferenceById(
   }
 }
 
-export async function getAllPreScreenAnswers(): Promise<
-  Tables<"PreScreenAnswers">[]
-> {
+export async function getAllPreScreenAnswers(
+  startDate?: string | null,
+  endDate?: string | null,
+): Promise<Tables<"PreScreenAnswers">[]> {
   const supabase = createSupabaseClient();
   try {
-    const { data, error } = await supabase.from("PreScreenAnswers").select("*");
+    let query = supabase.from("PreScreenAnswers").select("*");
+
+    // Apply date filters if provided
+    if (startDate) {
+      query = query.gte("created_at", startDate);
+    }
+    if (endDate) {
+      // Add one day to include the entire end date
+      const endDateInclusive = new Date(endDate);
+      endDateInclusive.setDate(endDateInclusive.getDate() + 1);
+      query = query.lt(
+        "created_at",
+        endDateInclusive.toISOString().split("T")[0],
+      );
+    }
+
+    const { data, error } = await query;
     if (error) {
       console.error("Error in getAllPreScreenAnswers:", error);
       throw error;
@@ -930,14 +947,29 @@ export async function getAllPreScreenAnswers(): Promise<
   }
 }
 
-export async function getAllPostScreenAnswers(): Promise<
-  Tables<"PostScreenAnswers">[]
-> {
+export async function getAllPostScreenAnswers(
+  startDate?: string | null,
+  endDate?: string | null,
+): Promise<Tables<"PostScreenAnswers">[]> {
   const supabase = createSupabaseClient();
   try {
-    const { data, error } = await supabase
-      .from("PostScreenAnswers")
-      .select("*");
+    let query = supabase.from("PostScreenAnswers").select("*");
+
+    // Apply date filters if provided
+    if (startDate) {
+      query = query.gte("created_at", startDate);
+    }
+    if (endDate) {
+      // Add one day to include the entire end date
+      const endDateInclusive = new Date(endDate);
+      endDateInclusive.setDate(endDateInclusive.getDate() + 1);
+      query = query.lt(
+        "created_at",
+        endDateInclusive.toISOString().split("T")[0],
+      );
+    }
+
+    const { data, error } = await query;
     if (error) {
       console.error("Error in getAllPostScreenAnswers:", error);
       throw error;
