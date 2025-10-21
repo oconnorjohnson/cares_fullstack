@@ -161,6 +161,9 @@ export default function DateRangeSelector({
                     tempEndDate ? date > tempEndDate : date > new Date()
                   }
                   initialFocus
+                  captionLayout="dropdown-buttons"
+                  fromYear={2020}
+                  toYear={new Date().getFullYear()}
                 />
               </div>
 
@@ -176,6 +179,9 @@ export default function DateRangeSelector({
                       ? date < tempStartDate || date > new Date()
                       : date > new Date()
                   }
+                  captionLayout="dropdown-buttons"
+                  fromYear={2020}
+                  toYear={new Date().getFullYear()}
                 />
               </div>
             </div>
