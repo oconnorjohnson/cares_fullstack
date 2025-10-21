@@ -2,6 +2,41 @@
 
 ## Recent Changes
 
+### Convert Race Chart to Pie Chart - Tue Oct 21 14:58:18 PDT 2025
+
+**What changed:**
+
+- Converted "Requests by Client Race" chart from horizontal bar chart to pie chart
+- Fixed display issue where bars weren't showing
+- Added distinct colors for each race category
+- Added center label showing total request count
+
+**Implementation details:**
+
+- Changed from `BarChart` to `PieChart` with donut layout (innerRadius: 60)
+- Added individual color mappings for each race category in chartConfig:
+  - White: chart-1
+  - Hispanic / Latino: chart-2
+  - African American / Black: chart-3
+  - Asian: chart-4
+  - Native American / Alaska Native: chart-5
+  - Pacific Islander, Two or More Races, Other, Unknown: additional colors
+- Center label displays total request count
+- Tooltip shows race name, count, and percentage
+- Added console.log for debugging data
+
+**Files modified:**
+
+- `components/admin/dashboard/requests-by-race.tsx` - Complete rewrite from bar to pie chart
+
+**Why the bar chart wasn't working:**
+
+- The horizontal bar chart likely had data but wasn't displaying bars properly
+- Pie chart is better suited for showing percentage breakdowns anyway
+- Now matches the style of other charts like "Requests Per Agency"
+
+---
+
 ### New Requests by Client Race Chart - Tue Oct 21 14:50:16 PDT 2025
 
 **What changed:**
