@@ -2,6 +2,39 @@
 
 ## Recent Changes
 
+### Show Improved Clients as Ratio - Wed Oct 22 11:53:29 PDT 2025
+
+**What changed:**
+
+- Updated Pre/Post Screen Analysis chart to display the ratio of improved clients
+- Now shows "X out of Y clients saw improved outcomes" instead of just the count
+- Provides context by showing improvement rate within selected date range
+
+**Implementation details:**
+
+- **Supabase function** (`server/supabase/functions/count.ts`):
+  - Modified return type to include `total: number`
+  - Counts valid records (those with both pre and post screens)
+  - Returns `{ decreased, increased, total }`
+- **Server action** (`server/actions/calculations/actions.ts`):
+  - Updated return type to include `total: number`
+  - Passes through the total count
+- **Analytics page** (`app/admin/analytics/page.tsx`):
+  - Pass `totalCount={prePostChanges.total}` to component
+- **Chart component** (`components/admin/dashboard/pre-post-analysis.tsx`):
+  - Added `totalCount` optional prop
+  - Display: **"X out of Y clients saw improved outcomes (decreased scores)"**
+  - Proper pluralization for "client/clients"
+  - Shows ratio only when both values available
+
+**Result:**
+
+- Users now see the improvement rate, e.g., "5 out of 8 clients improved"
+- Provides better context for understanding program effectiveness
+- Filters by date range automatically
+
+---
+
 ### Add Improved Outcomes Count to Pre/Post Chart - Tue Oct 21 16:14:24 PDT 2025
 
 **What changed:**

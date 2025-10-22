@@ -168,6 +168,7 @@ export default async function Analytics({
               <PrePostAnalysis
                 chartData={prePostChartData}
                 decreasedCount={prePostChanges.decreased}
+                totalCount={prePostChanges.total}
               />
               <RequestsByAgency
                 totalRequests={totalRequests!}

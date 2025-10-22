@@ -27,6 +27,7 @@ interface CategoryData {
 interface PrePostAnalysisProps {
   chartData: CategoryData[];
   decreasedCount?: number;
+  totalCount?: number;
 }
 
 const categoryMapping: Record<string, string> = {
@@ -54,6 +55,7 @@ const chartConfig = {
 export default function PrePostAnalysis({
   chartData,
   decreasedCount,
+  totalCount,
 }: PrePostAnalysisProps) {
   const transformedChartData = chartData.map((data) => ({
     ...data,
@@ -94,14 +96,14 @@ export default function PrePostAnalysis({
         </div>
         <div className="leading-none text-muted-foreground">
           Showing average answer per category before and after receiving aid.
-          {decreasedCount !== undefined && (
+          {decreasedCount !== undefined && totalCount !== undefined && (
             <>
               {" "}
               <span className="font-medium text-foreground">
-                {decreasedCount}
+                {decreasedCount} out of {totalCount}
               </span>{" "}
-              {decreasedCount === 1 ? "request" : "requests"} saw improved
-              outcomes (decreased scores).
+              {totalCount === 1 ? "client" : "clients"} saw improved outcomes
+              (decreased scores).
             </>
           )}
         </div>

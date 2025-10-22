@@ -134,6 +134,7 @@ export async function countPrePostScreenChanges(
 ): Promise<{
   decreased: number;
   increased: number;
+  total: number;
 }> {
   const supabase = createSupabaseClient();
   try {
@@ -176,12 +177,15 @@ export async function countPrePostScreenChanges(
 
     let decreased = 0;
     let increased = 0;
+    let validRecordsCount = 0;
 
     data.forEach((request) => {
       const preScreen = request.PreScreenAnswers[0];
       const postScreen = request.PostScreenAnswers[0];
 
       if (!preScreen || !postScreen) return;
+
+      validRecordsCount++;
 
       const preSum = Object.values(preScreen).reduce(
         (sum, val) => sum + (val as number),
@@ -200,7 +204,7 @@ export async function countPrePostScreenChanges(
       // If postSum === preSum, we don't count it as either increased or decreased
     });
 
-    return { decreased, increased };
+    return { decreased, increased, total: validRecordsCount };
   } catch (error) {
     console.error("Error in countPrePostScreenChanges:", error);
     throw error;

@@ -163,6 +163,7 @@ export async function GetPrePostScreenChanges(
 ): Promise<{
   decreased: number;
   increased: number;
+  total: number;
 }> {
   const { userId } = auth();
   if (!userId) {
