@@ -132,6 +132,7 @@ interface PostScreenData {
   transpoStress: number;
   financialDifficulties: number;
   additionalInformation: string;
+  processImproved: boolean;
 }
 
 type DepositData = {
