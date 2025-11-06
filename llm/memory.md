@@ -2,6 +2,46 @@
 
 ## Recent Changes
 
+### Post-Screen Process Improvement Question - Thu Nov 6 10:12:03 PST 2025
+
+**What changed:**
+
+- Added new required boolean question to post-screen survey form
+- Question asks: "Has the CARES nonprofit increased your ability to assist your clients?"
+- Users must select Yes or No before submitting post-screen form
+
+**Implementation details:**
+
+- **Form schema** (`components/forms/post-screen.tsx`):
+  - Added `processImproved: z.boolean()` with required_error message
+  - Added to form default values as `undefined`
+  - New FormField with Select component (Yes/No options)
+  - Value conversion: string "true"/"false" → boolean true/false
+  - Positioned before submit button, after Additional Information field
+- **Server action** (`server/actions/create/actions.ts`):
+  - Updated `PostScreenData` interface to include `processImproved: boolean`
+- **Database function** (`server/supabase/functions/create.ts`):
+  - No changes needed - already uses `TablesInsert<"PostScreenAnswers">` which automatically includes new column
+
+**Database schema:**
+
+- `PostScreenAnswers` table has new column `processImproved: boolean`
+- Required field in database schema
+
+**Files modified:**
+
+- `components/forms/post-screen.tsx` - Added form field and schema validation
+- `server/actions/create/actions.ts` - Updated interface
+
+**Result:**
+
+- Users must answer whether CARES improved their ability to help clients
+- Data flows correctly from form → server action → database
+- No linter errors
+- Form validation prevents submission without answering
+
+---
+
 ### Show Improved Clients as Ratio - Wed Oct 22 11:53:29 PDT 2025
 
 **What changed:**
