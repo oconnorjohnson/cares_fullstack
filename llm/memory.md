@@ -2,6 +2,45 @@
 
 ## Recent Changes
 
+### Fix Vercel Build Error from Vitest - Tue Dec 23 13:34:55 PST 2025
+
+**What happened:**
+
+- Vercel deployment failed with TypeScript error in `@vitejs/plugin-react` type definitions
+- Error: `Identifier expected` on line with `"module.exports"` export syntax
+
+**Root cause:**
+
+- The React testing packages (`@vitejs/plugin-react`, `@testing-library/react`, etc.) had TypeScript definitions incompatible with the project's TypeScript version
+- These packages weren't needed since we're only testing pure TypeScript functions (bus-passes.ts constants)
+
+**Fix applied:**
+
+1. Excluded vitest config files from TypeScript compilation in `tsconfig.json`:
+   - Added `"vitest.config.ts"` and `"vitest.setup.ts"` to exclude array
+2. Removed unnecessary packages:
+   - `@vitejs/plugin-react`
+   - `@testing-library/react`
+   - `@testing-library/jest-dom`
+   - `jsdom`
+3. Simplified `vitest.config.ts` to use Node environment (no React plugin)
+4. Simplified `vitest.setup.ts` to empty setup file
+
+**Files modified:**
+
+- `tsconfig.json`
+- `vitest.config.ts`
+- `vitest.setup.ts`
+- `package.json` (via pnpm remove)
+
+**Result:**
+
+- Build passes locally
+- All 26 unit tests still pass
+- Ready for Vercel deployment
+
+---
+
 ### Sac/Yolo Bus Pass Support - Tue Dec 23 13:03:15 PST 2025
 
 **What changed:**
