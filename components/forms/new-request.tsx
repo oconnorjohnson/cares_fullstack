@@ -554,7 +554,9 @@ export default function NewRequest({ userId }: { userId: string }) {
                         <FormLabel>
                           Select requested funds and note fund amounts. When
                           selecting bus passes, please add them to your request
-                          in multiples of ten.
+                          in multiples of ten. Note: Sac Bus Passes are single
+                          fare ($2.50 each), Yolo Bus Passes are double fare
+                          ($5.00 each).
                         </FormLabel>
                         <FormControl>
                           <FundSelect

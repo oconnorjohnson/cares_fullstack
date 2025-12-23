@@ -17,6 +17,7 @@ import {
   markRequestAsNeedingReceipt,
   markRequestAsNotNeedingReceipt,
 } from "@/server/actions/update/actions";
+import { getBusPassUnitValue } from "@/server/constants/bus-passes";
 
 import type {
   FundDetail,
@@ -149,11 +150,12 @@ async function createBusPassDisbursementTransaction(
   requestId: number,
   UserId: string,
 ): Promise<boolean> {
+  const unitValue = getBusPassUnitValue(3); // Legacy bus pass
   const busPassTransactionData = {
     FundTypeId: 3,
     quantity: fund.amount,
-    unitValue: 2.5,
-    totalValue: fund.amount * 2.5,
+    unitValue: unitValue,
+    totalValue: fund.amount * unitValue,
     RequestId: requestId,
     UserId: UserId,
     isRFF: true,
@@ -162,7 +164,95 @@ async function createBusPassDisbursementTransaction(
   };
   await createTransaction(busPassTransactionData);
   console.log(
-    `Disbursement transaction created for bus pass with fund ID ${fund.id}`,
+    `Disbursement transaction created for legacy bus pass with fund ID ${fund.id}`,
+  );
+  return true;
+}
+
+/** Expends Sac Bus Passes (FundTypeId: 7) */
+async function expendSacBusPass(
+  asset: number | null,
+  fundId: number,
+  fund: FundDetail,
+): Promise<boolean> {
+  const expended = await markAssetAsExpended(asset!, fundId);
+  if (!expended) {
+    console.error(
+      `Error marking Sac bus pass (Asset ID: ${asset}) as expended`,
+    );
+    throw new Error(
+      `Error marking Sac bus pass (Asset ID: ${asset}) as expended`,
+    );
+  }
+  console.log(`Sac bus pass with fund ID ${fundId} marked as expended.`);
+  return true;
+}
+
+/** Creates disbursement transaction for Sac Bus Pass (FundTypeId: 7) */
+async function createSacBusPassDisbursementTransaction(
+  fund: FundDetail,
+  requestId: number,
+  UserId: string,
+): Promise<boolean> {
+  const unitValue = getBusPassUnitValue(7); // $2.50 for Sac
+  const sacBusPassTransactionData = {
+    FundTypeId: 7,
+    quantity: fund.amount,
+    unitValue: unitValue,
+    totalValue: fund.amount * unitValue,
+    RequestId: requestId,
+    UserId: UserId,
+    isRFF: true,
+    isReservation: false,
+    isDisbursement: true,
+  };
+  await createTransaction(sacBusPassTransactionData);
+  console.log(
+    `Disbursement transaction created for Sac bus pass with fund ID ${fund.id}`,
+  );
+  return true;
+}
+
+/** Expends Yolo Bus Passes (FundTypeId: 8) */
+async function expendYoloBusPass(
+  asset: number | null,
+  fundId: number,
+  fund: FundDetail,
+): Promise<boolean> {
+  const expended = await markAssetAsExpended(asset!, fundId);
+  if (!expended) {
+    console.error(
+      `Error marking Yolo bus pass (Asset ID: ${asset}) as expended`,
+    );
+    throw new Error(
+      `Error marking Yolo bus pass (Asset ID: ${asset}) as expended`,
+    );
+  }
+  console.log(`Yolo bus pass with fund ID ${fundId} marked as expended.`);
+  return true;
+}
+
+/** Creates disbursement transaction for Yolo Bus Pass (FundTypeId: 8) */
+async function createYoloBusPassDisbursementTransaction(
+  fund: FundDetail,
+  requestId: number,
+  UserId: string,
+): Promise<boolean> {
+  const unitValue = getBusPassUnitValue(8); // $5.00 for Yolo
+  const yoloBusPassTransactionData = {
+    FundTypeId: 8,
+    quantity: fund.amount,
+    unitValue: unitValue,
+    totalValue: fund.amount * unitValue,
+    RequestId: requestId,
+    UserId: UserId,
+    isRFF: true,
+    isReservation: false,
+    isDisbursement: true,
+  };
+  await createTransaction(yoloBusPassTransactionData);
+  console.log(
+    `Disbursement transaction created for Yolo bus pass with fund ID ${fund.id}`,
   );
   return true;
 }
@@ -193,17 +283,21 @@ async function createFundDisbursementTransaction(
 const expendHandlers: ExpendTypeHandlers = {
   1: expendWalmartGiftCard,
   2: expendArcoGiftCard,
-  3: expendBusPass,
+  3: expendBusPass, // Legacy bus pass
   4: expendFunds,
   6: expendFunds,
+  7: expendSacBusPass, // Sac Bus Pass @ $2.50
+  8: expendYoloBusPass, // Yolo Bus Pass @ $5.00
 };
 
 const transactionHandlers: FundTypeTransactionHandlers = {
   1: createWalmartDisbursementTransaction,
   2: createArcoDisbursementTransaction,
-  3: createBusPassDisbursementTransaction,
+  3: createBusPassDisbursementTransaction, // Legacy bus pass
   4: createFundDisbursementTransaction,
   6: createFundDisbursementTransaction,
+  7: createSacBusPassDisbursementTransaction, // Sac Bus Pass @ $2.50
+  8: createYoloBusPassDisbursementTransaction, // Yolo Bus Pass @ $5.00
 };
 
 export default async function MarkPaid(requestId: number, UserId: string) {

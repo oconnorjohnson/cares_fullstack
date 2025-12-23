@@ -1,6 +1,7 @@
 "use server";
 
 import { auth } from "@clerk/nextjs/server";
+import { calculateBusPassValue } from "@/server/constants/bus-passes";
 import {
   getClientsByUserId,
   getAdminRequests,
@@ -290,11 +291,8 @@ export async function getFundsSumByRequestId(
   const funds = await getFundsByRequestId(requestId);
   let totalValue = 0;
   for (const fund of funds) {
-    if (fund.fundTypeId === 3) {
-      totalValue += fund.amount * 2.5;
-    } else {
-      totalValue += fund.amount;
-    }
+    // Bus passes (types 3, 7, 8) use quantity * unit price, other funds use amount directly
+    totalValue += calculateBusPassValue(fund.fundTypeId, fund.amount);
   }
   return totalValue;
 }

@@ -1,6 +1,7 @@
 import { createClient as createSupabaseClient } from "@/server/supabase/server";
 import { Tables } from "@/types_db";
 import { z } from "zod";
+import { calculateBusPassValue } from "@/server/constants/bus-passes";
 type totalValue = {
   id: number;
   totalValue: number;
@@ -167,12 +168,13 @@ export async function dollarsSpentByFundType(): Promise<
     }
 
     // Group and sum amounts by fundTypeId
+    // Bus passes (types 3, 7, 8) use quantity * unit price, other funds use amount directly
     const dollarsByFundType = fundsData.reduce(
       (
         acc: Record<number, number>,
         fund: { fundTypeId: number; amount: number },
       ) => {
-        const amount = fund.fundTypeId === 3 ? fund.amount * 2.5 : fund.amount;
+        const amount = calculateBusPassValue(fund.fundTypeId, fund.amount);
         if (acc[fund.fundTypeId]) {
           acc[fund.fundTypeId] += amount;
         } else {
@@ -1043,6 +1045,50 @@ export async function getRFFBusPasses(): Promise<id[]> {
   }
 }
 
+/** Fetches available RFF Sac Bus Passes (FundTypeId: 7) */
+export async function getRFFSacBusPasses(): Promise<id[]> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Asset")
+      .select("id")
+      .eq("FundTypeId", 7)
+      .eq("isAvailable", true)
+      .eq("isRFF", true)
+      .eq("isCARES", false);
+    if (error) {
+      console.error("Error in getRFFSacBusPasses:", error);
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.error("Error in getRFFSacBusPasses:", error);
+    throw error;
+  }
+}
+
+/** Fetches available RFF Yolo Bus Passes (FundTypeId: 8) */
+export async function getRFFYoloBusPasses(): Promise<id[]> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Asset")
+      .select("id")
+      .eq("FundTypeId", 8)
+      .eq("isAvailable", true)
+      .eq("isRFF", true)
+      .eq("isCARES", false);
+    if (error) {
+      console.error("Error in getRFFYoloBusPasses:", error);
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    console.error("Error in getRFFYoloBusPasses:", error);
+    throw error;
+  }
+}
+
 export async function getRFFWalmartCards(): Promise<totalValue[]> {
   const supabase = createSupabaseClient();
   try {
@@ -1132,6 +1178,46 @@ export async function getReservedRFFBusPasses(): Promise<id[]> {
     return data;
   } catch (error) {
     console.error("Error in getReservedBusPasses:", error);
+    throw error;
+  }
+}
+
+/** Fetches reserved RFF Sac Bus Passes (FundTypeId: 7) */
+export async function getReservedRFFSacBusPasses(): Promise<id[]> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Asset")
+      .select("id")
+      .eq("FundTypeId", 7)
+      .eq("isAvailable", false)
+      .eq("isRFF", true)
+      .eq("isCARES", false)
+      .eq("isReserved", true);
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Error in getReservedRFFSacBusPasses:", error);
+    throw error;
+  }
+}
+
+/** Fetches reserved RFF Yolo Bus Passes (FundTypeId: 8) */
+export async function getReservedRFFYoloBusPasses(): Promise<id[]> {
+  const supabase = createSupabaseClient();
+  try {
+    const { data, error } = await supabase
+      .from("Asset")
+      .select("id")
+      .eq("FundTypeId", 8)
+      .eq("isAvailable", false)
+      .eq("isRFF", true)
+      .eq("isCARES", false)
+      .eq("isReserved", true);
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Error in getReservedRFFYoloBusPasses:", error);
     throw error;
   }
 }

@@ -8,6 +8,7 @@ import {
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader } from "@/components/ui/card";
+import { calculateBusPassValue } from "@/server/constants/bus-passes";
 type RequestStatus = "Pending" | "Approved" | "Denied" | "Error";
 
 async function getRequests(): Promise<Request[]> {
@@ -32,7 +33,7 @@ async function getRequests(): Promise<Request[]> {
     const formattedFunds = requestFunds.map((fund) => ({
       id: fund.id,
       typeName: fundTypesMap.get(fund.fundTypeId) || "Unknown",
-      amount: fund.fundTypeId === 3 ? fund.amount * 2.5 : fund.amount,
+      amount: calculateBusPassValue(fund.fundTypeId, fund.amount),
     }));
 
     return {
