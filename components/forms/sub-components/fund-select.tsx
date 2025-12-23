@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import {
   LEGACY_BUS_PASS_FUND_TYPE_ID,
   NEW_BUS_PASS_FUND_TYPE_IDS,
-} from "@/server/constants/bus-passes";
+} from "@/lib/constants/bus-passes";
 
 interface FundType {
   id: number;
@@ -123,6 +123,12 @@ export default function FundSelect({
             Add Fund
           </Button>
         </div>
+        <div className="py-2" />
+        <p className="text-xs text-muted-foreground">
+          <strong>Bus Pass Note:</strong> Sac Bus Passes are single fare
+          ($2.50/each). Yolo Bus Passes are double fare ($5.00/each). Please
+          account for this when requesting bus passes.
+        </p>
         <div className="py-2" />
         <div className="space-y-2">
           {value.map((fund, index) => (
