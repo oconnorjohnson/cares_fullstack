@@ -9,7 +9,7 @@ import { trpc } from "@/app/_trpc/client";
 import { newRequest } from "@/server/actions/create/actions";
 import { Submitted } from "@/server/actions/resend/actions";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { isUserBanned } from "@/server/actions/create/actions";
 import { LoadingSpinner } from "@/components/admin/request/approve";
 import {
