@@ -2,6 +2,85 @@
 
 ## Recent Changes
 
+### Sac/Yolo Bus Pass Support - Tue Dec 23 13:03:15 PST 2025
+
+**What changed:**
+
+- Extended bus pass system to support two distinct bus pass types with different pricing:
+  - **Sac Bus Pass (FundType 7)**: Sacramento County single fare @ $2.50 each
+  - **Yolo Bus Pass (FundType 8)**: Yolo County double fare @ $5.00 each
+  - **Legacy Bus Pass (FundType 3)**: Hidden from new requests, honored for pending/historical
+
+**Why this was needed:**
+
+- Yolo County bus no longer accepts Sacramento bus tickets
+- Must now purchase separate Yolo bus tickets at $5.00/double fare
+- System needed to track both types while preserving historical data
+
+**Implementation details:**
+
+- **Database Migration**: `supabase/migrations/20251223_add_sac_yolo_bus_pass_fund_types.sql`
+
+  - Adds FundType 7 (Sac Bus Pass) and FundType 8 (Yolo Bus Pass)
+
+- **Centralized Constants**: `server/constants/bus-passes.ts`
+
+  - `BUS_PASS_CONFIG` - pricing and FundType ID mappings
+  - `getBusPassUnitValue(fundTypeId)` - returns unit price for any bus pass type
+  - `isBusPassFundType(fundTypeId)` - checks if FundType is a bus pass
+  - `calculateBusPassValue(fundTypeId, amount)` - calculates total value
+
+- **Server Actions Updated**:
+
+  - `server/actions/create/actions.ts` - `addBusPasses()` now accepts `sacAmount` and `yoloAmount`
+  - `server/actions/rff/approve.ts` - handlers for FundTypes 7, 8
+  - `server/actions/rff/paid.ts` - handlers for FundTypes 7, 8
+  - `server/supabase/functions/read.ts` - added `getRFFSacBusPasses()`, `getRFFYoloBusPasses()`
+  - `server/supabase/functions/count.ts` - counts now include all bus pass types (3, 7, 8)
+  - `server/actions/request/actions.ts` - uses `calculateBusPassValue()` for totals
+
+- **Frontend Updates**:
+
+  - `components/admin/assets/add-bus-pass.tsx` - dual quantity inputs for Sac and Yolo
+  - `components/forms/sub-components/fund-select.tsx` - hides FundType 3, validates 7/8
+  - Analytics pages group all bus passes under single "Bus Pass" label
+
+- **Testing**: Added Vitest with 26 passing tests for bus pass logic
+
+**Files modified:**
+
+- `supabase/migrations/20251223_add_sac_yolo_bus_pass_fund_types.sql` (NEW)
+- `server/constants/bus-passes.ts` (NEW)
+- `server/constants/__tests__/bus-passes.test.ts` (NEW)
+- `vitest.config.ts` (NEW)
+- `vitest.setup.ts` (NEW)
+- `server/actions/create/actions.ts`
+- `server/actions/rff/approve.ts`
+- `server/actions/rff/paid.ts`
+- `server/supabase/functions/read.ts`
+- `server/supabase/functions/count.ts`
+- `server/actions/request/actions.ts`
+- `components/admin/assets/add-bus-pass.tsx`
+- `components/forms/sub-components/fund-select.tsx`
+- `components/admin/tables/requests/page.tsx`
+- `app/admin/analytics/page.tsx`
+- `app/admin/pick-ups/page.tsx`
+- `app/admin/requests/[requestid]/page.tsx`
+- `package.json` (added test scripts, vitest dependencies)
+
+**Backward compatibility:**
+
+- Legacy FundType 3 fully supported for existing/pending requests
+- Historical transactions remain unchanged
+- All existing calculations work correctly
+
+**Database notes:**
+
+- Run migration to add FundTypes 7 and 8 before deploying
+- No data migration needed - existing records remain as FundType 3
+
+---
+
 ### Post-Screen Process Improvement Question - Thu Nov 6 10:12:03 PST 2025
 
 **What changed:**

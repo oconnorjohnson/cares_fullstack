@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import {
   Select,
   SelectTrigger,
@@ -10,6 +10,10 @@ import { TrashIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import {
+  LEGACY_BUS_PASS_FUND_TYPE_ID,
+  NEW_BUS_PASS_FUND_TYPE_IDS,
+} from "@/server/constants/bus-passes";
 
 interface FundType {
   id: number;
@@ -34,6 +38,14 @@ export default function FundSelect({
   onChange,
   fundTypesData,
 }: FundSelectProps) {
+  // Filter out legacy bus pass (FundType 3) from new requests
+  // Users should select Sac Bus Pass (7) or Yolo Bus Pass (8) instead
+  const availableFundTypes = useMemo(() => {
+    return fundTypesData.filter(
+      (fundType) => fundType.id !== LEGACY_BUS_PASS_FUND_TYPE_ID,
+    );
+  }, [fundTypesData]);
+
   const handleAddFund = () => {
     if (value.length < 4) {
       const newFunds = [
@@ -72,27 +84,6 @@ export default function FundSelect({
     onChange(newFunds);
   };
 
-  // const handleAmountChange = (index: number, newValue: string) => {
-  //   const newAmount = parseFloat(newValue);
-  //   const fund = value[index];
-  //   const fundType = fundTypesData.find((ft) => ft.id === fund.fundTypeId);
-
-  //   if (fundType && fundType.id === 3) {
-  //     if (newAmount % 10 !== 0) {
-  //       toast.error("Bus Pass amount must be a multiple of 10.");
-  //       return;
-  //     }
-  //   }
-
-  //   const newFunds = value.map((fund, idx) => {
-  //     if (idx === index) {
-  //       return { ...fund, aount: newAmount };
-  //     }
-  //     return fund;
-  //   });
-  //   onChange(newFunds);
-  // };
-
   const handleAmountChange = (index: number, newValue: string) => {
     const newFunds = value.map((fund, idx) => {
       if (idx === index) {
@@ -105,10 +96,16 @@ export default function FundSelect({
 
   const validateAmount = (index: number) => {
     const fund = value[index];
-    const fundType = fundTypesData.find((ft) => ft.id === fund.fundTypeId);
-    if (fundType && fundType.id === 3 && fund.amount % 10 !== 0) {
+    // Validate bus pass amounts (legacy type 3 and new types 7, 8) must be multiples of 10
+    const isBusPass =
+      fund.fundTypeId === LEGACY_BUS_PASS_FUND_TYPE_ID ||
+      (NEW_BUS_PASS_FUND_TYPE_IDS as readonly number[]).includes(
+        fund.fundTypeId,
+      );
+
+    if (isBusPass && fund.amount % 10 !== 0) {
       toast.error("Bus Pass amount must be a multiple of 10.");
-      handleAmountChange(index, "0"); // Reset to 0 or the nearest valid multiple
+      handleAmountChange(index, "0");
     }
   };
 
@@ -140,7 +137,7 @@ export default function FundSelect({
                   <SelectValue placeholder="Select Fund Type" />
                 </SelectTrigger>
                 <SelectContent>
-                  {fundTypesData.map((fundType) => (
+                  {availableFundTypes.map((fundType) => (
                     <SelectItem
                       key={fundType.id}
                       value={fundType.id.toString()}

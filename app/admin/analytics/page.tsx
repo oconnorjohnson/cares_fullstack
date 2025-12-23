@@ -47,10 +47,12 @@ const agencyIdToNameMap: { [key: number]: string } = {
 const fundTypeIdToNameMap: { [key: number]: string } = {
   1: "Walmart Gift Card",
   2: "Arco Gift Card",
-  3: "Bus Pass",
+  3: "Bus Pass", // Legacy bus pass
   4: "Cash",
   5: "Invoice",
   6: "Check",
+  7: "Bus Pass", // Sac Bus Pass - grouped under "Bus Pass" for analytics
+  8: "Bus Pass", // Yolo Bus Pass - grouped under "Bus Pass" for analytics
 };
 
 interface AgencyPercentageData {
@@ -133,20 +135,50 @@ export default async function Analytics({
     postValue: getCategoryValue(category, postAnswers),
   }));
 
-  const fundPopChartData = percentagesByAssetTypeAndAgency.map(
-    ({ fundTypeId, percentage }) => ({
-      fundTypeId,
-      percentage,
-      fundTypeName: fundTypeIdToNameMap[fundTypeId],
-    }),
+  // Aggregate fund type percentages (grouping all bus pass types together)
+  const fundPopChartData = Object.values(
+    percentagesByAssetTypeAndAgency.reduce(
+      (acc, { fundTypeId, percentage }) => {
+        const fundTypeName = fundTypeIdToNameMap[fundTypeId] || "Unknown";
+        if (acc[fundTypeName]) {
+          acc[fundTypeName].percentage += percentage;
+        } else {
+          acc[fundTypeName] = {
+            fundTypeId, // Keep first encountered ID for reference
+            percentage,
+            fundTypeName,
+          };
+        }
+        return acc;
+      },
+      {} as Record<
+        string,
+        { fundTypeId: number; percentage: number; fundTypeName: string }
+      >,
+    ),
   );
 
-  const dollarsSpentChartData = dollarsSpentByFundType.map(
-    ({ fundTypeId, dollars }) => ({
-      fundTypeId,
-      dollars,
-      fundTypeName: fundTypeIdToNameMap[fundTypeId],
-    }),
+  // Aggregate dollars spent by fund type name (grouping all bus pass types together)
+  const dollarsSpentChartData = Object.values(
+    dollarsSpentByFundType.reduce(
+      (acc, { fundTypeId, dollars }) => {
+        const fundTypeName = fundTypeIdToNameMap[fundTypeId] || "Unknown";
+        if (acc[fundTypeName]) {
+          acc[fundTypeName].dollars += dollars;
+        } else {
+          acc[fundTypeName] = {
+            fundTypeId, // Keep first encountered ID for reference
+            dollars,
+            fundTypeName,
+          };
+        }
+        return acc;
+      },
+      {} as Record<
+        string,
+        { fundTypeId: number; dollars: number; fundTypeName: string }
+      >,
+    ),
   );
 
   if (!isAdmin) {

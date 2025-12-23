@@ -9,8 +9,11 @@ import {
   getRFFWalmartCards,
   getRFFArcoCards,
   getRFFBusPasses,
+  getRFFSacBusPasses,
+  getRFFYoloBusPasses,
   getRFFBalance,
 } from "@/server/supabase/functions/read";
+import { getBusPassUnitValue } from "@/server/constants/bus-passes";
 import {
   markAssetAsReserved,
   updateFundWithAssets,
@@ -31,19 +34,23 @@ import type {
 const fundTypeHandlers: FundTypeHandlers = {
   1: reserveWalmartGiftCard,
   2: reserveArcoGiftCard,
-  3: reserveBusPass,
+  3: reserveBusPass, // Legacy bus pass
   4: reserveFunds,
   5: reserveFunds,
   6: reserveFunds,
+  7: reserveSacBusPass, // Sac Bus Pass @ $2.50
+  8: reserveYoloBusPass, // Yolo Bus Pass @ $5.00
 };
 
 const fundTypeTransactionHandlers: FundTypeTransactionHandlers = {
   1: createWalmartGiftCardTransaction,
   2: createArcoGiftCardTransaction,
-  3: createBusPassTransaction,
+  3: createBusPassTransaction, // Legacy bus pass
   4: createFundReservationTransaction,
   5: createFundReservationTransaction,
   6: createFundReservationTransaction,
+  7: createSacBusPassTransaction, // Sac Bus Pass @ $2.50
+  8: createYoloBusPassTransaction, // Yolo Bus Pass @ $5.00
 };
 
 async function reserveWalmartGiftCard(fund: FundDetail) {
@@ -189,18 +196,143 @@ async function createBusPassTransaction(
   requestId: number,
   UserId: string,
 ): Promise<boolean> {
+  const unitValue = getBusPassUnitValue(3); // Legacy bus pass
   const busPassTransactionData = {
     FundTypeId: 3,
     quantity: fund.amount,
-    unitValue: 2.5,
-    totalValue: fund.amount * 2.5,
+    unitValue: unitValue,
+    totalValue: fund.amount * unitValue,
     RequestId: requestId,
     UserId: UserId,
     isRFF: true,
     isReservation: true,
   };
   await createTransaction(busPassTransactionData);
-  console.log(`Transaction created for bus pass with fund ID ${fund.id}`);
+  console.log(
+    `Transaction created for legacy bus pass with fund ID ${fund.id}`,
+  );
+  return true;
+}
+
+/** Reserves Sac Bus Passes (FundTypeId: 7) from available RFF assets */
+async function reserveSacBusPass(fund: FundDetail): Promise<boolean> {
+  let assetIdsToReserve: number[] = [];
+  const availableBusPasses = await getRFFSacBusPasses();
+  if (!availableBusPasses) {
+    throw new Error("Failed to fetch available Sac bus passes.");
+  }
+  if (fund.amount > availableBusPasses.length) {
+    throw new Error(
+      `Requested number of Sac bus passes exceeds available stock. Available: ${availableBusPasses.length}, Requested: ${fund.amount}`,
+    );
+  }
+  const busPassIdsToReserve = availableBusPasses
+    .slice(-fund.amount)
+    .map((pass) => pass.id);
+  const reservedPromises = busPassIdsToReserve.map((busPassId) =>
+    markAssetAsReserved(busPassId, fund.id),
+  );
+  assetIdsToReserve = busPassIdsToReserve;
+  try {
+    await Promise.all(reservedPromises);
+  } catch (error) {
+    console.error("Error in marking Sac bus pass assets as reserved", error);
+    throw new Error("Error in marking Sac bus pass assets as reserved");
+  }
+  if (assetIdsToReserve.length > 0) {
+    await updateFundWithAssets(fund.id, assetIdsToReserve);
+    console.log(
+      "Updating fund with fundId with assetIds:",
+      fund.id,
+      assetIdsToReserve,
+    );
+  }
+  console.log(
+    `Successfully reserved ${busPassIdsToReserve.length} Sac bus passes.`,
+  );
+  return true;
+}
+
+/** Creates transaction for Sac Bus Pass reservation (FundTypeId: 7) */
+async function createSacBusPassTransaction(
+  fund: FundDetail,
+  requestId: number,
+  UserId: string,
+): Promise<boolean> {
+  const unitValue = getBusPassUnitValue(7); // $2.50 for Sac
+  const sacBusPassTransactionData = {
+    FundTypeId: 7,
+    quantity: fund.amount,
+    unitValue: unitValue,
+    totalValue: fund.amount * unitValue,
+    RequestId: requestId,
+    UserId: UserId,
+    isRFF: true,
+    isReservation: true,
+  };
+  await createTransaction(sacBusPassTransactionData);
+  console.log(`Transaction created for Sac bus pass with fund ID ${fund.id}`);
+  return true;
+}
+
+/** Reserves Yolo Bus Passes (FundTypeId: 8) from available RFF assets */
+async function reserveYoloBusPass(fund: FundDetail): Promise<boolean> {
+  let assetIdsToReserve: number[] = [];
+  const availableBusPasses = await getRFFYoloBusPasses();
+  if (!availableBusPasses) {
+    throw new Error("Failed to fetch available Yolo bus passes.");
+  }
+  if (fund.amount > availableBusPasses.length) {
+    throw new Error(
+      `Requested number of Yolo bus passes exceeds available stock. Available: ${availableBusPasses.length}, Requested: ${fund.amount}`,
+    );
+  }
+  const busPassIdsToReserve = availableBusPasses
+    .slice(-fund.amount)
+    .map((pass) => pass.id);
+  const reservedPromises = busPassIdsToReserve.map((busPassId) =>
+    markAssetAsReserved(busPassId, fund.id),
+  );
+  assetIdsToReserve = busPassIdsToReserve;
+  try {
+    await Promise.all(reservedPromises);
+  } catch (error) {
+    console.error("Error in marking Yolo bus pass assets as reserved", error);
+    throw new Error("Error in marking Yolo bus pass assets as reserved");
+  }
+  if (assetIdsToReserve.length > 0) {
+    await updateFundWithAssets(fund.id, assetIdsToReserve);
+    console.log(
+      "Updating fund with fundId with assetIds:",
+      fund.id,
+      assetIdsToReserve,
+    );
+  }
+  console.log(
+    `Successfully reserved ${busPassIdsToReserve.length} Yolo bus passes.`,
+  );
+  return true;
+}
+
+/** Creates transaction for Yolo Bus Pass reservation (FundTypeId: 8) */
+async function createYoloBusPassTransaction(
+  fund: FundDetail,
+  requestId: number,
+  UserId: string,
+): Promise<boolean> {
+  const unitValue = getBusPassUnitValue(8); // $5.00 for Yolo
+  const yoloBusPassTransactionData = {
+    FundTypeId: 8,
+    quantity: fund.amount,
+    unitValue: unitValue,
+    totalValue: fund.amount * unitValue,
+    RequestId: requestId,
+    UserId: UserId,
+    isRFF: true,
+    isReservation: true,
+  };
+  await createTransaction(yoloBusPassTransactionData);
+  console.log(`Transaction created for Yolo bus pass with fund ID ${fund.id}`);
   return true;
 }
 

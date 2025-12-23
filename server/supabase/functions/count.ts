@@ -1,5 +1,6 @@
 import { createClient as createSupabaseClient } from "@/server/supabase/server";
 import { Database } from "@/types_db";
+import { BUS_PASS_FUND_TYPE_IDS } from "@/server/constants/bus-passes";
 
 type ScreenAnswer = Database["public"]["Tables"]["PreScreenAnswers"]["Row"];
 type Fund = Database["public"]["Tables"]["Fund"]["Row"];
@@ -367,13 +368,14 @@ export async function countCARESArcoCards(): Promise<{
   }
 }
 
+/** Counts all available RFF bus passes (legacy, Sac, and Yolo types) */
 export async function countAvailableRFFBusPasses(): Promise<number | null> {
   const supabase = createSupabaseClient();
   try {
     const { count, error } = await supabase
       .from("Asset")
       .select("*", { count: "exact" })
-      .eq("FundTypeId", 3)
+      .in("FundTypeId", [...BUS_PASS_FUND_TYPE_IDS])
       .eq("isAvailable", true)
       .eq("isRFF", true)
       .eq("isCARES", false);
@@ -388,13 +390,14 @@ export async function countAvailableRFFBusPasses(): Promise<number | null> {
   }
 }
 
+/** Counts all reserved RFF bus passes (legacy, Sac, and Yolo types) */
 export async function countReservedRFFBusPasses(): Promise<number | null> {
   const supabase = createSupabaseClient();
   try {
     const { count, error } = await supabase
       .from("Asset")
       .select("*", { count: "exact" })
-      .eq("FundTypeId", 3)
+      .in("FundTypeId", [...BUS_PASS_FUND_TYPE_IDS])
       .eq("isAvailable", false)
       .eq("isReserved", true)
       .eq("isRFF", true)
@@ -410,13 +413,14 @@ export async function countReservedRFFBusPasses(): Promise<number | null> {
   }
 }
 
+/** Counts all available CARES bus passes (legacy, Sac, and Yolo types) */
 export async function countAvailableCARESBusPasses(): Promise<number | null> {
   const supabase = createSupabaseClient();
   try {
     const { count, error } = await supabase
       .from("Asset")
       .select("*", { count: "exact" })
-      .eq("FundTypeId", 3)
+      .in("FundTypeId", [...BUS_PASS_FUND_TYPE_IDS])
       .eq("isAvailable", true)
       .eq("isRFF", false)
       .eq("isCARES", true);
@@ -431,13 +435,14 @@ export async function countAvailableCARESBusPasses(): Promise<number | null> {
   }
 }
 
+/** Counts all reserved CARES bus passes (legacy, Sac, and Yolo types) */
 export async function countReservedCARESBusPasses(): Promise<number | null> {
   const supabase = createSupabaseClient();
   try {
     const { count, error } = await supabase
       .from("Asset")
       .select("*", { count: "exact" })
-      .eq("FundTypeId", 3)
+      .in("FundTypeId", [...BUS_PASS_FUND_TYPE_IDS])
       .eq("isAvailable", false)
       .eq("isReserved", true)
       .eq("isRFF", false)

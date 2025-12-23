@@ -10,6 +10,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test": "vitest",
+    "test:run": "vitest run",
     "prepare": "husky install"
   },
   "dependencies": {
@@ -85,14 +87,18 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.1",
     "@types/node": "^22",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@vitejs/plugin-react": "^5.1.2",
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
     "eslint-config-next": "14.1.0",
     "eslint-config-prettier": "^9.1.0",
     "husky": "^8.0.3",
+    "jsdom": "^27.3.0",
     "lint-staged": "^15.2.0",
     "postcss": "^8",
     "prettier": "^3.2.4",
@@ -101,7 +107,8 @@
     "supabase": "^1.153.4",
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.0.16"
   },
   "lint-staged": {
     "**/*": [

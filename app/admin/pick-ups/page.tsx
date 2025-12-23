@@ -33,6 +33,18 @@ import { ArrowRightIcon } from "lucide-react";
 import PickupEventsTable from "@/components/admin/tables/pickup-events/page";
 import MarkPaidButton from "@/components/admin/request/mark-paid";
 
+// Centralized asset/fund type name mapping - includes legacy and new bus pass types
+const assetMap: { [key: number]: string } = {
+  1: "Walmart Gift Card",
+  2: "Arco Gift Card",
+  3: "Bus Pass", // Legacy
+  4: "Cash",
+  5: "Invoice",
+  6: "Check",
+  7: "Sac Bus Pass",
+  8: "Yolo Bus Pass",
+};
+
 export default async function PickUps() {
   const tomorrowEvents = await getTomorrowsEventsAndFunds();
   const todayEvents = await getTodaysEventsAndFunds();
@@ -72,14 +84,6 @@ export default async function PickUps() {
                           </TableHeader>
                           <TableBody>
                             {event.funds.map((fund) => {
-                              const assetMap: { [key: number]: string } = {
-                                1: "Walmart Gift Card",
-                                2: "Arco Gift Card",
-                                3: "Bus Pass",
-                                4: "Cash",
-                                5: "Invoice",
-                                6: "Check",
-                              };
                               const assetName =
                                 assetMap[
                                   fund.fundTypeId as keyof typeof assetMap
@@ -148,14 +152,6 @@ export default async function PickUps() {
                           </TableHeader>
                           <TableBody>
                             {event.funds.map((fund) => {
-                              const assetMap: { [key: number]: string } = {
-                                1: "Walmart Gift Card",
-                                2: "Arco Gift Card",
-                                3: "Bus Pass",
-                                4: "Cash",
-                                5: "Invoice",
-                                6: "Check",
-                              };
                               const assetName =
                                 assetMap[
                                   fund.fundTypeId as keyof typeof assetMap

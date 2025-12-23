@@ -28,6 +28,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import { isBusPassFundType } from "@/server/constants/bus-passes";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   GetRFFWalmartCards,
@@ -140,7 +141,7 @@ const RequestPage = async ({ requestid }: { requestid: string }) => {
         <Badge className="text-sm">{fund.FundType.typeName}</Badge>
       )}
       <div className="px-2" />
-      {fund.FundType.typeName === "Bus Pass" ? (
+      {isBusPassFundType(fund.FundType.id) ? (
         <span className="text-lg font-semibold">{fund.amount}</span>
       ) : (
         <span className="text-lg font-semibold">${fund.amount}</span>
