@@ -34,7 +34,7 @@ import { addBusPasses } from "@/server/actions/create/actions";
 import { toast } from "sonner";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useAuth } from "@clerk/nextjs";
-import { BUS_PASS_CONFIG } from "@/server/constants/bus-passes";
+import { BUS_PASS_CONFIG } from "@/lib/constants/bus-passes";
 
 const formSchema = z
   .object({
