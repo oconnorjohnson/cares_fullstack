@@ -44,6 +44,10 @@ const formSchema = z.object({
   transpoStress: z.number().min(1).max(5),
   financialDifficulties: z.number().min(1).max(5),
   additionalInformation: z.string().min(1).max(500),
+  processImproved: z.boolean({
+    required_error:
+      "Please answer whether CARES has increased your ability to assist clients",
+  }),
   requestId: z.number().min(1),
 });
 
@@ -64,6 +68,7 @@ export default function PostScreen({ requestId }: { requestId: number }) {
       transpoStress: undefined,
       financialDifficulties: undefined,
       additionalInformation: "",
+      processImproved: undefined,
       requestId: requestId,
     },
   });
@@ -403,6 +408,40 @@ export default function PostScreen({ requestId }: { requestId: number }) {
                         <FormControl>
                           <Textarea {...field} />
                         </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <div className="py-2" />
+                  <FormField
+                    control={form.control}
+                    name="processImproved"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>CARES Impact</FormLabel>
+                        <FormDescription>
+                          Has the CARES nonprofit increased your ability to
+                          assist your clients?
+                        </FormDescription>
+                        <Select
+                          onValueChange={(value) =>
+                            field.onChange(value === "true")
+                          }
+                          defaultValue={
+                            field.value !== undefined
+                              ? field.value.toString()
+                              : ""
+                          }
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select Yes or No" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="true">Yes</SelectItem>
+                            <SelectItem value="false">No</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </FormItem>
                     )}
                   />

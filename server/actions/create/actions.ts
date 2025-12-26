@@ -132,6 +132,7 @@ interface PostScreenData {
   transpoStress: number;
   financialDifficulties: number;
   additionalInformation: string;
+  processImproved: boolean;
 }
 
 type DepositData = {
@@ -301,11 +302,13 @@ export async function createTransaction(
 }
 
 export async function addBusPasses({
-  amount,
+  sacAmount,
+  yoloAmount,
   UserId,
   balanceSource,
 }: {
-  amount: number;
+  sacAmount: number;
+  yoloAmount: number;
   UserId: string;
   balanceSource: string;
 }) {
@@ -313,13 +316,29 @@ export async function addBusPasses({
   if (!clerkuserId) {
     throw new Error("User not authenticated");
   }
-  const unitValue = 2.5;
-  const totalValue = amount * unitValue;
+
+  // Use pricing from centralized config
+  const sacUnitValue = 2.5; // Sac Bus Pass - single fare
+  const yoloUnitValue = 5.0; // Yolo Bus Pass - double fare
+  const sacFundTypeId = 7;
+  const yoloFundTypeId = 8;
+
+  const sacTotalValue = sacAmount * sacUnitValue;
+  const yoloTotalValue = yoloAmount * yoloUnitValue;
+  const totalValue = sacTotalValue + yoloTotalValue;
+  const totalQuantity = sacAmount + yoloAmount;
+
+  // Early return if no passes to add
+  if (totalQuantity === 0) {
+    throw new Error("Must add at least one bus pass.");
+  }
+
   let transactionId: number | undefined;
   let currentBalance;
   let lastVersion;
   let balanceUpdated: boolean = false;
   let previousBalance: number | null = null;
+
   try {
     // Step 1: Get the current balance and version number
     if (balanceSource === "CARES") {
@@ -335,24 +354,27 @@ export async function addBusPasses({
     }
     lastVersion = currentBalance[0].version;
     previousBalance = currentBalance[0].availableBalance;
-    // Step 2: Create the transaction
+
+    // Step 2: Create a single transaction for the combined purchase
     const transactionData = {
-      quantity: amount,
-      unitValue: unitValue,
+      quantity: totalQuantity,
+      unitValue: null, // Mixed unit values, so we leave this null
       totalValue: totalValue,
       isPurchase: true,
       isCARES: balanceSource === "CARES",
       isRFF: balanceSource === "RFF",
       UserId: UserId,
       previousBalance: previousBalance,
+      details: `Bus Pass Purchase: ${sacAmount} Sac @ $${sacUnitValue}, ${yoloAmount} Yolo @ $${yoloUnitValue}`,
     };
 
     const createdTransaction = await createTransaction(transactionData);
     if (!createdTransaction) {
       throw new Error("Failed to create transaction.");
     }
-    const transactionId = createdTransaction;
+    transactionId = createdTransaction;
     console.log("Created transaction with ID:", transactionId);
+
     // Step 3: Update balance with the lastVersion
     try {
       const balanceUpdateData = {
@@ -373,30 +395,62 @@ export async function addBusPasses({
       console.error("Error in addBusPasses:", error);
       throw error;
     }
+
     if (!transactionId) {
       throw new Error("No transaction ID, failed to create asset records.");
     }
-    // Step 4: Create asset records
+
+    // Step 4: Create asset records for both Sac and Yolo bus passes
     const assetPromises = [];
-    for (let i = 0; i < amount; i++) {
+
+    // Create Sac Bus Pass assets (FundTypeId: 7, $2.50 each)
+    for (let i = 0; i < sacAmount; i++) {
       assetPromises.push(
         createNewAsset({
           UserId: UserId,
-          FundTypeId: 3,
+          FundTypeId: sacFundTypeId,
           isAvailable: true,
           TransactionId: transactionId,
-          totalValue: unitValue,
+          totalValue: sacUnitValue,
           isRFF: balanceSource === "RFF",
           isCARES: balanceSource === "CARES",
         }),
       );
     }
+
+    // Create Yolo Bus Pass assets (FundTypeId: 8, $5.00 each)
+    for (let i = 0; i < yoloAmount; i++) {
+      assetPromises.push(
+        createNewAsset({
+          UserId: UserId,
+          FundTypeId: yoloFundTypeId,
+          isAvailable: true,
+          TransactionId: transactionId,
+          totalValue: yoloUnitValue,
+          isRFF: balanceSource === "RFF",
+          isCARES: balanceSource === "CARES",
+        }),
+      );
+    }
+
     try {
       await Promise.all(assetPromises);
+      console.log(
+        `Created ${sacAmount} Sac and ${yoloAmount} Yolo bus pass assets`,
+      );
     } catch (error) {
-      console.error("Error in addBusPasses:", error);
+      console.error("Error creating bus pass assets:", error);
       throw error;
     }
+
+    // Send admin notification emails
+    if (balanceSource === "RFF") {
+      await sendRFFAssetsAddedAdminEmails();
+    } else if (balanceSource === "CARES") {
+      await sendCARESAssetsAddedAdminEmails();
+    }
+
+    revalidatePath("/admin/assets");
   } catch (error) {
     console.error("Error in addBusPasses:", error);
     if (transactionId) {
