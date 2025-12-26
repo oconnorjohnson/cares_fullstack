@@ -20,7 +20,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogClose,
 } from "@/components/ui/dialog";
 import {
   Select,
@@ -31,23 +30,14 @@ import {
 } from "@/components/ui/select";
 import { PlusCircleIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import {
-  createBusPassAssets,
-  addBusPasses,
-} from "@/server/actions/create/actions";
+import { addBusPasses } from "@/server/actions/create/actions";
 import { toast } from "sonner";
-import { trpc } from "@/app/_trpc/client";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { useAuth } from "@clerk/nextjs";
 
 const formSchema = z.object({
   UserId: z.string().min(1),
-  amount: z
-    .string()
-    .transform((value) => parseInt(value, 10))
-    .refine((value) => !isNaN(value) && value > 0, {
-      message: "amount must be at least 1 number.",
-    }),
+  amount: z.coerce.number().min(1, "Amount must be at least 1"),
   balanceSource: z.string().min(1),
 });
 
