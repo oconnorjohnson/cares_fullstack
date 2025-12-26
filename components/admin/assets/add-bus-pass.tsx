@@ -66,8 +66,8 @@ export default function AddBusPasses() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      sacAmount: 0,
-      yoloAmount: 0,
+      sacAmount: "0",
+      yoloAmount: "0",
       UserId: userId!,
       balanceSource: "",
     },
