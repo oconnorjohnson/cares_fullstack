@@ -29,6 +29,10 @@ export function isBusPassFundType(fundTypeId: number): boolean {
   return (BUS_PASS_FUND_TYPE_IDS as readonly number[]).includes(fundTypeId);
 }
 
+export function isLegacyBusPassFundType(fundTypeId: number): boolean {
+  return fundTypeId === LEGACY_BUS_PASS_FUND_TYPE_ID;
+}
+
 export function calculateBusPassValue(
   fundTypeId: number,
   amount: number,
